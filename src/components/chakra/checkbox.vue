@@ -14,8 +14,8 @@ const value = computed({
   get() {
     return props.modelValue;
   },
-  set(value) {
-    emit("update:modelValue", value);
+  set(valueNew) {
+    emit("update:modelValue", valueNew);
   },
 });
 </script>
@@ -65,7 +65,7 @@ const value = computed({
   align-items: center;
   vertical-align: top;
   position: relative;
-  
+
   &:hover {
     .chakra-checkbox__control {
       border-color: var(--colors-blue-100);
