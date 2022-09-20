@@ -44,7 +44,6 @@ rules:
       printWidth: 93
   unused-imports/no-unused-imports:
     - error
-  "@typescript-eslint/no-use-before-define": 0 # broken
 env:
   browser: true
   node: true
