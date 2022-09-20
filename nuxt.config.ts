@@ -7,8 +7,8 @@ export default defineNuxtConfig({
   ],
   runtimeConfig: {
     public: {
-      apiBase: "https://backend.eawork.org/api",
-      env: "prod",
+      apiBase: "https://backend.stewardship.givemomentum.com",
+      env: "dev",
     },
   },
   ssr: false,
