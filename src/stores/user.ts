@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import Cookies from "js-cookie";
+import { useRuntimeConfig } from "#app";
 
 interface State {
   user: User | null;

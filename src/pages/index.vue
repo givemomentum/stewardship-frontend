@@ -1,27 +1,27 @@
 <script setup lang="ts">
 import { CFlex, CLink, CText } from "@chakra-ui/vue-next";
 import { useUserStore } from "@/stores/user";
+import { useRuntimeConfig } from "#app";
 
-const config = useRuntimeConfig();
-const signupLink: string = `${config.public.apiBase}/accounts/signup`;
-const loginLink: string = `${config.public.apiBase}/accounts/login`;
+const hooks = {
+  config: useRuntimeConfig(),
+  userStore: useUserStore(),
+}
 
-const userStore = useUserStore();
-
-userStore.loadUser();
+hooks.userStore.loadUser();
 </script>
 
 <template>
-  <CText v-if="userStore.isLoading">Loading...</CText>
+  <CText v-if="hooks.userStore.isLoading">Loading...</CText>
   <div v-else>
-    <CFlex v-if="userStore.isLoggedIn" direction="column" overflowX="hidden">
-      <CText>Welcome {{ userStore.user.firstName }}!</CText>
-      <CLink v-on:click="userStore.logout">Logout</CLink>
+    <CFlex v-if="hooks.userStore.isLoggedIn" direction="column" overflowX="hidden">
+      <CText>Welcome {{ hooks.userStore.user.firstName }}!</CText>
+      <CLink v-on:click="hooks.userStore.logout">Logout</CLink>
     </CFlex>
     <CFlex v-else direction="column" overflowX="hidden">
       <CText>You're logged out</CText>
-      <CLink :href="signupLink">Sign up</CLink>
-      <CLink :href="loginLink">Login</CLink>
+      <CLink :href="`${hooks.config.public.apiBase}/accounts/signup`">Sign up</CLink>
+      <CLink :href="`${hooks.config.public.apiBase}/accounts/login`">Login</CLink>
     </CFlex>
   </div>
 
