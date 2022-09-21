@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "nuxt": "^3.0.0-rc.10",
+    "@pinia/nuxt": "^0.4.2",
     "@chakra-ui/vue-next": "^1.0.0-alpha.15",
       "@chakra-ui/nuxt-next": "^0.1.0-alpha.8",
     "@formkit/nuxt": "next",
@@ -34,7 +35,8 @@
     "@ckeditor/ckeditor5-vue": "^4.0.1",
       "@ckeditor/ckeditor5-build-balloon-block": "^35.1.0",
     "@segment/analytics-next": "^1.43.0",
-    "dataclass": "^2.0.0"
+    "dataclass": "^2.0.0",
+    "js-cookie": "^3.0.1"
   },
   "devDependencies": {
     "@nuxt/kit": "^3.0.0-rc.10",

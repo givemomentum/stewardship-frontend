@@ -1,11 +1,11 @@
 import { defineNuxtConfig } from "nuxt";
-import { ViteSentryPluginOptions } from "vite-plugin-sentry";
 import viteSentry from "vite-plugin-sentry";
 
 export default defineNuxtConfig({
   modules: [
     "@nuxt/ui",
     "@formkit/nuxt",
+    "@pinia/nuxt",
   ],
   runtimeConfig: {
     public: {
