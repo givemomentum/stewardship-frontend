@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { CContainer, CFlex, CBox } from "@chakra-ui/vue-next";
-import { ref } from "vue";
-import { useForm } from "~/hooks";
+import useForm from "~/composables/useForm";
 
 const hooks = {
- form: useForm({
-   url: "/account/login",
- }),
+  form: useForm({
+    url: "/account/login",
+  }),
 };
-
 </script>
 
 <template>

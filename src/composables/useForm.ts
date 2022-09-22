@@ -3,7 +3,7 @@ import axios from "axios";
 import { ref } from "vue";
 import { strings } from "~/constants";
 
-export function useForm(args: {
+export default function (args: {
   url: string;
   dataExtra?: any;
   serializers?: { [key: string]: (value: any) => any };
@@ -12,11 +12,11 @@ export function useForm(args: {
   const state = {
     isSuccess: ref(false),
   };
-  
+
   async function submit(data: any, node: FormKitNode) {
     state.isSuccess.value = false;
     try {
-      const res = await axios.post(args.url, { ...data, ...args.dataExtra });
+      const res = await axios.post(args.url, {...data, ...args.dataExtra});
       if (res.data.is_success === true) {
         state.isSuccess.value = true;
         node.reset();
@@ -31,6 +31,6 @@ export function useForm(args: {
 
   return {
     submit: submit,
-    isSuccess: state.isSuccess.value,
+    isSuccess: state.isSuccess,
   };
 }
