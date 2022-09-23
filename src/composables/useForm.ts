@@ -1,7 +1,7 @@
 import { FormKitNode } from "@formkit/core";
 import { ref } from "vue";
 import { strings } from "~/constants";
-import useApi from "~/composables/useApi";
+import { useApi } from "~/composables/useApi";
 
 export default function (args: {
   path: string;
@@ -20,7 +20,7 @@ export default function (args: {
   async function submit(data: any, node: FormKitNode) {
     state.isSuccess.value = false;
     try {
-      const res = await hooks.api.post(args.path, {...data, ...args.dataExtra});
+      const res = await hooks.api.$post(args.path, {...data, ...args.dataExtra});
       if (res.data.is_success === true) {
         state.isSuccess.value = true;
         node.reset();

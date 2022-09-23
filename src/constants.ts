@@ -1,7 +1,3 @@
-export namespace urls {
-  export const about = "/about";
-}
-
 export const breakpointsChakra = {
   base: 0,
   sm: 480,

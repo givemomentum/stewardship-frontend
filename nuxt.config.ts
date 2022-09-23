@@ -9,6 +9,7 @@ export default defineNuxtConfig({
   ],
   runtimeConfig: {
     public: {
+      apiBase: "https://backend.stewardship.givemomentum.com/api",
       serverHostname: "https://backend.stewardship.givemomentum.com",
       env: "dev",
     },

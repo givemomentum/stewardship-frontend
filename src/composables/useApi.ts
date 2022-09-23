@@ -2,7 +2,7 @@ import { useRuntimeConfig } from "#app";
 import Cookies from "js-cookie";
 import axios from "axios";
 
-export default function () {
+export function useApi() {
   const hooks = {
     config: useRuntimeConfig(),
   }
@@ -55,5 +55,5 @@ export default function () {
     });
   }
 
-  return {$get, $delete, $post, $put, $patch};
+  return { $get, $delete, $post, $put, $patch };
 }

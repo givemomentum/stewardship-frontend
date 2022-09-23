@@ -1,28 +1,55 @@
 <script setup lang="ts">
-import { CFlex, CLink, CText } from "@chakra-ui/vue-next";
-import { useRuntimeConfig } from "#app";
-import useUserStore from "~/stores/useUserStore";
+  import { CFlex, CBox, CLink, CText, CBadge, CHeading } from "@chakra-ui/vue-next";
+  import { useRuntimeConfig } from "#app";
+  import { User } from "@sentry/vue";
+  import axios from "axios";
+  import { onMounted, ref } from "vue";
+  import { useApi } from "~/composables/useApi";
+  import { PrimaryKey } from "~/interfaces";
+  import useUserStore from "~/stores/useUserStore";
 
-const hooks = {
-  config: useRuntimeConfig(),
-  userStore: useUserStore(),
-}
-
-hooks.userStore.loadUser();
+  const hooks = {
+    config: useRuntimeConfig(),
+    api: useApi(),
+    user: useUserStore(),
+  };
+  
+  const state = {
+    tasks: ref<Task[]>([]),
+  };
+  
+  onMounted(async () => {
+    const res = await hooks.api.$get(`${hooks.config.public.apiBase}/tasks/`);
+    state.tasks.value = res.data;
+  });
+  
+  interface Task {
+    pk: PrimaryKey;
+    title: string;
+    description: string;
+    description_short: string;
+    donors: any[];
+    status: string;
+    author: User;
+    assignees: User[];
+    assignees_pks: PrimaryKey[];
+    org: PrimaryKey;
+  }
 </script>
 
 <template>
-  <CText v-if="hooks.userStore.isLoading">Loading...</CText>
-  <div v-else>
-    <CFlex v-if="hooks.userStore.isLoggedIn" direction="column" overflowX="hidden">
-      <CText>Welcome {{ hooks.userStore.user.firstName }}!</CText>
-      <CLink v-on:click="hooks.userStore.logout">Logout</CLink>
-    </CFlex>
-    <CFlex v-else direction="column" overflowX="hidden">
-      <CText>You're logged out</CText>
-      <CLink :href="`${hooks.config.public.serverHostname}/accounts/signup`">Sign up</CLink>
-      <CLink :href="`${hooks.config.public.serverHostname}/accounts/login`">Login</CLink>
-    </CFlex>
-  </div>
-
+  <CFlex direction="column" v-if="hooks.user.isLoggedIn">
+    <CHeading size="md">Your tasks</CHeading>
+    <CBox
+      v-for="task in state.tasks.value"
+      :key="task.pk"
+      mt="3"
+    >
+      {{task.title}} <CBadge>{{task.status}}</CBadge>
+    </CBox>
+  </CFlex>
+  
+  <CHeading v-else size="md">
+    Welcome!
+  </CHeading>
 </template>
