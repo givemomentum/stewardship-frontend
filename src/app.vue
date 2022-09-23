@@ -22,7 +22,7 @@
 
 <template>
   <CFlex direction="column">
-    <CBox py="4" border-bottom="1px solid" border-color="gray.300">
+    <CBox py="4" border-bottom="1px solid" border-color="gray.200" bg="white">
       <CContainer max-w="8xl">
 
         <CFlex justify="space-between" align="center">
