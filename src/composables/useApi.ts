@@ -2,6 +2,9 @@ import { useRuntimeConfig } from "#app";
 import Cookies from "js-cookie";
 import axios from "axios";
 
+const XSRF_HEADER = "x-csrftoken";
+const XSRF_COOKIE = "csrftoken";
+
 export function useApi() {
   const hooks = {
     config: useRuntimeConfig(),
@@ -10,8 +13,8 @@ export function useApi() {
   const axiosInstance = axios.create({
     baseURL: `${hooks.config.public.serverHostname}/api`,
     withCredentials: true,
-    xsrfHeaderName: "x-csrftoken",
-    xsrfCookieName: "csrftoken",
+    xsrfHeaderName: XSRF_HEADER,
+    xsrfCookieName: XSRF_COOKIE,
     validateStatus: function (status) {
       return status < 400 || status === 403;
     }
@@ -19,8 +22,12 @@ export function useApi() {
 
   async function ensureCSRFToken() {
     // Refresh CSRF token if necessary
-    if (!Cookies.get('csrftoken')) {
-      await $get("/auth/csrf");
+    if (!Cookies.get(XSRF_COOKIE)) {
+      const res = await $get("/auth/csrf");
+      const token = res.headers[XSRF_HEADER];
+      console.log(res);
+      console.log("Loaded token", token);
+      Cookies.set(XSRF_COOKIE, token);
     }
   }
 
