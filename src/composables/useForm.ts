@@ -1,10 +1,10 @@
 import { FormKitNode } from "@formkit/core";
-import axios from "axios";
 import { ref } from "vue";
 import { strings } from "~/constants";
+import useApi from "~/composables/useApi";
 
 export default function (args: {
-  url: string;
+  path: string;
   dataExtra?: any;
   serializers?: { [key: string]: (value: any) => any };
   method?: "POST" | "PATCH";
@@ -13,10 +13,14 @@ export default function (args: {
     isSuccess: ref(false),
   };
 
+  const hooks = {
+    api: useApi();
+  }
+
   async function submit(data: any, node: FormKitNode) {
     state.isSuccess.value = false;
     try {
-      const res = await axios.post(args.url, {...data, ...args.dataExtra});
+      const res = await hooks.api.post(args.path, {...data, ...args.dataExtra});
       if (res.data.is_success === true) {
         state.isSuccess.value = true;
         node.reset();

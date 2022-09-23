@@ -29,7 +29,7 @@ export default defineStore("user", {
       this.isLoading = true;
       const api = useApi();
 
-      const res = await api.$get("/users/me");
+      const res = await api.$get("/users/me/");
       if (res.status === 200) {
         this.user = {
           email: res.data.email,
