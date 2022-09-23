@@ -1,5 +1,4 @@
 import { useRuntimeConfig } from "#app";
-import Cookies from "js-cookie";
 import axios from "axios";
 
 export function useApi() {
@@ -7,53 +6,37 @@ export function useApi() {
     config: useRuntimeConfig(),
   }
 
-  const instance = axios.create({
+  const axiosInstance = axios.create({
     baseURL: `${hooks.config.public.serverHostname}/api`,
     withCredentials: true,
+    xsrfHeaderName: "X-CSRFToken",
+    xsrfCookieName: "csrftoken",
     validateStatus: function (status) {
       return status < 400 || status === 403;
     }
   });
 
-  async function getCsrfToken(): Promise<string> {
-    // Check if token already cached.
-    let token = Cookies.get('csrftoken');
-    if (token) {
-      return token;
-    }
-
-    // Otherwise load from server.
-    await instance.get("/auth/csrf");
-    return Cookies.get('csrftoken');
+  async function $get(path: string, config?: any) {
+    return axiosInstance.get(path, config);
   }
 
-  async function $get(path: string) {
-    return instance.get(path);
+  async function $delete(path: string, config?: any) {
+    return axiosInstance.delete(path, config);
   }
 
-  async function $delete(path: string) {
-    return instance.delete(path, {
-      headers: {"X-CSRFToken": await getCsrfToken()},
-    });
+  async function $post(path: string, data?: any, config?: any) {
+    return axiosInstance.post(path, data, config);
   }
 
-  async function $post(path: string, data?: any) {
-    return instance.post(path, data, {
-      headers: {"X-CSRFToken": await getCsrfToken()},
-    });
+  async function $put(path: string, data?: any, config?: any) {
+    return axiosInstance.put(path, data, config);
   }
 
-  async function $put(path: string, data?: any) {
-    return instance.put(path, data, {
-      headers: {"X-CSRFToken": await getCsrfToken()},
-    });
+  async function $patch(path: string, data?: any, config?: any) {
+    return axiosInstance.patch(path, data, config);
   }
 
-  async function $patch(path: string, data?: any) {
-    return instance.patch(path, data, {
-      headers: {"X-CSRFToken": await getCsrfToken()},
-    });
-  }
-
-  return { $get, $delete, $post, $put, $patch };
+  return {
+    $get, $delete, $post, $put, $patch
+  };
 }
