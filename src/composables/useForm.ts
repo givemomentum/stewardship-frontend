@@ -14,7 +14,7 @@ export default function (args: {
   };
 
   const hooks = {
-    api: useApi();
+    api: useApi(),
   }
 
   async function submit(data: any, node: FormKitNode) {
