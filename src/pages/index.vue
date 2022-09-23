@@ -1,8 +1,16 @@
 <script setup lang="ts">
   import { CFlex, CBox, CLink, CText, CBadge, CIcon, CHeading } from "@chakra-ui/vue-next";
+  import {
+    CDrawer,
+    CDrawerOverlay,
+    CDrawerContent,
+    CDrawerCloseButton,
+    CDrawerHeader,
+    CDrawerBody
+  } from "@chakra-ui/vue-next";
   import { useRuntimeConfig } from "#app";
   import { Md5 } from "ts-md5";
-  import { onMounted, ref } from "vue";
+  import { onMounted, ref, watch } from "vue";
   import { useApi } from "~/composables/useApi";
   import { Task, PrimaryKey, TaskStatus } from "~/interfaces";
   import useUserStore from "~/stores/useUserStore";
@@ -16,41 +24,36 @@
   
   const state = {
     tasks: ref<Task[]>([]),
+    taskOpened: ref<Task | null>(null),
+    isDrawlerOpened: ref(false),
   };
-  
+
+  watch(state.taskOpened, (taskOpenedNew) => {
+    state.isDrawlerOpened.value = Boolean(taskOpenedNew);
+  });
+
   onMounted(async () => {
     const res = await hooks.api.$get(`${hooks.config.public.apiBase}/tasks/`);
     state.tasks.value = res.data;
   });
-  function getTaskStatusColor(status: TaskStatus): string {
-    switch (status) {
-      case "draft": return "gray.500";
-      case "pending": return "gray.500";
-      case "recommended": return "teal.500";
-      case "recommendation_declined": return "gray.500";
-      case "review": return "blue.500";
-      case "scheduled": return "green.500";
-      case "in_progress": return "green.500";
-      case "completed": return "gray.500";
-      case "failed": return "red.500";
-      case "archived": return "red.500";
-    }
-  }
-
-  function getGravatarURL(email: string) {
-    const emailNormalized = String(email).trim().toLowerCase();
-    return `https://www.gravatar.com/avatar/${Md5.hashStr(emailNormalized)}`;
-  }
 </script>
 
 <template>
-  <CFlex direction="column" v-if="hooks.user.isLoggedIn" gap="3">
+  <CFlex v-if="hooks.user.isLoggedIn" direction="column" gap="3">
 
-    <CHeading size="md" mt="6" mb="4">Tasks</CHeading>
+    <CHeading
+      size="lg"
+      mt="3"
+      mb="1"
+      font-weight="normal"
+    >
+      Tasks
+    </CHeading>
 
     <CFlex
       v-for="task in state.tasks.value"
       :key="task.pk"
+      @click="state.taskOpened.value = task"
       direction="column"
       gap="3"
       mt="4"
@@ -58,34 +61,10 @@
       max-w="700px"
       bg="white"
       border-radius="lg"
+      border="1px solid white"
+      :_hover="{ cursor: 'pointer', borderColor: 'gray.200' }"
     >
-      <CFlex align="center" justify="space-between">
-        <CText font-size="lg">{{ task.title }}</CText>
-        <chakra.img
-          v-for="assignee in task.assignees"
-          :key="assignee.email"
-          :src="getGravatarURL(assignee.email)"
-          bg="blue.500"
-          border-radius="full"
-          w="26px"
-          h="26px"
-        />
-      </CFlex>
-      
-      <CBox
-        p="2px"
-        px="6px"
-        :bg="getTaskStatusColor(task.status)"
-        color="white"
-        w="fit-content"
-        font-size="sm"
-        border-radius="md"
-        text-transform="capitalize"
-      >
-        {{ task.status }}
-      </CBox>
-      
-      <CText v-if="task.description" font-size="md" color="gray.500">{{ task.description }}</CText>
+      <TaskHead :task="task" />
 
       <CFlex
         justify="space-between"
@@ -113,6 +92,32 @@
 
       </CFlex>
     </CFlex>
+
+    <CDrawer
+      v-model="state.isDrawlerOpened.value"
+      placement="right"
+      size="xl"
+      @keyup.esc="state.isDrawlerOpened.value = false"
+      tabindex="0"
+    >
+      <CDrawerOverlay />
+      <CDrawerContent bg="white">
+        <CDrawerBody v-if="state.taskOpened.value" pt="4" >
+          <TaskHead :task="state.taskOpened.value" />
+        </CDrawerBody>
+      </CDrawerContent>
+    </CDrawer>
+
+    <CBox
+      v-if="state.isDrawlerOpened.value"
+      @click="state.isDrawlerOpened.value = false"
+      pos="fixed"
+      w="100vw"
+      h="100vh"
+      left="0"
+      top="0"
+      z-index="1399"
+    />
   </CFlex>
   
   <CHeading v-else size="md">
@@ -124,4 +129,14 @@
   html, body {
     background: #f4f8fb;
   }
+  
+  // chakra drawer is broken, revisit one they fix it
+  .chakra-modal__content-container {
+    width: 0;
+    height: 0;
+    section {
+      z-index: 1400;
+    }
+  }
+  .chakra-modal__overlay { }
 </style>
