@@ -10,7 +10,7 @@ export function useApi() {
   const axiosInstance = axios.create({
     baseURL: `${hooks.config.public.serverHostname}/api`,
     withCredentials: true,
-    xsrfHeaderName: "X-CSRFToken",
+    xsrfHeaderName: "x-csrftoken",
     xsrfCookieName: "csrftoken",
     validateStatus: function (status) {
       return status < 400 || status === 403;
