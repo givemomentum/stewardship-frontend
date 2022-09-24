@@ -130,7 +130,8 @@
 
 <style lang="scss">
   html, body {
-    background: #f4f8fb;
+    background: var(--colors-gray-75);
+    height: 100%;
   }
   
   // chakra drawer is broken, revisit one they fix it
