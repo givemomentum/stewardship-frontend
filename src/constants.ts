@@ -14,3 +14,8 @@ export const strings = {
   error:
     "An error occurred, our team has been notified. Please try again or contact support at support@eawork.org.",
 };
+
+export const security = {
+  xsrfHeader: "x-csrftoken",
+  xsrfCookie: "csrftoken",
+}

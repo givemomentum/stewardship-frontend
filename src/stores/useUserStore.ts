@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 import { useApi } from "~/composables/useApi";
+import Cookies from "js-cookie";
+import { security } from "~/constants";
 
 interface State {
   user: UseUserStore | null;
@@ -29,13 +31,18 @@ export default defineStore("user", {
       this.isLoading = true;
       const api = useApi();
 
-      const res = await api.$get("/users/me/");
-      if (res.status === 200) {
+      const userRes = await api.$get("/users/me/");
+      if (userRes.status === 200) {
         this.user = {
-          email: res.data.email,
-          firstName: res.data.first_name,
-          lastName: res.data.last_name,
+          email: userRes.data.email,
+          firstName: userRes.data.first_name,
+          lastName: userRes.data.last_name,
         }
+
+        // Fetch CSRF token after logging user in.
+        const csrfRes = await api.$get("/auth/csrf");
+        const token = csrfRes.headers[security.xsrfHeader];
+        Cookies.set(security.xsrfCookie, token);
       }
 
       this.isLoading = false;
