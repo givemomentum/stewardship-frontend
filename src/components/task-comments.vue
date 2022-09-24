@@ -6,12 +6,14 @@ import axios from "axios";
 import { ref } from "vue";
 import JobCommentChild from "~/components/task-comment-child.vue";
 import JobCommentForm from "~/components/task-comment-form.vue";
+import { useApi } from "~/composables/useApi";
 import { Comment, Task } from "~/interfaces";
 
 const props = defineProps<{ task: Task }>();
 
 const hooks = {
   config: useRuntimeConfig(),
+  api: useApi(),
 }
 
 const state = {
@@ -21,7 +23,7 @@ const state = {
 
 async function loadComments() {
   try {
-    const res = await axios.get(`${hooks.config.public.apiBase}/comments/?task=${props.task.pk}`);
+    const res = await hooks.api.$get(`${hooks.config.public.apiBase}/comments/?task=${props.task.pk}`);
     const commentsRaw: Comment[] = res.data;
     state.comments.value = commentsRaw.filter(comment => comment.parent === null);
   } catch (err) {

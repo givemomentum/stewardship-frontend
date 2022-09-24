@@ -6,6 +6,7 @@
   import axios from "axios";
   import { onMounted, onUpdated, ref } from "vue";
   import NuxtCkeditor from "~/components/nuxt-ckeditor.vue";
+  import { useApi } from "~/composables/useApi";
   import { PrimaryKey } from "~/interfaces";
   import { strings } from "~/constants";
   import useUserStore from "~/stores/useUserStore";
@@ -24,6 +25,7 @@
   const hooks = {
     config: useRuntimeConfig(),
     userStore: useUserStore(),
+    api: useApi(),
   };
 
   const state = {
@@ -39,7 +41,7 @@
     }
 
     try {
-      const res = await axios.post(`${hooks.config.public.apiBase}/comments/`, {
+      const res = await hooks.api.$post(`${hooks.config.public.apiBase}/comments/`, {
         author_pk: hooks.userStore.user.pk,
         content: state.replyContent.value,
         task: props.taskPk,
