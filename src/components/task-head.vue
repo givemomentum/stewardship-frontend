@@ -34,7 +34,6 @@
         v-for="assignee in task.assignees"
         :key="assignee.email"
         :src="getGravatarURL(assignee.email)"
-        bg="blue.500"
         border-radius="full"
         w="26px"
         h="26px"
