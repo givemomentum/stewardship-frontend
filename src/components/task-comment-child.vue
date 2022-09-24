@@ -6,7 +6,7 @@ import { onMounted, onUpdated, ref } from "vue";
 import JobCommentForm from "~/components/task-comment-form.vue";
 import { Comment, PrimaryKey } from "~/interfaces";
 
-const props = defineProps<{ taskPk: PrimaryKey | string; comment: Comment; isLastThreadLevel?: true; }>();
+const props = defineProps<{ taskPk: number | string; comment: Comment; isLastThreadLevel?: true; }>();
 
 const state = {
   isEditorVisible: ref(false),

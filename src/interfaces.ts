@@ -19,6 +19,8 @@ export interface Task {
   assignees_pks: PrimaryKey[];
   org: PrimaryKey;
   created_at: string;
+  comments: Comment[];
+  comments_count: number;
 }
 
 export interface Comment {

@@ -3,35 +3,29 @@ import { useRuntimeConfig, useState } from "#app";
 import { CHeading, CFlex, CBox, CButton, CLink, CText, chakra } from "@chakra-ui/vue-next";
 import { captureEvent } from "@sentry/hub";
 import axios from "axios";
-import { onMounted, onUpdated, ref } from "vue";
+import { ref } from "vue";
 import JobCommentChild from "~/components/task-comment-child.vue";
 import JobCommentForm from "~/components/task-comment-form.vue";
-import { Comment, PrimaryKey } from "~/interfaces";
+import { Comment, Task } from "~/interfaces";
 
-const props = defineProps<{ taskPk: number | string; isShouldLoad: boolean }>();
+const props = defineProps<{ task: Task }>();
 
 const hooks = {
   config: useRuntimeConfig(),
 }
 
 const state = {
-  comments: ref(null),
+  comments: ref(props.task.comments),
   isNoComments: ref(true),
 }
 
-onMounted(loadComments);
-
-onUpdated(loadComments);
-
-async function loadComments(args?: {isReload?: boolean}) {
-  if ((props.isShouldLoad && !state.comments.value) || args?.isReload) {
-    try {
-      const res = await axios.get(`${hooks.config.public.apiBase}/comments/?task=${props.taskPk}`);
-      const commentsRaw: Comment[] = res.data;
-      state.comments.value = commentsRaw.filter(comment => comment.parent === null);
-    } catch (err) {
-      captureEvent(err);
-    }
+async function loadComments() {
+  try {
+    const res = await axios.get(`${hooks.config.public.apiBase}/comments/?task=${props.task.pk}`);
+    const commentsRaw: Comment[] = res.data;
+    state.comments.value = commentsRaw.filter(comment => comment.parent === null);
+  } catch (err) {
+    captureEvent(err);
   }
 }
 
@@ -46,9 +40,9 @@ async function loadComments(args?: {isReload?: boolean}) {
     >
 
       <JobCommentChild
-        :task-pk="props.taskPk"
+        :task-pk="props.task.pk"
         :comment="comment"
-        @comment-posted="loadComments({ isReload: true })"
+        @comment-posted="loadComments()"
       />
 
       <CBox
@@ -59,11 +53,11 @@ async function loadComments(args?: {isReload?: boolean}) {
       >
 
         <JobCommentChild
-          :task-pk="props.taskPk"
+          :task-pk="props.task.pk"
           :comment="commentChild1"
-          @comment-posted="loadComments({ isReload: true })"
+          @comment-posted="loadComments()"
         />
-        
+
         <CBox
           v-if="commentChild1.children"
           v-for="commentChild2 in commentChild1.children"
@@ -71,10 +65,10 @@ async function loadComments(args?: {isReload?: boolean}) {
           ml="12"
         >
           <JobCommentChild
-            :task-pk="props.taskPk"
+            :task-pk="props.task.pk"
             :comment="commentChild2"
             :is-last-thread-level="true"
-            @comment-posted="loadComments({ isReload: true })"
+            @comment-posted="loadComments()"
           />
         </CBox>
 
@@ -91,8 +85,8 @@ async function loadComments(args?: {isReload?: boolean}) {
         Leave a comment
       </CText>
       <JobCommentForm
-        :task-pk="props.taskPk"
-        @comment-posted="loadComments({ isReload: true })"
+        :task-pk="props.task.pk"
+        @comment-posted="loadComments()"
       /> 
     </CFlex>
     

@@ -11,7 +11,7 @@
   import useUserStore from "~/stores/useUserStore";
 
   const props = defineProps<{
-    taskPk: PrimaryKey | string;
+    taskPk: number | string;
     commentParentPk?: number;
     isCancelBtnVisible?: boolean;
   }>();

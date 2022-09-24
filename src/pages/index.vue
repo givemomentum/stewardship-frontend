@@ -65,19 +65,20 @@
       <TaskHead :task="task" />
 
       <CFlex
-        justify="space-between"
+        :justify="task.comments_count ? 'space-between' : 'flex-end'"
         align="center"
         font-size="xs"
         color="gray.500"
       >
 
         <CFlex
+          v-if="task.comments_count"
           align="center"
           color="gray.500"
           gap="1"
         >
           <CIcon name="message-square"/>
-          <CText>5</CText>
+          <CText>{{task.comments_count}}</CText>
         </CFlex>
         
         <CFlex>

@@ -14,7 +14,7 @@
     </CBox>
     
     <CBox p="6" pt="0" bg="gray.75">
-      <TaskComments :task-pk="props.task.pk" :is-should-load="true" />
+      <TaskComments :task="props.task" />
     </CBox>
   </CFlex>
 </template>
