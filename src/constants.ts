@@ -12,7 +12,7 @@ export const breakpointsChakra = {
 
 export const strings = {
   error:
-    "An error occurred, our team has been notified. Please try again or contact support at support@eawork.org.",
+    "An error occurred, our team has been notified. Please try again or contact support at support@givemomentum.com.",
 };
 
 export const security = {

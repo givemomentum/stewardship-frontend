@@ -1,6 +1,7 @@
 export type PrimaryKey = number;
 
 export interface User {
+  pk: PrimaryKey;
   email: string;
   first_name: string;
   last_name: string;
@@ -17,6 +18,17 @@ export interface Task {
   assignees: User[];
   assignees_pks: PrimaryKey[];
   org: PrimaryKey;
+  created_at: string;
+}
+
+export interface Comment {
+  pk: PrimaryKey;
+  parent: PrimaryKey;
+  task: PrimaryKey;
+  author: User;
+  content: string;
+  children: Array<Comment> | null;
+  updated_at: string;
   created_at: string;
 }
 
