@@ -7,7 +7,6 @@
     CDrawerBody
   } from "@chakra-ui/vue-next";
   import { useRuntimeConfig } from "#app";
-  import { Md5 } from "ts-md5";
   import { onMounted, ref, watch } from "vue";
   import { useApi } from "~/composables/useApi";
   import { Task, PrimaryKey, TaskStatus } from "~/interfaces";
@@ -32,7 +31,11 @@
 
   onMounted(async () => {
     const res = await hooks.api.$get(`${hooks.config.public.apiBase}/tasks/`);
-    state.tasks.value = res.data;
+    let tasksProcessed: Task[] = res.data;
+    for (const task of tasksProcessed) {
+      task.comments = task.comments.filter(comment => comment.parent === null)
+    }
+    state.tasks.value = tasksProcessed;
   });
 </script>
 

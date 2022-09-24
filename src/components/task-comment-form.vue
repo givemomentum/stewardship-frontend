@@ -3,11 +3,9 @@
   import { CHeading, CFlex, CBox, CButton, CLink, CInput, CText, chakra } from "@chakra-ui/vue-next";
   import { FormKitNode } from "@formkit/core";
   import { captureEvent } from "@sentry/hub";
-  import axios from "axios";
   import { onMounted, onUpdated, ref } from "vue";
   import NuxtCkeditor from "~/components/nuxt-ckeditor.vue";
   import { useApi } from "~/composables/useApi";
-  import { PrimaryKey } from "~/interfaces";
   import { strings } from "~/constants";
   import useUserStore from "~/stores/useUserStore";
 
