@@ -29,13 +29,9 @@
     isDrawlerOpened: ref(Boolean(props.taskOpened)),
   };
 
-  watch(state.taskOpened, (taskOpenedNew) => {
-    state.isDrawlerOpened.value = Boolean(taskOpenedNew);
-  });
-
   onMounted(async () => {
     const res = await hooks.api.$get(`${hooks.config.public.apiBase}/tasks/`);
-    state.tasks.value = res.data;
+    state.tasks.value = res.data ?? [];
   });
 </script>
 
