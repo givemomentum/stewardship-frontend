@@ -30,9 +30,13 @@
   };
 
   onMounted(async () => {
+    debugger;
     const res = await hooks.api.$get(`${hooks.config.public.apiBase}/tasks/`);
     state.tasks.value = res.data ?? [];
+    debugger;
   });
+  
+  debugger;
 </script>
 
 <template>
