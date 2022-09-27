@@ -54,7 +54,7 @@
     <CFlex
       v-for="task in state.tasks.value"
       :key="task.pk"
-      @click="state.taskOpened.value = task"
+      @click="state.taskOpened.value = task; state.isDrawlerOpened.value = true"
       direction="column"
       gap="3"
       mt="4"
@@ -99,7 +99,7 @@
       v-model="state.isDrawlerOpened.value"
       placement="right"
       size="xl"
-      @keyup.esc="state.isDrawlerOpened.value = false"
+      @keyup.esc="state.isDrawlerOpened.value = false; state.taskOpened.value = false"
       tabindex="0"
     >
       <CDrawerOverlay />
@@ -112,7 +112,7 @@
 
     <CBox
       v-if="state.isDrawlerOpened.value"
-      @click="state.isDrawlerOpened.value = false"
+      @click="state.isDrawlerOpened.value = false; state.taskOpened.value = false"
       pos="fixed"
       w="100vw"
       h="100vh"

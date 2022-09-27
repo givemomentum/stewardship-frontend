@@ -16,6 +16,7 @@ export interface Task {
   donors: any[];
   status: TaskStatusStr;
   author: User;
+  author_pk: PrimaryKey;
   assignees: User[];
   assignees_pks: PrimaryKey[];
   org: PrimaryKey;
