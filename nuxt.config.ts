@@ -16,9 +16,12 @@ export default defineNuxtConfig({
   },
   ssr: false,
   srcDir: "src/",
+  bundleSourceMaps: true,
   vite: {
     build: {
       sourcemap: true,
+      minify: false,
+      ssr: false,
     },
     plugins: [
       viteSentry({
