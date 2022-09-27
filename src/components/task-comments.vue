@@ -17,7 +17,7 @@ const hooks = {
 }
 
 const state = {
-  comments: ref(props.task.comments),
+  comments: ref(props.task.comments.filter(comment => comment.parent === null)),
   isNoComments: ref(true),
 }
 
@@ -80,7 +80,7 @@ async function loadComments() {
 
     <CFlex gap="4" direction="column">
       <CText
-        :mt="state.comments.value?.length ? 6 : 0"
+        :mt="state.comments.value?.length ? 6 : 1"
         font-size="lg"
         line-height="1"
       >
@@ -91,6 +91,6 @@ async function loadComments() {
         @comment-posted="loadComments()"
       /> 
     </CFlex>
-    
+
   </div>
 </template>

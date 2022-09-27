@@ -38,6 +38,6 @@ export function useApi() {
   }
 
   return {
-    $get, $delete, $post, $put, $patch
+    $get, $delete, $post: $post, $put, $patch
   };
 }

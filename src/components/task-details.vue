@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { Md5 } from "ts-md5";
-  import { Task, TaskStatus } from "~/interfaces";
+  import { Task, TaskStatusStr } from "~/interfaces";
   import { CFlex, CBox, CLink, CText, CBadge, CIcon, CHeading } from "@chakra-ui/vue-next";
 
   const props = defineProps<{ task: Task }>();

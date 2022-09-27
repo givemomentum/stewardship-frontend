@@ -1,13 +1,12 @@
 <script lang="ts" setup>
   import { Md5 } from "ts-md5";
-  import { Task, TaskStatus } from "~/interfaces";
+  import { Task, TaskStatusStr } from "~/interfaces";
   import { CFlex, CBox, CLink, CText, CBadge, CIcon, CHeading } from "@chakra-ui/vue-next";
 
-  const props = defineProps<{ task: Task }>();
+  const props = defineProps<{ task: Task, isPreview?: boolean; }>();
   
-  function getTaskStatusColor(status: TaskStatus): string {
+  function getTaskStatusColor(status: TaskStatusStr): string {
     switch (status) {
-      case "draft": return "gray.500";
       case "pending": return "gray.500";
       case "recommended": return "teal.500";
       case "recommendation_declined": return "gray.500";
@@ -40,19 +39,23 @@
       />
     </CFlex>
     
-    <CBox
-      p="2px"
-      px="6px"
-      :bg="getTaskStatusColor(task.status)"
-      color="white"
-      w="fit-content"
-      font-size="sm"
-      border-radius="md"
-      text-transform="capitalize"
+    <TaskStatus :task="props.task" />
+
+    <CText
+      v-if="props.isPreview"
+      font-size="md"
+      color="gray.500"
     >
-      {{ task.status }}
-    </CBox>
-    
-    <CText v-if="task.description" font-size="md" color="gray.500">{{ task.description }}</CText>
+      {{
+        task.description_short
+        || task.description_plaintext ? `${task.description_plaintext?.slice(0, 160)} [...]` : ""
+      }}
+    </CText>
+
+    <CText
+      v-if="task.description && !props.isPreview"
+      font-size="md"
+      v-html="task.description"
+    />
   </CFlex>
 </template>

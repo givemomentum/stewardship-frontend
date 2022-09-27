@@ -12,8 +12,9 @@ export interface Task {
   title: string;
   description: string;
   description_short: string;
+  description_plaintext: string;
   donors: any[];
-  status: TaskStatus;
+  status: TaskStatusStr;
   author: User;
   assignees: User[];
   assignees_pks: PrimaryKey[];
@@ -34,7 +35,7 @@ export interface Comment {
   created_at: string;
 }
 
-export type TaskStatus = 
+export type TaskStatusStr = 
   "draft" |
   "pending" |
   "recommended" |

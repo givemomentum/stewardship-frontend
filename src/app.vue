@@ -26,7 +26,7 @@
       <CContainer max-w="8xl">
 
         <CFlex justify="space-between" align="center">
-          <chakra.img w="184px" src="momentum-logo.svg" />
+          <chakra.img w="184px" src="/momentum-logo.svg" />
         
           <CFlex v-if="hooks.userStore.isLoading">Loading...</CFlex>
           <CFlex v-else direction="column">
