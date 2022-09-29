@@ -99,7 +99,7 @@
       v-model="state.isDrawlerOpened.value"
       placement="right"
       size="xl"
-      @keyup.esc="state.isDrawlerOpened.value = false; state.taskOpened.value = false"
+      @keyup.esc="state.isDrawlerOpened.value = false; state.taskOpened.value = null"
       tabindex="0"
     >
       <CDrawerOverlay />
@@ -112,7 +112,7 @@
 
     <CBox
       v-if="state.isDrawlerOpened.value"
-      @click="state.isDrawlerOpened.value = false; state.taskOpened.value = false"
+      @click="state.isDrawlerOpened.value = false; state.taskOpened.value = null"
       pos="fixed"
       w="100vw"
       h="100vh"
@@ -138,6 +138,7 @@
   .chakra-modal__content-container {
     width: 0;
     height: 0;
+
     section {
       z-index: 1400;
     }
