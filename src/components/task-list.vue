@@ -30,13 +30,10 @@
   };
 
   onMounted(async () => {
-    debugger;
     const res = await hooks.api.$get(`${hooks.config.public.apiBase}/tasks/`);
     state.tasks.value = res.data ?? [];
-    debugger;
   });
   
-  debugger;
 </script>
 
 <template>
@@ -95,20 +92,20 @@
       </CFlex>
     </CFlex>
 
-    <CDrawer
-      v-model="state.isDrawlerOpened.value"
-      placement="right"
-      size="xl"
-      @keyup.esc="state.isDrawlerOpened.value = false; state.taskOpened.value = null"
-      tabindex="0"
-    >
-      <CDrawerOverlay />
-      <CDrawerContent>
-        <CDrawerBody p="0" bg="gray.75">
-          <TaskDetails v-if="state.taskOpened.value" :task="state.taskOpened.value" />
-        </CDrawerBody>
-      </CDrawerContent>
-    </CDrawer>
+<!--    <CDrawer-->
+<!--      v-model="state.isDrawlerOpened.value"-->
+<!--      placement="right"-->
+<!--      size="xl"-->
+<!--      @keyup.esc="state.isDrawlerOpened.value = false; state.taskOpened.value = null"-->
+<!--      tabindex="0"-->
+<!--    >-->
+<!--      <CDrawerOverlay />-->
+<!--      <CDrawerContent>-->
+<!--        <CDrawerBody p="0" bg="gray.75">-->
+<!--          <TaskDetails v-if="state.taskOpened.value" :task="state.taskOpened.value" />-->
+<!--        </CDrawerBody>-->
+<!--      </CDrawerContent>-->
+<!--    </CDrawer>-->
 
     <CBox
       v-if="state.isDrawlerOpened.value"
