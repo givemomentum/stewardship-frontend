@@ -1,11 +1,5 @@
 <script setup lang="ts">
   import { CFlex, CBox, CLink, CText, CBadge, CIcon, CHeading } from "@chakra-ui/vue-next";
-  import {
-    CDrawer,
-    CDrawerOverlay,
-    CDrawerContent,
-    CDrawerBody
-  } from "@chakra-ui/vue-next";
   import { useRuntimeConfig } from "#app";
   import { onMounted, ref, watch } from "vue";
   import { useApi } from "~/composables/useApi";
@@ -25,8 +19,7 @@
 
   const state = {
     tasks: ref<Task[]>([]),
-    taskOpened: ref<Task | null>(props.taskOpened ?? null),
-    isDrawlerOpened: ref(Boolean(props.taskOpened)),
+    taskOpened: ref<Task | null | false>(props.taskOpened ?? null),
   };
 
   onMounted(async () => {
@@ -51,7 +44,7 @@
     <CFlex
       v-for="task in state.tasks.value"
       :key="task.pk"
-      @click="state.taskOpened.value = task; state.isDrawlerOpened.value = true"
+      @click="state.taskOpened.value = task"
       direction="column"
       gap="3"
       mt="4"
@@ -92,33 +85,11 @@
       </CFlex>
     </CFlex>
 
-<!--    <CDrawer-->
-<!--      v-model="state.isDrawlerOpened.value"-->
-<!--      placement="right"-->
-<!--      size="xl"-->
-<!--      @keyup.esc="state.isDrawlerOpened.value = false; state.taskOpened.value = null"-->
-<!--      tabindex="0"-->
-<!--    >-->
-<!--      <CDrawerOverlay />-->
-<!--      <CDrawerContent>-->
-<!--        <CDrawerBody p="0" bg="gray.75">-->
-<!--          <TaskDetails v-if="state.taskOpened.value" :task="state.taskOpened.value" />-->
-<!--        </CDrawerBody>-->
-<!--      </CDrawerContent>-->
-<!--    </CDrawer>-->
-
-    <CBox
-      v-if="state.isDrawlerOpened.value"
-      @click="state.isDrawlerOpened.value = false; state.taskOpened.value = null"
-      pos="fixed"
-      w="100vw"
-      h="100vh"
-      left="0"
-      top="0"
-      z-index="1399"
-    />
+    <DrawlerSimple v-model="state.taskOpened.value">
+      <TaskDetails :task="state.taskOpened.value" />
+    </DrawlerSimple>
   </CFlex>
-  
+
   <CHeading v-else size="md">
     Welcome!
   </CHeading>
