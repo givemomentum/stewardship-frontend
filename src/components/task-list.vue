@@ -98,7 +98,7 @@
 
 <style lang="scss">
   html, body {
-    background: var(--colors-gray-75);
+    background: var(--colors-gray-75) !important;
     height: 100%;
   }
   
