@@ -6,7 +6,7 @@
   import { Task, PrimaryKey, TaskStatusStr } from "~/interfaces";
   import useUserStore from "~/stores/useUserStore";
   import { formatDistance, format } from "date-fns";
-  
+
   const props = defineProps<{
     taskOpened?: Task;
   }>();
@@ -26,62 +26,63 @@
     const res = await hooks.api.$get(`${hooks.config.public.apiBase}/tasks/`);
     state.tasks.value = res.data ?? [];
   });
-  
+
 </script>
 
 <template>
-  <CFlex v-if="hooks.userStore.isLoggedIn" direction="column" gap="3">
-
+  <CFlex v-if="hooks.userStore.isLoggedIn" direction="column" gap="7">
+    
     <CHeading
-      size="lg"
-      mt="3"
-      mb="1"
-      font-weight="normal"
+      font-size="3xl"
+      mt="6"
+      mb="px"
+      font-weight="semibold"
     >
       Tasks
     </CHeading>
 
-    <CFlex
-      v-for="task in state.tasks.value"
-      :key="task.pk"
-      @click="state.taskOpened.value = task"
-      direction="column"
-      gap="3"
-      mt="4"
-      p="4"
-      max-w="700px"
-      bg="white"
-      border-radius="lg"
-      border="1px solid white"
-      :_hover="{ cursor: 'pointer', borderColor: 'gray.200' }"
-    >
-      <TaskHead :task="task" :is-preview="true" />
-
+    <CFlex gap="6" direction="column">
       <CFlex
-        :justify="task.comments_count ? 'space-between' : 'flex-end'"
-        align="center"
-        font-size="xs"
-        color="gray.500"
+        v-for="task in state.tasks.value"
+        :key="task.pk"
+        @click="state.taskOpened.value = task"
+        direction="column"
+        gap="3"
+        p="4"
+        max-w="700px"
+        bg="white"
+        border-radius="lg"
+        border="1px solid white"
+        :_hover="{ cursor: 'pointer', borderColor: 'gray.200' }"
       >
-
+        <TaskHead :task="task" :is-preview="true" />
+  
         <CFlex
-          v-if="task.comments_count"
+          :justify="task.comments_count ? 'space-between' : 'flex-end'"
           align="center"
+          font-size="xs"
           color="gray.500"
-          gap="1"
         >
-          <CIcon name="message-square"/>
-          <CText>{{task.comments_count}}</CText>
+  
+          <CFlex
+            v-if="task.comments_count"
+            align="center"
+            color="gray.500"
+            gap="1"
+          >
+            <CIcon name="message-square"/>
+            <CText>{{task.comments_count}}</CText>
+          </CFlex>
+          
+          <CFlex>
+            {{
+              formatDistance(new Date(task.created_at), new Date(), {
+                addSuffix: true,
+              })
+            }}
+          </CFlex>
+  
         </CFlex>
-        
-        <CFlex>
-          {{
-            formatDistance(new Date(task.created_at), new Date(), {
-              addSuffix: true,
-            })
-          }}
-        </CFlex>
-
       </CFlex>
     </CFlex>
 
