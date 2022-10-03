@@ -32,6 +32,7 @@ export interface DropdownOption<Value = any> {
   label?: any;
   bg?: string;
   color?: string;
+  [key: string]: any;
 }
 
 export interface Comment {

@@ -8,6 +8,7 @@
     optionCurrent: DropdownOption;
     options: Array<DropdownOption>;
     onSelected: (option: DropdownOption) => Promise<any>;
+    pos?: "left" | "right";
   }>();
 
   const state = {
@@ -66,7 +67,7 @@
       <slot
         name="option-current"
         :option-current="state.optionCurrent.value"
-        :options="props.options"
+        :is-saving-option="state.isSavingOption.value"
       >
         <CBox
           :py="comp.cardPy"
@@ -104,9 +105,10 @@
         v-if="state.isDropdownOpen.value"
         direction="column"
         pos="absolute"
-        left="0"
+        :left="props.pos === 'left' ? 0 : 'initial'"
+        :right="props.pos === 'right' ? 0 : 'initial'"
         py="1"
-        w="fit-content"
+        w="max-content"
         border-radius="lg"
         border="1px solid"
         border-color="gray.100"
@@ -121,10 +123,11 @@
           direction="column"
         >
           <slot
-            name="dropdown-item"
+            name="dropdown-option"
             :option="option"
             :option-current="state.optionCurrent.value"
             :options="props.options"
+            :on-select="onSelect"
           >
             <CFlex
               @click="onSelect(option)"

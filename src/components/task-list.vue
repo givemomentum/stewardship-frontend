@@ -3,7 +3,7 @@
   import { useRuntimeConfig } from "#app";
   import { onMounted, ref, watch } from "vue";
   import { useApi } from "~/composables/useApi";
-  import { Task, PrimaryKey, TaskStatusStr } from "~/interfaces";
+  import { Task, PrimaryKey, User, TaskStatusStr } from "~/interfaces";
   import { useTaskListStore } from "~/stores/useTaskListStore";
   import useUserStore from "~/stores/useUserStore";
   import { formatDistance, format } from "date-fns";
@@ -19,7 +19,19 @@
     taskListStore: useTaskListStore(),
   };
 
-  onMounted(hooks.taskListStore.loadTasks);
+  const state = {
+    users: ref<User[]>([]),
+  };
+
+  onMounted(async () => {
+    await hooks.taskListStore.loadTasks();
+    await loadUsers();
+  });
+  
+  async function loadUsers() {
+    const res = await hooks.api.$get("/users/");
+    state.users.value = res.data;
+  }
 </script>
 
 <template>
@@ -48,7 +60,7 @@
         border="1px solid white"
         :_hover="{ cursor: 'pointer', borderColor: 'gray.200' }"
       >
-        <TaskHead :task="task" :is-preview="true" />
+        <TaskHead :task="task" :is-preview="true" :users="state.users.value" />
   
         <CFlex
           :justify="task.comments_count ? 'space-between' : 'flex-end'"
@@ -80,7 +92,7 @@
     </CFlex>
 
     <DrawlerSimple v-model="hooks.taskListStore.taskOpened.value">
-      <TaskDetails :task="hooks.taskListStore.taskOpened.value" />
+      <TaskDetails :task="hooks.taskListStore.taskOpened.value" :users="state.users.value" />
     </DrawlerSimple>
   </CFlex>
 

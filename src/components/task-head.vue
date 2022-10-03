@@ -1,28 +1,16 @@
 <script lang="ts" setup>
   import { Md5 } from "ts-md5";
-  import { Task, TaskStatusStr } from "~/interfaces";
+  import { Task, TaskStatusStr, User } from "~/interfaces";
   import { CFlex, CBox, CLink, CText, CBadge, CIcon, CHeading } from "@chakra-ui/vue-next";
 
-  const props = defineProps<{ task: Task, isPreview?: boolean; }>();
-
-  function getGravatarURL(email: string) {
-    const emailNormalized = String(email).trim().toLowerCase();
-    return `https://www.gravatar.com/avatar/${Md5.hashStr(emailNormalized)}`;
-  }
+  const props = defineProps<{ task: Task; users: User[]; isPreview?: boolean; }>();
 </script>
 
 <template>
   <CFlex gap="3" direction="column">
     <CFlex align="center" justify="space-between">
       <CText font-size="lg">{{ task.title }}</CText>
-      <chakra.img
-        v-for="assignee in task.assignees"
-        :key="assignee.email"
-        :src="getGravatarURL(assignee.email)"
-        border-radius="full"
-        w="26px"
-        h="26px"
-      />
+      <TaskAssignee :task="props.task" :users="props.users" />
     </CFlex>
     
     <TaskStatus :task="props.task" />
