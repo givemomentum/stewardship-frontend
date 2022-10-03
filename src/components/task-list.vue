@@ -4,6 +4,7 @@
   import { onMounted, ref, watch } from "vue";
   import { useApi } from "~/composables/useApi";
   import { Task, PrimaryKey, TaskStatusStr } from "~/interfaces";
+  import { useTaskListStore } from "~/stores/useTaskListStore";
   import useUserStore from "~/stores/useUserStore";
   import { formatDistance, format } from "date-fns";
 
@@ -15,18 +16,10 @@
     config: useRuntimeConfig(),
     api: useApi(),
     userStore: useUserStore(),
+    taskListStore: useTaskListStore(),
   };
 
-  const state = {
-    tasks: ref<Task[]>([]),
-    taskOpened: ref<Task | null | false>(props.taskOpened ?? null),
-  };
-
-  onMounted(async () => {
-    const res = await hooks.api.$get(`${hooks.config.public.apiBase}/tasks/`);
-    state.tasks.value = res.data ?? [];
-  });
-
+  onMounted(hooks.taskListStore.loadTasks);
 </script>
 
 <template>
@@ -43,9 +36,9 @@
 
     <CFlex gap="6" direction="column">
       <CFlex
-        v-for="task in state.tasks.value"
+        v-for="task in hooks.taskListStore.tasks.value"
         :key="task.pk"
-        @click="state.taskOpened.value = task"
+        @click="hooks.taskListStore.taskOpened.value = task"
         direction="column"
         gap="3"
         p="4"
@@ -86,8 +79,8 @@
       </CFlex>
     </CFlex>
 
-    <DrawlerSimple v-model="state.taskOpened.value">
-      <TaskDetails :task="state.taskOpened.value" />
+    <DrawlerSimple v-model="hooks.taskListStore.taskOpened.value">
+      <TaskDetails :task="hooks.taskListStore.taskOpened.value" />
     </DrawlerSimple>
   </CFlex>
 

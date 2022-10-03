@@ -4,21 +4,7 @@
   import { CFlex, CBox, CLink, CText, CBadge, CIcon, CHeading } from "@chakra-ui/vue-next";
 
   const props = defineProps<{ task: Task, isPreview?: boolean; }>();
-  
-  function getTaskStatusColor(status: TaskStatusStr): string {
-    switch (status) {
-      case "pending": return "gray.500";
-      case "recommended": return "teal.500";
-      case "recommendation_declined": return "gray.500";
-      case "review": return "blue.500";
-      case "scheduled": return "green.500";
-      case "in_progress": return "green.500";
-      case "completed": return "gray.500";
-      case "failed": return "red.500";
-      case "archived": return "red.500";
-    }
-  }
-  
+
   function getGravatarURL(email: string) {
     const emailNormalized = String(email).trim().toLowerCase();
     return `https://www.gravatar.com/avatar/${Md5.hashStr(emailNormalized)}`;

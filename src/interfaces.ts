@@ -9,6 +9,7 @@ export interface User {
 
 export interface Task {
   pk: PrimaryKey;
+  slug: string;
   title: string;
   description: string;
   description_short: string;
@@ -25,6 +26,14 @@ export interface Task {
   comments_count: number;
 }
 
+export interface DropdownOption<Value = any> {
+  id: string | number;
+  value: Value;
+  label?: any;
+  bg?: string;
+  color?: string;
+}
+
 export interface Comment {
   pk: PrimaryKey;
   parent: PrimaryKey;
@@ -37,7 +46,6 @@ export interface Comment {
 }
 
 export type TaskStatusStr = 
-  "draft" |
   "pending" |
   "recommended" |
   "recommendation_declined" |

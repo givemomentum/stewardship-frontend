@@ -8,7 +8,7 @@ export function useApi() {
   }
 
   const axiosInstance = axios.create({
-    baseURL: `${hooks.config.public.serverHostname}/api`,
+    baseURL: `${hooks.config.public.apiBase}`,
     withCredentials: true,
     xsrfHeaderName: security.xsrfHeader,
     xsrfCookieName: security.xsrfCookie,
