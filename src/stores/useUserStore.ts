@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { useApi } from "~/composables/useApi";
-import { PrimaryKey, User } from "~/interfaces";
+import { User } from "~/interfaces";
 import Cookies from "js-cookie";
 import { security } from "~/constants";
 
@@ -26,7 +26,6 @@ export default defineStore("user", {
       this.isLoading = true;
       const api = useApi();
 
-      const res = await api.$get("/users/me/");
       const userRes = await api.$get("/users/me/");
       if (userRes.status === 200) {
         this.user = userRes.data;

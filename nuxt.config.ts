@@ -10,6 +10,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBase: "https://backend.stewardship.givemomentum.com/api",
+      accountsBase: "htts://backend.stewardship.givemomentum.com/accounts",
       env: "dev",
     },
   },
