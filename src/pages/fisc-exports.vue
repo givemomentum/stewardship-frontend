@@ -30,10 +30,10 @@ interface FiscExport {
   <CFlex direction="column" gap="7">
 
     <CHeading
-        font-size="3xl"
-        mt="6"
-        mb="px"
-        font-weight="semibold"
+      font-size="3xl"
+      mt="6"
+      mb="px"
+      font-weight="semibold"
     >
       CSV Exports
     </CHeading>
@@ -49,12 +49,8 @@ interface FiscExport {
 
       <chakra.tbody>
         <chakra.tr
-            v-for="exportItem in state.exports.value"
-            :key="exportItem.pk"
-            :_hover="{
-            bg: 'gray.100',
-            cursor: 'pointer',
-          }"
+          v-for="exportItem in state.exports.value"
+          :key="exportItem.pk"
         >
           <chakra.td>{{ (new Date(exportItem.date)).toLocaleDateString() }}</chakra.td>
           <chakra.td data-is-numeric="true">
@@ -124,7 +120,5 @@ interface FiscExport {
       text-align: right;
     }
   }
-
 }
-
 </style>
