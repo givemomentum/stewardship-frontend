@@ -57,14 +57,24 @@
         >
           <chakra.td>{{(new Date(exportItem.date)).toLocaleDateString()}}</chakra.td>
           <chakra.td data-is-numeric="true">
-            <CBox
+            <CFlex
               ml="auto"
+              justify="center"
+              align="center"
               :bg="exportItem.is_downloaded ? 'blue.500' : 'white'"
               border="1px solid"
               border-color="gray.200"
-              w="18px"
-              h="18px"
-            />
+              w="16px"
+              h="16px"
+            >
+              <CIcon
+                v-if="exportItem.is_downloaded"
+                name="check"
+                w="10px"
+                mt="px"
+                color="white"
+              />
+            </CFlex>
           </chakra.td>
           <chakra.td>
             <CButton size="xs">Download</CButton>
