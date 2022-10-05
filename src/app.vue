@@ -53,7 +53,21 @@
             <CIcon name="task" font-size="2xl" />
             Tasks
           </CLink>
-          
+
+          <CLink
+            variant="side-menu"
+            href="/fisc-exports"
+            :bg="state.urlCurrent.value === '/fisc-exports' ? 'whiteAlpha.300' : ''"
+            :color="state.urlCurrent.value  === '/fisc-exports' ? 'white' : ''"
+          >
+            <CIcon
+              name="oi-table"
+              font-size="2xl"
+              :fill="state.urlCurrent.value  === '/fisc-exports' ? 'white' : 'blue.100'"
+            />
+            FISC CSV Exports
+          </CLink>
+
           <CLink
             variant="side-menu"
             href="/fisc-scans"
