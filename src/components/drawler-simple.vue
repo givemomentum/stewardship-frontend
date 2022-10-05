@@ -1,10 +1,11 @@
 <script lang="ts" setup>
   import { CFlex, CBox, CLink, CText, CBadge, CIcon, CHeading } from "@chakra-ui/vue-next";
-  import { computed, ref } from "vue";
+  import { computed, onMounted, onUnmounted, ref } from "vue";
   import { Task } from "~/interfaces";
 
   const props = defineProps<{
     modelValue: any;
+    w: string;
   }>();
 
   const emit = defineEmits(["update:modelValue"]);
@@ -15,6 +16,22 @@
       set: (value) => emit("update:modelValue", value),
     }),
   };
+  
+  onMounted(async () => {
+    window.addEventListener("keydown", handleKeyUp);
+  });
+  
+  onUnmounted(() => {
+    window.removeEventListener("keydown", handleKeyUp);
+  });
+  
+  function handleKeyUp(event) {
+    const isEscKey = event.keyCode === 27
+    if (isEscKey) {
+      state.isOpened.value = false;
+    }
+  }
+  
 </script>
 
 <template>
@@ -25,7 +42,7 @@
       top="0"
       right="0"
       bottom="0"
-      w="4xl"
+      :w="props.w ?? '4xl'"
       box-shadow="lg"
       bg="gray.75"
       z-index="modal"

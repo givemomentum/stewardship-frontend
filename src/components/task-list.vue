@@ -27,7 +27,7 @@
     await hooks.taskListStore.loadTasks();
     await loadUsers();
   });
-  
+
   async function loadUsers() {
     const res = await hooks.api.$get("/users/");
     state.users.value = res.data;
