@@ -32,6 +32,7 @@ export interface DropdownOption<Value = any> {
   label?: any;
   bg?: string;
   color?: string;
+
   [key: string]: any;
 }
 
@@ -46,7 +47,7 @@ export interface Comment {
   created_at: string;
 }
 
-export type TaskStatusStr = 
+export type TaskStatusStr =
   "pending" |
   "recommended" |
   "recommendation_declined" |
@@ -56,3 +57,14 @@ export type TaskStatusStr =
   "completed" |
   "failed" |
   "archived";
+
+export interface FiscExport {
+  pk: PrimaryKey;
+  org: PrimaryKey;
+  date: string;
+  is_downloaded: boolean;
+  export_url: string;
+  num_scans: number;
+  num_gifts: number;
+  donation_total: number;
+}

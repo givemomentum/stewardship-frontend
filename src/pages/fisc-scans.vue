@@ -3,29 +3,29 @@
   import { onMounted, onUnmounted, ref } from "vue";
   import { useApi } from "~/composables/useApi";
   import { PrimaryKey } from "~/interfaces";
-  
+
   const hooks = {
     api: useApi(),
   }
-  
+
   const state = {
-    scans: ref<CheckScan[]>([]),
+    scans: ref<FiscScan[]>([]),
     scanOpenIndex: ref<number>(null),
-    scanOpen: ref<CheckScan>(null)
+    scanOpen: ref<FiscScan>(null)
   };
-  
+
   onMounted(async () => {
-    const res = await hooks.api.$get("/fisc/check-scans/");
+    const res = await hooks.api.$get("/fisc/scans/");
     const checksNonEmpty = res.data.filter(check => check.date);
     state.scans.value = checksNonEmpty;
-    
+
     window.addEventListener("keydown", handleKeyUp);
   });
-  
+
   onUnmounted(() => {
     window.removeEventListener("keydown", handleKeyUp);
   });
-  
+
   function handleKeyUp(event) {
     if (event.keyCode === 37) {
       onLeftKeyClick();
@@ -34,7 +34,7 @@
       onRightKeyClick();
     }
   }
-  
+
   function onRightKeyClick() {
     const scanNextIndex = state.scanOpenIndex.value + 1;
     const scanNext = state.scans.value[scanNextIndex];
@@ -43,7 +43,7 @@
       state.scanOpenIndex.value = scanNextIndex;
     }
   }
-  
+
   function onLeftKeyClick() {
     const scanPrevIndex = state.scanOpenIndex.value - 1;
     const scanPrev = state.scans.value[scanPrevIndex];
@@ -52,8 +52,8 @@
       state.scanOpenIndex.value = scanPrevIndex;
     }
   }
-  
-  interface CheckScan {
+
+  interface FiscScan {
     pk: PrimaryKey;
     image_front: URL;
     image_back: URL;
@@ -66,7 +66,7 @@
 
 <template>
   <CFlex direction="column" gap="7">
-    
+
     <CHeading
       font-size="3xl"
       mt="6"
@@ -75,18 +75,18 @@
     >
       Scans
     </CHeading>
-    
+
     <chakra.table class="table-small">
       <chakra.thead>
         <chakra.tr>
           <chakra.th>Date</chakra.th>
           <chakra.th data-is-numeric="true">Amount</chakra.th>
-          <chakra.th >Donor ID</chakra.th>
-          <chakra.th >Account ID</chakra.th>
+          <chakra.th>Donor ID</chakra.th>
+          <chakra.th>Account ID</chakra.th>
           <chakra.th>Scans</chakra.th>
         </chakra.tr>
       </chakra.thead>
-  
+
       <chakra.tbody>
         <chakra.tr
           v-for="(scan, scanIndex) in state.scans.value"
@@ -98,10 +98,10 @@
           }"
           :bg="scan.pk === state.scanOpen.value?.pk ? 'gray.200' : ''"
         >
-          <chakra.td>{{(new Date(scan.date)).toLocaleDateString()}}</chakra.td>
-          <chakra.td data-is-numeric="true">${{scan.amount}}</chakra.td>
-          <chakra.td >{{scan.donor_id}}</chakra.td>
-          <chakra.td >{{scan.account}}</chakra.td>
+          <chakra.td>{{ (new Date(scan.date)).toLocaleDateString() }}</chakra.td>
+          <chakra.td data-is-numeric="true">${{ scan.amount }}</chakra.td>
+          <chakra.td>{{ scan.donor_id }}</chakra.td>
+          <chakra.td>{{ scan.account }}</chakra.td>
           <chakra.td>
             <CFlex>
               <chakra.img :src="scan.image_front" max-w="200px" min-h="91px" />
@@ -111,7 +111,7 @@
         </chakra.tr>
       </chakra.tbody>
     </chakra.table>
-    
+
     <DrawlerSimple v-model="state.scanOpen.value" w="6xl">
       <CFlex
         direction="column"
@@ -124,35 +124,35 @@
           <CFlex direction="column">
             <CText font-size="sm" color="gray.500">Date</CText>
             <CText font-size="2xl" color="blue.500">
-              {{(new Date(state.scanOpen.value.date)).toLocaleDateString()}}
+              {{ (new Date(state.scanOpen.value.date)).toLocaleDateString() }}
             </CText>
           </CFlex>
 
           <CFlex direction="column">
             <CText font-size="sm" color="gray.500">Amount</CText>
             <CHeading color="green.500" font-size="2xl">
-              ${{state.scanOpen.value.amount}}
+              ${{ state.scanOpen.value.amount }}
             </CHeading>
           </CFlex>
 
           <CFlex direction="column">
             <CText font-size="sm" color="gray.500">Donor ID</CText>
             <CText font-size="2xl" color="purple.500">
-              {{state.scanOpen.value.donor_id}}
+              {{ state.scanOpen.value.donor_id }}
             </CText>
           </CFlex>
-          
+
           <CFlex direction="column">
             <CText font-size="sm" color="gray.500">Account ID</CText>
             <CText font-size="2xl" color="purple.500">
-              {{state.scanOpen.value.account}}
+              {{ state.scanOpen.value.account }}
             </CText>
           </CFlex>
- 
+
         </CFlex>
-        
-        <chakra.img :src="state.scanOpen.value.image_front"/>
-        <chakra.img :src="state.scanOpen.value.image_back"/>
+
+        <chakra.img :src="state.scanOpen.value.image_front" />
+        <chakra.img :src="state.scanOpen.value.image_back" />
       </CFlex>
     </DrawlerSimple>
 
@@ -177,6 +177,7 @@
       border-color: var(--colors-gray-200);
       border-bottom-width: 1px;
     }
+
     td {
       text-align: start;
       padding-inline-start: var(--space-6);
@@ -187,6 +188,7 @@
       border-color: var(--colors-gray-200);
       border-bottom-width: 1px;
     }
+
     th, td {
       &[data-is-numeric=true] {
         text-align: right;

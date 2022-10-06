@@ -1,9 +1,8 @@
 <script setup lang="ts">
   import { useHead, useRuntimeConfig } from "#app";
   import { CContainer, CIcon, CBox, CLink, CFlex, chakra } from "@chakra-ui/vue-next";
-  import { onMounted, ref } from "vue";
+  import { onMounted } from "vue";
   import useUserStore from "~/stores/useUserStore";
-  import { urls } from "~/urls";
 
   useHead({
     titleTemplate: (titleChunk) => (titleChunk ? `${titleChunk} - Momentum` : "Momentum"),
@@ -14,19 +13,15 @@
     config: useRuntimeConfig(),
     userStore: useUserStore(),
   };
-  
-  const state = {
-    urlCurrent: ref(""),
-  }
+
 
   onMounted(async () => {
     await hooks.userStore.loadUser();
-    state.urlCurrent.value = window.location.pathname;
   });
 </script>
 
 <template>
-    
+
   <CFlex h="100%" align="stretch">
     <CFlex
       direction="column"
@@ -45,46 +40,49 @@
       <CFlex direction="column" mt="6" gap="1">
         <template v-if="hooks.userStore.isLoggedIn">
           <CLink
+            as="RouterLink"
             variant="side-menu"
-            href="/"
-            :bg="state.urlCurrent.value === '/' ? 'whiteAlpha.300' : ''"
-            :color="state.urlCurrent.value  === '/' ? 'white' : ''"
+            to="/"
+            :bg="$route.path === '/' ? 'whiteAlpha.300' : ''"
+            :color="$route.path  === '/' ? 'white' : ''"
           >
             <CIcon name="task" font-size="2xl" />
             Tasks
           </CLink>
 
           <CLink
+            as="RouterLink"
             variant="side-menu"
-            href="/fisc-exports"
-            :bg="state.urlCurrent.value === '/fisc-exports' ? 'whiteAlpha.300' : ''"
-            :color="state.urlCurrent.value  === '/fisc-exports' ? 'white' : ''"
+            to="/fisc-exports"
+            :bg="$route.path === '/fisc-exports' ? 'whiteAlpha.300' : ''"
+            :color="$route.path  === '/fisc-exports' ? 'white' : ''"
           >
             <CIcon
               name="oi-table"
               font-size="2xl"
-              :fill="state.urlCurrent.value  === '/fisc-exports' ? 'white' : 'blue.100'"
+              :fill="$route.path  === '/fisc-exports' ? 'white' : 'blue.100'"
             />
             FISC CSV Exports
           </CLink>
 
           <CLink
+            as="RouterLink"
             variant="side-menu"
-            href="/fisc-scans"
-            :bg="state.urlCurrent.value === '/fisc-scans' ? 'whiteAlpha.300' : ''"
-            :color="state.urlCurrent.value  === '/fisc-scans' ? 'white' : ''"
+            to="/fisc-scans"
+            :bg="$route.path === '/fisc-scans' ? 'whiteAlpha.300' : ''"
+            :color="$route.path  === '/fisc-scans' ? 'white' : ''"
           >
             <CIcon name="dollar" font-size="2xl" />
             FISC Scans
           </CLink>
-  
+
           <CLink
             variant="side-menu"
           >
             <CIcon name="people" font-size="2xl" />
             Donors
           </CLink>
-          
+
           <CLink
             variant="side-menu"
           >
@@ -94,14 +92,14 @@
         </template>
         <template v-else>
           <CLink
-              variant="side-menu"
-              :href="`${hooks.config.public.accountsBase}/login`"
+            variant="side-menu"
+            :href="`${hooks.config.public.accountsBase}/login`"
           >
             Login
           </CLink>
           <CLink
-              variant="side-menu"
-              :href="`${hooks.config.public.accountsBase}/signup`"
+            variant="side-menu"
+            :href="`${hooks.config.public.accountsBase}/signup`"
           >
             Sign up
           </CLink>
