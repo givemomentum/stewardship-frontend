@@ -67,4 +67,5 @@ export interface FiscExport {
   num_scans: number;
   num_gifts: number;
   donation_total: number;
+  file_name: string;
 }

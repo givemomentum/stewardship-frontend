@@ -71,6 +71,7 @@
 </template>
 
 <style lang="scss">
+  // TODO: Factor table styles into a component
   .table-small {
     th {
       font-family: var(--fonts-heading);
