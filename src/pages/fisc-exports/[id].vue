@@ -4,8 +4,6 @@
   import { onBeforeMount, onMounted, ref } from "vue";
   import { FiscExport } from "~/interfaces";
 
-  console.log("ID")
-
   const hooks = {
     route: useRoute(),
     api: useApi(),
@@ -24,6 +22,6 @@
 
 <template>
   <template v-if="state.export.value">
-    <p>Hello {{ state.export.value.pk }}</p>
+    <p>Hello, my ID is {{ state.export.value.pk }}</p>
   </template>
 </template>
