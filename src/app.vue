@@ -89,6 +89,15 @@
             <CIcon name="user" font-size="2xl" />
             Account
           </CLink>
+
+          <CLink
+            v-if="hooks.userStore.user.is_staff"
+            :href="`${hooks.config.public.accountsBase}/../admin`"
+            variant="side-menu"
+          >
+            <CIcon name="user" font-size="2xl" />
+            Admin Panel
+          </CLink>
         </template>
         <template v-else>
           <CLink
