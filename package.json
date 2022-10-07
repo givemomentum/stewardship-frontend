@@ -1,5 +1,5 @@
 {
-  "name": "stewardhsip-frontend",
+  "name": "stewardship-frontend",
   "license": "GPL-3.0-or-later",
   "engines": {
     "node": "^16.0"

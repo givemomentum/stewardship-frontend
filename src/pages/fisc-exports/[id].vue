@@ -27,14 +27,14 @@
     state.export.value = res.data;
   }
 
-  async function loadCSV(path: string, target: ref<CSVData | null>) {
+  async function loadCSV(path: string): Promise<CSVData> {
     const csv = await hooks.api.$get(path);
     const parseResult = Papa.parse(csv.data, { header: true, skipEmptyLines: true });
     if (parseResult.errors.length > 0) {
       console.log(parseResult.errors);
-    // TODO: log to sentry or something
+      // TODO: log to sentry or something
     }
-    target.value = {
+    return {
       headers: csv.data.split(/\r?\n/)[0].split(","),
       rows: parseResult.data,
     };
@@ -42,8 +42,12 @@
 
   onMounted(() => {
     loadExport();
-    loadCSV(`/fisc/exports/${hooks.route.params.id}/download/gifts`, state.gifts);
-    loadCSV(`/fisc/exports/${hooks.route.params.id}/download/optout`, state.optouts);
+    loadCSV(`/fisc/exports/${hooks.route.params.id}/download/gifts`).then((result) => {
+      state.gifts.value = result;
+    });
+    loadCSV(`/fisc/exports/${hooks.route.params.id}/download/optout`).then((result) => {
+      state.optouts.value = result;
+    });
   });
 
 </script>

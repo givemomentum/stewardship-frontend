@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { CFlex, CBox, CButton, CLink, CText, CBadge, CIcon, CHeading, chakra } from "@chakra-ui/vue-next";
+  import { CFlex, CButton, CText, CHeading, chakra } from "@chakra-ui/vue-next";
   import { onMounted, onUnmounted, ref } from "vue";
   import { useApi } from "~/composables/useApi";
   import { PrimaryKey } from "~/interfaces";
@@ -27,11 +27,8 @@
   };
 
   onMounted(async () => {
-    const res = await hooks.api.$get("/fisc/scans/");
-    const checksNonEmpty = res.data.filter((check) => check.date);
     const res = await hooks.api.$get(`/fisc/scans/?date=${hooks.route.params.date}`);
-    const checksNonEmpty = res.data.filter(check => check.date);
-    state.scans.value = checksNonEmpty;
+    state.scans.value = res.data;
 
     window.addEventListener("keydown", handleKeyUp);
   });

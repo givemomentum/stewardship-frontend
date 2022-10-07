@@ -37,23 +37,23 @@
 
   function getStatusDropdownOption(status: TaskStatusStr): DropdownOption<TaskStatusStr> {
     switch (status) {
-      case "pending":
-        return { id: status, value: status, label: status.replace("_", " "), color: "gray.800", bg: "gray.100" };
-      case "recommended":
-        return { id: status, value: status, label: status.replace("_", " "), color: "teal.800", bg: "teal.100" };
-      case "review":
-        return { id: status, value: status, label: status.replace("_", " "), color: "blue.800", bg: "blue.100" };
-      case "scheduled":
-        return { id: status, value: status, label: status.replace("_", " "), color: "green.800", bg: "green.100" };
-      case "in_progress":
-        return { id: status, value: status, label: status.replace("_", " "), color: "green.800", bg: "green.100" };
-      case "completed":
-        return { id: status, value: status, label: status.replace("_", " "), color: "gray.800", bg: "gray.100" };
-      case "failed":
-        return { id: status, value: status, label: status.replace("_", " "), color: "red.800", bg: "red.100" };
-      case "archived":
-        return { id: status, value: status, label: status.replace("_", " "), color: "red.800", bg: "red.100" };
-      }
+    case "pending":
+      return { id: status, value: status, label: status.replace("_", " "), color: "gray.800", bg: "gray.100" };
+    case "recommended":
+      return { id: status, value: status, label: status.replace("_", " "), color: "teal.800", bg: "teal.100" };
+    case "review":
+      return { id: status, value: status, label: status.replace("_", " "), color: "blue.800", bg: "blue.100" };
+    case "scheduled":
+      return { id: status, value: status, label: status.replace("_", " "), color: "green.800", bg: "green.100" };
+    case "in_progress":
+      return { id: status, value: status, label: status.replace("_", " "), color: "green.800", bg: "green.100" };
+    case "completed":
+      return { id: status, value: status, label: status.replace("_", " "), color: "gray.800", bg: "gray.100" };
+    case "failed":
+      return { id: status, value: status, label: status.replace("_", " "), color: "red.800", bg: "red.100" };
+    case "archived":
+      return { id: status, value: status, label: status.replace("_", " "), color: "red.800", bg: "red.100" };
+    }
   }
 
 </script>

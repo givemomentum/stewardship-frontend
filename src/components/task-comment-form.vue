@@ -39,7 +39,7 @@
     }
 
     try {
-      const res = await hooks.api.$post(`${hooks.config.public.apiBase}/comments/`, {
+      await hooks.api.$post(`${hooks.config.public.apiBase}/comments/`, {
         author_pk: hooks.userStore.user.pk,
         content: state.replyContent.value,
         task: props.taskPk,

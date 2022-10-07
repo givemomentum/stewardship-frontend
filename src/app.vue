@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { useHead, useRuntimeConfig } from "#app";
-  import { CContainer, CIcon, CBox, CLink, CFlex, chakra } from "@chakra-ui/vue-next";
+  import { CIcon, CBox, CLink, CFlex, chakra } from "@chakra-ui/vue-next";
   import { onMounted } from "vue";
   import useUserStore from "~/stores/useUserStore";
 
@@ -43,7 +43,7 @@
             variant="side-menu"
             to="/"
             :bg="$route.path === '/' ? 'whiteAlpha.300' : ''"
-            :color="$route.path  === '/' ? 'white' : ''"
+            :color="$route.path === '/' ? 'white' : ''"
           >
             <CIcon name="task" font-size="2xl" />
             Tasks
@@ -54,12 +54,12 @@
             variant="side-menu"
             to="/fisc-exports"
             :bg="$route.path === '/fisc-exports' ? 'whiteAlpha.300' : ''"
-            :color="$route.path  === '/fisc-exports' ? 'white' : ''"
+            :color="$route.path === '/fisc-exports' ? 'white' : ''"
           >
             <CIcon
               name="oi-table"
               font-size="2xl"
-              :fill="$route.path  === '/fisc-exports' ? 'white' : 'blue.100'"
+              :fill="$route.path === '/fisc-exports' ? 'white' : 'blue.100'"
             />
             FISC Gift Exports
           </CLink>

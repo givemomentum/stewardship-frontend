@@ -31,6 +31,7 @@ module.exports = {
     "@typescript-eslint/quotes": 0, // disable single quotes enforcement
     "@typescript-eslint/indent": 0, // incompatible with indents in .vue <script setup>
     "unused-imports/no-unused-imports": ["error"],
+    "vue/multi-word-component-names": 0,
     "vue/script-indent": [
       "error",
       2,
