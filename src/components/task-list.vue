@@ -1,12 +1,12 @@
 <script setup lang="ts">
-  import { CFlex, CBox, CLink, CText, CBadge, CIcon, CHeading } from "@chakra-ui/vue-next";
+  import { CFlex, CText, CIcon, CHeading } from "@chakra-ui/vue-next";
   import { useRuntimeConfig } from "#app";
-  import { onMounted, ref, watch } from "vue";
+  import { onMounted, ref } from "vue";
   import { useApi } from "~/composables/useApi";
-  import { Task, PrimaryKey, User, TaskStatusStr } from "~/interfaces";
+  import { Task, User } from "~/interfaces";
   import { useTaskListStore } from "~/stores/useTaskListStore";
   import useUserStore from "~/stores/useUserStore";
-  import { formatDistance, format } from "date-fns";
+  import { formatDistance } from "date-fns";
 
   const props = defineProps<{
     taskOpened?: Task;
@@ -36,7 +36,7 @@
 
 <template>
   <CFlex v-if="hooks.userStore.isLoggedIn" direction="column" gap="7">
-    
+
     <CHeading
       font-size="3xl"
       mt="6"
@@ -61,24 +61,24 @@
         :_hover="{ cursor: 'pointer', borderColor: 'gray.200' }"
       >
         <TaskHead :task="task" :is-preview="true" :users="state.users.value" />
-  
+
         <CFlex
           :justify="task.comments_count ? 'space-between' : 'flex-end'"
           align="center"
           font-size="xs"
           color="gray.500"
         >
-  
+
           <CFlex
             v-if="task.comments_count"
             align="center"
             color="gray.500"
             gap="1"
           >
-            <CIcon name="message-square"/>
+            <CIcon name="message-square" />
             <CText>{{task.comments_count}}</CText>
           </CFlex>
-          
+
           <CFlex>
             {{
               formatDistance(new Date(task.created_at), new Date(), {
@@ -86,7 +86,7 @@
               })
             }}
           </CFlex>
-  
+
         </CFlex>
       </CFlex>
     </CFlex>
@@ -107,7 +107,7 @@
     background: var(--colors-gray-75) !important;
     height: 100%;
   }
-  
+
   // chakra drawer is broken, revisit one they fix it
   .chakra-modal__content-container {
     width: 0;

@@ -10,16 +10,14 @@ interface State {
 }
 
 export default defineStore("user", {
-  state: (): State => {
-    return {
-      user: null,
-      isLoading: true,
-    }
-  },
+  state: (): State => ({
+    user: null,
+    isLoading: true,
+  }),
   getters: {
     isLoggedIn(state: State): boolean {
       return !!state.user;
-    }
+    },
   },
   actions: {
     async loadUser() {
@@ -41,9 +39,9 @@ export default defineStore("user", {
     async logout() {
       this.isLoading = true;
       const api = useApi();
-      await api.$post("/users/logout/")
+      await api.$post("/users/logout/");
       this.user = null;
       this.isLoading = false;
-    }
+    },
   },
 });

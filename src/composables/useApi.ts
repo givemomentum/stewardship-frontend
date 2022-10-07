@@ -5,7 +5,7 @@ import { security } from "~/constants";
 export function useApi() {
   const hooks = {
     config: useRuntimeConfig(),
-  }
+  };
 
   const axiosInstance = axios.create({
     baseURL: `${hooks.config.public.apiBase}`,
@@ -14,7 +14,7 @@ export function useApi() {
     xsrfCookieName: security.xsrfCookie,
     validateStatus: function (status) {
       return status < 400 || status === 403;
-    }
+    },
   });
 
   async function $get(path: string, config?: any) {
@@ -38,6 +38,6 @@ export function useApi() {
   }
 
   return {
-    $get, $delete, $post: $post, $put, $patch
+    $get, $delete, $post: $post, $put, $patch,
   };
 }

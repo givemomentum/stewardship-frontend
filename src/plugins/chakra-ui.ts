@@ -47,7 +47,7 @@ export default defineNuxtPlugin((nuxtApp) => {
                 color: "white",
                 textDecoration: "none",
               },
-            }
+            },
           },
         },
         FormLabel: {
@@ -59,7 +59,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       colors: {
         gray: {
           75: "#f4f8fb",
-        }
+        },
       },
     }),
     icons: {

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-  import { CFlex, CBox, CLink, CSpinner, CText, CBadge, CIcon, CHeading } from "@chakra-ui/vue-next";
+  import { CFlex, CBox, CSpinner } from "@chakra-ui/vue-next";
   import { captureException } from "@sentry/hub";
-  import { computed, ref, watch } from "vue";
+  import { ref, watch } from "vue";
   import { DropdownOption } from "~/interfaces";
 
   const props = defineProps<{
@@ -16,13 +16,13 @@
     isDropdownOpen: ref(false),
     isSavingOption: ref(false),
   };
-  
+
   const comp = {
     hoverFilter: "brightness(95%) saturate(105%)",
     cardPx: 2,
     cardPy: "2px",
   };
-  
+
   watch(() => props.optionCurrent, () => {
     state.optionCurrent.value = props.optionCurrent;
   });

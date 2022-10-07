@@ -1,12 +1,10 @@
 <script lang="ts" setup>
   import { Md5 } from "ts-md5";
-  import { ref } from "vue";
   import { useApi } from "~/composables/useApi";
-  import { PrimaryKey, Task, TaskStatusStr, User } from "~/interfaces";
-  import { CFlex, CBox, CLink, CText, CSpinner, CBadge, CIcon, CHeading } from "@chakra-ui/vue-next";
-  import { DropdownOption } from "~/interfaces";
-  import OptionSelect from "~/components/option-select";
+  import { PrimaryKey, Task, User, DropdownOption } from "~/interfaces";
+  import { CFlex } from "@chakra-ui/vue-next";
   import { useTaskListStore } from "~/stores/useTaskListStore";
+  import OptionSelect from "~/components/option-select";
 
   const props = defineProps<{ task: Task; users: User[] }>();
 
@@ -14,10 +12,10 @@
     api: useApi(),
     taskListStore: useTaskListStore(),
   };
-  
+
   const comp = {
     imgSize: "26px",
-  }
+  };
 
   async function onSelected(optionNew: DropdownOption<PrimaryKey>) {
     const res = await hooks.api.$patch(
@@ -36,16 +34,16 @@
       value: assignee.pk,
       label: `${assignee.first_name} ${assignee.last_name}`,
       email: assignee.email,
-    }
+    };
   }
 
   function getGravatarURL(email: string) {
     const emailNormalized = String(email).trim().toLowerCase();
     return `https://www.gravatar.com/avatar/${Md5.hashStr(emailNormalized)}`;
   }
-  
+
   function serializeUsersAsOptions(): Array<DropdownOption<PrimaryKey>> {
-    return props.users.map(user => getAssigneeDropdownOption(user));
+    return props.users.map((user) => getAssigneeDropdownOption(user));
   }
 </script>
 

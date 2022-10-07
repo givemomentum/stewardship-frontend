@@ -8,7 +8,7 @@
   const hooks = {
     route: useRoute(),
     api: useApi(),
-  }
+  };
 
   interface FiscScan {
     pk: PrimaryKey;
@@ -23,10 +23,12 @@
   const state = {
     scans: ref<FiscScan[]>([]),
     scanOpenIndex: ref<number>(null),
-    scanOpen: ref<FiscScan>(null)
+    scanOpen: ref<FiscScan>(null),
   };
 
   onMounted(async () => {
+    const res = await hooks.api.$get("/fisc/scans/");
+    const checksNonEmpty = res.data.filter((check) => check.date);
     const res = await hooks.api.$get(`/fisc/scans/?date=${hooks.route.params.date}`);
     const checksNonEmpty = res.data.filter(check => check.date);
     state.scans.value = checksNonEmpty;

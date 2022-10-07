@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-  import { useRuntimeConfig, useState } from "#app";
-  import { CHeading, CFlex, CBox, CButton, CLink, CInput, CText, chakra } from "@chakra-ui/vue-next";
+  import { useRuntimeConfig } from "#app";
+  import { CFlex, CBox, CButton } from "@chakra-ui/vue-next";
   import { FormKitNode } from "@formkit/core";
   import { captureEvent } from "@sentry/hub";
-  import { onMounted, onUpdated, ref } from "vue";
+  import { ref } from "vue";
   import NuxtCkeditor from "~/components/nuxt-ckeditor.vue";
   import { useApi } from "~/composables/useApi";
   import { strings } from "~/constants";
@@ -59,7 +59,7 @@
   <CBox class="comment comment-form">
     <FormKit type="form" :actions="false" @submit="submitComment">
       <NuxtCkeditor v-model="state.replyContent.value" />
-      
+
       <CFlex justify="flex-start" mt="4" gap="4">
         <FormKit
           type="submit"

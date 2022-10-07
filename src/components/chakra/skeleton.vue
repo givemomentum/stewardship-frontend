@@ -1,13 +1,13 @@
 <script lang="ts">
-import { CBox } from "@chakra-ui/vue-next";
-import { vueThemingProps } from "@chakra-ui/vue-utils";
+  import { CBox } from "@chakra-ui/vue-next";
+  import { vueThemingProps } from "@chakra-ui/vue-utils";
 
-export default {
-  props: vueThemingProps,
-  components: {
-    CBox,
-  },
-};
+  export default {
+    props: vueThemingProps,
+    components: {
+      CBox,
+    },
+  };
 </script>
 
 <template>

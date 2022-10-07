@@ -14,7 +14,6 @@
     userStore: useUserStore(),
   };
 
-
   onMounted(async () => {
     await hooks.userStore.loadUser();
   });

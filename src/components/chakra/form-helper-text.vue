@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { CBox } from "@chakra-ui/vue-next";
+  import { CBox } from "@chakra-ui/vue-next";
 
-const props = defineProps<{ text: string }>();
+  const props = defineProps<{ text: string }>();
 </script>
 
 <template>

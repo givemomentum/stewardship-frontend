@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-  import { CFlex, CBox, CLink, CText, CBadge, CIcon, CHeading } from "@chakra-ui/vue-next";
-  import { computed, onMounted, onUnmounted, ref } from "vue";
-  import { Task } from "~/interfaces";
+  import { CBox } from "@chakra-ui/vue-next";
+  import { computed, onMounted, onUnmounted } from "vue";
 
   const props = defineProps<{
     modelValue: any;
@@ -16,22 +15,22 @@
       set: (value) => emit("update:modelValue", value),
     }),
   };
-  
+
   onMounted(async () => {
     window.addEventListener("keydown", handleKeyUp);
   });
-  
+
   onUnmounted(() => {
     window.removeEventListener("keydown", handleKeyUp);
   });
-  
+
   function handleKeyUp(event) {
-    const isEscKey = event.keyCode === 27
+    const isEscKey = event.keyCode === 27;
     if (isEscKey) {
       state.isOpened.value = false;
     }
   }
-  
+
 </script>
 
 <template>
@@ -47,7 +46,7 @@
       bg="gray.75"
       z-index="modal"
       overflow-y="scroll"
-     >
+    >
       <slot />
     </CBox>
 

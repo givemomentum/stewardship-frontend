@@ -1,23 +1,23 @@
 <script lang="ts" setup>
-import { CFlex } from "@chakra-ui/vue-next";
-import { computed, ref } from "vue";
+  import { CFlex } from "@chakra-ui/vue-next";
+  import { computed, ref } from "vue";
 
-const props = defineProps<{ modelValue: boolean }>();
+  const props = defineProps<{ modelValue: boolean }>();
 
-const state = {
-  id: ref(Math.random().toString(16).slice(2)),
-};
+  const state = {
+    id: ref(Math.random().toString(16).slice(2)),
+  };
 
-const emit = defineEmits(["update:modelValue"]);
+  const emit = defineEmits(["update:modelValue"]);
 
-const value = computed({
-  get() {
-    return props.modelValue;
-  },
-  set(valueNew) {
-    emit("update:modelValue", valueNew);
-  },
-});
+  const value = computed({
+    get() {
+      return props.modelValue;
+    },
+    set(valueNew) {
+      emit("update:modelValue", valueNew);
+    },
+  });
 </script>
 
 <template>
@@ -47,13 +47,13 @@ const value = computed({
             stroke-dashoffset: 0;
           "
         >
-          <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+          <polyline points="1.5 6 4.5 9 10.5 1" />
         </svg>
       </CFlex>
     </CFlex>
 
     <span class="chakra-checkbox__label">
-      <slot></slot>
+      <slot />
     </span>
   </label>
 </template>

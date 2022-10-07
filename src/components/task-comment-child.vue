@@ -1,29 +1,28 @@
 <script lang="ts" setup>
-import { useRuntimeConfig, useState } from "#app";
-import { CHeading, CFlex, CBox, CButton, CLink, CInput, CText, chakra } from "@chakra-ui/vue-next";
-import { formatDistance, subDays } from "date-fns";
-import { onMounted, onUpdated, ref } from "vue";
-import JobCommentForm from "~/components/task-comment-form.vue";
-import { Comment, PrimaryKey } from "~/interfaces";
+  import { CFlex, CBox, CButton, CText } from "@chakra-ui/vue-next";
+  import { formatDistance } from "date-fns";
+  import { ref } from "vue";
+  import JobCommentForm from "~/components/task-comment-form.vue";
+  import { Comment } from "~/interfaces";
 
-const props = defineProps<{ taskPk: number | string; comment: Comment; isLastThreadLevel?: true; }>();
+  const props = defineProps<{ taskPk: number | string; comment: Comment; isLastThreadLevel?: true; }>();
 
-const state = {
-  isEditorVisible: ref(false),
-}
+  const state = {
+    isEditorVisible: ref(false),
+  };
 
-const emit = defineEmits<{
-  (event: "commentPosted"): void;
-}>();
+  const emit = defineEmits<{
+    (event: "commentPosted"): void;
+  }>();
 
-function formatDate(date: string) {
-  return formatDistance(new Date(date), new Date(), { addSuffix: true })
-}
+  function formatDate(date: string) {
+    return formatDistance(new Date(date), new Date(), { addSuffix: true });
+  }
 
-function onCommentPosted() {
-  state.isEditorVisible.value = false;
-  emit("commentPosted");
-}
+  function onCommentPosted() {
+    state.isEditorVisible.value = false;
+    emit("commentPosted");
+  }
 
 </script>
 
@@ -35,7 +34,7 @@ function onCommentPosted() {
       </CFlex>
       <CBox mt="0.5" v-html="comment.content" />
     </CBox>
-    
+
     <CFlex align="center" gap="3" pl="3" mt="0.5">
       <CButton
         @click="state.isEditorVisible.value = true"
@@ -48,7 +47,7 @@ function onCommentPosted() {
       <CBox w="3px" h="3px" mt="5px" bg="gray.300" border-radius="100%" />
       <CText color="gray.400" font-size="xs" mt="1">{{ formatDate(comment.created_at) }}</CText>
     </CFlex>
-    
+
     <CBox mt="3" v-if="state.isEditorVisible.value" pl="3" class="comment-form">
       <JobCommentForm
         :task-pk="props.taskPk"

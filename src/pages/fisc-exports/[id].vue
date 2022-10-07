@@ -1,10 +1,10 @@
 <script setup lang="ts">
-  import { CFlex, CBox, CLink, CText, CBadge, CIcon, CHeading, CButton, chakra } from "@chakra-ui/vue-next";
+  import { CFlex, CHeading, CButton, chakra } from "@chakra-ui/vue-next";
   import { useRoute } from "#app";
   import { useApi } from "#imports";
   import { onMounted, ref } from "vue";
   import { FiscExport } from "~/interfaces";
-  import Papa from 'papaparse';
+  import Papa from "papaparse";
 
   const hooks = {
     route: useRoute(),
@@ -32,12 +32,12 @@
     const parseResult = Papa.parse(csv.data, { header: true, skipEmptyLines: true });
     if (parseResult.errors.length > 0) {
       console.log(parseResult.errors);
-      // TODO: log to sentry or something
+    // TODO: log to sentry or something
     }
     target.value = {
       headers: csv.data.split(/\r?\n/)[0].split(","),
       rows: parseResult.data,
-    }
+    };
   }
 
   onMounted(() => {
@@ -94,8 +94,10 @@
             v-for="row in state.gifts.value.rows"
             :key="row['DONOR_ID']"
           >
-            <chakra.td v-for="header in state.gifts.value.headers" :key="header"
-                       :data-is-numeric="!isNaN(row[header])">{{ row[header] }}
+            <chakra.td
+              v-for="header in state.gifts.value.headers"
+              :key="header"
+              :data-is-numeric="!isNaN(row[header])">{{ row[header] }}
             </chakra.td>
           </chakra.tr>
         </chakra.tbody>

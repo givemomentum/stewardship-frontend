@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { CFlex, CBox, CLink, CText, CBadge, CIcon, CHeading, CButton, chakra } from "@chakra-ui/vue-next";
-  import { onMounted, onUnmounted, ref } from "vue";
+  import { CFlex, CHeading, CButton, chakra } from "@chakra-ui/vue-next";
+  import { onMounted, ref } from "vue";
   import { useApi } from "~/composables/useApi";
   import { FiscExport } from "~/interfaces";
 
@@ -16,7 +16,6 @@
     const res = await hooks.api.$get("/fisc/exports/");
     state.exports.value = res.data;
   });
-
 
 </script>
 
@@ -39,7 +38,7 @@
           <chakra.th data-is-numeric="true">Donation total</chakra.th>
           <chakra.th data-is-numeric="true">Number of gifts</chakra.th>
           <chakra.th data-is-numeric="true">Number of scans</chakra.th>
-          <chakra.th></chakra.th>
+          <chakra.th />
         </chakra.tr>
       </chakra.thead>
 

@@ -11,12 +11,12 @@ export function useTaskListStore() {
   const hooks = {
     api: useApi(),
   };
-  
+
   async function loadTasks() {
     const res = await hooks.api.$get("/tasks/");
     state.tasks.value = res.data ?? [];
   }
-  
+
   return {
     tasks: state.tasks,
     taskOpened: state.taskOpened,

@@ -15,12 +15,12 @@ export default function (args: {
 
   const hooks = {
     api: useApi(),
-  }
+  };
 
   async function submit(data: any, node: FormKitNode) {
     state.isSuccess.value = false;
     try {
-      const res = await hooks.api.$post(args.path, {...data, ...args.dataExtra});
+      const res = await hooks.api.$post(args.path, { ...data, ...args.dataExtra });
       if (res.data.is_success === true) {
         state.isSuccess.value = true;
         node.reset();

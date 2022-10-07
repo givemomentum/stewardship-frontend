@@ -18,4 +18,4 @@ export const strings = {
 export const security = {
   xsrfHeader: "x-csrftoken",
   xsrfCookie: "csrftoken",
-}
+};

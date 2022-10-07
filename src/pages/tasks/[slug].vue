@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { useRoute } from "#app";
   import { useApi } from "#imports";
-  import { onBeforeMount, onMounted, ref } from "vue";
+  import { onBeforeMount, ref } from "vue";
   import { Task } from "~/interfaces";
 
   const hooks = {

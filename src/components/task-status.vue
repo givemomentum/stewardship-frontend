@@ -1,11 +1,8 @@
 <script lang="ts" setup>
-  import { ref } from "vue";
   import { useApi } from "~/composables/useApi";
-  import { Task, TaskStatusStr } from "~/interfaces";
-  import { CFlex, CBox, CLink, CText, CSpinner, CBadge, CIcon, CHeading } from "@chakra-ui/vue-next";
-  import { DropdownOption } from "~/interfaces";
-  import OptionSelect from "~/components/option-select";
+  import { Task, TaskStatusStr, DropdownOption } from "~/interfaces";
   import { useTaskListStore } from "~/stores/useTaskListStore";
+  import OptionSelect from "~/components/option-select";
 
   const props = defineProps<{ task: Task }>();
 
@@ -56,7 +53,7 @@
         return { id: status, value: status, label: status.replace("_", " "), color: "red.800", bg: "red.100" };
       case "archived":
         return { id: status, value: status, label: status.replace("_", " "), color: "red.800", bg: "red.100" };
-    }
+      }
   }
 
 </script>
