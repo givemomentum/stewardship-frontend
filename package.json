@@ -47,6 +47,7 @@
     "@babel/core": "^7.18.13",
     "@nuxt/kit": "^3.0.0-rc.11",
     "@nuxt/ui": "^0.3.3",
+    "@types/papaparse": "^5.3.5",
     "@typescript-eslint/eslint-plugin": "^5.33.1",
     "@typescript-eslint/parser": "^5.0.0",
     "@vue/compiler-sfc": "^3.0.0-0",

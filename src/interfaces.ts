@@ -64,9 +64,11 @@ export interface FiscExport {
   org: PrimaryKey;
   date: string;
   is_downloaded: boolean;
-  export_url: string;
+  gifts_export_url: string;
+  optout_export_url: string;
   num_scans: number;
   num_gifts: number;
+  num_optouts: number;
   donation_total: number;
   file_name: string;
 }

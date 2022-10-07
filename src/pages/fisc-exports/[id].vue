@@ -11,10 +11,15 @@
     api: useApi(),
   };
 
+  interface CSVData {
+    headers: string[],
+    rows: any[],
+  }
+
   const state = {
     export: ref<FiscExport | null>(null),
-    csvData: ref<any[] | null>(null),
-    headers: ref<string[] | null>(null),
+    gifts: ref<CSVData | null>(null),
+    optouts: ref<CSVData | null>(null),
   };
 
   async function loadExport() {
@@ -22,22 +27,23 @@
     state.export.value = res.data;
   }
 
-  async function loadCSV() {
-    const csv = await hooks.api.$get(`/fisc/exports/${hooks.route.params.id}/download`)
-    const parseResult = Papa.parse(csv.data, { header: true });
-    if (parseResult.error) {
-      console.log(parseResult.error);
+  async function loadCSV(path: string, target: ref<CSVData | null>) {
+    const csv = await hooks.api.$get(path);
+    const parseResult = Papa.parse(csv.data, { header: true, skipEmptyLines: true });
+    if (parseResult.errors.length > 0) {
+      console.log(parseResult.errors);
       // TODO: log to sentry or something
     }
-    state.headers.value = csv.data.split(/\r?\n/)[0].split(",");
-    state.csvData.value = parseResult.data;
-    console.log(state.headers.value);
-    console.log(state.csvData.value);
+    target.value = {
+      headers: csv.data.split(/\r?\n/)[0].split(","),
+      rows: parseResult.data,
+    }
   }
 
   onMounted(() => {
     loadExport();
-    loadCSV();
+    loadCSV(`/fisc/exports/${hooks.route.params.id}/download/gifts`, state.gifts);
+    loadCSV(`/fisc/exports/${hooks.route.params.id}/download/optout`, state.optouts);
   });
 
 </script>
@@ -53,20 +59,62 @@
       >
         {{ state.export.value.file_name }}
       </CHeading>
-      <chakra.table class="table-small" v-if="state.csvData.value">
+      <CFlex gap="4">
+        <NuxtLink :to="state.export.value.gifts_export_url" target="_blank">
+          <CButton borderRadius="6">
+            Export Gifts
+          </CButton>
+        </NuxtLink>
+        <NuxtLink :to="state.export.value.optout_export_url" target="_blank">
+          <CButton borderRadius="6">
+            Export Optout List
+          </CButton>
+        </NuxtLink>
+      </CFlex>
+      <CHeading
+        font-size="xl"
+        font-weight="semibold"
+      >
+        Export preview:
+      </CHeading>
+      <chakra.table class="table-small" v-if="state.gifts.value">
         <chakra.thead>
           <chakra.tr>
-            <chakra.th v-for="header in state.headers.value" :key="header">{{ header }}</chakra.th>
+            <chakra.th v-for="header in state.gifts.value.headers" :key="header">{{ header }}</chakra.th>
           </chakra.tr>
         </chakra.thead>
 
         <chakra.tbody>
           <chakra.tr
-            v-for="row in state.csvData.value"
+            v-for="row in state.gifts.value.rows"
             :key="row['DONOR_ID']"
           >
-            <chakra.td v-for="header in state.headers.value" :key="header"
+            <chakra.td v-for="header in state.gifts.value.headers" :key="header"
                        :data-is-numeric="!isNaN(row[header])">{{ row[header] }}
+            </chakra.td>
+          </chakra.tr>
+        </chakra.tbody>
+      </chakra.table>
+
+      <CHeading
+        font-size="xl"
+        font-weight="semibold"
+      >
+        Opt-out list preview:
+      </CHeading>
+      <chakra.table class="table-small" v-if="state.optouts.value" width="auto">
+        <chakra.thead>
+          <chakra.tr>
+            <chakra.th v-for="header in state.optouts.value.headers" :key="header">{{ header }}</chakra.th>
+          </chakra.tr>
+        </chakra.thead>
+
+        <chakra.tbody>
+          <chakra.tr
+            v-for="row in state.optouts.value.rows"
+            :key="row['DONOR_ID']"
+          >
+            <chakra.td v-for="header in state.optouts.value.headers" :key="header">{{ row[header] }}
             </chakra.td>
           </chakra.tr>
         </chakra.tbody>
