@@ -57,17 +57,22 @@
         mb="px"
         font-weight="semibold"
       >
-        {{ state.export.value.file_name }}
+        FISC export: {{ state.export.value.file_name }}
       </CHeading>
       <CFlex gap="4">
+        <NuxtLink :to="`/fisc-exports/scans/${state.export.value.date}?export=${state.export.value.pk}`">
+          <CButton borderRadius="6">
+            Review scans
+          </CButton>
+        </NuxtLink>
         <NuxtLink :to="state.export.value.gifts_export_url" target="_blank">
           <CButton borderRadius="6">
-            Export Gifts
+            Download gifts CSV
           </CButton>
         </NuxtLink>
         <NuxtLink :to="state.export.value.optout_export_url" target="_blank">
           <CButton borderRadius="6">
-            Export Optout List
+            Download optout list
           </CButton>
         </NuxtLink>
       </CFlex>

@@ -62,18 +62,7 @@
               font-size="2xl"
               :fill="$route.path  === '/fisc-exports' ? 'white' : 'blue.100'"
             />
-            FISC CSV Exports
-          </CLink>
-
-          <CLink
-            as="RouterLink"
-            variant="side-menu"
-            to="/fisc-scans"
-            :bg="$route.path === '/fisc-scans' ? 'whiteAlpha.300' : ''"
-            :color="$route.path  === '/fisc-scans' ? 'white' : ''"
-          >
-            <CIcon name="dollar" font-size="2xl" />
-            FISC Scans
+            FISC Gift Exports
           </CLink>
 
           <CLink

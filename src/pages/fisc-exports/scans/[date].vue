@@ -1,11 +1,23 @@
 <script setup lang="ts">
-  import { CFlex, CBox, CLink, CText, CBadge, CIcon, CHeading, chakra } from "@chakra-ui/vue-next";
+  import { CFlex, CBox, CButton, CLink, CText, CBadge, CIcon, CHeading, chakra } from "@chakra-ui/vue-next";
   import { onMounted, onUnmounted, ref } from "vue";
   import { useApi } from "~/composables/useApi";
   import { PrimaryKey } from "~/interfaces";
+  import { useRoute } from "#app";
 
   const hooks = {
+    route: useRoute(),
     api: useApi(),
+  }
+
+  interface FiscScan {
+    pk: PrimaryKey;
+    image_front: URL;
+    image_back: URL;
+    account: number;
+    donor_id: number;
+    date?: string;
+    amount: string;
   }
 
   const state = {
@@ -15,7 +27,7 @@
   };
 
   onMounted(async () => {
-    const res = await hooks.api.$get("/fisc/scans/");
+    const res = await hooks.api.$get(`/fisc/scans/?date=${hooks.route.params.date}`);
     const checksNonEmpty = res.data.filter(check => check.date);
     state.scans.value = checksNonEmpty;
 
@@ -52,16 +64,6 @@
       state.scanOpenIndex.value = scanPrevIndex;
     }
   }
-
-  interface FiscScan {
-    pk: PrimaryKey;
-    image_front: URL;
-    image_back: URL;
-    account: number;
-    donor_id: number;
-    date?: string;
-    amount: string;
-  }
 </script>
 
 <template>
@@ -73,8 +75,14 @@
       mb="px"
       font-weight="semibold"
     >
-      Scans
+      Scans for {{ (new Date($route.params.date)).toLocaleDateString() }}
     </CHeading>
+
+    <NuxtLink :to="`/fisc-exports/${$route.query.export || ''}`">
+      <CButton borderRadius="6">
+        Back to gifts
+      </CButton>
+    </NuxtLink>
 
     <chakra.table class="table-small">
       <chakra.thead>
