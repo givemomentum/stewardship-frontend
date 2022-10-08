@@ -1,24 +1,17 @@
 <script setup lang="ts">
-  import { CFlex, CButton, CText, CHeading, chakra } from "@chakra-ui/vue-next";
+  import { CFlex, CText, CHeading, chakra } from "@chakra-ui/vue-next";
   import { onMounted, onUnmounted, ref } from "vue";
+  import MenuBreadcrumbs from "~/components/menu/menu-breadcrumbs.vue";
   import { useApi } from "~/composables/useApi";
-  import { PrimaryKey } from "~/interfaces";
+  import { FiscGift, FiscOptOut, PrimaryKey } from "~/interfaces";
   import { useRoute } from "#app";
+  import { urls } from "~/urls";
+  import { toLocalDate } from "~/utils";
 
   const hooks = {
     route: useRoute(),
     api: useApi(),
   };
-
-  interface FiscScan {
-    pk: PrimaryKey;
-    image_front: URL;
-    image_back: URL;
-    account: number;
-    donor_id: number;
-    date?: string;
-    amount: string;
-  }
 
   const state = {
     scans: ref<FiscScan[]>([]),
@@ -37,60 +30,60 @@
     window.removeEventListener("keydown", handleKeyUp);
   });
 
-  function handleKeyUp(event) {
-    if (event.keyCode === 37) {
-      onLeftKeyClick();
+  function handleKeyUp(event: KeyboardEvent) {
+    if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      changeScanIndex(-1);
     }
-    if (event.keyCode === 39) {
-      onRightKeyClick();
-    }
-  }
-
-  function onRightKeyClick() {
-    const scanNextIndex = state.scanOpenIndex.value + 1;
-    const scanNext = state.scans.value[scanNextIndex];
-    if (scanNext) {
-      state.scanOpen.value = scanNext;
-      state.scanOpenIndex.value = scanNextIndex;
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+      changeScanIndex(+1);
     }
   }
 
-  function onLeftKeyClick() {
-    const scanPrevIndex = state.scanOpenIndex.value - 1;
-    const scanPrev = state.scans.value[scanPrevIndex];
-    if (scanPrev) {
-      state.scanOpen.value = scanPrev;
-      state.scanOpenIndex.value = scanPrevIndex;
+  function changeScanIndex(change: -1 | 1) {
+    const scanIndexNew = state.scanOpenIndex.value + change;
+    const scanNew = state.scans.value[scanIndexNew];
+    if (scanNew) {
+      state.scanOpen.value = scanNew;
+      state.scanOpenIndex.value = scanIndexNew;
     }
+  }
+
+  interface FiscScan {
+    pk: PrimaryKey;
+    image_front: URL;
+    image_back: URL;
+    account: number;
+    donor_id: number;
+    date?: string;
+    amount: string;
+    gift?: FiscGift;
+    optout?: FiscOptOut;
+    is_viewed: boolean;
+    is_duplicated: boolean;
   }
 </script>
 
 <template>
   <CFlex direction="column" gap="7">
 
-    <CHeading
-      font-size="3xl"
-      mt="6"
-      mb="px"
-      font-weight="semibold"
-    >
-      Scans for {{ (new Date($route.params.date)).toLocaleDateString() }}
+    <MenuBreadcrumbs
+      :items="[
+        { label: 'FISC Exports', url: urls.fiscExport.list },
+        { label: toLocalDate(state.scans.value[0]?.date), url: urls.fiscExport.detail($route.params.id) },
+        { label: 'Scans', isCurrentPage: true },
+      ]" />
+
+    <CHeading variant="page-header">
+      Scans for {{ toLocalDate($route.params.date) }}
     </CHeading>
 
-    <NuxtLink :to="`/fisc-exports/${$route.query.export || ''}`">
-      <CButton borderRadius="6">
-        Back to gifts
-      </CButton>
-    </NuxtLink>
-
-    <chakra.table class="table-small">
+    <ChakraTable size="sm">
       <chakra.thead>
         <chakra.tr>
           <chakra.th>Date</chakra.th>
           <chakra.th data-is-numeric="true">Amount</chakra.th>
-          <chakra.th>Donor ID</chakra.th>
-          <chakra.th>Account ID</chakra.th>
-          <chakra.th>Scans</chakra.th>
+          <chakra.th>First Name</chakra.th>
+          <chakra.th>Last Name</chakra.th>
         </chakra.tr>
       </chakra.thead>
 
@@ -107,25 +100,17 @@
         >
           <chakra.td>{{ (new Date(scan.date)).toLocaleDateString() }}</chakra.td>
           <chakra.td data-is-numeric="true">${{ scan.amount }}</chakra.td>
-          <chakra.td>{{ scan.donor_id }}</chakra.td>
-          <chakra.td>{{ scan.account }}</chakra.td>
-          <chakra.td>
-            <CFlex>
-              <chakra.img :src="scan.image_front" max-w="200px" min-h="91px" />
-              <chakra.img :src="scan.image_back" max-w="200px" min-h="91px" />
-            </CFlex>
-          </chakra.td>
+          <chakra.td>{{ scan.gift?.first_name }}</chakra.td>
+          <chakra.td>{{ scan.gift?.last_name }}</chakra.td>
         </chakra.tr>
       </chakra.tbody>
-    </chakra.table>
+    </ChakraTable>
 
     <DrawlerSimple v-model="state.scanOpen.value" w="6xl">
       <CFlex
         direction="column"
         p="8"
         gap="4"
-        @keyup.left="onLeftKeyClick()"
-        @keyup.right="onRightKeyClick()"
       >
         <CFlex gap="8" mb="2" mt="-2" align="center">
           <CFlex direction="column">
@@ -156,6 +141,13 @@
             </CText>
           </CFlex>
 
+          <CFlex direction="column">
+            <CText font-size="sm" color="gray.500">Is duplicate</CText>
+            <CText font-size="2xl" color="purple.500">
+              {{ state.scanOpen.value.is_duplicated }}
+            </CText>
+          </CFlex>
+
         </CFlex>
 
         <chakra.img :src="state.scanOpen.value.image_front" />
@@ -165,43 +157,3 @@
 
   </CFlex>
 </template>
-
-<style lang="scss">
-  .table-small {
-    th {
-      font-family: var(--fonts-heading);
-      font-weight: var(--fontWeights-bold);
-      text-transform: uppercase;
-      letter-spacing: var(--letterSpacings-wider);
-      text-align: start;
-      padding-inline-start: var(--space-6);
-      padding-inline-end: var(--space-6);
-      padding-top: var(--space-3);
-      padding-bottom: var(--space-3);
-      line-height: var(--lineHeights-4);
-      font-size: var(--fontSizes-xs);
-      color: var(--colors-gray-600);
-      border-color: var(--colors-gray-200);
-      border-bottom-width: 1px;
-    }
-
-    td {
-      text-align: start;
-      padding-inline-start: var(--space-6);
-      padding-inline-end: var(--space-6);
-      padding-top: var(--space-4);
-      padding-bottom: var(--space-4);
-      line-height: var(--lineHeights-5);
-      border-color: var(--colors-gray-200);
-      border-bottom-width: 1px;
-    }
-
-    th, td {
-      &[data-is-numeric=true] {
-        text-align: right;
-      }
-    }
-
-  }
-
-</style>

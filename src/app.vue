@@ -25,16 +25,28 @@
     <CFlex
       direction="column"
       p="6"
-      min-w="350px"
+      pr="10"
       h="auto"
       min-h="100vh"
       color="blue.100"
       bg="blue.800"
       font-size="lg"
     >
-      <CBox pl="1">
-        <chakra.img src="/momentum-logo.svg" color="white" max-w="200px" />
-      </CBox>
+      <CFlex pl="1" gap="4" align="center">
+        <chakra.img src="/momentum-logo.svg" color="white" max-w="185px" />
+        <CBox
+          mt="7px"
+          px="10px"
+          py="1px"
+          pt="2px"
+          bg="blue.100"
+          color="blue.900"
+          border-radius="lg"
+          font-size="xs"
+        >
+          ALPHA
+        </CBox>
+      </CFlex>
 
       <CFlex direction="column" mt="6" gap="1">
         <template v-if="hooks.userStore.isLoggedIn">
@@ -61,7 +73,7 @@
               font-size="2xl"
               :fill="$route.path === '/fisc-exports' ? 'white' : 'blue.100'"
             />
-            FISC Gift Exports
+            FISC Exports
           </CLink>
 
           <CLink
@@ -105,7 +117,7 @@
 
     </CFlex>
 
-    <CFlex px="10">
+    <CFlex px="10" pt="6">
       <NuxtPage />
     </CFlex>
 

@@ -3,6 +3,7 @@
   import { onMounted, ref } from "vue";
   import { useApi } from "~/composables/useApi";
   import { FiscExport } from "~/interfaces";
+  import { urls } from "~/urls";
 
   const hooks = {
     api: useApi(),
@@ -16,7 +17,6 @@
     const res = await hooks.api.$get("/fisc/exports/");
     state.exports.value = res.data;
   });
-
 </script>
 
 <template>
@@ -24,20 +24,19 @@
 
     <CHeading
       font-size="3xl"
-      mt="6"
       mb="px"
       font-weight="semibold"
     >
       CSV Exports
     </CHeading>
 
-    <chakra.table class="table-small">
+    <ChakraTable>
       <chakra.thead>
         <chakra.tr>
           <chakra.th>Date</chakra.th>
           <chakra.th data-is-numeric="true">Donation total</chakra.th>
-          <chakra.th data-is-numeric="true">Number of gifts</chakra.th>
-          <chakra.th data-is-numeric="true">Number of scans</chakra.th>
+          <chakra.th data-is-numeric="true">Gifts</chakra.th>
+          <chakra.th data-is-numeric="true">Scans</chakra.th>
           <chakra.th />
         </chakra.tr>
       </chakra.thead>
@@ -58,52 +57,13 @@
             {{ exportItem.num_scans }}
           </chakra.td>
           <chakra.td>
-            <NuxtLink :to="`/fisc-exports/${exportItem.pk}`">
+            <NuxtLink :to="urls.fiscExport.detail(exportItem.pk)">
               <CButton size="sm">Review</CButton>
             </NuxtLink>
           </chakra.td>
         </chakra.tr>
       </chakra.tbody>
-    </chakra.table>
+    </ChakraTable>
 
   </CFlex>
 </template>
-
-<style lang="scss">
-  // TODO: Factor table styles into a component
-  .table-small {
-    th {
-      font-family: var(--fonts-heading);
-      font-weight: var(--fontWeights-bold);
-      text-transform: uppercase;
-      letter-spacing: var(--letterSpacings-wider);
-      text-align: start;
-      padding-inline-start: var(--space-6);
-      padding-inline-end: var(--space-6);
-      padding-top: var(--space-3);
-      padding-bottom: var(--space-3);
-      line-height: var(--lineHeights-4);
-      font-size: var(--fontSizes-xs);
-      color: var(--colors-gray-600);
-      border-color: var(--colors-gray-200);
-      border-bottom-width: 1px;
-    }
-
-    td {
-      text-align: start;
-      padding-inline-start: var(--space-6);
-      padding-inline-end: var(--space-6);
-      padding-top: var(--space-4);
-      padding-bottom: var(--space-4);
-      line-height: var(--lineHeights-5);
-      border-color: var(--colors-gray-200);
-      border-bottom-width: 1px;
-    }
-
-    th, td {
-      &[data-is-numeric=true] {
-        text-align: right;
-      }
-    }
-  }
-</style>

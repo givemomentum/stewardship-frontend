@@ -37,12 +37,7 @@
 <template>
   <CFlex v-if="hooks.userStore.isLoggedIn" direction="column" gap="7">
 
-    <CHeading
-      font-size="3xl"
-      mt="6"
-      mb="px"
-      font-weight="semibold"
-    >
+    <CHeading variant="page-header">
       Tasks
     </CHeading>
 

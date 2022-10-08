@@ -16,6 +16,15 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(ChakraUIVuePlugin, {
     extendTheme: extendTheme({
       components: {
+        Heading: {
+          variants: {
+            "page-header": {
+              fontWeight: "normal",
+              fontSize: "3xl",
+              mb: "px",
+            },
+          },
+        },
         Button: {
           defaultProps: {
             colorScheme: "blue",

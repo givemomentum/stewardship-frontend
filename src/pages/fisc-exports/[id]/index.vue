@@ -2,8 +2,10 @@
   import { CFlex, CHeading, CButton, chakra } from "@chakra-ui/vue-next";
   import { useRoute } from "#app";
   import { useApi } from "#imports";
+  import { captureException } from "@sentry/hub";
   import { onMounted, ref } from "vue";
   import { FiscExport } from "~/interfaces";
+  import { urls } from "~/urls";
   import Papa from "papaparse";
 
   const hooks = {
@@ -31,8 +33,10 @@
     const csv = await hooks.api.$get(path);
     const parseResult = Papa.parse(csv.data, { header: true, skipEmptyLines: true });
     if (parseResult.errors.length > 0) {
-      console.log(parseResult.errors);
-      // TODO: log to sentry or something
+      captureException(
+        new Error("failed to load CSV"),
+        { extra: { path, errors: parseResult.errors } },
+      );
     }
     return {
       headers: csv.data.split(/\r?\n/)[0].split(","),
@@ -49,7 +53,6 @@
       state.optouts.value = result;
     });
   });
-
 </script>
 
 <template>
@@ -57,14 +60,14 @@
     <template v-if="state.export.value">
       <CHeading
         font-size="3xl"
-        mt="6"
         mb="px"
         font-weight="semibold"
       >
         FISC export: {{ state.export.value.file_name }}
       </CHeading>
+
       <CFlex gap="4">
-        <NuxtLink :to="`/fisc-exports/scans/${state.export.value.date}?export=${state.export.value.pk}`">
+        <NuxtLink :to="urls.fiscExport.detailScans(state.export.value.pk, state.export.value.date)">
           <CButton borderRadius="6">
             Review scans
           </CButton>
@@ -80,13 +83,14 @@
           </CButton>
         </NuxtLink>
       </CFlex>
+
       <CHeading
         font-size="xl"
         font-weight="semibold"
       >
-        Export preview:
+        Gifts preview:
       </CHeading>
-      <chakra.table class="table-small" v-if="state.gifts.value">
+      <ChakraTable size="sm" v-if="state.gifts.value">
         <chakra.thead>
           <chakra.tr>
             <chakra.th v-for="header in state.gifts.value.headers" :key="header">{{ header }}</chakra.th>
@@ -105,15 +109,16 @@
             </chakra.td>
           </chakra.tr>
         </chakra.tbody>
-      </chakra.table>
+      </ChakraTable>
 
       <CHeading
         font-size="xl"
         font-weight="semibold"
       >
-        Opt-out list preview:
+        Opt-out preview:
       </CHeading>
-      <chakra.table class="table-small" v-if="state.optouts.value" width="auto">
+
+      <ChakraTable size="sm" v-if="state.optouts.value">
         <chakra.thead>
           <chakra.tr>
             <chakra.th v-for="header in state.optouts.value.headers" :key="header">{{ header }}</chakra.th>
@@ -129,46 +134,7 @@
             </chakra.td>
           </chakra.tr>
         </chakra.tbody>
-      </chakra.table>
+      </ChakraTable>
     </template>
   </CFlex>
 </template>
-
-<style lang="scss">
-  // TODO: Factor table styles into a component
-  .table-small {
-    th {
-      font-family: var(--fonts-heading);
-      font-weight: var(--fontWeights-bold);
-      text-transform: uppercase;
-      letter-spacing: var(--letterSpacings-wider);
-      text-align: start;
-      padding-inline-start: var(--space-6);
-      padding-inline-end: var(--space-6);
-      padding-top: var(--space-3);
-      padding-bottom: var(--space-3);
-      line-height: var(--lineHeights-4);
-      font-size: var(--fontSizes-xs);
-      color: var(--colors-gray-600);
-      border-color: var(--colors-gray-200);
-      border-bottom-width: 1px;
-    }
-
-    td {
-      text-align: start;
-      padding-inline-start: var(--space-6);
-      padding-inline-end: var(--space-6);
-      padding-top: var(--space-4);
-      padding-bottom: var(--space-4);
-      line-height: var(--lineHeights-5);
-      border-color: var(--colors-gray-200);
-      border-bottom-width: 1px;
-    }
-
-    th, td {
-      &[data-is-numeric=true] {
-        text-align: right;
-      }
-    }
-  }
-</style>
