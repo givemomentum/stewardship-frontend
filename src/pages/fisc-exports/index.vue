@@ -4,6 +4,7 @@
   import { useApi } from "~/composables/useApi";
   import { FiscExport } from "~/interfaces";
   import { urls } from "~/urls";
+  import { toLocalDate } from "~/utils";
 
   const hooks = {
     api: useApi(),
@@ -46,7 +47,7 @@
           v-for="exportItem in state.exports.value"
           :key="exportItem.pk"
         >
-          <chakra.td>{{ (new Date(exportItem.date)).toLocaleDateString() }}</chakra.td>
+          <chakra.td>{{ toLocalDate(exportItem.date) }}</chakra.td>
           <chakra.td data-is-numeric="true">
             ${{ exportItem.donation_total }}
           </chakra.td>

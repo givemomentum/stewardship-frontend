@@ -1,6 +1,8 @@
+import { parseISO } from "date-fns";
+
 export function toLocalDate(date?: string) {
   if (date) {
-    return (new Date(date)).toLocaleDateString();
+    return parseISO(date).toLocaleDateString();
   }
   return "";
 }

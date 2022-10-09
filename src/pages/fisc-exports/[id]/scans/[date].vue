@@ -98,7 +98,7 @@
           }"
           :bg="scan.pk === state.scanOpen.value?.pk ? 'gray.200' : ''"
         >
-          <chakra.td>{{ (new Date(scan.date)).toLocaleDateString() }}</chakra.td>
+          <chakra.td>{{ toLocalDate(scan.date) }}</chakra.td>
           <chakra.td data-is-numeric="true">${{ scan.amount }}</chakra.td>
           <chakra.td>{{ scan.gift?.first_name }}</chakra.td>
           <chakra.td>{{ scan.gift?.last_name }}</chakra.td>
@@ -116,7 +116,7 @@
           <CFlex direction="column">
             <CText font-size="sm" color="gray.500">Date</CText>
             <CText font-size="2xl" color="blue.500">
-              {{ (new Date(state.scanOpen.value.date)).toLocaleDateString() }}
+              {{ toLocalDate(state.scanOpen.value.date) }}
             </CText>
           </CFlex>
 
