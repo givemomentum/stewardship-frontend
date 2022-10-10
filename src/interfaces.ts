@@ -113,3 +113,17 @@ export interface FiscOptOut {
   state: string;
   zip: string;
 }
+
+export interface FiscScan {
+  pk: PrimaryKey;
+  image_front: URL;
+  image_back: URL;
+  account: number;
+  donor_id: number;
+  date?: string;
+  amount: string;
+  gift?: FiscGift;
+  optout?: FiscOptOut;
+  is_viewed: boolean;
+  is_duplicated: boolean;
+}

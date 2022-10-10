@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { useHead, useRuntimeConfig } from "#app";
-  import { CIcon, CBox, CLink, CFlex, chakra } from "@chakra-ui/vue-next";
+  import { CFlex } from "@chakra-ui/vue-next";
   import { onMounted } from "vue";
   import useUserStore from "~/stores/useUserStore";
 

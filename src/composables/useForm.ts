@@ -1,6 +1,6 @@
 import { FormKitNode } from "@formkit/core";
 import { captureException } from "@sentry/hub";
-import { Ref, ref } from "vue";
+import { ref } from "vue";
 import { strings } from "~/constants";
 import { useApi } from "~/composables/useApi";
 
@@ -28,7 +28,7 @@ export function useForm(args: {
       if (typeof args.path === "function") {
         path = args.path(args.getPathArg());
       }
-      let resArgs = { ...data, ...args.dataExtra };
+      const resArgs = { ...data, ...args.dataExtra };
       if (args.method === "PATCH") {
         await hooks.api.$patch(path, resArgs);
       } else if (args.method === "POST") {

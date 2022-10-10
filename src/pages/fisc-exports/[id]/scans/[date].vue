@@ -1,12 +1,11 @@
 <script setup lang="ts">
   import { useRoute } from "#app";
-  import { CFlex, CText, CHeading, chakra } from "@chakra-ui/vue-next";
-  import { onBeforeMount, onMounted, onUnmounted, ref, watch } from "vue";
+  import { CFlex, chakra } from "@chakra-ui/vue-next";
+  import { onBeforeMount, onMounted, onUnmounted, ref } from "vue";
   import MenuBreadcrumbs from "~/components/menu/menu-breadcrumbs.vue";
   import { useApi } from "~/composables/useApi";
-  import { useForm } from "~/composables/useForm";
   import { useLeftMenu } from "~/composables/useLeftMenu";
-  import { FiscGift, FiscOptOut, PrimaryKey } from "~/interfaces";
+  import { FiscScan } from "~/interfaces";
   import { urls } from "~/urls";
   import { toLocaleDateString } from "~/utils";
 
@@ -14,23 +13,16 @@
     route: useRoute(),
     api: useApi(),
     menu: useLeftMenu(),
-    form: useForm({
-      path: (giftPk: PrimaryKey) => `fisc/gifts/${giftPk}/`,
-      getPathArg: () => state.scanOpen.value.gift.pk,
-      method: "PATCH",
-      onSuccess: loadScans,
-    }),
   };
 
   const state = {
     scans: ref<FiscScan[]>([]),
     scanOpenIndex: ref<number>(null),
     scanOpen: ref<FiscScan>(null),
-    gift: ref<FiscGift>(null),
   };
 
   const tableRefs = ref([]);
-  
+
   onBeforeMount(() => {
     hooks.menu.collapse();
   });
@@ -43,15 +35,6 @@
   onUnmounted(() => {
     hooks.menu.unfold();
     window.removeEventListener("keydown", handleKeyUp);
-  });
-  
-  watch(state.scanOpen, (scanNew: FiscScan) => {
-    state.gift.value = null;
-    // formkit isn't good at changes detection on :value wo setTimeout
-    // and v-model of course writes back to the given object
-    setTimeout(() => {
-      state.gift.value = scanNew.gift;
-    }, 30);
   });
 
   async function loadScans() {
@@ -74,29 +57,15 @@
     if (scanNew) {
       state.scanOpen.value = scanNew;
       state.scanOpenIndex.value = scanIndexNew;
-      
+
       // doesn't work wo setTimeout, prob a Vue render issue
       setTimeout(() => {
         tableRefs.value[scanIndexNew].scrollIntoView({
           behavior: "smooth",
-          block: "center"
+          block: "center",
         });
       }, 0);
     }
-  }
-
-  interface FiscScan {
-    pk: PrimaryKey;
-    image_front: URL;
-    image_back: URL;
-    account: number;
-    donor_id: number;
-    date?: string;
-    amount: string;
-    gift?: FiscGift;
-    optout?: FiscOptOut;
-    is_viewed: boolean;
-    is_duplicated: boolean;
   }
 </script>
 
@@ -104,7 +73,7 @@
   <CFlex gap="7" pb="8">
 
     <CFlex direction="column">
-      
+
       <MenuBreadcrumbs
         :items="[
           { label: 'FISC Exports', url: urls.fiscExport.list },
@@ -124,7 +93,7 @@
               <chakra.th data-is-numeric="true">Amount</chakra.th>
             </chakra.tr>
           </chakra.thead>
-  
+
           <chakra.tbody>
             <!-- <tr ref="{}"> must be assigned wo `state.{}` and on native html elements -->
             <tr
@@ -148,7 +117,7 @@
           </chakra.tbody>
         </ChakraTable>
       </CFlex>
-      
+
     </CFlex>
 
     <CFlex pos="relative" w="100%">
@@ -168,47 +137,11 @@
           <chakra.img :src="state.scanOpen.value.image_front" />
           <chakra.img :src="state.scanOpen.value.image_back" />
         </CFlex>
-        
-        <CFlex direction="column" v-if="state.gift.value" gap="4">
-          <CHeading font-size="2xl">Update Gift</CHeading>
-          
-          <FormKit
-            type="form"
-            @submit="hooks.form.submit"
-            :actions="false"
-            :value="state.gift.value"
-          >
-            <CFlex justify="flex-start" direction="column">
-              <CFlex gap="4">
-                <FormKit name="first_name" label="first_name" />
-                <FormKit name="last_name" label="last_name" />
-              </CFlex>
-              
-              <FormKit name="address" label="address" />
-              
-              <CFlex gap="4">
-                <FormKit name="address2" label="address2" />
-                <FormKit name="zip" label="zip" />
-              </CFlex>
 
-              <CFlex gap="4">
-                <FormKit name="city" label="city" />
-                <FormKit name="state" label="state" />
-              </CFlex>
-              
-              <FormKit name="ty_letter_no" label="ty_letter_no" />
-
-              <CFlex gap="4">
-                <FormKit name="sub_solicit_code" label="sub_solicit_code" />
-                <FormKit name="gift_narrative" label="gift_narrative" />
-              </CFlex>
-              
-              <FormKit name="gift_narrative" label="gift_narrative" />
-
-              <FormKit type="submit" label="Save" size="md" />
-            </CFlex>
-          </FormKit>
-        </CFlex>
+        <FiscGiftForm
+          :scan-open="state.scanOpen.value"
+          :load-scans="loadScans"
+        />
 
       </CFlex>
     </CFlex>

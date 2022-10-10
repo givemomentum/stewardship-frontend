@@ -15,5 +15,5 @@ export function useLeftMenu() {
     isFullWidth: isFullWidth,
     collapse: collapse,
     unfold: unfold,
-  }
+  };
 }
