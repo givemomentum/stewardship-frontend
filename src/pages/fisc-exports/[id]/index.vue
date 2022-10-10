@@ -58,12 +58,8 @@
 <template>
   <CFlex direction="column" gap="7">
     <template v-if="state.export.value">
-      <CHeading
-        font-size="3xl"
-        mb="px"
-        font-weight="semibold"
-      >
-        FISC export: {{ state.export.value.file_name }}
+      <CHeading variant="page-header">
+        FISC export
       </CHeading>
 
       <CFlex gap="4">
@@ -88,7 +84,7 @@
         font-size="xl"
         font-weight="semibold"
       >
-        Gifts preview:
+        Gifts preview
       </CHeading>
       <ChakraTable size="sm" v-if="state.gifts.value">
         <chakra.thead>
@@ -115,13 +111,15 @@
         font-size="xl"
         font-weight="semibold"
       >
-        Opt-out preview:
+        Opt-out preview
       </CHeading>
 
       <ChakraTable size="sm" v-if="state.optouts.value">
         <chakra.thead>
           <chakra.tr>
-            <chakra.th v-for="header in state.optouts.value.headers" :key="header">{{ header }}</chakra.th>
+            <chakra.th v-for="header in state.optouts.value.headers" :key="header">
+              {{ header }}
+            </chakra.th>
           </chakra.tr>
         </chakra.thead>
 
@@ -130,7 +128,8 @@
             v-for="row in state.optouts.value.rows"
             :key="row['DONOR_ID']"
           >
-            <chakra.td v-for="header in state.optouts.value.headers" :key="header">{{ row[header] }}
+            <chakra.td v-for="header in state.optouts.value.headers" :key="header">
+              {{ row[header] }}
             </chakra.td>
           </chakra.tr>
         </chakra.tbody>

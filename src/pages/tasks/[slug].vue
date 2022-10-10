@@ -14,7 +14,7 @@
   };
 
   onBeforeMount(async () => {
-    const res = await hooks.api.$get(`/tasks/${$route.params.slug}`);
+    const res = await hooks.api.$get(`/tasks/${hooks.route.params.slug}`);
     state.task.value = res.data;
   });
 

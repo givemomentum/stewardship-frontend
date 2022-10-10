@@ -4,7 +4,7 @@
   import { useApi } from "~/composables/useApi";
   import { FiscExport } from "~/interfaces";
   import { urls } from "~/urls";
-  import { toLocalDate } from "~/utils";
+  import { toLocaleDateString } from "~/utils";
 
   const hooks = {
     api: useApi(),
@@ -23,11 +23,7 @@
 <template>
   <CFlex direction="column" gap="7">
 
-    <CHeading
-      font-size="3xl"
-      mb="px"
-      font-weight="semibold"
-    >
+    <CHeading variant="page-header">
       CSV Exports
     </CHeading>
 
@@ -35,7 +31,7 @@
       <chakra.thead>
         <chakra.tr>
           <chakra.th>Date</chakra.th>
-          <chakra.th data-is-numeric="true">Donation total</chakra.th>
+          <chakra.th data-is-numeric="true">Total</chakra.th>
           <chakra.th data-is-numeric="true">Gifts</chakra.th>
           <chakra.th data-is-numeric="true">Scans</chakra.th>
           <chakra.th />
@@ -47,7 +43,7 @@
           v-for="exportItem in state.exports.value"
           :key="exportItem.pk"
         >
-          <chakra.td>{{ toLocalDate(exportItem.date) }}</chakra.td>
+          <chakra.td>{{ toLocaleDateString(exportItem.date) }}</chakra.td>
           <chakra.td data-is-numeric="true">
             ${{ exportItem.donation_total }}
           </chakra.td>
