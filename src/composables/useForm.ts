@@ -5,8 +5,7 @@ import { strings } from "~/constants";
 import { useApi } from "~/composables/useApi";
 
 export function useForm(args: {
-  path: string | ((arg: any) => string);
-  getPathArg?: () => any;
+  path: string | (() => string);
   dataExtra?: any;
   serializers?: { [key: string]: (value: any) => any };
   method?: "POST" | "PATCH";
@@ -26,12 +25,13 @@ export function useForm(args: {
     try {
       let path = args.path as string;
       if (typeof args.path === "function") {
-        path = args.path(args.getPathArg());
+        path = args.path();
       }
       const resArgs = { ...data, ...args.dataExtra };
-      if (args.method === "PATCH") {
+      const method = args.method ?? "POST";
+      if (method === "PATCH") {
         await hooks.api.$patch(path, resArgs);
-      } else if (args.method === "POST") {
+      } else if (method === "POST") {
         await hooks.api.$post(path, resArgs);
       }
       state.isSuccess.value = true;

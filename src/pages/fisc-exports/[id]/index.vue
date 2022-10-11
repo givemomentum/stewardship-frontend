@@ -7,6 +7,7 @@
   import { FiscExport } from "~/interfaces";
   import { urls } from "~/urls";
   import Papa from "papaparse";
+  import { toLocaleDateString } from "~/utils";
 
   const hooks = {
     route: useRoute(),
@@ -56,11 +57,18 @@
 </script>
 
 <template>
-  <CFlex direction="column" gap="7">
+  <CFlex direction="column" gap="7" pb="8">
     <template v-if="state.export.value">
-      <CHeading variant="page-header">
-        FISC export
-      </CHeading>
+
+      <MenuBreadcrumbs
+        :items="[
+          { label: 'FISC Exports', url: urls.fiscExport.list },
+          {
+            label: state.export.value ? toLocaleDateString(state.export.value?.date) : '00/00/2022',
+            isCurrentPage: true,
+          },
+        ]"
+      />
 
       <CFlex gap="4">
         <NuxtLink :to="urls.fiscExport.detailScans(state.export.value.pk, state.export.value.date)">

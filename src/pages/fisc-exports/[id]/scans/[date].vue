@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { useRoute } from "#app";
-  import { CFlex, chakra } from "@chakra-ui/vue-next";
-  import { onBeforeMount, onMounted, onUnmounted, ref } from "vue";
+  import { CFlex, chakra, CBox } from "@chakra-ui/vue-next";
+  import { onBeforeMount, onMounted, onUnmounted, ref, watch } from "vue";
   import MenuBreadcrumbs from "~/components/menu/menu-breadcrumbs.vue";
   import { useApi } from "~/composables/useApi";
   import { useLeftMenu } from "~/composables/useLeftMenu";
@@ -37,6 +37,11 @@
     window.removeEventListener("keydown", handleKeyUp);
   });
 
+  watch(state.scanOpen, async (scanNew) => {
+    await hooks.api.$patch(`/fisc/scans/${scanNew.pk}/`, { is_viewed: true });
+    scanNew.is_viewed = true;
+  });
+
   async function loadScans() {
     const res = await hooks.api.$get(`/fisc/scans/?date=${hooks.route.params.date}`);
     state.scans.value = res.data;
@@ -70,7 +75,7 @@
 </script>
 
 <template>
-  <CFlex gap="7" pb="8">
+  <CFlex gap="4" pb="8">
 
     <CFlex direction="column">
 
@@ -86,11 +91,13 @@
       />
 
       <CFlex h="fit-content">
-        <ChakraTable size="sm" min-w="300px" mt="8">
+        <ChakraTable size="sm" min-w="370px" mt="8">
           <chakra.thead>
             <chakra.tr>
+              <chakra.th>Donor ID</chakra.th>
               <chakra.th>Name</chakra.th>
               <chakra.th data-is-numeric="true">Amount</chakra.th>
+              <chakra.th>Duplicate</chakra.th>
             </chakra.tr>
           </chakra.thead>
 
@@ -102,17 +109,37 @@
               :key="scan.pk"
               @click="state.scanOpen.value = scan; state.scanOpenIndex.value = scanIndex;"
               :data-is-selected="scan.pk === state.scanOpen.value?.pk"
+              :data-is-viewed="scan.is_viewed"
               class="table-row"
             >
+              <chakra.td pr="0 !important">
+                {{ scan.donor_id }}
+              </chakra.td>
+
               <chakra.td
                 white-space="nowrap"
                 v-if="scan.gift?.first_name"
                 pr="0 !important"
+                max-w="130px"
+                overflow-x="hidden"
               >
                 {{ scan.gift?.first_name }} {{ scan.gift?.last_name }}
               </chakra.td>
-              <chakra.td v-else>-</chakra.td>
+              <chakra.td v-else />
+
               <chakra.td data-is-numeric="true">${{ scan.amount }}</chakra.td>
+              <chakra.td>
+                <CBox
+                  v-if="scan.is_duplicated"
+                  px="1"
+                  font-size="xs"
+                  bg="teal.500"
+                  color="white"
+                  border-radius="md"
+                >
+                  Duplicate
+                </CBox>
+              </chakra.td>
             </tr>
           </chakra.tbody>
         </ChakraTable>
@@ -129,7 +156,7 @@
         overflow-y="auto"
         top="0"
         p="8"
-        pt="8"
+        pt=""
         pl="4"
         gap="8"
       >
@@ -139,6 +166,12 @@
         </CFlex>
 
         <FiscGiftForm
+          v-if="state.scanOpen.value.gift"
+          :scan-open="state.scanOpen.value"
+          :load-scans="loadScans"
+        />
+        <FiscOptOutForm
+          v-else
           :scan-open="state.scanOpen.value"
           :load-scans="loadScans"
         />
@@ -157,6 +190,9 @@
     }
     &[data-is-selected=true] {
       background: var(--colors-gray-200);
+    }
+    &[data-is-viewed=false] {
+      color: var(--colors-blue-500);
     }
   }
 </style>

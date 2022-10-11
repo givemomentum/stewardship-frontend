@@ -24,7 +24,7 @@
   <CFlex h="100%" align="stretch">
     <MenuLeft />
 
-    <CFlex px="10" pt="6">
+    <CFlex px="10" pt="6" pr="6">
       <NuxtPage />
     </CFlex>
 

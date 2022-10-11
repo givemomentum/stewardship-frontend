@@ -7,7 +7,7 @@
 </script>
 
 <template>
-  <chakra.table :data-size="'md'">
+  <chakra.table :data-size="props.size ?? 'md'" class="table">
     <slot />
   </chakra.table>
 </template>
@@ -40,12 +40,12 @@
     }
   }
 
-  table[data-size=sm] {
+  table[data-size=md] {
     @extend .table;
 
-    $px: var(--space-5);
-    $py-th: var(--space-2);
-    $py: var(--space-3);
+    $px: var(--space-6);
+    $py-th: var(--space-4);
+    $py: var(--space-4);
 
     th {
       padding-inline-start: $px;
@@ -62,12 +62,12 @@
     }
   }
 
-  table[data-size=md] {
+  table[data-size=sm] {
     @extend .table;
 
-    $px: var(--space-6);
-    $py-th: var(--space-4);
-    $py: var(--space-4);
+    $px: var(--space-4);
+    $py-th: var(--space-2);
+    $py: var(--space-3);
 
     th {
       padding-inline-start: $px;

@@ -76,10 +76,13 @@ export interface FiscExport {
 export interface FiscGift {
   pk: PrimaryKey;
   donor_id: PrimaryKey;
+  is_existing_donor: boolean;
   first_name: string;
   last_name: string;
   salutation: string;
   home_phone: string;
+  opt_line: string;
+  email: string;
   org_rec: string;
   donor_type: string;
   address: string;
@@ -99,6 +102,10 @@ export interface FiscGift {
   sub_solicit_code: string;
   gift_narrative: string;
   record_type: string;
+  flags: string;
+  memory_honor: string;
+  gfname: string;
+  glname: string;
   export: string;
 }
 
@@ -116,6 +123,7 @@ export interface FiscOptOut {
 
 export interface FiscScan {
   pk: PrimaryKey;
+  is_existing_donor: boolean;
   image_front: URL;
   image_back: URL;
   account: number;
