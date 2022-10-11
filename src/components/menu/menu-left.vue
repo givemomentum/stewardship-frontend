@@ -31,10 +31,10 @@
         <chakra.img v-else src="/momentum-logo-only.svg" max-w="50px" />
         <CBox
           v-if="hooks.menu.isFullWidth.value"
-          mt="7px"
+          mt="6px"
           px="10px"
-          py="1px"
-          pt="2px"
+          pt="1px"
+          pb="2px"
           bg="blue.100"
           color="blue.900"
           border-radius="lg"
@@ -72,15 +72,19 @@
             <chakra.span v-if="hooks.menu.isFullWidth.value">FISC Exports</chakra.span>
           </CLink>
 
-          <CLink
-            variant="side-menu"
-          >
-            <CIcon name="people" font-size="2xl" />
-            <chakra.span v-if="hooks.menu.isFullWidth.value">Donors</chakra.span>
-          </CLink>
+          <!--          <CLink-->
+          <!--            variant="side-menu"-->
+          <!--          >-->
+          <!--            <CIcon name="people" font-size="2xl" />-->
+          <!--            <chakra.span v-if="hooks.menu.isFullWidth.value">Donors</chakra.span>-->
+          <!--          </CLink>-->
 
           <CLink
+            as="RouterLink"
             variant="side-menu"
+            to="/account"
+            :bg="$route.path.includes('/account') ? 'whiteAlpha.300' : ''"
+            :color="$route.path.includes('/account') ? 'white' : ''"
           >
             <CIcon name="user" font-size="2xl" />
             <chakra.span v-if="hooks.menu.isFullWidth.value">Account</chakra.span>

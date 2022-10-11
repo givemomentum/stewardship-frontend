@@ -16,6 +16,9 @@
 
   onMounted(async () => {
     await hooks.userStore.loadUser();
+    if (!hooks.userStore.isLoggedIn) {
+      window.location.href = `${hooks.config.public.accountsBase}/login`;
+    }
   });
 </script>
 
@@ -25,7 +28,7 @@
     <MenuLeft />
 
     <CFlex px="10" pt="6" pr="6">
-      <NuxtPage />
+      <NuxtPage v-if="hooks.userStore.isLoggedIn" />
     </CFlex>
 
   </CFlex>

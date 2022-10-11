@@ -3,6 +3,7 @@ import { useApi } from "~/composables/useApi";
 import { User } from "~/interfaces";
 import Cookies from "js-cookie";
 import { security } from "~/constants";
+import { useRuntimeConfig } from "#app";
 
 interface State {
   user: User | null;
@@ -42,6 +43,9 @@ export default defineStore("user", {
       await api.$post("/users/logout/");
       this.user = null;
       this.isLoading = false;
+
+      const config = useRuntimeConfig();
+      window.location.href = `${config.public.accountsBase}/login`;
     },
   },
 });
