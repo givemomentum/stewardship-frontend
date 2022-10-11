@@ -23,16 +23,7 @@
   };
 
   watch(() => props.scanOpen, (scanNew, scanOld) => {
-    state.gift.value = null;
-    // formkit isn't good at changes detection on :value wo setTimeout
-    // and v-model of course writes back to the given object
-    //
-    // adding v-if="state.gift.value" helps,
-    // I bet formkit doesn't correctly read reactivity object
-    // hence fails to add itself as a rendering dep
-    setTimeout(() => {
-      state.gift.value = scanNew?.gift;
-    }, 100);
+    state.gift.value = scanNew?.gift;
   });
 </script>
 
@@ -58,8 +49,8 @@
 
     <FormKit
       type="form"
-      v-if="state.gift.value"
       :value="state.gift.value"
+      :key="state.gift.value.pk"
       @submit="hooks.form.submit"
       :actions="false"
     >

@@ -59,20 +59,19 @@
       @submit="hooks.form.submit"
       :actions="false"
       :value="state.optOut.value"
-      :config="{ validationVisibility: 'submit' }"
-    >
+      :key="props.scanOpen.pk">
       <CFlex justify="flex-start" direction="column">
         <CFlex gap="4">
-          <FormKit name="first_name" label="First Name" validation="required" />
-          <FormKit name="last_name" label="Last Name" validation="required" />
+          <FormKit name="first_name" label="First Name" />
+          <FormKit name="last_name" label="Last Name" />
         </CFlex>
 
-        <FormKit name="address" label="Address" validation="required" />
-        <FormKit name="city" label="City" validation="required" />
+        <FormKit name="address" label="Address" />
+        <FormKit name="city" label="City" />
 
         <CFlex gap="4">
-          <FormKit name="state" label="State" validation="required" />
-          <FormKit name="zip" label="Zip" validation="required" />
+          <FormKit name="state" label="State" />
+          <FormKit name="zip" label="Zip" />
         </CFlex>
 
         <FormKit name="notes" label="Notes" />
