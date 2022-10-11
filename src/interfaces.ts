@@ -123,6 +123,8 @@ export interface FiscOptOut {
 
 export interface FiscScan {
   pk: PrimaryKey;
+  gift?: FiscGift;
+  optout?: FiscOptOut;
   is_existing_donor: boolean;
   image_front: URL;
   image_back: URL;
@@ -130,8 +132,6 @@ export interface FiscScan {
   donor_id: number;
   date?: string;
   amount: string;
-  gift?: FiscGift;
-  optout?: FiscOptOut;
   is_viewed: boolean;
   is_duplicated: boolean;
 }

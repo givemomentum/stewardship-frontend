@@ -4,11 +4,13 @@ import { ref } from "vue";
 import { strings } from "~/constants";
 import { useApi } from "~/composables/useApi";
 
+export type HttpMethod = "POST" | "PATCH";
+
 export function useForm(args: {
   path: string | (() => string);
-  dataExtra?: any;
+  getExtraData?: () => any;
   serializers?: { [key: string]: (value: any) => any };
-  method?: "POST" | "PATCH";
+  method?: HttpMethod | (() => HttpMethod);
   onSuccess?: () => Promise<void>;
 }) {
   const state = {
@@ -27,8 +29,12 @@ export function useForm(args: {
       if (typeof args.path === "function") {
         path = args.path();
       }
-      const resArgs = { ...data, ...args.dataExtra };
-      const method = args.method ?? "POST";
+      const extraData = args.getExtraData ? args.getExtraData() : {};
+      const resArgs = { ...data, ...extraData };
+      let method = args.method ?? "POST";
+      if (typeof args.method === "function") {
+        method = args.method();
+      }
       if (method === "PATCH") {
         await hooks.api.$patch(path, resArgs);
       } else if (method === "POST") {

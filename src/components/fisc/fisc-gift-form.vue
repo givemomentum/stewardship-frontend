@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { CFlex, CHeading, CButton } from "@chakra-ui/vue-next";
+  import { CFlex, CHeading, CButton, CAlert, CAlertIcon, CAlertDescription } from "@chakra-ui/vue-next";
   import { ref, watch } from "vue";
   import { useForm } from "~/composables/useForm";
   import { FiscGift, FiscScan } from "~/interfaces";
@@ -30,7 +30,6 @@
     // I bet formkit doesn't correctly read reactivity object
     // hence fails to add itself as a rendering dep
     setTimeout(() => {
-      console.log(scanNew.gift);
       state.gift.value = scanNew?.gift;
     }, 100);
   });
@@ -86,6 +85,11 @@
         <FormKit name="gift_narrative" label="gift_narrative" />
 
         <FormKit type="submit" label="Save" size="md" />
+
+        <CAlert v-if="hooks.form.isSuccess.value" status="success" mt="2">
+          <CAlertIcon />
+          <CAlertDescription>Gift record updated</CAlertDescription>
+        </CAlert>
 
       </CFlex>
     </FormKit>

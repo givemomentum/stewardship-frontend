@@ -38,8 +38,10 @@
   });
 
   watch(state.scanOpen, async (scanNew) => {
-    await hooks.api.$patch(`/fisc/scans/${scanNew.pk}/`, { is_viewed: true });
-    scanNew.is_viewed = true;
+    if (!scanNew.is_viewed) {
+      await hooks.api.$patch(`/fisc/scans/${scanNew.pk}/`, { is_viewed: true });
+      scanNew.is_viewed = true;
+    }
   });
 
   async function loadScans() {
