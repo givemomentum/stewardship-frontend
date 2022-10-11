@@ -49,7 +49,7 @@
 
     <CFlex justify="space-between" align="center" min-w="418px">
       <CHeading font-size="1.5rem" font-weight="normal">
-        Opt out (add to Nixie list)
+        Opt-out (add to Nixie list)
       </CHeading>
 
     </CFlex>
@@ -67,11 +67,16 @@
         </CFlex>
 
         <FormKit name="address" label="Address" />
-        <FormKit name="city" label="City" />
-
         <CFlex gap="4">
-          <FormKit name="state" label="State" />
-          <FormKit name="zip" label="Zip" />
+          <CBox flex="2">
+            <FormKit name="city" label="City" />
+          </CBox>
+          <CBox flex="1">
+            <FormKit name="state" label="State" />
+          </CBox>
+          <CBox flex="2">
+            <FormKit name="zip" label="Zip" />
+          </CBox>
         </CFlex>
 
         <FormKit name="notes" label="Notes" />

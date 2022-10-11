@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { CFlex, CHeading, CLink, CButton, CAlert, CAlertIcon, CAlertDescription } from "@chakra-ui/vue-next";
+  import { CFlex, CHeading, CLink, CButton, CBox, CAlert, CAlertIcon, CAlertDescription } from "@chakra-ui/vue-next";
   import { ref, watch } from "vue";
   import { useForm } from "~/composables/useForm";
   import { FiscGift, FiscScan } from "~/interfaces";
@@ -31,7 +31,9 @@
   <CFlex direction="column" v-if="props.scanOpen.gift" gap="4">
 
     <CFlex justify="space-between" align="center" min-w="418px">
-      <CHeading font-size="1.5rem" font-weight="normal">Update Gift</CHeading>
+      <CHeading font-size="1.5rem" font-weight="normal">
+        Update Gift - {{props.scanOpen.is_existing_donor ? "Existing Donor" : "New Donor"}}
+      </CHeading>
       <CLink
         v-if="props.scanOpen.is_existing_donor"
         :href="urls.donorPerfect.donor(props.scanOpen.donor_id)"
@@ -56,30 +58,50 @@
     >
       <CFlex justify="flex-start" direction="column">
         <CFlex gap="4">
-          <FormKit name="first_name" label="first_name" />
-          <FormKit name="last_name" label="last_name" />
+          <FormKit color="red" name="first_name" label="First Name" />
+          <FormKit name="last_name" label="Last Name" />
         </CFlex>
 
-        <FormKit name="address" label="address" />
+        <FormKit name="address" label="Address" />
 
         <CFlex gap="4">
-          <FormKit name="address2" label="address2" />
-          <FormKit name="zip" label="zip" />
+          <CBox flex="2">
+            <FormKit name="city" label="City" />
+          </CBox>
+          <CBox flex="1">
+            <FormKit name="state" label="State" />
+          </CBox>
+          <CBox flex="2">
+            <FormKit name="zip" label="Zip" />
+          </CBox>
         </CFlex>
 
         <CFlex gap="4">
-          <FormKit name="city" label="city" />
-          <FormKit name="state" label="state" />
+          <CBox flex="1">
+            <FormKit name="sub_solicit_code" label="Sub-Solicit Code" />
+          </CBox>
+          <CBox flex="2">
+            <FormKit name="gift_narrative" label="Gift Narrative" />
+          </CBox>
         </CFlex>
-
-        <FormKit name="ty_letter_no" label="ty_letter_no" />
 
         <CFlex gap="4">
-          <FormKit name="sub_solicit_code" label="sub_solicit_code" />
-          <FormKit name="gift_narrative" label="gift_narrative" />
+          <FormKit name="ty_letter_no" label="TY Letter No" />
+          <FormKit name="campaign" label="Campaign" />
+          <FormKit name="solicit_code" label="Solicit Code" />
         </CFlex>
 
-        <FormKit name="gift_narrative" label="gift_narrative" />
+        <CFlex gap="4">
+          <CBox flex="1">
+            <FormKit name="memory_honory" label="Memory/Honor" />
+          </CBox>
+          <CBox flex="2">
+            <FormKit name="gfname" label="Honoree First Name" />
+          </CBox>
+          <CBox flex="2">
+            <FormKit name="glname" label="Honoree Last Name" />
+          </CBox>
+        </CFlex>
 
         <FormKit type="submit" label="Save" size="md" />
 
