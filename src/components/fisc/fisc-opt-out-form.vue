@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { CFlex, CHeading, CButton, CAlert, CAlertIcon, CAlertDescription } from "@chakra-ui/vue-next";
+  import { CFlex, CHeading, CAlert, CAlertIcon, CAlertDescription } from "@chakra-ui/vue-next";
   import { ref, watch } from "vue";
   import { useApi } from "~/composables/useApi";
   import { useForm } from "~/composables/useForm";
@@ -47,16 +47,9 @@
 
     <CFlex justify="space-between" align="center" min-w="418px">
       <CHeading font-size="1.5rem" font-weight="normal">
-        Opt out
+        Opt out (add to Nixie list)
       </CHeading>
-      <CButton
-        v-if="props.scanOpen.is_existing_donor"
-        right-icon="external-link"
-        size="sm"
-        variant="outline"
-      >
-        DP Profile
-      </CButton>
+
     </CFlex>
 
     <FormKit

@@ -58,7 +58,7 @@
           <chakra.td data-is-numeric="true">
             {{ exportItem.num_optouts }}
           </chakra.td>
-          
+
           <chakra.td data-is-numeric="true">
             {{ exportItem.num_scans }}
           </chakra.td>

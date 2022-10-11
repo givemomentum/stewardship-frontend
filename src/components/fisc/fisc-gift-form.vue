@@ -1,8 +1,9 @@
 <script setup lang="ts">
-  import { CFlex, CHeading, CButton, CAlert, CAlertIcon, CAlertDescription } from "@chakra-ui/vue-next";
+  import { CFlex, CHeading, CLink, CButton, CAlert, CAlertIcon, CAlertDescription } from "@chakra-ui/vue-next";
   import { ref, watch } from "vue";
   import { useForm } from "~/composables/useForm";
   import { FiscGift, FiscScan } from "~/interfaces";
+  import { urls } from "~/urls";
 
   const props = defineProps<{
     loadScans: () => Promise<void>;
@@ -40,14 +41,19 @@
 
     <CFlex justify="space-between" align="center" min-w="418px">
       <CHeading font-size="1.5rem" font-weight="normal">Update Gift</CHeading>
-      <CButton
+      <CLink
         v-if="props.scanOpen.is_existing_donor"
-        right-icon="external-link"
-        size="sm"
-        variant="outline"
-      >
-        DP Profile
-      </CButton>
+        :href="urls.donorPerfect.donor(props.scanOpen.donor_id)"
+        isExternal>
+        <CButton
+          v-if="props.scanOpen.is_existing_donor"
+          right-icon="external-link"
+          size="sm"
+          variant="outline"
+        >
+          DP Profile
+        </CButton>
+      </CLink>
     </CFlex>
 
     <FormKit

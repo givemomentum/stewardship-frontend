@@ -172,12 +172,15 @@
           :scan-open="state.scanOpen.value"
           :load-scans="loadScans"
         />
-        <FiscOptOutForm
-          v-else
+        <FiscExistingDonorNoGift
+          v-else-if="state.scanOpen.value.is_existing_donor"
           :scan-open="state.scanOpen.value"
           :load-scans="loadScans"
         />
-
+        <FiscOptOutForm
+          v-else
+          :scan-open="state.scanOpen.value"
+        />
       </CFlex>
     </CFlex>
 
