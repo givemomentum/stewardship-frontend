@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { CFlex, CHeading, CAlert, CAlertIcon, CAlertDescription } from "@chakra-ui/vue-next";
-  import { ref, watch } from "vue";
+  import { ref } from "vue";
   import { useApi } from "~/composables/useApi";
   import { useForm } from "~/composables/useForm";
   import { FiscScan } from "~/interfaces";
@@ -14,8 +14,8 @@
     api: useApi(),
     form: useForm({
       path: () => {
-        if (state.optOut.value) {
-          return `fisc/opt-outs/${state.optOut.value.pk}/`;
+        if (props.scanOpen.optout) {
+          return `fisc/opt-outs/${props.scanOpen.optout.pk}/`;
         }
         return `fisc/opt-outs/`;
       },
@@ -23,24 +23,19 @@
         scan: props.scanOpen.pk,
       }),
       onSuccess: async () => {
-        state.alertMessage.value = `Opt-out record ${state.optOut.value ? "updated" : "created"}`;
+        state.alertMessage.value = `Opt-out record ${props.scanOpen.optout ? "updated" : "created"}`;
         await props.loadScans();
         setTimeout(() => {
           state.alertMessage.value = null;
         }, 5000);
       },
-      method: () => (state.optOut.value ? "PATCH" : "POST"),
+      method: () => (props.scanOpen.optout ? "PATCH" : "POST"),
     }),
   };
 
   const state = {
-    optOut: ref(props.scanOpen.optout),
     alertMessage: ref<string | null>(null),
   };
-
-  watch(() => props.scanOpen, (scanNew) => {
-    state.optOut.value = scanNew?.optout ?? null;
-  });
 
 </script>
 
@@ -58,7 +53,7 @@
       type="form"
       @submit="hooks.form.submit"
       :actions="false"
-      :value="state.optOut.value"
+      :value="props.scanOpen?.optout"
       :key="props.scanOpen.pk">
       <CFlex justify="flex-start" direction="column">
         <CFlex gap="4">
@@ -81,7 +76,7 @@
 
         <FormKit name="notes" label="Notes" />
 
-        <FormKit type="submit" :label="state.optOut.value ? 'Update' : 'Submit'" size="md" />
+        <FormKit type="submit" :label="props.scanOpen.optout ? 'Update' : 'Submit'" size="md" />
 
         <CAlert v-if="state.alertMessage.value" status="success" mt="2">
           <CAlertIcon />

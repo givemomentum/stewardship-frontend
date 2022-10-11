@@ -1,8 +1,7 @@
 <script setup lang="ts">
   import { CFlex, CHeading, CLink, CButton, CBox, CAlert, CAlertIcon, CAlertDescription } from "@chakra-ui/vue-next";
-  import { ref, watch } from "vue";
   import { useForm } from "~/composables/useForm";
-  import { FiscGift, FiscScan } from "~/interfaces";
+  import { FiscScan } from "~/interfaces";
   import { urls } from "~/urls";
 
   const props = defineProps<{
@@ -17,22 +16,13 @@
       onSuccess: props.loadScans,
     }),
   };
-
-  const state = {
-    gift: ref<FiscGift>(props.scanOpen?.gift),
-  };
-
-  watch(() => props.scanOpen, (scanNew, scanOld) => {
-    state.gift.value = scanNew?.gift;
-  });
 </script>
 
 <template>
   <CFlex direction="column" v-if="props.scanOpen.gift" gap="4">
-
     <CFlex justify="space-between" align="center" min-w="418px">
       <CHeading font-size="1.5rem" font-weight="normal">
-        Update Gift - {{props.scanOpen.is_existing_donor ? "Existing Donor" : "New Donor"}}
+        Update Gift - {{ props.scanOpen.is_existing_donor ? "Existing Donor" : "New Donor" }}
       </CHeading>
       <CLink
         v-if="props.scanOpen.is_existing_donor"
@@ -51,8 +41,8 @@
 
     <FormKit
       type="form"
-      :value="state.gift.value"
-      :key="state.gift.value.pk"
+      :value="props.scanOpen?.gift"
+      :key="props.scanOpen?.gift.pk"
       @submit="hooks.form.submit"
       :actions="false"
     >
