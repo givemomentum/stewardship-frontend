@@ -194,7 +194,7 @@
       background: var(--colors-gray-200);
     }
     &[data-is-viewed=false] {
-      color: var(--colors-blue-500);
+      color: var(--colors-blue-600);
     }
   }
 </style>

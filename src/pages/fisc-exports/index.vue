@@ -80,14 +80,14 @@
           </chakra.td>
 
           <chakra.td>
-            <CLink :href="urls.fiscExport.detail(exportItem.pk)" is-external>
+            <CLink :href="exportItem.gifts_export_url" is-external>
               <CButton size="sm" variant="link" left-icon="download">Gifts</CButton>
             </CLink>
           </chakra.td>
 
           <chakra.td>
-            <CLink :href="urls.fiscExport.detail(exportItem.pk)" is-external>
-              <CButton size="sm" variant="link" left-icon="download">Nixies</CButton>
+            <CLink :href="exportItem.optout_export_url" is-external>
+              <CButton size="sm" variant="link" left-icon="download">Oputouts</CButton>
             </CLink>
           </chakra.td>
 
