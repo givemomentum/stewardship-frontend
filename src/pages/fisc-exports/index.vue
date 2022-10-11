@@ -87,7 +87,7 @@
 
           <chakra.td>
             <CLink :href="exportItem.optout_export_url" is-external>
-              <CButton size="sm" variant="link" left-icon="download">Oputouts</CButton>
+              <CButton size="sm" variant="link" left-icon="download">Opt-outs</CButton>
             </CLink>
           </chakra.td>
 

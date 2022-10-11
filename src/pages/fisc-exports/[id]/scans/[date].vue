@@ -85,7 +85,7 @@
         :items="[
           { label: 'FISC Exports', url: urls.fiscExport.list },
           {
-            label: state.scans.value[0] ? toLocaleDateString(state.scans.value[0]?.date) : '00/00/2022',
+            label: toLocaleDateString($route.params.date),
             url: urls.fiscExport.detail($route.params.id),
           },
           { label: 'Scans', isCurrentPage: true },
@@ -190,9 +190,11 @@
       background: var(--colors-gray-100);
       cursor: pointer;
     }
+
     &[data-is-selected=true] {
       background: var(--colors-gray-200);
     }
+
     &[data-is-viewed=false] {
       color: var(--colors-blue-600);
     }
