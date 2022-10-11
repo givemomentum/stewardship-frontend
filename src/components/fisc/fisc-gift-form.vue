@@ -51,6 +51,20 @@
           <FormKit color="red" name="first_name" label="First Name" />
           <FormKit name="last_name" label="Last Name" />
         </CFlex>
+        <template v-if="!props.scanOpen.is_existing_donor">
+          <CFlex gap="4">
+            <FormKit name="salutation" label="Salutation" />
+            <FormKit name="opt_line" label="Opt Line" />
+          </CFlex>
+          <CFlex gap="4">
+            <FormKit name="home_phone" label="Home Phone" />
+            <FormKit name="email" label="Email" />
+          </CFlex>
+          <CFlex gap="4">
+            <FormKit name="org_rec" label="Org Rec" />
+            <FormKit name="donor_type" label="Donor Type" />
+          </CFlex>
+        </template>
 
         <FormKit name="address" label="Address" />
 

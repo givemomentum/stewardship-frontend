@@ -72,13 +72,6 @@
             <chakra.span v-if="hooks.menu.isFullWidth.value">FISC Exports</chakra.span>
           </CLink>
 
-          <!--          <CLink-->
-          <!--            variant="side-menu"-->
-          <!--          >-->
-          <!--            <CIcon name="people" font-size="2xl" />-->
-          <!--            <chakra.span v-if="hooks.menu.isFullWidth.value">Donors</chakra.span>-->
-          <!--          </CLink>-->
-
           <CLink
             as="RouterLink"
             variant="side-menu"
