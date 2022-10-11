@@ -72,18 +72,18 @@
 
       <CFlex gap="4">
         <NuxtLink :to="urls.fiscExport.detailScans(state.export.value.pk, state.export.value.date)">
-          <CButton borderRadius="6">
-            Review scans
+          <CButton borderRadius="6" left-icon="eye">
+            Check scans
           </CButton>
         </NuxtLink>
         <NuxtLink :to="state.export.value.gifts_export_url" target="_blank">
-          <CButton borderRadius="6">
-            Download gifts CSV
+          <CButton borderRadius="6" left-icon="download">
+            Gifts CSV
           </CButton>
         </NuxtLink>
         <NuxtLink :to="state.export.value.optout_export_url" target="_blank">
-          <CButton borderRadius="6">
-            Download optout list
+          <CButton borderRadius="6" left-icon="download">
+            Optout list
           </CButton>
         </NuxtLink>
       </CFlex>
@@ -92,8 +92,9 @@
         font-size="xl"
         font-weight="semibold"
       >
-        Gifts preview
+        Gifts
       </CHeading>
+
       <ChakraTable size="sm" v-if="state.gifts.value">
         <chakra.thead>
           <chakra.tr>
@@ -119,7 +120,7 @@
         font-size="xl"
         font-weight="semibold"
       >
-        Opt-out preview
+        Optout
       </CHeading>
 
       <ChakraTable size="sm" v-if="state.optouts.value">

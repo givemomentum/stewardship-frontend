@@ -67,6 +67,7 @@ export interface FiscExport {
   gifts_export_url: string;
   optout_export_url: string;
   num_scans: number;
+  num_scans_unread: number;
   num_gifts: number;
   num_optouts: number;
   donation_total: number;
