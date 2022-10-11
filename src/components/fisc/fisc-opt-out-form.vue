@@ -14,30 +14,32 @@
     api: useApi(),
     form: useForm({
       path: () => {
-        if (props.scanOpen.optout) {
-          return `fisc/opt-outs/${props.scanOpen.optout.pk}/`;
+        if (state.optOut.value) {
+          return `fisc/opt-outs/${state.optOut.value.pk}/`;
         }
         return `fisc/opt-outs/`;
       },
       getExtraData: () => ({
         scan: props.scanOpen.pk,
       }),
-      onSuccess: props.loadScans,
-      method: () => (props.scanOpen.optout ? "PATCH" : "POST"),
+      onSuccess: async () => {
+        state.alertMessage.value = `Opt-out record ${state.optOut.value ? "updated" : "created"}`;
+        await props.loadScans();
+        setTimeout(() => {
+          state.alertMessage.value = null;
+        }, 5000);
+      },
+      method: () => (state.optOut.value ? "PATCH" : "POST"),
     }),
   };
 
   const state = {
     optOut: ref(props.scanOpen.optout),
+    alertMessage: ref<string | null>(null),
   };
 
-  watch(() => props.scanOpen, async (scanNew) => {
-    state.optOut.value = null;
-    // see ./fisc-gift-form.vue watch() for details
-    setTimeout(() => {
-      state.optOut.value = scanNew?.optout ?? null;
-      hooks.form.isSuccess.value = false;
-    }, 100);
+  watch(() => props.scanOpen, (scanNew) => {
+    state.optOut.value = scanNew?.optout ?? null;
   });
 
 </script>
@@ -54,76 +56,34 @@
 
     <FormKit
       type="form"
-      v-if="state.optOut.value"
       @submit="hooks.form.submit"
       :actions="false"
       :value="state.optOut.value"
+      :config="{ validationVisibility: 'submit' }"
     >
       <CFlex justify="flex-start" direction="column">
         <CFlex gap="4">
-          <FormKit name="first_name" label="first_name" />
-          <FormKit name="last_name" label="last_name" />
+          <FormKit name="first_name" label="First Name" validation="required" />
+          <FormKit name="last_name" label="Last Name" validation="required" />
         </CFlex>
 
-        <FormKit name="address" label="address" />
+        <FormKit name="address" label="Address" validation="required" />
+        <FormKit name="city" label="City" validation="required" />
 
         <CFlex gap="4">
-          <FormKit name="address2" label="address2" />
-          <FormKit name="zip" label="zip" />
+          <FormKit name="state" label="State" validation="required" />
+          <FormKit name="zip" label="Zip" validation="required" />
         </CFlex>
 
-        <CFlex gap="4">
-          <FormKit name="city" label="city" />
-          <FormKit name="state" label="state" />
-        </CFlex>
+        <FormKit name="notes" label="Notes" />
 
-        <FormKit name="notes" label="notes" />
+        <FormKit type="submit" :label="state.optOut.value ? 'Update' : 'Submit'" size="md" />
 
-        <FormKit type="submit" label="Update" size="md" />
-
-        <CAlert v-if="hooks.form.isSuccess.value" status="success" mt="2">
+        <CAlert v-if="state.alertMessage.value" status="success" mt="2">
           <CAlertIcon />
-          <CAlertDescription>Opt out record updated</CAlertDescription>
+          <CAlertDescription>{{ state.alertMessage.value }}</CAlertDescription>
         </CAlert>
-
       </CFlex>
     </FormKit>
-
-    <FormKit
-      type="form"
-      v-else
-      @submit="hooks.form.submit"
-      :actions="false"
-    >
-      <CFlex justify="flex-start" direction="column">
-        <CFlex gap="4">
-          <FormKit name="first_name" label="first_name" />
-          <FormKit name="last_name" label="last_name" />
-        </CFlex>
-
-        <FormKit name="address" label="address" />
-
-        <CFlex gap="4">
-          <FormKit name="address2" label="address2" />
-          <FormKit name="zip" label="zip" />
-        </CFlex>
-
-        <CFlex gap="4">
-          <FormKit name="city" label="city" />
-          <FormKit name="state" label="state" />
-        </CFlex>
-
-        <FormKit name="notes" label="notes" />
-
-        <FormKit type="submit" label="Submit" size="md" />
-
-        <CAlert v-if="hooks.form.isSuccess.value" status="success" mt="2">
-          <CAlertIcon />
-          <CAlertDescription>Opt out record created</CAlertDescription>
-        </CAlert>
-
-      </CFlex>
-    </FormKit>
-
   </CFlex>
 </template>

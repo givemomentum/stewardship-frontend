@@ -43,6 +43,7 @@ export function useForm(args: {
       state.isSuccess.value = true;
       await args.onSuccess();
     } catch (error) {
+      console.log(error);
       captureException(error);
       node.setErrors([strings.error]);
     }

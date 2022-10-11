@@ -47,6 +47,9 @@
   async function loadScans() {
     const res = await hooks.api.$get(`/fisc/scans/?date=${hooks.route.params.date}`);
     state.scans.value = res.data;
+    if (state.scanOpenIndex.value) {
+      state.scanOpen.value = state.scans.value[state.scanOpenIndex.value];
+    }
   }
 
   function handleKeyUp(event: KeyboardEvent) {
@@ -175,11 +178,11 @@
         <FiscExistingDonorNoGift
           v-else-if="state.scanOpen.value.is_existing_donor"
           :scan-open="state.scanOpen.value"
-          :load-scans="loadScans"
         />
         <FiscOptOutForm
           v-else
           :scan-open="state.scanOpen.value"
+          :load-scans="loadScans"
         />
       </CFlex>
     </CFlex>
