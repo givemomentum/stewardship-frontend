@@ -41,7 +41,7 @@ export function useForm(args: {
         await hooks.api.$post(path, resArgs);
       }
       state.isSuccess.value = true;
-      await args.onSuccess();
+      args.onSuccess();
     } catch (error) {
       console.log(error);
       captureException(error);
