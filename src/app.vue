@@ -30,7 +30,9 @@
 
   onMounted(async () => {
     await hooks.userStore.loadUser();
-    if (!hooks.userStore.isLoggedIn) {
+    if (hooks.userStore.isLoggedIn) {
+      window.hj("identify", hooks.userStore.user.email);
+    } else {
       window.location.href = `${hooks.config.public.accountsBase}/login`;
     }
   });
