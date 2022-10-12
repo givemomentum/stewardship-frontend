@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { CFlex, CHeading, CAlert, CAlertIcon, CAlertDescription } from "@chakra-ui/vue-next";
-  import { ref } from "vue";
+  import { CFlex, CHeading, CAlert, CAlertIcon, CAlertDescription, CBox } from "@chakra-ui/vue-next";
+  import { ref, watch } from "vue";
   import { useApi } from "~/composables/useApi";
   import { useForm } from "~/composables/useForm";
   import { FiscScan } from "~/interfaces";
@@ -36,6 +36,12 @@
   const state = {
     alertMessage: ref<string | null>(null),
   };
+  
+  watch(() => props.scanOpen, (scanNew, scanOld) => {
+    if (scanNew.pk !== scanOld.pk) {
+      state.alertMessage.value = null;
+    }
+  });
 
 </script>
 

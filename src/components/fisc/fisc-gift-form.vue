@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { CFlex, CHeading, CLink, CButton, CBox, CAlert, CAlertIcon, CAlertDescription } from "@chakra-ui/vue-next";
+  import { watch } from "vue";
   import { useForm } from "~/composables/useForm";
   import { FiscScan } from "~/interfaces";
   import { urls } from "~/urls";
@@ -16,6 +17,12 @@
       onSuccess: props.loadScans,
     }),
   };
+
+  watch(() => props.scanOpen, (scanNew, scanOld) => {
+    if (scanNew.pk !== scanOld.pk) {
+      hooks.form.isSuccess.value = false;
+    }
+  });
 </script>
 
 <template>
