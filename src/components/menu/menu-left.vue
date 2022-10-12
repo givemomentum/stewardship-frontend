@@ -82,6 +82,16 @@
             <CIcon name="user" font-size="2xl" />
             <chakra.span v-if="hooks.menu.isFullWidth.value">Account</chakra.span>
           </CLink>
+
+          <CLink
+            v-if="hooks.userStore.user.is_staff"
+            :href="`${hooks.config.public.accountsBase}/../admin`"
+            variant="side-menu"
+            isExternal
+          >
+            <CIcon name="bi-tools" font-size="2xl" fill="blue.100" />
+            <chakra.span v-if="hooks.menu.isFullWidth.value">Admin Panel</chakra.span>
+          </CLink>
         </template>
       </CFlex>
 
