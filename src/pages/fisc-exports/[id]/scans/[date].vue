@@ -29,12 +29,12 @@
 
   onMounted(async () => {
     await loadScans();
-    window.addEventListener("keydown", handleKeyUp);
+    document.addEventListener("keydown", handleKeyUp);
   });
 
   onUnmounted(() => {
     hooks.menu.unfold();
-    window.removeEventListener("keydown", handleKeyUp);
+    document.removeEventListener("keydown", handleKeyUp);
   });
 
   watch(state.scanOpen, async (scanNew) => {
@@ -53,6 +53,11 @@
   }
 
   function handleKeyUp(event: KeyboardEvent) {
+    const isEditingInputTextWithArrows = event.target.tagName === "INPUT";
+    if (isEditingInputTextWithArrows) {
+      return;
+    }
+
     if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
       changeScanIndex(-1);
     }
@@ -157,33 +162,41 @@
         v-if="state.scanOpen.value"
         direction="row"
         pos="fixed"
-        max-h="100%"
-        overflow-y="auto"
         top="0"
         p="8"
-        pt=""
         pl="4"
         gap="8"
       >
-        <CFlex direction="column" max-w="800px" min-w="800px">
+        <CFlex
+          direction="column"
+          max-w="800px"
+          min-w="800px"
+          pos="fixed"
+          pb="16"
+          h="100%"
+          overflow-y="auto"
+          z-index="1"
+        >
           <chakra.img :src="state.scanOpen.value.image_front" />
           <chakra.img :src="state.scanOpen.value.image_back" />
         </CFlex>
 
-        <FiscGiftForm
-          v-if="state.scanOpen.value.gift"
-          :scan-open="state.scanOpen.value"
-          :load-scans="loadScans"
-        />
-        <FiscExistingDonorNoGift
-          v-else-if="state.scanOpen.value.is_existing_donor"
-          :scan-open="state.scanOpen.value"
-        />
-        <FiscOptOutForm
-          v-else
-          :scan-open="state.scanOpen.value"
-          :load-scans="loadScans"
-        />
+        <CFlex pl="832px" pos="fixed">
+          <FiscGiftForm
+            v-if="state.scanOpen.value.gift"
+            :scan-open="state.scanOpen.value"
+            :load-scans="loadScans"
+          />
+          <FiscExistingDonorNoGift
+            v-else-if="state.scanOpen.value.is_existing_donor"
+            :scan-open="state.scanOpen.value"
+          />
+          <FiscOptOutForm
+            v-else
+            :scan-open="state.scanOpen.value"
+            :load-scans="loadScans"
+          />
+        </CFlex>
       </CFlex>
     </CFlex>
 
