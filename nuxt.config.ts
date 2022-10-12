@@ -11,7 +11,7 @@ export default defineNuxtConfig({
     public: {
       apiBase: "https://backend.stewardship.givemomentum.com/api",
       accountsBase: "https://backend.stewardship.givemomentum.com/accounts",
-      env: "dev",
+      env: "prod",
     },
   },
   ssr: false,
