@@ -97,7 +97,7 @@
 
         <CFlex gap="4">
           <CBox flex="1">
-            <FormKit name="memory_honory" label="Memory/Honor" />
+            <FormKit name="memory_honor" label="Memory/Honor" />
           </CBox>
           <CBox flex="2">
             <FormKit name="gfname" label="Honoree First Name" />

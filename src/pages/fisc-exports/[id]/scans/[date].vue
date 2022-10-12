@@ -89,7 +89,7 @@
           { label: 'FISC Exports', url: urls.fiscExport.list },
           {
             label: toLocaleDateString($route.params.date),
-            url: urls.fiscExport.detail($route.params.id),
+            isCurrentPage: true
           },
           { label: 'Scans', isCurrentPage: true },
         ]"

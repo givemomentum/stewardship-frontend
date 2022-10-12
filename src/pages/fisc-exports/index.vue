@@ -90,12 +90,6 @@
               <CButton size="sm" variant="link" left-icon="download">Opt-outs</CButton>
             </CLink>
           </chakra.td>
-
-          <chakra.td>
-            <NuxtLink :to="urls.fiscExport.detail(exportItem.pk)">
-              <CButton size="sm" variant="link" left-icon="eye">View</CButton>
-            </NuxtLink>
-          </chakra.td>
         </chakra.tr>
       </chakra.tbody>
     </ChakraTable>
