@@ -48,7 +48,7 @@
     >
       <CFlex justify="flex-start" direction="column">
         <CFlex gap="4">
-          <FormKit color="red" name="first_name" label="First Name" />
+          <FormKit name="first_name" label="First Name" />
           <FormKit name="last_name" label="Last Name" />
         </CFlex>
         <template v-if="!props.scanOpen.is_existing_donor">
