@@ -25,13 +25,24 @@
           })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
         ` : "",
       },
+      {
+        id: "hs-script-loader",
+        src: "//js.hs-scripts.com/20795930.js",
+      },
+      { children: `window._hsq = window._hsq ?? [];`, },
     ],
   });
 
   onMounted(async () => {
     await hooks.userStore.loadUser();
     if (hooks.userStore.isLoggedIn) {
-      window.hj("identify", hooks.userStore.user.email);
+      const hotjar = window.hj;
+      if (hotjar) {
+        hotjar("identify", hooks.userStore.user.email);
+      }
+
+      const hubspot = window._hsq;
+      hubspot.push(["identify", { email: hooks.userStore.user.email }]);
     } else {
       window.location.href = `${hooks.config.public.accountsBase}/login`;
     }
