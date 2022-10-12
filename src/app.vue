@@ -4,15 +4,29 @@
   import { onMounted } from "vue";
   import useUserStore from "~/stores/useUserStore";
 
-  useHead({
-    titleTemplate: (titleChunk) => (titleChunk ? `${titleChunk} - Momentum` : "Momentum"),
-    link: [{ rel: "icon", type: "image/svg+xml", href: "/favicon.webp" }],
-  });
-
   const hooks = {
     config: useRuntimeConfig(),
     userStore: useUserStore(),
   };
+
+  useHead({
+    titleTemplate: (titleChunk) => (titleChunk ? `${titleChunk} - Momentum` : "Momentum"),
+    link: [{ rel: "icon", type: "image/svg+xml", href: "/favicon.webp" }],
+    script: [
+      {
+        children: hooks.config.public.env === "prod" ? `
+          (function(h,o,t,j,a,r){
+          h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+          h._hjSettings={hjid:3199313,hjsv:6};
+          a=o.getElementsByTagName('head')[0];
+          r=o.createElement('script');r.async=1;
+          r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+          a.appendChild(r);
+          })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+        ` : "",
+      },
+    ],
+  });
 
   onMounted(async () => {
     await hooks.userStore.loadUser();
