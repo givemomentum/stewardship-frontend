@@ -9,7 +9,8 @@ export interface Org {
 }
 
 export interface BlackbaudConnection {
-  authenticated_user_email: string;
+  linked_entity_name: string;
+  linked_user_email: string;
   connection_successful: boolean;
 }
 

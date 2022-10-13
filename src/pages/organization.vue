@@ -1,3 +1,5 @@
+<!-- Warning: This page's URL is referenced from the backend oauth return flow,
+     so don't move it without updating. -->
 <script setup lang="ts">
   import { CBox, CLink, CText, CFlex, CHeading } from "@chakra-ui/vue-next";
   import useUserStore from "~/stores/useUserStore";
@@ -36,15 +38,15 @@
         <CBox>
           <CText
             v-if="state.adminOrg.value.blackbaud_connection && state.adminOrg.value.blackbaud_connection.connection_successful">
-            Your Blackbaud account is linked ({{
-              state.adminOrg.value.blackbaud_connection.authenticated_user_email
-            }})
+            The blackbaud connection for {{ state.adminOrg.value.blackbaud_connection.linked_entity_name }} was
+            successfully linked by {{
+              state.adminOrg.value.blackbaud_connection.linked_user_email
+            }}.
           </CText>
           <CText
             v-else-if="state.adminOrg.value.blackbaud_connection && !state.adminOrg.value.blackbaud_connection.connection_successful">
-            Linking your account ({{ state.adminOrg.value.blackbaud_connection.authenticated_user_email }}) was
-            not
-            successful.
+            Linking {{ state.adminOrg.value.blackbaud_connection.linked_entity_name }} was
+            not successful.
             <CLink textDecoration="underline" :href="comp.blackbaudLink.value">Click here</CLink>
             to retry.
           </CText>
