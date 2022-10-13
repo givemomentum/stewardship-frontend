@@ -73,6 +73,21 @@
           </CLink>
 
           <CLink
+            v-if="hooks.userStore.isOrgAdmin"
+            as="RouterLink"
+            variant="side-menu"
+            to="/organization"
+            :bg="$route.path.includes('/organization') ? 'whiteAlpha.300' : ''"
+            :color="$route.path.includes('/organization') ? 'white' : ''"
+          >
+            <CIcon
+              name="md-settings-outlined"
+              font-size="2xl"
+              :fill="$route.path.includes('/organization') ? 'white' : 'blue.100'" />
+            <chakra.span v-if="hooks.menu.isFullWidth.value">Organization</chakra.span>
+          </CLink>
+
+          <CLink
             as="RouterLink"
             variant="side-menu"
             to="/account"
@@ -90,7 +105,7 @@
             isExternal
           >
             <CIcon name="bi-tools" font-size="2xl" fill="blue.100" />
-            <chakra.span v-if="hooks.menu.isFullWidth.value">Admin Panel</chakra.span>
+            <chakra.span v-if="hooks.menu.isFullWidth.value">Django Admin</chakra.span>
           </CLink>
         </template>
       </CFlex>

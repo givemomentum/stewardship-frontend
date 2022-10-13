@@ -37,7 +37,11 @@ export function useApi() {
     return axiosInstance.patch(path, data, config);
   }
 
+  function $url(path: string) {
+    return `${hooks.config.public.apiBase}${path}`;
+  }
+
   return {
-    $get, $delete, $post: $post, $put, $patch,
+    $get, $delete, $post: $post, $put, $patch, $url,
   };
 }

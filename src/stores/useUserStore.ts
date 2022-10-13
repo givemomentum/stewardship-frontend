@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { useApi } from "~/composables/useApi";
-import { User } from "~/interfaces";
+import { Org, User } from "~/interfaces";
 import Cookies from "js-cookie";
 import { security } from "~/constants";
 import { useRuntimeConfig } from "#app";
@@ -18,6 +18,12 @@ export default defineStore("user", {
   getters: {
     isLoggedIn(state: State): boolean {
       return !!state.user;
+    },
+    isOrgAdmin(state: State): boolean {
+      return !!(state.user?.membership?.is_org_admin);
+    },
+    org(state: State): Org | null {
+      return state.user?.membership?.org || null;
     },
   },
   actions: {

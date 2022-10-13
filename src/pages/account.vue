@@ -1,12 +1,11 @@
 <script setup lang="ts">
   import { CButton, CFlex, CHeading } from "@chakra-ui/vue-next";
   import useUserStore from "~/stores/useUserStore";
-  import { useRuntimeConfig } from "#app";
 
   const hooks = {
-    config: useRuntimeConfig(),
     userStore: useUserStore(),
   };
+
 </script>
 <template>
   <CFlex direction="column" gap="2">
@@ -15,6 +14,9 @@
     </CHeading>
     <div>
       {{ hooks.userStore.user.first_name }} {{ hooks.userStore.user.last_name }}
+    </div>
+    <div v-if="hooks.userStore.org">
+      {{ hooks.userStore.org.name }}
     </div>
     <div>
       {{ hooks.userStore.user.email }}
