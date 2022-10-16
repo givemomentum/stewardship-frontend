@@ -64,7 +64,7 @@
           </chakra.td>
 
           <chakra.td>
-            <NuxtLink :to="urls.fiscExport.detailScans(exportItem.pk, exportItem.date)">
+            <NuxtLink v-if="exportItem.num_scans" :to="urls.fiscExport.detailScans(exportItem.pk, exportItem.date)">
               <CButton
                 size="sm"
                 variant="link"
@@ -77,6 +77,7 @@
                 <chakra.span v-else>Scans</chakra.span>
               </CButton>
             </NuxtLink>
+            <p v-else>Scans not yet available</p>
           </chakra.td>
 
           <chakra.td>
