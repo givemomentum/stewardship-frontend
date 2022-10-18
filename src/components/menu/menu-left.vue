@@ -1,13 +1,16 @@
 <script setup lang="ts">
   import { useRuntimeConfig } from "#app";
-  import { CIcon, CBox, CLink, CFlex, chakra } from "@chakra-ui/vue-next";
+  import { CBox, CFlex, chakra } from "@chakra-ui/vue-next";
   import { useLeftMenu } from "~/composables/useLeftMenu";
+  import { useLetterBatchStore } from "~/composables/useLetterBatchStore";
+  import { urls } from "~/urls";
   import useUserStore from "~/stores/useUserStore";
 
   const hooks = {
     config: useRuntimeConfig(),
     userStore: useUserStore(),
     menu: useLeftMenu(),
+    batchStore: useLetterBatchStore(),
   };
 </script>
 
@@ -46,67 +49,54 @@
 
       <CFlex direction="column" mt="6" gap="1" :w="hooks.menu.isFullWidth.value ? '100%' : 'fit-content'">
         <template v-if="hooks.userStore.isLoggedIn">
-          <CLink
-            as="RouterLink"
-            variant="side-menu"
-            to="/"
-            :bg="$route.path === '/' ? 'whiteAlpha.300' : ''"
-            :color="$route.path === '/' ? 'white' : ''"
-          >
-            <CIcon name="task" font-size="2xl" />
-            <chakra.span v-if="hooks.menu.isFullWidth.value">Tasks</chakra.span>
-          </CLink>
 
-          <CLink
-            as="RouterLink"
-            variant="side-menu"
-            to="/fisc-exports"
-            :bg="$route.path.includes('/fisc-exports') ? 'whiteAlpha.300' : ''"
-            :color="$route.path.includes('/fisc-exports') ? 'white' : ''"
-          >
-            <CIcon
-              name="oi-table"
-              font-size="2xl"
-              :fill="$route.path === '/fisc-exports' ? 'white' : 'blue.100'"
-            />
-            <chakra.span v-if="hooks.menu.isFullWidth.value">FISC Exports</chakra.span>
-          </CLink>
-
-          <CLink
+          <MenuLeftItem
+            url="/"
+            label="Tasks"
+            icon-name="task"
+          />
+          <MenuLeftItem
+            v-if="hooks.userStore.isOrgHor || hooks.userStore.user.is_staff"
+            :url="urls.fiscExport.list"
+            label="FISC Exports"
+            icon-name="oi-table"
+            icon-color-prop="fill"
+          />
+          <MenuLeftItem
+            v-if="hooks.userStore.isOrgYsgn || hooks.userStore.user.is_staff"
+            :url="urls.lettersBatches.list"
+            label="Letter Batches"
+            icon-name="mail"
+            :unread-items="hooks.batchStore.countUnread()"
+          />
+          <MenuLeftItem
+            v-if="hooks.userStore.isOrgYsgn || hooks.userStore.user.is_staff"
+            :url="urls.letterSegments.list"
+            label="Letter Segments"
+            icon-name="oi-table"
+            icon-color-prop="fill"
+          />
+          <MenuLeftItem
             v-if="hooks.userStore.isOrgAdmin"
-            as="RouterLink"
-            variant="side-menu"
-            to="/organization"
-            :bg="$route.path.includes('/organization') ? 'whiteAlpha.300' : ''"
-            :color="$route.path.includes('/organization') ? 'white' : ''"
-          >
-            <CIcon
-              name="md-settings-outlined"
-              font-size="2xl"
-              :fill="$route.path.includes('/organization') ? 'white' : 'blue.100'" />
-            <chakra.span v-if="hooks.menu.isFullWidth.value">Organization</chakra.span>
-          </CLink>
-
-          <CLink
-            as="RouterLink"
-            variant="side-menu"
-            to="/account"
-            :bg="$route.path.includes('/account') ? 'whiteAlpha.300' : ''"
-            :color="$route.path.includes('/account') ? 'white' : ''"
-          >
-            <CIcon name="user" font-size="2xl" />
-            <chakra.span v-if="hooks.menu.isFullWidth.value">Account</chakra.span>
-          </CLink>
-
-          <CLink
+            :url="urls.organization"
+            label="Organization"
+            icon-name="md-settings-outlined"
+            icon-color-prop="fill"
+          />
+          <MenuLeftItem
+            :url="urls.account"
+            label="Account"
+            icon-name="user"
+          />
+          <MenuLeftItem
             v-if="hooks.userStore.user.is_staff"
-            :href="`${hooks.config.public.accountsBase}/../admin`"
-            variant="side-menu"
-            isExternal
-          >
-            <CIcon name="bi-tools" font-size="2xl" fill="blue.100" />
-            <chakra.span v-if="hooks.menu.isFullWidth.value">Django Admin</chakra.span>
-          </CLink>
+            :url="`${hooks.config.public.accountsBase}/../admin`"
+            label="Django Admin"
+            icon-name="bi-tools"
+            icon-color-prop="fill"
+            is-exeternal
+          />
+
         </template>
       </CFlex>
 

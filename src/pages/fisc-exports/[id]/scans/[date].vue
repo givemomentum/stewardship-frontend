@@ -53,7 +53,7 @@
   }
 
   function handleKeyUp(event: KeyboardEvent) {
-    const isEditingInputTextWithArrows = event.target.tagName === "INPUT";
+    const isEditingInputTextWithArrows = (event.target as any).tagName === "INPUT";
     if (isEditingInputTextWithArrows) {
       return;
     }

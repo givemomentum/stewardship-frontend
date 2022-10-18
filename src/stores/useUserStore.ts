@@ -25,6 +25,12 @@ export default defineStore("user", {
     org(state: State): Org | null {
       return state.user?.membership?.org || null;
     },
+    isOrgHor(state: State): boolean {
+      return state.user?.membership?.org.pk === 1;
+    },
+    isOrgYsgn(state: State): boolean {
+      return state.user?.membership?.org.pk === 2;
+    },
   },
   actions: {
     async loadUser() {

@@ -29,7 +29,7 @@
         id: "hs-script-loader",
         src: "//js.hs-scripts.com/20795930.js",
       },
-      { children: `window._hsq = window._hsq ?? [];`, },
+      { children: `window._hsq = window._hsq ?? [];` },
     ],
   });
 

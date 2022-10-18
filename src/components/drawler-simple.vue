@@ -4,7 +4,7 @@
 
   const props = defineProps<{
     modelValue: any;
-    w: string;
+    w?: string;
   }>();
 
   const emit = defineEmits(["update:modelValue"]);

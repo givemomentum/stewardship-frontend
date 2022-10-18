@@ -160,3 +160,37 @@ export interface FiscScan {
   is_viewed: boolean;
   is_duplicated: boolean;
 }
+
+export interface LetterSegment {
+  pk: PrimaryKey;
+  name: string;
+  description?: string;
+  template: LetterTemplate;
+  donation_amount_min: URL;
+  donation_amount_max: URL;
+  donation_amount_total_min: number;
+  donation_amount_total_max: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface LetterBatch {
+  pk: PrimaryKey;
+  template: LetterTemplate;
+  segment: LetterSegment;
+  is_downloaded: boolean;
+  docx_file: URL;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface LetterTemplate {
+  pk: PrimaryKey;
+  name: string;
+  description?: string;
+  template_file_docx: URL;
+  template_file_img: URL;
+  merge_variables: Map<string, string>;
+  created_at: string;
+  updated_at: string;
+}

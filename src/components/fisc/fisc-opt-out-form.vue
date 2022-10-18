@@ -36,7 +36,7 @@
   const state = {
     alertMessage: ref<string | null>(null),
   };
-  
+
   watch(() => props.scanOpen, (scanNew, scanOld) => {
     if (scanNew.pk !== scanOld.pk) {
       state.alertMessage.value = null;
