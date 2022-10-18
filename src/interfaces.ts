@@ -176,7 +176,6 @@ export interface LetterSegment {
 
 export interface LetterBatch {
   pk: PrimaryKey;
-  template: LetterTemplate;
   segment: LetterSegment;
   count: number;
   is_downloaded: boolean;

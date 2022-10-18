@@ -35,7 +35,7 @@
         >
           <chakra.td>{{ toLocaleDateString(batch.created_at) }}</chakra.td>
           <chakra.td>{{ batch.segment.name }}</chakra.td>
-          <chakra.td>{{ batch.template.name }}</chakra.td>
+          <chakra.td>{{ batch.segment.template.name }}</chakra.td>
           <chakra.td>{{ batch.count }}</chakra.td>
 
           <chakra.td>
