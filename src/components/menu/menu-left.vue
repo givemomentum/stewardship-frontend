@@ -51,50 +51,49 @@
         <template v-if="hooks.userStore.isLoggedIn">
 
           <MenuLeftItem
-            url="/"
+            path="/"
             label="Tasks"
             icon-name="task"
           />
           <MenuLeftItem
             v-if="hooks.userStore.isOrgHor || hooks.userStore.user.is_staff"
-            :url="urls.fiscExport.list"
+            :path="urls.fiscExport.list"
             label="FISC Exports"
             icon-name="oi-table"
             icon-color-prop="fill"
           />
           <MenuLeftItem
             v-if="hooks.userStore.isOrgYsgn || hooks.userStore.user.is_staff"
-            :url="urls.lettersBatches.list"
+            :path="urls.lettersBatches.list"
             label="Letter Batches"
             icon-name="mail"
             :unread-items="hooks.batchStore.countUnread()"
           />
           <MenuLeftItem
             v-if="hooks.userStore.isOrgYsgn || hooks.userStore.user.is_staff"
-            :url="urls.letterSegments.list"
+            :path="urls.letterSegments.list"
             label="Letter Segments"
             icon-name="oi-table"
             icon-color-prop="fill"
           />
           <MenuLeftItem
             v-if="hooks.userStore.isOrgAdmin"
-            :url="urls.organization"
+            :path="urls.organization"
             label="Organization"
             icon-name="md-settings-outlined"
             icon-color-prop="fill"
           />
           <MenuLeftItem
-            :url="urls.account"
+            :path="urls.account"
             label="Account"
             icon-name="user"
           />
-          <MenuLeftItem
+          <MenuLeftItemExternal
             v-if="hooks.userStore.user.is_staff"
             :url="`${hooks.config.public.accountsBase}/../admin`"
             label="Django Admin"
             icon-name="bi-tools"
             icon-color-prop="fill"
-            is-exeternal
           />
 
         </template>
