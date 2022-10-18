@@ -4,6 +4,7 @@ import { defineNuxtPlugin } from "#app";
 import {
   feChevronDown,
   feMail,
+  feEdit,
   feEye,
   feExternalLink,
   feSearch,
@@ -86,6 +87,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     icons: {
       library: {
         feX,
+        feEdit,
         feChevronDown,
         feMail,
         feExternalLink,

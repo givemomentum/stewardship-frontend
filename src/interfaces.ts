@@ -166,6 +166,7 @@ export interface LetterSegment {
   name: string;
   description?: string;
   template: LetterTemplate;
+  is_recurring: boolean;
   donation_amount_min: URL;
   donation_amount_max: URL;
   donation_amount_total_min: number;

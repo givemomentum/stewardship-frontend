@@ -34,6 +34,8 @@
           <chakra.th>Name</chakra.th>
           <chakra.th data-is-numeric="true">Donation Min</chakra.th>
           <chakra.th data-is-numeric="true">Donation Max</chakra.th>
+          <chakra.th>Recurring?</chakra.th>
+          <chakra.th />
           <chakra.th />
         </chakra.tr>
       </chakra.thead>
@@ -46,11 +48,16 @@
           <chakra.td>{{ segment.name }}</chakra.td>
           <chakra.td data-is-numeric="true">{{ segment.donation_amount_min ?? 0 }}</chakra.td>
           <chakra.td data-is-numeric="true">{{ segment.donation_amount_max ?? '∞' }}</chakra.td>
+          <chakra.td>{{ segment.is_recurring }}</chakra.td>
 
           <chakra.td>
             <CLink :href="segment.template.template_file_img" is-external>
               <CButton size="sm" variant="link" left-icon="eye">Preview</CButton>
             </CLink>
+          </chakra.td>
+
+          <chakra.td>
+            <CButton size="sm" variant="link" left-icon="edit">Edit</CButton>
           </chakra.td>
         </chakra.tr>
       </chakra.tbody>
