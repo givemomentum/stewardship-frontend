@@ -22,6 +22,7 @@
           <chakra.th>Date</chakra.th>
           <chakra.th>Segment</chakra.th>
           <chakra.th>Template</chakra.th>
+          <chakra.th>Count</chakra.th>
           <chakra.th />
         </chakra.tr>
       </chakra.thead>
@@ -35,6 +36,7 @@
           <chakra.td>{{ toLocaleDateString(batch.created_at) }}</chakra.td>
           <chakra.td>{{ batch.segment.name }}</chakra.td>
           <chakra.td>{{ batch.template.name }}</chakra.td>
+          <chakra.td>{{ batch.count }}</chakra.td>
 
           <chakra.td>
             <CLink

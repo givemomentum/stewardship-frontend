@@ -178,6 +178,7 @@ export interface LetterBatch {
   pk: PrimaryKey;
   template: LetterTemplate;
   segment: LetterSegment;
+  count: number;
   is_downloaded: boolean;
   docx_file: URL;
   created_at: string;

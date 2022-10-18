@@ -49,7 +49,7 @@
 
           <chakra.td>
             <CLink :href="segment.template.template_file_img" is-external>
-              <CButton size="sm" variant="link" left-icon="download">Preview</CButton>
+              <CButton size="sm" variant="link" left-icon="eye">Preview</CButton>
             </CLink>
           </chakra.td>
         </chakra.tr>
