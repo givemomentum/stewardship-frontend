@@ -29,7 +29,11 @@
     await hooks.taskListStore.loadTasks();
   }
 
-  function getAssigneeDropdownOption(assignee: User): DropdownOption<PrimaryKey> {
+  function getAssigneeDropdownOption(assignee: User | undefined): DropdownOption<PrimaryKey> {
+    if (!assignee) {
+      return null;
+    }
+
     return {
       id: assignee.pk,
       value: assignee.pk,
@@ -55,7 +59,7 @@
   >
     <template v-slot:option-current="slotProps">
       <chakra.img
-        v-if="slotProps.optionCurrent.avatar"
+        v-if="slotProps.optionCurrent?.avatar"
         :src="slotProps.optionCurrent.avatar"
         border-radius="full"
         :w="comp.imgSize"
@@ -80,11 +84,11 @@
         transition-property="all"
         transition-duration="normal"
         :opacity="slotProps.isSavingOption ? 0.5 : 1"
-        bg="blue.100"
+        :bg="slotProps.optionCurrent ? 'blue.100' : 'gray.100'"
         align="center"
         justify="center"
       >
-        {{ slotProps.optionCurrent.first_name.slice(0, 1) }}
+        {{ slotProps.optionCurrent ? slotProps.optionCurrent.first_name.slice(0, 1) : '' }}
       </CFlex>
     </template>
 
@@ -97,7 +101,7 @@
           bg: 'gray.75',
           cursor: 'pointer',
         }"
-        :bg="slotProps.option.id === slotProps.optionCurrent.id ? 'gray.100' : ''"
+        :bg="slotProps.option.id === slotProps.optionCurrent?.id ? 'gray.100' : ''"
         transition-property="all"
         transition-duration="normal"
         w="100%"

@@ -22,7 +22,6 @@
 
   const state = {
     users: ref<User[]>([]),
-    taskOpened: ref<Task | null>(props.taskOpened ?? null),
   };
 
   onMounted(async () => {
@@ -47,7 +46,7 @@
       <CFlex
         v-for="task in hooks.taskListStore.tasks.value"
         :key="task.pk"
-        @click="state.taskOpened.value = task"
+        @click="hooks.taskListStore.taskOpened.value = task"
         direction="column"
         gap="3"
         p="4"
@@ -89,8 +88,8 @@
       </CFlex>
     </CFlex>
 
-    <DrawlerSimple v-model="state.taskOpened.value">
-      <TaskDetails :task="state.taskOpened.value" :users="state.users.value" />
+    <DrawlerSimple v-model="hooks.taskListStore.taskOpened.value">
+      <TaskDetails :task="hooks.taskListStore.taskOpened.value" :users="state.users.value" />
     </DrawlerSimple>
   </CFlex>
 
