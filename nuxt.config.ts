@@ -41,7 +41,7 @@ export default defineNuxtConfig({
           auto: true
         },
         sourceMaps: {
-          include: ["./src"],
+          include: ["./output/public"],
         },
       }),
     ],

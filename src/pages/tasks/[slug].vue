@@ -21,5 +21,5 @@
 </script>
 
 <template>
-  <TaskList v-if="state.task.value" :task-opened="state.task.value" />
+  <TaskList :task-opened="state.task.value" />
 </template>

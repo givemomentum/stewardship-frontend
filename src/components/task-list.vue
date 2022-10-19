@@ -47,7 +47,7 @@
       <CFlex
         v-for="task in hooks.taskListStore.tasks.value"
         :key="task.pk"
-        @click="navigateTo({ path: urls.tasks.detail(task.slug) })"
+        @click="state.taskOpened.value = task"
         direction="column"
         gap="3"
         p="4"
