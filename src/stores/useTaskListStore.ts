@@ -4,7 +4,6 @@ import { Task } from "~/interfaces";
 
 const state = {
   tasks: ref<Task[]>([]),
-  taskOpened: ref<Task | null>(null),
 };
 
 export function useTaskListStore() {
@@ -19,7 +18,6 @@ export function useTaskListStore() {
 
   return {
     tasks: state.tasks,
-    taskOpened: state.taskOpened,
     loadTasks: loadTasks,
   };
 }

@@ -46,8 +46,8 @@
           :key="segment.pk"
         >
           <chakra.td>{{ segment.name }}</chakra.td>
-          <chakra.td data-is-numeric="true">{{ segment.donation_amount_min ?? 0 }}</chakra.td>
-          <chakra.td data-is-numeric="true">{{ segment.donation_amount_max ?? '∞' }}</chakra.td>
+          <chakra.td data-is-numeric="true">{{ segment.donation_amount_min?.toLocaleString() ?? '-' }}</chakra.td>
+          <chakra.td data-is-numeric="true">{{ segment.donation_amount_max?.toLocaleString() ?? '∞' }}</chakra.td>
           <chakra.td>{{ segment.is_recurring }}</chakra.td>
 
           <chakra.td>

@@ -51,7 +51,7 @@
         <template v-if="hooks.userStore.isLoggedIn">
 
           <MenuLeftItem
-            path="/"
+            :path="urls.tasks.list"
             label="Tasks"
             icon-name="task"
           />

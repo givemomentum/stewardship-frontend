@@ -31,7 +31,7 @@
         <chakra.tr
           v-for="batch in hooks.batchStore.batchList.value"
           :key="batch.pk"
-          :color="batch.is_downloaded ? '' : 'blue.500'"
+          :color="batch.is_downloaded ? '' : 'blue.700'"
         >
           <chakra.td>{{ toLocaleDateString(batch.created_at) }}</chakra.td>
           <chakra.td>{{ batch.segment.name }}</chakra.td>

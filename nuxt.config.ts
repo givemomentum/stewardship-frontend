@@ -15,7 +15,12 @@ export default defineNuxtConfig({
     },
   },
   ssr: false,
+  pageTransition: { mode: "fade", name: "page" },
   srcDir: "src/",
+  sourcemap: {
+    server: true,
+    client: true,
+  },
   bundleSourceMaps: true,
   vite: {
     build: {

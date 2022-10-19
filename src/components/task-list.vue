@@ -1,11 +1,12 @@
 <script setup lang="ts">
   import { CFlex, CText, CIcon, CHeading } from "@chakra-ui/vue-next";
-  import { useRuntimeConfig } from "#app";
-  import { onMounted, ref } from "vue";
+  import { navigateTo, useRouter, useRuntimeConfig } from "#app";
+  import { onBeforeMount, onMounted, ref, watch } from "vue";
   import { useApi } from "~/composables/useApi";
   import { Task, User } from "~/interfaces";
   import { useTaskListStore } from "~/stores/useTaskListStore";
   import useUserStore from "~/stores/useUserStore";
+  import { urls } from "~/urls";
   import { formatDistance } from "date-fns";
 
   const props = defineProps<{
@@ -21,11 +22,12 @@
 
   const state = {
     users: ref<User[]>([]),
+    taskOpened: ref<Task | null>(props.taskOpened ?? null),
   };
 
   onMounted(async () => {
-    await hooks.taskListStore.loadTasks();
-    await loadUsers();
+    hooks.taskListStore.loadTasks();
+    loadUsers();
   });
 
   async function loadUsers() {
@@ -45,7 +47,7 @@
       <CFlex
         v-for="task in hooks.taskListStore.tasks.value"
         :key="task.pk"
-        @click="hooks.taskListStore.taskOpened.value = task"
+        @click="navigateTo({ path: urls.tasks.detail(task.slug) })"
         direction="column"
         gap="3"
         p="4"
@@ -87,14 +89,10 @@
       </CFlex>
     </CFlex>
 
-    <DrawlerSimple v-model="hooks.taskListStore.taskOpened.value">
-      <TaskDetails :task="hooks.taskListStore.taskOpened.value" :users="state.users.value" />
+    <DrawlerSimple v-model="state.taskOpened.value">
+      <TaskDetails :task="state.taskOpened.value" :users="state.users.value" />
     </DrawlerSimple>
   </CFlex>
-
-  <CHeading v-else size="md">
-    Welcome!
-  </CHeading>
 
 </template>
 
