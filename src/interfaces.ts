@@ -1,5 +1,7 @@
 export type PrimaryKey = number;
 
+export type UrlString = string;
+
 export interface Org {
   pk: PrimaryKey;
   name: string;
@@ -26,6 +28,7 @@ export interface OrgMembership {
 export interface User {
   pk: PrimaryKey;
   email: string;
+  avatar?: UrlString;
   first_name: string;
   last_name: string;
   is_staff: boolean;
@@ -88,8 +91,8 @@ export interface FiscExport {
   org: PrimaryKey;
   date: string;
   is_downloaded: boolean;
-  gifts_export_url: string;
-  optout_export_url: string;
+  gifts_export_url: UrlString;
+  optout_export_url: UrlString;
   num_scans: number;
   num_scans_unread: number;
   num_gifts: number;
@@ -151,8 +154,8 @@ export interface FiscScan {
   gift?: FiscGift;
   optout?: FiscOptOut;
   is_existing_donor: boolean;
-  image_front: URL;
-  image_back: URL;
+  image_front: UrlString;
+  image_back: UrlString;
   account: number;
   donor_id: number;
   date?: string;
@@ -180,7 +183,7 @@ export interface LetterBatch {
   segment: LetterSegment;
   count: number;
   is_downloaded: boolean;
-  docx_file: URL;
+  docx_file: UrlString;
   created_at: string;
   updated_at: string;
 }
@@ -189,8 +192,8 @@ export interface LetterTemplate {
   pk: PrimaryKey;
   name: string;
   description?: string;
-  template_file_docx: URL;
-  template_file_img: URL;
+  template_file_docx: UrlString;
+  template_file_img: UrlString;
   merge_variables: Map<string, string>;
   created_at: string;
   updated_at: string;

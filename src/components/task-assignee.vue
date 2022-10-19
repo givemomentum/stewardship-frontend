@@ -1,16 +1,17 @@
 <script lang="ts" setup>
-  import { Md5 } from "ts-md5";
   import { useApi } from "~/composables/useApi";
+  import { useUserListStore } from "~/composables/useUserListStore";
   import { PrimaryKey, Task, User, DropdownOption } from "~/interfaces";
   import { CFlex } from "@chakra-ui/vue-next";
   import { useTaskListStore } from "~/stores/useTaskListStore";
   import OptionSelect from "~/components/option-select";
 
-  const props = defineProps<{ task: Task; users: User[] }>();
+  const props = defineProps<{ task: Task }>();
 
   const hooks = {
     api: useApi(),
     taskListStore: useTaskListStore(),
+    userListStore: useUserListStore(),
   };
 
   const comp = {
@@ -34,16 +35,13 @@
       value: assignee.pk,
       label: `${assignee.first_name} ${assignee.last_name}`,
       email: assignee.email,
+      avatar: assignee.avatar,
+      first_name: assignee.first_name,
     };
   }
 
-  function getGravatarURL(email: string) {
-    const emailNormalized = String(email).trim().toLowerCase();
-    return `https://www.gravatar.com/avatar/${Md5.hashStr(emailNormalized)}`;
-  }
-
   function serializeUsersAsOptions(): Array<DropdownOption<PrimaryKey>> {
-    return props.users.map((user) => getAssigneeDropdownOption(user));
+    return hooks.userListStore.userList.value.map((user) => getAssigneeDropdownOption(user));
   }
 </script>
 
@@ -51,13 +49,14 @@
 
   <OptionSelect
     :option-current="getAssigneeDropdownOption(props.task.assignees[0])"
-    :options="serializeUsersAsOptions(props.users)"
+    :options="serializeUsersAsOptions()"
     :on-selected="onSelected"
     pos="right"
   >
     <template v-slot:option-current="slotProps">
       <chakra.img
-        :src="getGravatarURL(slotProps.optionCurrent.email)"
+        v-if="slotProps.optionCurrent.avatar"
+        :src="slotProps.optionCurrent.avatar"
         border-radius="full"
         :w="comp.imgSize"
         :h="comp.imgSize"
@@ -69,6 +68,24 @@
         transition-duration="normal"
         :opacity="slotProps.isSavingOption ? 0.5 : 1"
       />
+      <CFlex
+        v-else
+        border-radius="full"
+        :w="comp.imgSize"
+        :h="comp.imgSize"
+        :_hover="{
+          filter: 'brightness(95%) saturate(105%)',
+          cursor: 'pointer',
+        }"
+        transition-property="all"
+        transition-duration="normal"
+        :opacity="slotProps.isSavingOption ? 0.5 : 1"
+        bg="blue.100"
+        align="center"
+        justify="center"
+      >
+        {{ slotProps.optionCurrent.first_name.slice(0, 1) }}
+      </CFlex>
     </template>
 
     <template v-slot:dropdown-option="slotProps">
@@ -86,11 +103,24 @@
         w="100%"
       >
         <chakra.img
-          :src="getGravatarURL(slotProps.option.email)"
+          v-if="slotProps.option.avatar"
+          :src="slotProps.option.avatar"
           border-radius="full"
           :w="comp.imgSize"
           :h="comp.imgSize"
         />
+        <CFlex
+          v-else
+          border-radius="full"
+          :min-w="comp.imgSize"
+          :h="comp.imgSize"
+          bg="blue.100"
+          align="center"
+          justify="center"
+        >
+          {{ slotProps.option.first_name.slice(0, 1) }}
+        </CFlex>
+
         <CFlex
           py="2px"
           :px="2"

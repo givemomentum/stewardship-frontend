@@ -50,6 +50,7 @@
         gap="3"
         p="4"
         max-w="700px"
+        min-w="600px"
         bg="white"
         border-radius="lg"
         border="1px solid white"
