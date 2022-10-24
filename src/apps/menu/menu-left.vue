@@ -56,14 +56,14 @@
             icon-name="task"
           />
           <MenuLeftItem
-            v-if="hooks.userStore.isOrgHor || hooks.userStore.user.is_staff"
+            v-if="hooks.userStore.isOrgHor"
             :path="urls.fiscExport.list"
             label="FISC Exports"
             icon-name="oi-table"
             icon-color-prop="fill"
           />
           <MenuLeftItem
-            v-if="hooks.userStore.isOrgYsgn || hooks.userStore.user.is_staff"
+            v-if="hooks.userStore.isOrgYsgn"
             :path="urls.letters.segmentList"
             label="Letters"
             icon-name="mail"
@@ -80,14 +80,6 @@
             label="Account"
             icon-name="user"
           />
-          <MenuLeftItemExternal
-            v-if="hooks.userStore.user.is_staff"
-            :url="`${hooks.config.public.accountsBase}/../admin`"
-            label="Django Admin"
-            icon-name="bi-tools"
-            icon-color-prop="fill"
-          />
-
         </template>
       </CFlex>
 

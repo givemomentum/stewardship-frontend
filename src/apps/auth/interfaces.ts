@@ -31,6 +31,6 @@ export interface User {
   avatar?: UrlString;
   first_name: string;
   last_name: string;
-  is_staff: boolean;
+  is_momentum_admin: boolean;
   membership?: OrgMembership;
 }
