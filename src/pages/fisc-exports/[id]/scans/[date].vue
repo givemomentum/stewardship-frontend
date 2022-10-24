@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { useRoute } from "#app";
-  import { CFlex, chakra, CBox } from "@chakra-ui/vue-next";
-  import { onBeforeMount, onMounted, onUnmounted, ref, watch } from "vue";
+  import { CFlex, chakra, CIcon, CBox } from "@chakra-ui/vue-next";
+  import { onBeforeMount, onMounted, onUnmounted, ref, watch, Ref } from "vue";
   import MenuBreadcrumbs from "~/components/menu/menu-breadcrumbs.vue";
   import { useApi } from "~/composables/useApi";
   import { useLeftMenu } from "~/composables/useLeftMenu";
@@ -15,10 +15,16 @@
     menu: useLeftMenu(),
   };
 
+  type Order = 1 | 0 | -1;
+
   const state = {
     scans: ref<FiscScan[]>([]),
     scanOpenIndex: ref<number>(null),
     scanOpen: ref<FiscScan>(null),
+
+    sortDonorId: ref<Order>(0),
+    sortName: ref<Order>(0),
+    sortAmount: ref<Order>(0),
   };
 
   const tableRefs = ref([]);
@@ -43,6 +49,58 @@
       scanNew.is_viewed = true;
     }
   });
+
+  watch(state.sortName, (orderNew: Order) => {
+    if (orderNew === 0) {
+      loadScans();
+      return;
+    }
+    state.scans.value = state.scans.value.sort((a, b) => {
+      const nameA = a.gift?.first_name?.toLowerCase();
+      const nameB = b.gift?.first_name?.toLowerCase();
+      if (nameA < nameB) {
+        return orderNew === 1 ? -1 : 1;
+      }
+      if (nameA > nameB) {
+        return orderNew === 1 ? 1 : -1;
+      }
+      return 0;
+    });
+  });
+
+  watch(state.sortDonorId, (orderNew: Order) => {
+    if (orderNew === 0) {
+      loadScans();
+      return;
+    }
+    if (orderNew === 1) {
+      state.scans.value = state.scans.value.sort((a, b) => a.donor_id - b.donor_id);
+    } else {
+      state.scans.value = state.scans.value.sort((a, b) => b.donor_id - a.donor_id);
+    }
+  });
+
+  watch(state.sortAmount, (orderNew: Order) => {
+    if (orderNew === 0) {
+      loadScans();
+      return;
+    }
+    if (orderNew === 1) {
+      state.scans.value = state.scans.value.sort((a, b) => Number(a.amount) - Number(b.amount));
+    } else if (orderNew === -1) {
+      state.scans.value = state.scans.value.sort((a, b) => Number(b.amount) - Number(a.amount));
+    }
+  });
+
+  function toggleSorting(ref: Ref<Order>) {
+    if (ref.value === 1) {
+      ref.value = -1;
+    } else if (ref.value === -1) {
+      ref.value = 0;
+    } else {
+      ref.value = 1;
+    }
+  }
 
   async function loadScans() {
     const res = await hooks.api.$get(`/fisc/scans/?date=${hooks.route.params.date}`);
@@ -73,13 +131,16 @@
       state.scanOpen.value = scanNew;
       state.scanOpenIndex.value = scanIndexNew;
 
-      // doesn't work wo setTimeout, prob a Vue render issue
-      setTimeout(() => {
-        tableRefs.value[scanIndexNew].scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      }, 0);
+      const isRefPosNotCorruptedBySorting = !state.sortDonorId.value && !state.sortName.value && !state.sortAmount.value;
+      if (isRefPosNotCorruptedBySorting) {
+        // doesn't work wo setTimeout, prob a Vue render issue
+        setTimeout(() => {
+          tableRefs.value[scanIndexNew].scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }, 0);
+      }
     }
   }
 </script>
@@ -104,9 +165,37 @@
         <ChakraTable size="sm" min-w="370px" mt="8">
           <chakra.thead>
             <chakra.tr>
-              <chakra.th>Donor ID</chakra.th>
-              <chakra.th>Name</chakra.th>
-              <chakra.th data-is-numeric="true">Amount</chakra.th>
+              <chakra.th
+                @click="toggleSorting(state.sortDonorId)"
+                pos="relative"
+                :_hover="{ cursor: 'pointer' }"
+              >
+                Donor ID
+                <CIcon top="11px" right="2" pos="absolute" v-if="state.sortDonorId.value === -1" name="chevron-up" />
+                <CIcon top="11px" right="2" pos="absolute" v-if="state.sortDonorId.value === 1" name="chevron-down" />
+              </chakra.th>
+
+              <chakra.th
+                @click="toggleSorting(state.sortName)"
+                pos="relative"
+                :_hover="{ cursor: 'pointer' }"
+              >
+                Name
+                <CIcon top="11px" right="16" pos="absolute" v-if="state.sortName.value === -1" name="chevron-up" />
+                <CIcon top="11px" right="16" pos="absolute" v-if="state.sortName.value === 1" name="chevron-down" />
+              </chakra.th>
+
+              <chakra.th
+                data-is-numeric="true"
+                @click="toggleSorting(state.sortAmount)"
+                pos="relative"
+                :_hover="{ cursor: 'pointer' }"
+              >
+                Amount
+                <CIcon top="11px" right="px" pos="absolute" v-if="state.sortAmount.value === -1" name="chevron-up" />
+                <CIcon top="11px" right="px" pos="absolute" v-if="state.sortAmount.value === 1" name="chevron-down" />
+              </chakra.th>
+
               <chakra.th>Duplicate</chakra.th>
             </chakra.tr>
           </chakra.thead>
@@ -122,7 +211,10 @@
               :data-is-viewed="scan.is_viewed"
               class="table-row"
             >
-              <chakra.td pr="0 !important">
+              <chakra.td
+                pr="0 !important"
+                @click="toggleSorting(state.sortDonorId)"
+              >
                 {{ scan.donor_id }}
               </chakra.td>
 
@@ -137,7 +229,10 @@
               </chakra.td>
               <chakra.td v-else />
 
-              <chakra.td data-is-numeric="true">${{ scan.amount }}</chakra.td>
+              <chakra.td data-is-numeric="true">
+                ${{ scan.amount }}
+              </chakra.td>
+
               <chakra.td>
                 <CBox
                   v-if="scan.is_duplicated"

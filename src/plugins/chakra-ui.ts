@@ -9,6 +9,7 @@ import {
   feExternalLink,
   feSearch,
   feDownload,
+  feChevronUp,
   feMessageSquare,
   feX,
 } from "feather-icons-paths";
@@ -89,6 +90,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         feX,
         feEdit,
         feChevronDown,
+        feChevronUp,
         feMail,
         feExternalLink,
         feMessageSquare,
