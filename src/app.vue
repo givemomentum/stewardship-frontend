@@ -58,6 +58,7 @@
       <NuxtPage v-if="hooks.userStore.isLoggedIn" />
     </CFlex>
 
+    <AdminBar v-if="hooks.userStore.user?.is_momentum_admin" />
   </CFlex>
 
 </template>

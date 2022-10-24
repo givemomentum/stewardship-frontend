@@ -5,9 +5,9 @@ export type UrlString = string;
 export interface Org {
   pk: PrimaryKey;
   name: string;
-  contact_first_name: string;
-  contact_last_name: string;
-  support_email: string;
+  contact_first_name?: string;
+  contact_last_name?: string;
+  support_email?: string;
 }
 
 export interface BlackbaudConnection {
@@ -31,7 +31,7 @@ export interface User {
   avatar?: UrlString;
   first_name: string;
   last_name: string;
-  is_staff: boolean;
+  is_momentum_admin: boolean;
   membership?: OrgMembership;
 }
 
