@@ -26,10 +26,10 @@ export const useUserStore = defineStore("user", {
       return state.user?.membership?.org || null;
     },
     isOrgHor(state: State): boolean {
-      return state.user?.membership?.org.pk === 1;
+      return state.user?.membership?.org.name === "House of Ruth";
     },
     isOrgYsgn(state: State): boolean {
-      return state.user?.membership?.org.pk === 2;
+      return state.user?.membership?.org.name === "YSGN";
     },
   },
   actions: {

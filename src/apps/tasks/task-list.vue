@@ -73,7 +73,7 @@
             gap="1"
           >
             <CIcon name="message-square" />
-            <CText>{{task.comments_count}}</CText>
+            <CText>{{ task.comments_count }}</CText>
           </CFlex>
 
           <CFlex>
@@ -110,5 +110,7 @@
       z-index: 1400;
     }
   }
-  .chakra-modal__overlay { }
+
+  .chakra-modal__overlay {
+  }
 </style>
