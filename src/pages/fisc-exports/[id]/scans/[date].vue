@@ -19,6 +19,7 @@
 
   const state = {
     scans: ref<FiscScan[]>([]),
+    scansUnsorted: ref<FiscScan[]>([]),
     scanOpenIndex: ref<number>(null),
     scanOpen: ref<FiscScan>(null),
 
@@ -52,7 +53,7 @@
 
   watch(state.sortName, (orderNew: Order) => {
     if (orderNew === 0) {
-      loadScans();
+      state.scans.value = [...state.scansUnsorted.value];
       return;
     }
     state.scans.value = state.scans.value.sort((a, b) => {
@@ -70,7 +71,7 @@
 
   watch(state.sortDonorId, (orderNew: Order) => {
     if (orderNew === 0) {
-      loadScans();
+      state.scans.value = [...state.scansUnsorted.value];
       return;
     }
     if (orderNew === 1) {
@@ -82,7 +83,7 @@
 
   watch(state.sortAmount, (orderNew: Order) => {
     if (orderNew === 0) {
-      loadScans();
+      state.scans.value = [...state.scansUnsorted.value];
       return;
     }
     if (orderNew === 1) {
@@ -105,6 +106,7 @@
   async function loadScans() {
     const res = await hooks.api.$get(`/fisc/scans/?date=${hooks.route.params.date}`);
     state.scans.value = res.data;
+    state.scansUnsorted.value = [...res.data];
     if (state.scanOpenIndex.value) {
       state.scanOpen.value = state.scans.value[state.scanOpenIndex.value];
     }
