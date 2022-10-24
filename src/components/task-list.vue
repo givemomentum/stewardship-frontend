@@ -1,12 +1,11 @@
 <script setup lang="ts">
   import { CFlex, CText, CIcon, CHeading } from "@chakra-ui/vue-next";
-  import { navigateTo, useRouter, useRuntimeConfig } from "#app";
-  import { onBeforeMount, onMounted, ref, watch } from "vue";
+  import { useRuntimeConfig } from "#app";
+  import { onMounted, ref } from "vue";
   import { useApi } from "~/composables/useApi";
   import { Task, User } from "~/interfaces";
   import { useTaskListStore } from "~/stores/useTaskListStore";
   import useUserStore from "~/stores/useUserStore";
-  import { urls } from "~/urls";
   import { formatDistance } from "date-fns";
 
   const props = defineProps<{
