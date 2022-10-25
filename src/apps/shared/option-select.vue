@@ -38,7 +38,7 @@
 
   async function onSelect(optionNew: DropdownOption) {
     const optionOld = state.optionCurrent.value;
-    if (optionNew.id === optionOld.id) {
+    if (optionNew.id === optionOld?.id) {
       return;
     }
     state.isSavingOption.value = true;
