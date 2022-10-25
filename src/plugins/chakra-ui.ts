@@ -1,4 +1,8 @@
-import ChakraUIVuePlugin, { chakra, extendTheme } from "@chakra-ui/vue-next";
+import ChakraUIVuePlugin, {
+  chakra,
+  extendTheme,
+} from "@chakra-ui/vue-next";
+import * as ChakraModule from "@chakra-ui/vue-next";
 import { domElements } from "@chakra-ui/vue-system";
 import { defineNuxtPlugin } from "#app";
 import {
@@ -140,6 +144,13 @@ export default defineNuxtPlugin((nuxtApp) => {
   domElements.forEach((tag) => {
     nuxtApp.vueApp.component(`chakra.${tag}`, chakra(tag));
   });
+
+  for (const moduleName in ChakraModule) {
+    const isComponent = moduleName.startsWith("C");
+    if (isComponent) {
+      nuxtApp.vueApp.component(moduleName, ChakraModule[moduleName]);
+    }
+  }
 });
 
 function getOhVueIconProps(icon: IconType) {
