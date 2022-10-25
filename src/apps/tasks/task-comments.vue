@@ -3,10 +3,10 @@
   import { CFlex, CBox, CText } from "@chakra-ui/vue-next";
   import { captureEvent } from "@sentry/hub";
   import { ref } from "vue";
-  import JobCommentChild from "~/components/task-comment-child.vue";
-  import JobCommentForm from "~/components/task-comment-form.vue";
+  import JobCommentChild from "~/apps/tasks/task-comment-child.vue";
+  import JobCommentForm from "~/apps/tasks/task-comment-form.vue";
   import { useApi } from "~/composables/useApi";
-  import { Comment, Task } from "~/interfaces";
+  import { Comment, Task } from "~/apps/tasks/interfaces";
 
   const props = defineProps<{ task: Task }>();
 

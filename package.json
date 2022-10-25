@@ -28,6 +28,7 @@
       "floating-vue": "^2.0.0-beta.19",
       "@ckeditor/ckeditor5-vue": "^4.0.1",
         "@ckeditor/ckeditor5-build-balloon-block": "^35.1.0",
+      "@tinymce/tinymce-vue": "^5.0.0",
       "@sentry/vue": "^7.11.1",
         "@sentry/tracing": "^7.11.1",
         "@sentry/hub": "^7.15.0",

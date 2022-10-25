@@ -4,7 +4,7 @@
   import { useApi } from "#imports";
   import { captureException } from "@sentry/hub";
   import { onMounted, ref } from "vue";
-  import { FiscExport } from "~/interfaces";
+  import { FiscExport } from "~/apps/fisc/interfaces";
   import { urls } from "~/urls";
   import Papa from "papaparse";
   import { toLocaleDateString } from "~/utils";

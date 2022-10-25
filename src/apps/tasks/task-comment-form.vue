@@ -4,10 +4,10 @@
   import { FormKitNode } from "@formkit/core";
   import { captureEvent } from "@sentry/hub";
   import { ref } from "vue";
-  import NuxtCkeditor from "~/components/nuxt-ckeditor.vue";
+  import NuxtCkeditor from "~/apps/tasks/nuxt-ckeditor.vue";
   import { useApi } from "~/composables/useApi";
   import { strings } from "~/constants";
-  import useUserStore from "~/stores/useUserStore";
+  import { useUserStore } from "~/apps/auth/useUserStore";
 
   const props = defineProps<{
     taskPk: number | string;

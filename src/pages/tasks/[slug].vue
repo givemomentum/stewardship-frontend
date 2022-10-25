@@ -2,7 +2,7 @@
   import { useRoute } from "#app";
   import { useApi } from "#imports";
   import { onBeforeMount, ref } from "vue";
-  import { Task } from "~/interfaces";
+  import { Task } from "~/apps/tasks/interfaces";
 
   const hooks = {
     route: useRoute(),

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
   import { useApi } from "~/composables/useApi";
-  import { Task, TaskStatusStr, DropdownOption } from "~/interfaces";
-  import { useTaskListStore } from "~/stores/useTaskListStore";
-  import OptionSelect from "~/components/option-select";
+  import { DropdownOption, Task, TaskStatusStr } from "~/apps/tasks/interfaces";
+  import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
+  import OptionSelect from "~/apps/shared/option-select.vue";
 
   const props = defineProps<{ task: Task }>();
 

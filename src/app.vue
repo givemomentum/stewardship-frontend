@@ -2,7 +2,7 @@
   import { useHead, useRuntimeConfig } from "#app";
   import { CFlex } from "@chakra-ui/vue-next";
   import { onMounted } from "vue";
-  import useUserStore from "~/stores/useUserStore";
+  import { useUserStore } from "~/apps/auth/useUserStore";
 
   const hooks = {
     config: useRuntimeConfig(),

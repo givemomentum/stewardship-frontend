@@ -2,8 +2,8 @@
      so don't move it without updating. -->
 <script setup lang="ts">
   import { CBox, CLink, CText, CFlex, CHeading } from "@chakra-ui/vue-next";
-  import useUserStore from "~/stores/useUserStore";
-  import { AdminOrg } from "~/interfaces";
+  import { useUserStore } from "~/apps/auth/useUserStore";
+  import { AdminOrg } from "~/apps/auth/interfaces";
   import { onMounted, ref, computed } from "vue";
   import { useApi } from "~/composables/useApi";
 

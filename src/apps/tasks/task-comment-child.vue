@@ -2,8 +2,8 @@
   import { CFlex, CBox, CButton, CText } from "@chakra-ui/vue-next";
   import { formatDistance } from "date-fns";
   import { ref } from "vue";
-  import JobCommentForm from "~/components/task-comment-form.vue";
-  import { Comment } from "~/interfaces";
+  import JobCommentForm from "~/apps/tasks/task-comment-form.vue";
+  import { Comment } from "~/apps/tasks/interfaces";
 
   const props = defineProps<{ taskPk: number | string; comment: Comment; isLastThreadLevel?: true; }>();
 

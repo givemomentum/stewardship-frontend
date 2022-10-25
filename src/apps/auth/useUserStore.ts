@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { useApi } from "~/composables/useApi";
-import { Org, User } from "~/interfaces";
+import { Org, User } from "~/apps/auth/interfaces";
 import Cookies from "js-cookie";
 import { security } from "~/constants";
 import { useRuntimeConfig } from "#app";
@@ -10,7 +10,7 @@ interface State {
   isLoading: boolean;
 }
 
-export default defineStore("user", {
+export const useUserStore = defineStore("user", {
   state: (): State => ({
     user: null,
     isLoading: true,

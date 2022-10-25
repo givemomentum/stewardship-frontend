@@ -14,6 +14,17 @@ export default defineNuxtConfig({
       env: "prod",
     },
   },
+  components: {
+    dirs: [
+      "~/components",
+      "~/apps/letters",
+      "~/apps/tasks",
+      "~/apps/fisc",
+      "~/apps/chakra",
+      "~/apps/menu",
+      "~/apps/shared",
+    ],
+  },
   ssr: false,
   pageTransition: { mode: "fade", name: "page" },
   srcDir: "src/",

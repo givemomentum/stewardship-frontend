@@ -3,7 +3,7 @@
   import { ref, watch } from "vue";
   import { useApi } from "~/composables/useApi";
   import { useForm } from "~/composables/useForm";
-  import { FiscScan } from "~/interfaces";
+  import { FiscScan } from "~/apps/fisc/interfaces";
 
   const props = defineProps<{
     loadScans: () => Promise<void>;

@@ -2,7 +2,7 @@
   import { CFlex, CBox, CSpinner } from "@chakra-ui/vue-next";
   import { captureException } from "@sentry/hub";
   import { ref, watch } from "vue";
-  import { DropdownOption } from "~/interfaces";
+  import { DropdownOption } from "~/apps/tasks/interfaces";
 
   const props = defineProps<{
     optionCurrent: DropdownOption;

@@ -1,7 +1,7 @@
 import { Md5 } from "ts-md5";
 import { onMounted, ref } from "vue";
 import { useApi } from "~/composables/useApi";
-import { User } from "~/interfaces";
+import { User } from "~/apps/auth/interfaces";
 
 const state = {
   userList: ref<User[]>([]),

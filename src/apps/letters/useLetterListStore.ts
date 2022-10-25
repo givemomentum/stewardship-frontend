@@ -1,12 +1,12 @@
 import { onMounted, ref } from "vue";
 import { useApi } from "~/composables/useApi";
-import { LetterBatch } from "~/interfaces";
+import { Letter } from "~/apps/letters/interfaces";
 
 const state = {
-  batchList: ref<LetterBatch[]>([]),
+  batchList: ref<Letter[]>([]),
 };
 
-export function useLetterBatchStore() {
+export function useLetterListStore() {
   const hooks = {
     api: useApi(),
   };
@@ -18,12 +18,12 @@ export function useLetterBatchStore() {
   });
 
   async function load() {
-    const res = await hooks.api.$get(`/ysgn/letter-batches/`);
+    const res = await hooks.api.$get(`/letters/`);
     state.batchList.value = res.data;
   }
 
-  async function markAsDownloaded(batch: LetterBatch) {
-    await hooks.api.$patch(`/ysgn/letter-batches/${batch.pk}/`, {
+  async function markAsDownloaded(letter: Letter) {
+    await hooks.api.$patch(`/letters/${letter.pk}/`, {
       is_downloaded: true,
     });
     await load();
@@ -33,6 +33,5 @@ export function useLetterBatchStore() {
     load: load,
     markAsDownloaded: markAsDownloaded,
     batchList: state.batchList,
-    countUnread: () => state.batchList.value.filter((batch) => !batch.is_downloaded).length,
   };
 }

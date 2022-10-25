@@ -1,6 +1,6 @@
 import { ref } from "vue";
 import { useApi } from "~/composables/useApi";
-import { Task } from "~/interfaces";
+import { Task } from "~/apps/tasks/interfaces";
 
 const state = {
   tasks: ref<Task[]>([]),

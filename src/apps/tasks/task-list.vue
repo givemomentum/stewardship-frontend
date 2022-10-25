@@ -3,9 +3,10 @@
   import { navigateTo, useRouter, useRuntimeConfig } from "#app";
   import { onBeforeMount, onMounted, ref, watch } from "vue";
   import { useApi } from "~/composables/useApi";
-  import { Task, User } from "~/interfaces";
-  import { useTaskListStore } from "~/stores/useTaskListStore";
-  import useUserStore from "~/stores/useUserStore";
+  import { User } from "~/apps/auth/interfaces";
+  import { Task } from "~/apps/tasks/interfaces";
+  import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
+  import { useUserStore } from "~/apps/auth/useUserStore";
   import { urls } from "~/urls";
   import { formatDistance } from "date-fns";
 

@@ -1,16 +1,16 @@
 <script setup lang="ts">
   import { useRuntimeConfig } from "#app";
   import { CBox, CFlex, chakra } from "@chakra-ui/vue-next";
-  import { useLeftMenu } from "~/composables/useLeftMenu";
-  import { useLetterBatchStore } from "~/composables/useLetterBatchStore";
+  import { useLeftMenu } from "~/apps/menu/useLeftMenu";
+  import { useLetterListStore } from "~/apps/letters/useLetterListStore";
   import { urls } from "~/urls";
-  import useUserStore from "~/stores/useUserStore";
+  import { useUserStore } from "~/apps/auth/useUserStore";
 
   const hooks = {
     config: useRuntimeConfig(),
     userStore: useUserStore(),
     menu: useLeftMenu(),
-    batchStore: useLetterBatchStore(),
+    batchStore: useLetterListStore(),
   };
 </script>
 
@@ -64,17 +64,9 @@
           />
           <MenuLeftItem
             v-if="hooks.userStore.isOrgYsgn || hooks.userStore.user.is_staff"
-            :path="urls.lettersBatches.list"
-            label="Letter Batches"
+            :path="urls.letters.list"
+            label="Letters"
             icon-name="mail"
-            :unread-items="hooks.batchStore.countUnread()"
-          />
-          <MenuLeftItem
-            v-if="hooks.userStore.isOrgYsgn || hooks.userStore.user.is_staff"
-            :path="urls.letterSegments.list"
-            label="Letter Segments"
-            icon-name="oi-table"
-            icon-color-prop="fill"
           />
           <MenuLeftItem
             v-if="hooks.userStore.isOrgAdmin"
