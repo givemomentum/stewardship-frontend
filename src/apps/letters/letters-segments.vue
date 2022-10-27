@@ -33,8 +33,8 @@
         <chakra.th>Name</chakra.th>
         <chakra.th>Donation min</chakra.th>
         <chakra.th>Donation max</chakra.th>
-        <chakra.th>Recurring?</chakra.th>
-        <chakra.th data-is-numeric="true">Unsent</chakra.th>
+        <chakra.th>Recurring filter</chakra.th>
+        <chakra.th data-is-numeric="true">Batches Unsent</chakra.th>
         <chakra.th></chakra.th>
       </chakra.thead>
       <chakra.tbody>
@@ -43,9 +43,9 @@
           :key="segment.pk"
         >
           <chakra.td>{{segment.name}}</chakra.td>
-          <chakra.td data-is-numeric="true">{{ segment.donation_amount_min?.toLocaleString() ?? '0' }}</chakra.td>
-          <chakra.td data-is-numeric="true">{{ segment.donation_amount_max?.toLocaleString() ?? '∞' }}</chakra.td>
-          <chakra.td>{{ segment.is_recurring }}</chakra.td>
+          <chakra.td data-is-numeric="true">${{ segment.donation_amount_min ?? '0' }}</chakra.td>
+          <chakra.td data-is-numeric="true">{{ segment.donation_amount_max ? '$' + segment.donation_amount_max.toLocaleString() : '∞' }}</chakra.td>
+          <chakra.td>{{ segment.recurring_filter === 'any' ? '' : segment.recurring_filter.replace('_', ' ').replace('_', ' ') }}</chakra.td>
           <chakra.td data-is-numeric="true">{{ segment.unsent_batches_count }}</chakra.td>
 
           <chakra.td>

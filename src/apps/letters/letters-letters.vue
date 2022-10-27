@@ -303,7 +303,7 @@
     td {
       padding-left: 0 !important;
       &:first-of-type {
-        color: var(--colors-gray-400)
+        color: #98a4b4;
       }
     }
   }
