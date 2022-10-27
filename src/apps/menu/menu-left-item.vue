@@ -5,6 +5,7 @@
 
   const props = defineProps<{
     path: string;
+    pathBase?: string;
     label: string;
     iconName: string;
     iconColorProp?: "fill" | "color";
@@ -17,7 +18,7 @@
   };
 
   function isActiveItem(): boolean {
-    return hooks.route.path.startsWith(props.path);
+    return hooks.route.path.startsWith(props.path) || hooks.route.path.startsWith(props.pathBase);
   }
 </script>
 

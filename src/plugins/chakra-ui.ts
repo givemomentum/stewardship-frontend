@@ -11,6 +11,9 @@ import {
   feEdit,
   feEye,
   feExternalLink,
+  feFileText,
+  feShare_2,
+  feArchive,
   feSearch,
   feDownload,
   feChevronUp,
@@ -31,7 +34,7 @@ import {
 import { IconType } from "oh-vue-icons/types/icons";
 
 export default defineNuxtPlugin((nuxtApp) => {
-  nuxtApp.vueApp.use(ChakraUIVuePlugin, {
+  nuxtApp.vueApp.use(ChakraUIVuePlugin as any, {
     extendTheme: extendTheme({
       components: {
         Heading: {
@@ -101,6 +104,9 @@ export default defineNuxtPlugin((nuxtApp) => {
         feDownload,
         feSearch,
         feEye,
+        feFileText,
+        feArchive,
+        feShare_2,
       },
       extend: {
         ...getOhVueIconProps(FaDiscord),

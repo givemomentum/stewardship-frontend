@@ -13,7 +13,9 @@ export namespace urls {
   };
 
   export const letters = {
-    list: "/letters/list",
+    segmentList: "/letters/segments",
+    segmentBatchList: (segmentPk: number) => `/letters/segments/${segmentPk}/batches`,
+    batchLettersList: (batchPk: number) => `/letters/segments/batches/${batchPk}/letters`,
   };
 
   export const organization = "/organization";

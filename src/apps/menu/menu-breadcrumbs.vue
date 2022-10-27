@@ -3,6 +3,7 @@
 
   const props = defineProps<{
     items: BreadcrumbItem[];
+    minW?: number | string;
   }>();
 
   interface BreadcrumbItem {
@@ -13,7 +14,7 @@
 </script>
 
 <template>
-  <CBreadcrumb mt="2">
+  <CBreadcrumb mt="2" :min-w="props.minW ?? ''">
     <template v-slot:separator>
       <CIcon name="chevron-right" color="gray.400" h="5" w="5" />
     </template>

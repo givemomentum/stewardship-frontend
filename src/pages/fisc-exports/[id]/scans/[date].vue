@@ -203,7 +203,7 @@
           </chakra.thead>
 
           <chakra.tbody>
-            <!-- <tr ref="{}"> must be assigned wo `state.{}` and on native html elements -->
+            <!-- <tr ref="{}"> must be assigned wo `state.{}` and on a native html elements -->
             <tr
               v-for="(scan, scanIndex) in state.scans.value"
               ref="tableRefs"
@@ -213,10 +213,7 @@
               :data-is-viewed="scan.is_viewed"
               class="table-row"
             >
-              <chakra.td
-                pr="0 !important"
-                @click="toggleSorting(state.sortDonorId)"
-              >
+              <chakra.td pr="0 !important">
                 {{ scan.donor_id }}
               </chakra.td>
 

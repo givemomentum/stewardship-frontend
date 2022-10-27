@@ -5,7 +5,7 @@
   import { DropdownOption } from "~/apps/tasks/interfaces";
 
   const props = defineProps<{
-    optionCurrent: DropdownOption;
+    optionCurrent: DropdownOption | null;
     options: Array<DropdownOption>;
     onSelected: (option: DropdownOption) => Promise<any>;
     pos?: "left" | "right";

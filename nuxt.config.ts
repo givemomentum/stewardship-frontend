@@ -7,6 +7,9 @@ export default defineNuxtConfig({
     "@formkit/nuxt",
     "@pinia/nuxt",
   ],
+  buildModules: [
+    "floating-vue/nuxt",
+  ],
   runtimeConfig: {
     public: {
       apiBase: "https://backend.stewardship.givemomentum.com/api",

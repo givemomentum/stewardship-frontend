@@ -2,7 +2,7 @@
   import { useRuntimeConfig } from "#app";
   import { CBox, CFlex, chakra } from "@chakra-ui/vue-next";
   import { useLeftMenu } from "~/apps/menu/useLeftMenu";
-  import { useLetterListStore } from "~/apps/letters/useLetterListStore";
+  import { useLetterBatchStore } from "~/apps/letters/useLetterBatchStore";
   import { urls } from "~/urls";
   import { useUserStore } from "~/apps/auth/useUserStore";
 
@@ -10,7 +10,7 @@
     config: useRuntimeConfig(),
     userStore: useUserStore(),
     menu: useLeftMenu(),
-    batchStore: useLetterListStore(),
+    batchStore: useLetterBatchStore(),
   };
 </script>
 
@@ -64,7 +64,7 @@
           />
           <MenuLeftItem
             v-if="hooks.userStore.isOrgYsgn || hooks.userStore.user.is_staff"
-            :path="urls.letters.list"
+            :path="urls.letters.segmentList"
             label="Letters"
             icon-name="mail"
           />
