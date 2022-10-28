@@ -1,18 +1,20 @@
 <script lang="ts" setup>
-  import { CFlex, CLink } from "@chakra-ui/vue-next";
+  import { CLink } from "@chakra-ui/vue-next";
   import { onMounted, ref, computed } from "vue";
   import { useRuntimeConfig } from "#app";
   import { useApi } from "~/composables/useApi";
   import { Org } from "~/apps/auth/interfaces";
   import { useForm } from "~/composables/useForm";
-  import useUserStore from "~/stores/useUserStore";
+  import { useUserStore } from "~/apps/auth/useUserStore";
+  import { useLeftMenu } from "~/apps/menu/useLeftMenu";
 
   const hooks = {
     config: useRuntimeConfig(),
     api: useApi(),
     userStore: useUserStore(),
+    menu: useLeftMenu(),
     form: useForm({
-      path: () => `auth/impersonate-org`,
+      path: () => `orgs/admin/impersonate`,
       method: "POST",
       onSuccess: async () => window.location.reload(),
     }),
@@ -40,24 +42,30 @@
 </script>
 
 <template>
-  <CFlex bg="white">
-    <CLink
-      :href="`${hooks.config.public.accountsBase}/../admin`"
-      is-external
-    >
-      Django Admin
-    </CLink>
+  <div class="admin-bar">
+    <div class="hide-link-container">
+      <CLink @click="hooks.menu.hideAdminBar" mt="auto" variant="link">
+        Hide
+      </CLink>
+    </div>
+    <div class="admin-link-container">
+      <CLink
+        :href="`${hooks.config.public.accountsBase}/../admin`"
+        is-external
+      >
+        Django Admin Panel
+      </CLink>
+    </div>
     <FormKit
       :v-if="state.orgs"
       type="form"
       @submit="hooks.form.submit"
       :actions="false"
-      display="flex"
       :value="comp.defaults.value"
     >
       <FormKit
         type="select"
-        label="Org to impersonate"
+        label="Org:"
         placeholder="Select an org"
         name="org_id"
         :options="comp.orgOptions.value"
@@ -68,13 +76,65 @@
         type="checkbox"
         label="Org admin"
         name="is_org_admin"
-
+        label-class="checkbox-label"
       />
-      <FormKit type="submit" label="Save" size="md" />
+      <FormKit type="submit" label="Save" size="sm" />
     </FormKit>
-  </CFlex>
+  </div>
 </template>
 
 <style lang="scss">
+  .admin-bar {
+    background: var(--colors-blue-800);
+    color: var(--colors-blue-100);
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 2em;
+    padding: 1em 1em;
+  }
 
+  .hide-link-container {
+    display: flex;
+    align-items: center;
+    padding: 0 7.5em;
+  }
+
+  .admin-link-container {
+    margin-left: auto;
+  }
+
+  form {
+    display: flex;
+    gap: 2em;
+    align-items: center;
+  }
+
+  .checkbox-label {
+    margin-left: .375em;
+  }
+
+  .formkit-form .formkit-outer {
+    width: auto;
+    margin-bottom: 0 !important; // Overriding !important declaration in formkit styles
+  }
+
+  .formkit-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  .formkit-label {
+    margin-bottom: 0 !important;
+  }
+
+  .formkit-form .formkit-outer .formkit-inner {
+    height: 2em;
+  }
+
+  .formkit-form .formkit-outer .formkit-inner .formkit-input {
+    height: 2em;
+  }
 </style>

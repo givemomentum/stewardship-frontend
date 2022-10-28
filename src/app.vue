@@ -53,12 +53,9 @@
 
   <CFlex h="100%" align="stretch">
     <MenuLeft />
-
     <CFlex px="10" pt="6" pr="6">
       <NuxtPage v-if="hooks.userStore.isLoggedIn" />
     </CFlex>
-
-    <AdminBar v-if="hooks.userStore.user?.is_momentum_admin" />
   </CFlex>
 
 </template>
