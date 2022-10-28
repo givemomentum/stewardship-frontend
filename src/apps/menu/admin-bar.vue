@@ -42,7 +42,7 @@
 </script>
 
 <template>
-  <div class="admin-bar">
+  <div class="menu-admin">
     <div class="hide-link-container">
       <CLink @click="hooks.menu.hideAdminBar" mt="auto" variant="link">
         Hide
@@ -84,7 +84,7 @@
 </template>
 
 <style lang="scss">
-  .admin-bar {
+  .menu-admin {
     background: var(--colors-blue-800);
     color: var(--colors-blue-100);
     position: fixed;
@@ -94,48 +94,48 @@
     align-items: center;
     gap: 2em;
     padding: 1em;
-  }
-
-  .hide-link-container {
-    display: flex;
-    align-items: center;
-    padding: 0 7.5em;
-  }
-
-  .admin-link-container {
-    margin-left: auto;
-  }
-
-  form {
-    display: flex;
-    gap: 2em;
-    align-items: center;
-    margin-right: 7em; // So it's not covered by hubspot chat
-  }
-
-  .checkbox-label {
-    margin-left: .375em;
-  }
-
-  .formkit-form .formkit-outer {
-    width: auto;
-    margin-bottom: 0 !important; // Overriding !important declaration in formkit styles
-  }
-
-  .formkit-wrapper {
-    display: flex;
-    align-items: center;
-  }
-
-  .formkit-label {
-    margin-bottom: 0 !important;
-  }
-
-  .formkit-form .formkit-outer .formkit-inner {
-    height: 2em;
-  }
-
-  .formkit-form .formkit-outer .formkit-inner .formkit-input {
-    height: 2em;
+    
+    .hide-link-container {
+      display: flex;
+      align-items: center;
+      padding: 0 7.5em;
+    }
+  
+    .admin-link-container {
+      margin-left: auto;
+    }
+  
+    form {
+      display: flex;
+      gap: 2em;
+      align-items: center;
+      margin-right: 7em; // So it's not covered by hubspot chat
+    }
+  
+    .checkbox-label {
+      margin-left: .375em;
+    }
+  
+    .formkit-form .formkit-outer {
+      width: auto;
+      margin-bottom: 0 !important; // Overriding !important declaration in formkit styles
+    }
+  
+    .formkit-wrapper {
+      display: flex;
+      align-items: center;
+    }
+  
+    .formkit-label {
+      margin-bottom: 0 !important;
+    }
+  
+    .formkit-form .formkit-outer .formkit-inner {
+      height: 2em;
+    }
+  
+    .formkit-form .formkit-outer .formkit-inner .formkit-input {
+      height: 2em;
+    }
   }
 </style>
