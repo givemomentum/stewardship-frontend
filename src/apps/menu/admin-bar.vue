@@ -93,7 +93,7 @@
     display: flex;
     align-items: center;
     gap: 2em;
-    padding: 1em 1em;
+    padding: 1em;
   }
 
   .hide-link-container {
@@ -110,6 +110,7 @@
     display: flex;
     gap: 2em;
     align-items: center;
+    margin-right: 7em; // So it's not covered by hubspot chat
   }
 
   .checkbox-label {
