@@ -32,6 +32,8 @@ module.exports = {
     "@typescript-eslint/indent": 0, // incompatible with indents in .vue <script setup>
     "unused-imports/no-unused-imports": ["error"],
     "vue/multi-word-component-names": 0,
+    "lines-between-class-members": 0, // mostly useless
+    "@typescript-eslint/lines-between-class-members": 0, // mostly useless
     "vue/script-indent": [
       "error",
       2,

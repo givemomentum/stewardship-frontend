@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { formatDistance } from "date-fns";
-  import { onBeforeMount, onMounted, onUnmounted, ref, watch } from "vue";
+  import { onBeforeMount, onUnmounted, ref, watch } from "vue";
   import { useToast } from "vue-toastification";
   import { PrimaryKey } from "~/apps/auth/interfaces";
-  import { CrmGift, Letter, LetterBatch } from "~/apps/letters/interfaces";
+  import { Letter, LetterBatch } from "~/apps/letters/interfaces";
   import { useLetterBatchStore } from "~/apps/letters/useLetterBatchStore";
   import { useLeftMenu } from "~/apps/menu/useLeftMenu";
   import { useApi } from "~/composables/useApi";
@@ -19,12 +19,11 @@
     batchStore: useLetterBatchStore(),
     toast: useToast(),
   };
-  
+
   const state = {
     letterHtmlCustom: ref(""),
-    isLetterHtmlChanged: ref(false),
     isSavingChanges: ref(false),
-    
+
     batch: ref<LetterBatch | null>(null),
     letterOpen: ref<Letter | null>(null),
     letterOpenIndex: ref<number | null>(null),
@@ -37,7 +36,7 @@
     await loadBatch();
     document.addEventListener("keydown", handleKeyUp);
   });
-  
+
   onUnmounted(() => {
     hooks.menu.unfold();
     document.removeEventListener("keydown", handleKeyUp);
@@ -52,19 +51,16 @@
     }
   });
 
-  watch(state.letterHtmlCustom, async (letterHtmlNew: string) => {
-    if (letterHtmlNew !== (state.letterOpen.value.html || state.letterOpen.value.html_default)) {
-      state.isLetterHtmlChanged.value = true;
-    } else {
-      state.isLetterHtmlChanged.value = false;
-    }
-  });
-  
+  function isLetterHtmlChanged(): boolean {
+    const htmlOriginal = state.letterOpen.value.html.valueOf() || state.letterOpen.value.html_default.valueOf();
+    return state.letterHtmlCustom.value.valueOf() === htmlOriginal;
+  }
+
   async function saveLetterHtml() {
     state.isSavingChanges.value = true;
     await hooks.api.$patch(
       `/letters/${state.letterOpen.value.pk}/`,
-      { html: state.letterHtmlCustom.value }
+      { html: state.letterHtmlCustom.value },
     );
     state.isSavingChanges.value = false;
     hooks.toast.success("Letter saved");
@@ -105,15 +101,15 @@
     const res = await hooks.api.$get(`/letters/batches/${props.batchPk}/`);
     state.batch.value = res.data;
   }
-  
+
   function getSegmentPk(): PrimaryKey | null {
-    return hooks.batchStore.list.value.find(batch => batch.pk === props.batchPk)?.segment?.pk;
+    return hooks.batchStore.list.value.find((batch) => batch.pk === props.batchPk)?.segment?.pk;
   }
-  
+
   function isSelected(letter: Letter): boolean {
     return letter.pk === state.letterOpen.value?.pk;
   }
-  
+
   function formatDate(date: string) {
     return formatDistance(new Date(date), new Date(), { addSuffix: true });
   }
@@ -132,7 +128,7 @@
           ]"
           min-w="255"
         />
-        
+
         <CFlex gap="5">
           <VTooltip>
             <CButton
@@ -145,7 +141,7 @@
             >
               Share
             </CButton>
-          
+
             <template #popper>
               <CBox font-size="xs">
                 Share the instant login link with your colleges
@@ -153,7 +149,7 @@
             </template>
           </VTooltip>
 
-          <CLink :href="state.batch.value?.zip_file" is-external :_hover="{textDecoration: 'none'}">
+          <CLink :href="state.batch.value?.zip_file" is-external :_hover="{ textDecoration: 'none' }">
             <CButton
               mt="2"
               left-icon="download"
@@ -166,7 +162,7 @@
           </CLink>
         </CFlex>
       </CFlex>
-    
+
       <CFlex h="fit-content">
         <ChakraTable size="sm" min-w="370px" mt="8">
           <chakra.thead>
@@ -246,7 +242,7 @@
                     </chakra.tr>
 
                     <chakra.tr>
-                      <chakra.td >Notes</chakra.td>
+                      <chakra.td>Notes</chakra.td>
                       <chakra.td white-space="nowrap">{{ letter.gift.notes }}</chakra.td>
                     </chakra.tr>
 
@@ -286,7 +282,8 @@
             size="sm"
             z-index="modal"
             border-radius="lg"
-            :opacity="state.isLetterHtmlChanged.value ? 1 : 0"
+            :opacity="isLetterHtmlChanged() ? 1 : 0"
+            transition="opacity 0.2s"
           >
             Save changes
           </CButton>
@@ -307,7 +304,7 @@
       }
     }
   }
-  
+
   .table-row {
     position: relative;
     height: 46px;
@@ -329,7 +326,7 @@
     &[data-is-viewed="false"] {
       color: var(--colors-blue-600);
     }
-    
+
     td {
       vertical-align: top;
     }

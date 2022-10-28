@@ -1,7 +1,6 @@
 <script setup lang="ts">
-  import { preloadComponents } from "#app";
   import { onMounted, ref } from "vue";
-  import { LetterSegment } from "~/apps/letters/interfaces";
+  import { LetterSegment, LetterTemplate } from "~/apps/letters/interfaces";
   import { useApi } from "~/composables/useApi";
   import { Mails } from "lucide-vue-next";
   import { urls } from "~/urls";
@@ -9,11 +8,12 @@
   const hooks = {
     api: useApi(),
   };
-  
+
   const state = {
     segments: ref<LetterSegment[]>([]),
+    templateOpen: ref<LetterTemplate | null>(null),
   };
-  
+
   onMounted(async () => {
     const res = await hooks.api.$get("/letters/segments/");
     state.segments.value = res.data;
@@ -27,7 +27,7 @@
         { label: 'Segments', isCurrentPage: true },
       ]"
     />
-  
+
     <ChakraTable>
       <chakra.thead>
         <chakra.th>Name</chakra.th>
@@ -35,8 +35,10 @@
         <chakra.th>Donation max</chakra.th>
         <chakra.th>Recurring filter</chakra.th>
         <chakra.th data-is-numeric="true">Batches Unsent</chakra.th>
-        <chakra.th></chakra.th>
+        <chakra.th />
+        <chakra.th />
       </chakra.thead>
+
       <chakra.tbody>
         <chakra.tr
           v-for="segment in state.segments.value"
@@ -56,8 +58,26 @@
               </CButton>
             </NuxtLink>
           </chakra.td>
+
+          <chakra.td>
+            <CButton
+              @click="state.templateOpen.value = segment.template"
+              size="sm"
+              variant="link"
+              gap="px"
+              left-icon="edit"
+            >
+              Template
+            </CButton>
+          </chakra.td>
+
         </chakra.tr>
       </chakra.tbody>
     </ChakraTable>
+
+    <DrawlerSimple v-model="state.templateOpen.value" w="calc(850px + var(--spaces-6) * 2)">
+      <LettersTemplateEdit :template="state.templateOpen.value" />
+    </DrawlerSimple>
+
   </CFlex>
 </template>

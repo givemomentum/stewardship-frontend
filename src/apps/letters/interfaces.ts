@@ -73,10 +73,14 @@ export interface LetterBatch {
 export interface LetterTemplate {
   pk: PrimaryKey;
   name: string;
-  description?: string;
-  template_file_docx: UrlString;
-  template_file_img: UrlString;
-  merge_variables: Map<string, string>;
+  html: string;
+  variables: Array<LetterTemplateVariable>;
   created_at: string;
   updated_at: string;
+}
+
+export interface LetterTemplateVariable {
+  key: string;
+  label?: string;
+  value_fallback: string;
 }

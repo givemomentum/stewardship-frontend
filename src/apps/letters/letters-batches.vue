@@ -1,7 +1,6 @@
 <script setup lang="ts">
-  import { onMounted, ref, watch } from "vue";
   import { PrimaryKey } from "~/apps/auth/interfaces";
-  import { LetterBatch, LetterSegment } from "~/apps/letters/interfaces";
+  import { LetterBatch } from "~/apps/letters/interfaces";
   import { useLetterBatchStore } from "~/apps/letters/useLetterBatchStore";
   import { useApi } from "~/composables/useApi";
   import { urls } from "~/urls";
@@ -18,7 +17,7 @@
   };
 
   function filterBatches(batchList: LetterBatch[]): LetterBatch[] {
-    return batchList.filter(batch => batch.segment.pk === props.pk);
+    return batchList.filter((batch) => batch.segment.pk === props.pk);
   }
 </script>
 
@@ -30,14 +29,14 @@
         { label: 'Batches', isCurrentPage: true },
       ]"
     />
-  
+
     <ChakraTable>
       <chakra.thead>
         <chakra.th>Date</chakra.th>
         <chakra.th data-is-numeric="true">Letters</chakra.th>
         <chakra.th data-is-numeric="true">New</chakra.th>
-        <chakra.th></chakra.th>
-        <chakra.th></chakra.th>
+        <chakra.th />
+        <chakra.th />
       </chakra.thead>
       <chakra.tbody>
         <chakra.tr

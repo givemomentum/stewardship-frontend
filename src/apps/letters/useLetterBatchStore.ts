@@ -1,4 +1,4 @@
-import { onBeforeMount, onMounted, ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { useApi } from "~/composables/useApi";
 import { LetterBatch } from "~/apps/letters/interfaces";
 
