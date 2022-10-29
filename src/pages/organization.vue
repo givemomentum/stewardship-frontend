@@ -18,6 +18,7 @@
 
   const comp = {
     blackbaudLink: computed(() => hooks.api.$url(`/crms/blackbaud/oauth_redirect/${state.adminOrg.value.pk}`)),
+    salesforceLink: computed(() => hooks.api.$url(`/crms/salesforce/oauth_redirect/${state.adminOrg.value.pk}`)),
   };
 
   onMounted(async () => {
@@ -38,7 +39,7 @@
         <CBox>
           <CText
             v-if="state.adminOrg.value.blackbaud_connection && state.adminOrg.value.blackbaud_connection.connection_successful">
-            The blackbaud connection for {{ state.adminOrg.value.blackbaud_connection.linked_entity_name }} was
+            The Blackbaud connection for {{ state.adminOrg.value.blackbaud_connection.linked_entity_name }} was
             successfully linked by {{
               state.adminOrg.value.blackbaud_connection.linked_user_email
             }}.
@@ -55,14 +56,27 @@
             to link your Blackbaud account.
           </CText>
         </CBox>
+
+        <CHeading font-size="xl" mt="4">Salesforce Connection</CHeading>
+        <CBox>
+          <CText
+            v-if="state.adminOrg.value.salesforce_connection && state.adminOrg.value.salesforce_connection.connection_successful">
+            Your organization's Salesforce has been successfully linked by
+            {{ state.adminOrg.value.salesforce_connection.sf_username }}.
+          </CText>
+          <CText
+            v-else-if="state.adminOrg.value.salesforce_connection && !state.adminOrg.value.salesforce_connection.connection_successful">
+            Linking Salesforce was not successful.
+            <CLink textDecoration="underline" :href="comp.salesforceLink.value">Click here</CLink>
+            to retry.
+          </CText>
+          <CText v-else>
+            <CLink textDecoration="underline" :href="comp.salesforceLink.value">Click here</CLink>
+            to link your Salesforce account.
+          </CText>
+        </CBox>
       </CFlex>
     </template>
 
   </CFlex>
 </template>
-
-<style>
-  a {
-    text-decoration: underline;
-  }
-</style>

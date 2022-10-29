@@ -16,8 +16,14 @@ export interface BlackbaudConnection {
   connection_successful: boolean;
 }
 
+export interface SalesforceConnection {
+  sf_username: string;
+  connection_successful: boolean;
+}
+
 export interface AdminOrg extends Org {
   blackbaud_connection?: BlackbaudConnection;
+  salesforce_connection?: SalesforceConnection;
 }
 
 export interface OrgMembership {
