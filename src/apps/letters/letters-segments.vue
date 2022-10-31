@@ -28,7 +28,7 @@
 <template>
   <CFlex direction="column" gap="10" pb="8">
     <CFlex direction="column" gap="2" align="flex-start" w="fit-content">
-      
+
       <CFlex justify="space-between" align="center" w="100%" pr="6">
         <CHeading variant="page-header" font-size="2xl">Batches</CHeading>
         <CButton left-icon="archive" variant="link" size="sm">See all</CButton>
@@ -81,15 +81,15 @@
                 </CButton>
               </CLink>
             </chakra.td>
-  
+
           </chakra.tr>
         </chakra.tbody>
       </ChakraTable>
     </CFlex>
-    
+
     <CFlex direction="column" gap="2">
       <CHeading variant="page-header" font-size="2xl">Segments</CHeading>
-  
+
       <ChakraTable>
         <chakra.thead>
           <chakra.th>Name</chakra.th>
@@ -99,7 +99,7 @@
           <chakra.th />
           <chakra.th />
         </chakra.thead>
-  
+
         <chakra.tbody>
           <chakra.tr
             v-for="segment in state.segments.value"
@@ -109,7 +109,7 @@
             <chakra.td data-is-numeric="true">${{ segment.donation_amount_min ?? '0' }}</chakra.td>
             <chakra.td data-is-numeric="true">{{ segment.donation_amount_max ? '$' + segment.donation_amount_max.toLocaleString() : '∞' }}</chakra.td>
             <chakra.td>{{ segment.recurring_filter === 'any' ? '' : segment.recurring_filter.replace('_', ' ').replace('_', ' ') }}</chakra.td>
-  
+
             <chakra.td>
               <NuxtLink :to="urls.letters.segmentBatchList(segment.pk)">
                 <CButton size="sm" variant="link" gap="2">
@@ -118,7 +118,7 @@
                 </CButton>
               </NuxtLink>
             </chakra.td>
-  
+
             <chakra.td>
               <CButton
                 @click="state.templateOpen.value = segment.template"
@@ -130,7 +130,7 @@
                 Template
               </CButton>
             </chakra.td>
-  
+
           </chakra.tr>
         </chakra.tbody>
       </ChakraTable>

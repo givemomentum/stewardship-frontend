@@ -324,21 +324,21 @@
       position: relative;
       height: 46px;
       transition: all 0.2s;
-  
+
       &:hover {
         background: var(--colors-gray-50);
         cursor: pointer;
       }
-  
+
       &[data-is-selected="true"] {
         background: white;
         height: 244px !important;
       }
-  
+
       &[data-is-viewed="false"] {
         color: var(--colors-blue-600);
       }
-  
+
       td {
         vertical-align: top;
       }
@@ -364,4 +364,3 @@
     }
   }
 </style>
-

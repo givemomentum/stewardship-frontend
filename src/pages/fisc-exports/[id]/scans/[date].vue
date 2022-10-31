@@ -305,11 +305,11 @@
         background: var(--colors-gray-100);
         cursor: pointer;
       }
-  
+
       &[data-is-selected=true] {
         background: var(--colors-gray-200);
       }
-  
+
       &[data-is-viewed=false] {
         color: var(--colors-blue-600);
       }
