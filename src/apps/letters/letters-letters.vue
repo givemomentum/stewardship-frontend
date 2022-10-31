@@ -27,6 +27,8 @@
     batch: ref<LetterBatch | null>(null),
     letterOpen: ref<Letter | null>(null),
     letterOpenIndex: ref<number | null>(null),
+
+    changedTrue: ref(true),
   };
 
   const tableRefs = ref([]);
@@ -53,7 +55,7 @@
 
   function isLetterHtmlChanged(): boolean {
     const htmlOriginal = state.letterOpen.value.html.valueOf() || state.letterOpen.value.html_default.valueOf();
-    return state.letterHtmlCustom.value.valueOf() === htmlOriginal;
+    return state.letterHtmlCustom.value.valueOf() !== htmlOriginal;
   }
 
   async function saveLetterHtml() {
@@ -65,6 +67,14 @@
     state.isSavingChanges.value = false;
     hooks.toast.success("Letter saved");
     state.letterOpen.value.html = state.letterHtmlCustom.value;
+  }
+
+  async function markAsUnread() {
+    await hooks.api.$patch(
+      `/letters/${state.letterOpen.value.pk}/`,
+      { is_viewed: false },
+    );
+    state.letterOpen.value.is_viewed = false;
   }
 
   function handleKeyUp(event: KeyboardEvent) {
@@ -164,13 +174,13 @@
       </CFlex>
 
       <CFlex h="fit-content">
-        <ChakraTable size="sm" min-w="370px" mt="8">
+        <ChakraTable size="sm" min-w="370px" mt="8" class="letter-table" w="100%">
           <chakra.thead>
             <chakra.tr>
               <chakra.th>Donor</chakra.th>
-              <chakra.th>Donation</chakra.th>
-              <chakra.th>Location</chakra.th>
-              <chakra.th>Modified</chakra.th>
+              <chakra.th data-is-numeric="true">Donation</chakra.th>
+              <chakra.th data-is-numeric="true">Donated total</chakra.th>
+              <chakra.th data-is-numeric="true">Modified</chakra.th>
             </chakra.tr>
           </chakra.thead>
 
@@ -183,7 +193,6 @@
               @click="state.letterOpen.value = letter; state.letterOpenIndex.value = letterIndex;"
               :data-is-selected="isSelected(letter)"
               :data-is-viewed="letter.is_viewed"
-              :data-is-doanted-total-a-lot="letter.donor.donated_total > letter.gift.amount"
               class="table-row"
             >
               <chakra.td v-if="letter.donor.first_name" pr="0 !important" white-space="nowrap">
@@ -194,17 +203,15 @@
               </chakra.td>
 
               <chakra.td data-is-numeric="true">
-                ${{ letter.gift.amount }}
+                ${{ Number(letter.gift.amount).toLocaleString() }}
               </chakra.td>
 
-              <chakra.td white-space="nowrap">
-                <span v-if="letter.donor.mailing_address.city">
-                  {{ letter.donor.mailing_address.state }}, {{ letter.donor.mailing_address.city }}
-                </span>
+              <chakra.td white-space="nowrap" data-is-numeric="true">
+                ${{ letter.donor.donated_total.toLocaleString() }}
               </chakra.td>
 
-              <chakra.td>
-                {{ Boolean(letter.html) ? 'Yes' : '' }}
+              <chakra.td data-is-numeric="true">
+                <ChakraCheckbox v-if="letter.html" v-model="state.changedTrue.value" is-disabled />
               </chakra.td>
 
               <CFlex
@@ -224,16 +231,16 @@
                 gap="3"
                 font-size="sm"
               >
-                <chakra.table className="donor-table" data-size="none">
+                <chakra.table class="donor-table" data-size="none">
                   <chakra.tbody>
                     <chakra.tr border-top="1px solid" border-color="gray.100">
                       <chakra.td>Email</chakra.td>
                       <chakra.td>{{ letter.donor.email }}</chakra.td>
                     </chakra.tr>
 
-                    <chakra.tr v-if="letter.donor.donated_total > letter.gift.amount">
-                      <chakra.td>Total</chakra.td>
-                      <chakra.td>${{ letter.donor.donated_total.toLocaleString() }}</chakra.td>
+                    <chakra.tr v-if="letter.donor.mailing_address.address_line1">
+                      <chakra.td>Address</chakra.td>
+                      <chakra.td>{{ letter.donor.mailing_address.address_line1.slice(0, 31) }}, {{ letter.donor.mailing_address.city }}</chakra.td>
                     </chakra.tr>
 
                     <chakra.tr>
@@ -273,20 +280,36 @@
         max-h="100vh"
       >
         <CFlex pos="relative">
-          <CButton
-            @click="saveLetterHtml()"
-            :is-loading="state.isSavingChanges.value"
+          <CFlex
             pos="absolute"
             right="3"
             top="3"
-            size="sm"
-            z-index="modal"
-            border-radius="lg"
-            :opacity="isLetterHtmlChanged() ? 1 : 0"
-            transition="opacity 0.2s"
+            gap="3"
           >
-            Save changes
-          </CButton>
+            <CButton
+              @click="saveLetterHtml()"
+              :is-loading="state.isSavingChanges.value"
+              size="sm"
+              z-index="toast"
+              border-radius="lg"
+              :opacity="isLetterHtmlChanged() ? 1 : 0"
+              transition="opacity 0.2s"
+            >
+              Save changes
+            </CButton>
+
+            <CButton
+              @click="markAsUnread()"
+              variant="outline"
+              size="sm"
+              z-index="toast"
+              border-radius="lg"
+              opacity="1"
+              transition="opacity 0.2s"
+            >
+              Mark unread
+            </CButton>
+          </CFlex>
           <TinyMce v-model="state.letterHtmlCustom.value" />
         </CFlex>
       </CFlex>
@@ -296,39 +319,49 @@
 </template>
 
 <style lang="scss">
+  .letter-table {
+    .table-row {
+      position: relative;
+      height: 46px;
+      transition: all 0.2s;
+  
+      &:hover {
+        background: var(--colors-gray-50);
+        cursor: pointer;
+      }
+  
+      &[data-is-selected="true"] {
+        background: white;
+        height: 244px !important;
+      }
+  
+      &[data-is-viewed="false"] {
+        color: var(--colors-blue-600);
+      }
+  
+      td {
+        vertical-align: top;
+      }
+    }
+  }
+
   .donor-table {
     td {
       padding-left: 0 !important;
+      padding-bottom: var(--space-1) !important;
+      border: 0;
+
       &:first-of-type {
         color: #98a4b4;
       }
     }
-  }
-
-  .table-row {
-    position: relative;
-    height: 46px;
-    transition: all 0.2s;
-
-    &:hover {
-      background: var(--colors-gray-50);
-      cursor: pointer;
-    }
-
-    &[data-is-selected="true"] {
-      background: white;
-      height: 235px;
-      &[data-is-doanted-total-a-lot="true"] {
-        height: 280px !important;
+    tr {
+      &:last-of-type {
+        td {
+          padding-bottom: var(--space-3) !important;
+        }
       }
-    }
-
-    &[data-is-viewed="false"] {
-      color: var(--colors-blue-600);
-    }
-
-    td {
-      vertical-align: top;
     }
   }
 </style>
+

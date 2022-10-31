@@ -37,7 +37,7 @@ export class CrmGift {
   pk: PrimaryKey;
   source_data: any;
   donor?: CrmDonor;
-  amount: number;
+  amount: string;
   date: string;
   gift_type: string;
   acknowledgment_status: string;
