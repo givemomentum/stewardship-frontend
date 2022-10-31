@@ -2,7 +2,7 @@
   import { CFlex } from "@chakra-ui/vue-next";
   import { computed, ref } from "vue";
 
-  const props = defineProps<{ modelValue: boolean }>();
+  const props = defineProps<{ modelValue: boolean; isDisabled?: boolean; }>();
 
   const state = {
     id: ref(Math.random().toString(16).slice(2)),
@@ -21,19 +21,26 @@
 </script>
 
 <template>
-  <label class="chakra-checkbox" :for="state.id.value" :_hover="{}">
+  <label
+    class="chakra-checkbox"
+    :for="state.id.value"
+    :_hover="{}"
+    :data-is-disabled="props.isDisabled"
+    w="fit-content"
+  >
     <input
       class="chakra-checkbox__input"
       type="checkbox"
       v-model="value"
       :id="state.id.value"
+      :disabled="props.isDisabled ?? false"
     />
 
     <CFlex
       class="chakra-checkbox__control"
       :class="{ 'chakra-checkbox__control__checked': value }"
       align-self="flex-start"
-      mt="0.25em"
+      mt="3px"
     >
       <CFlex align="center" h="100%" w="100%" transform="none" justify="center">
         <svg
@@ -72,6 +79,23 @@
     }
   }
 
+  &[data-is-disabled=true] {
+    &:hover {
+      cursor: initial;
+
+      .chakra-checkbox__control {
+        border-color: inherit;
+
+        &.chakra-checkbox__control__checked {
+          border-color: var(--colors-blue-500);
+        }
+      }
+    }
+    .chakra-checkbox__label {
+      display: none !important;
+    }
+  }
+
   .chakra-checkbox__input {
     border: 0;
     clip: rect(0px, 0px, 0px, 0px);
@@ -85,7 +109,6 @@
   }
 
   .chakra-checkbox__control {
-    margin-top: 5px;
     width: var(--sizes-4);
     transition: box-shadow var(--transition-duration-normal);
     border: 2px solid;

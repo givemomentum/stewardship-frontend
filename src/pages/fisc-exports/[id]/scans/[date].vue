@@ -164,7 +164,7 @@
       />
 
       <CFlex h="fit-content">
-        <ChakraTable size="sm" min-w="370px" mt="8">
+        <ChakraTable size="sm" min-w="370px" mt="8" class="fisc-table">
           <chakra.thead>
             <chakra.tr>
               <chakra.th
@@ -298,18 +298,21 @@
 </template>
 
 <style lang="scss">
-  .table-row {
-    &:hover {
-      background: var(--colors-gray-100);
-      cursor: pointer;
-    }
+  .fisc-table {
 
-    &[data-is-selected=true] {
-      background: var(--colors-gray-200);
-    }
-
-    &[data-is-viewed=false] {
-      color: var(--colors-blue-600);
+    .table-row {
+      &:hover {
+        background: var(--colors-gray-100);
+        cursor: pointer;
+      }
+  
+      &[data-is-selected=true] {
+        background: var(--colors-gray-200);
+      }
+  
+      &[data-is-viewed=false] {
+        color: var(--colors-blue-600);
+      }
     }
   }
 </style>
