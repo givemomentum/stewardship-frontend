@@ -83,10 +83,17 @@
         </template>
       </CFlex>
 
-      <CButton v-if="hooks.userStore.user?.is_momentum_admin" @click="hooks.menu.showAdminBar" mt="auto" variant="link">
+      <CButton
+        v-if="hooks.userStore.user?.is_momentum_admin && hooks.menu.isFullWidth.value"
+        @click="hooks.menu.showAdminBar"
+        mt="auto"
+        variant="link"
+      >
         Admin settings
       </CButton>
     </CFlex>
-    <AdminBar v-if="hooks.userStore.user?.is_momentum_admin && hooks.menu.isAdminBarVisible.value" />
+
+
+    <AdminBar v-if="hooks.userStore.user?.is_momentum_admin && hooks.menu.isAdminBarVisible.value"/>
   </CFlex>
 </template>

@@ -13,12 +13,10 @@ function unfold() {
 }
 
 function showAdminBar() {
-  console.log("show");
   isAdminBarVisible.value = true;
 }
 
 function hideAdminBar() {
-  console.log("hide");
   isAdminBarVisible.value = false;
 }
 
