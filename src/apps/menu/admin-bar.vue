@@ -42,6 +42,45 @@
 </script>
 
 <template>
+  <div class="menu-admin" v-if="hooks.menu.isFullWidth.value">
+    <div class="hide-link-container">
+      <CLink @click="hooks.menu.hideAdminBar" mt="auto" variant="link">
+        Hide
+      </CLink>
+    </div>
+    <div class="admin-link-container">
+      <CLink
+        :href="`${hooks.config.public.accountsBase}/../admin`"
+        is-external
+      >
+        Django Admin Panel
+      </CLink>
+    </div>
+    <FormKit
+      :v-if="state.orgs"
+      type="form"
+      @submit="hooks.form.submit"
+      :actions="false"
+      :value="comp.defaults.value"
+    >
+      <FormKit
+        type="select"
+        label="Org:"
+        placeholder="Select an org"
+        name="org_id"
+        :options="comp.orgOptions.value"
+        validation="required"
+        validation-visibility="submit"
+      />
+      <FormKit
+        type="checkbox"
+        label="Org admin"
+        name="is_org_admin"
+        label-class="checkbox-label"
+      />
+      <FormKit type="submit" label="Save" size="sm" />
+    </FormKit>
+  </div>
 </template>
 
 <style lang="scss">
