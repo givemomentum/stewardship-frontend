@@ -52,7 +52,7 @@ export interface Letter {
   template: LetterTemplate;
   segment: LetterSegment;
   html?: string;
-  html_default: string;
+  html_default?: string;
   is_viewed: boolean;
   created_at: string;
   updated_at: string;

@@ -21,7 +21,7 @@
   };
 
   const state = {
-    letterHtmlCustom: ref(""),
+    letterHtml: ref(""),
     isSavingChanges: ref(false),
 
     batch: ref<LetterBatch | null>(null),
@@ -36,6 +36,7 @@
   onBeforeMount(async () => {
     hooks.menu.collapse();
     await loadBatch();
+    await loadBatch({ isIncludeHtmlDefault: true });
     document.addEventListener("keydown", handleKeyUp);
   });
 
@@ -45,7 +46,7 @@
   });
 
   watch(state.letterOpen, async (letterNew) => {
-    state.letterHtmlCustom.value = letterNew.html || letterNew.html_default;
+    state.letterHtml.value = letterNew.html || (letterNew.html_default ?? "");
 
     if (!letterNew.is_viewed) {
       await hooks.api.$patch(`/letters/${letterNew.pk}/`, { is_viewed: true });
@@ -53,20 +54,28 @@
     }
   });
 
+  watch(state.batch, async (batchNew) => {
+    const letterOpenUpdated = batchNew.letters.find((letter) => letter.pk === state.letterOpen.value?.pk);
+    if (letterOpenUpdated) {
+      state.letterHtml.value = letterOpenUpdated.html || letterOpenUpdated.html_default;
+    }
+  });
+
   function isLetterHtmlChanged(): boolean {
-    const htmlOriginal = state.letterOpen.value.html.valueOf() || state.letterOpen.value.html_default.valueOf();
-    return state.letterHtmlCustom.value.valueOf() !== htmlOriginal;
+    // todo when we update letterHtml.value in watch() above this does't get recalculated. since the code not isn't in <template>?
+    const htmlOriginal = state.letterOpen.value.html.valueOf() || state.letterOpen.value.html_default?.valueOf();
+    return state.letterHtml.value.valueOf() !== htmlOriginal;
   }
 
   async function saveLetterHtml() {
     state.isSavingChanges.value = true;
     await hooks.api.$patch(
       `/letters/${state.letterOpen.value.pk}/`,
-      { html: state.letterHtmlCustom.value },
+      { html: state.letterHtml.value },
     );
     state.isSavingChanges.value = false;
     hooks.toast.success("Letter saved");
-    state.letterOpen.value.html = state.letterHtmlCustom.value;
+    state.letterOpen.value.html = state.letterHtml.value;
   }
 
   async function markAsUnread() {
@@ -107,8 +116,8 @@
     }
   }
 
-  async function loadBatch() {
-    const res = await hooks.api.$get(`/letters/batches/${props.batchPk}/`);
+  async function loadBatch(args?: { isIncludeHtmlDefault?: boolean }) {
+    const res = await hooks.api.$get(`/letters/batches/${props.batchPk}/?expand=letters${args?.isIncludeHtmlDefault ? ".html_default" : ""}`);
     state.batch.value = res.data;
   }
 
@@ -269,7 +278,7 @@
 
     <CFlex pos="relative" w="100%" h="100%">
       <CFlex
-        v-if="state.letterOpen.value"
+        v-if="state.letterOpen.value && state.letterHtml.value"
         direction="row"
         pos="fixed"
         top="-2px"
@@ -309,7 +318,8 @@
               Mark unread
             </CButton>
           </CFlex>
-          <TinyMce v-model="state.letterHtmlCustom.value" />
+
+          <TinyMce v-model="state.letterHtml.value" />
         </CFlex>
       </CFlex>
     </CFlex>
@@ -329,12 +339,12 @@
         cursor: pointer;
       }
 
-      &[data-is-selected="true"] {
+      &[data-is-selected='true'] {
         background: white;
         height: 244px !important;
       }
 
-      &[data-is-viewed="false"] {
+      &[data-is-viewed='false'] {
         color: var(--colors-blue-600);
       }
 
