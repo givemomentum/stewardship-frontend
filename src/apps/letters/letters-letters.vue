@@ -323,6 +323,10 @@
         </CFlex>
       </CFlex>
     </CFlex>
+    
+    <CBox visibility="hidden">
+      <TinyMce />
+    </CBox>
 
   </CFlex>
 </template>

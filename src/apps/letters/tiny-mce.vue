@@ -4,7 +4,7 @@
   import { LetterTemplateVariable } from "~/apps/letters/interfaces";
 
   const props = defineProps<{
-    modelValue: string;
+    modelValue?: string;
     variables?: LetterTemplateVariable[];
   }>();
 
