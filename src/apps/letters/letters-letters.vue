@@ -135,7 +135,7 @@
 </script>
 
 <template>
-  <CFlex gap="4" pb="8" h="100%">
+  <CFlex gap="4" pb="8" h="100%" overflow="hidden">
 
     <CFlex direction="column">
       <CFlex justify="space-between" v-if="true" min-w="510" gap="5">
@@ -212,11 +212,11 @@
               </chakra.td>
 
               <chakra.td data-is-numeric="true">
-                ${{ Number(letter.gift.amount).toLocaleString() }}
+                ${{ Number(letter.gift.amount).toLocaleString('en-US', { maximumFractionDigits: 0 }) }}
               </chakra.td>
 
               <chakra.td white-space="nowrap" data-is-numeric="true">
-                ${{ letter.donor.donated_total.toLocaleString() }}
+                ${{ letter.donor.donated_total.toLocaleString('en-US', { maximumFractionDigits: 0 }) }}
               </chakra.td>
 
               <chakra.td data-is-numeric="true">
