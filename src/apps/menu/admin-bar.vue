@@ -42,7 +42,7 @@
 </script>
 
 <template>
-  <div class="menu-admin" v-if="hooks.menu.isFullWidth.value">
+  <div class="menu-admin">
     <div class="hide-link-container">
       <CLink @click="hooks.menu.hideAdminBar" mt="auto" variant="link">
         Hide

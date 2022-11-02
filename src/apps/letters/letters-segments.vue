@@ -31,7 +31,6 @@
 
       <CFlex justify="space-between" align="center" w="100%" pr="6">
         <CHeading variant="page-header" font-size="2xl">Batches</CHeading>
-        <CButton left-icon="archive" variant="link" size="sm">See all</CButton>
       </CFlex>
 
       <ChakraTable>

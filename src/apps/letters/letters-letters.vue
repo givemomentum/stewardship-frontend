@@ -220,7 +220,6 @@
                 bottom="0"
                 left="0"
                 direction="column"
-                v-if="true"
                 px="5"
                 pb="4"
                 w="100%"
