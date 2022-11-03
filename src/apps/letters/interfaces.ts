@@ -28,7 +28,9 @@ export class CrmGift {
   gift_type: string;
   acknowledgment_status: string;
   notes: string;
-  appeal: PrimaryKey;
+  appeal?: { 
+    title: string;
+  };
 }
 
 export interface Letter {

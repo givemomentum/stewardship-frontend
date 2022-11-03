@@ -254,7 +254,7 @@
 
                     <chakra.tr>
                       <chakra.td border-bottom="0" pb="0 !important">Appeal</chakra.td>
-                      <chakra.td border-bottom="0" pb="0 !important">{{ letter.gift.appeal }}</chakra.td>
+                      <chakra.td border-bottom="0" pb="0 !important">{{ letter.gift.appeal?.title }}</chakra.td>
                     </chakra.tr>
                   </chakra.tbody>
                 </chakra.table>
