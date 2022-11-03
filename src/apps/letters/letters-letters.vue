@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { formatDistance } from "date-fns";
   import { onBeforeMount, onUnmounted, ref, watch } from "vue";
-  import { useToast } from "vue-toastification";
+  import { POSITION, useToast } from "vue-toastification";
   import { PrimaryKey } from "~/apps/auth/interfaces";
   import { Letter, LetterBatch } from "~/apps/letters/interfaces";
   import { useLetterBatchStore } from "~/apps/letters/useLetterBatchStore";
@@ -89,10 +89,15 @@
     batch.letters_new_count += 1;
   }
 
-  async function markAsDownloaded() {
+  async function triggerBatchDownload() {
+    await hooks.api.$get(`/letters/batches/${props.batchPk}/download`);
     await hooks.api.$patch(`/letters/batches/${props.batchPk}/`, { is_downloaded: true });
     const batch = hooks.batchStore.list.value.find((batch) => props.batchPk === batch.pk);
     batch.is_downloaded = true;
+    await hooks.toast.info(
+      "You'll receive an email with the archive once it's ready",
+      { position: POSITION.BOTTOM_RIGHT, timeout: 5.5 * 1000 }
+    );
   }
 
   function handleKeyUp(event: KeyboardEvent) {
@@ -151,16 +156,15 @@
         <CHeading variant="page-header">Edit letters</CHeading>
 
         <CFlex gap="5">
-          <CLink :href="state.batch.value?.zip_file" is-external :_hover="{ textDecoration: 'none' }">
-            <CButton
-              left-icon="download"
-              size="sm"
-              variant="outline"
-              bg="white"
-            >
-              Download all
-            </CButton>
-          </CLink>
+          <CButton
+            @click="triggerBatchDownload"
+            left-icon="download"
+            size="sm"
+            variant="outline"
+            bg="white"
+          >
+            Download all
+          </CButton>
         </CFlex>
       </CFlex>
 

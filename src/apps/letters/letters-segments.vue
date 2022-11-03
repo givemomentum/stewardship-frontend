@@ -34,10 +34,14 @@
     state.segments.value = res.data;
   }
 
-  async function markAsDownloaded(batch: LetterBatch) {
+  async function triggerBatchDownload(batch: LetterBatch) {
+    await hooks.api.$get(`/letters/batches/${batch.pk}/download`);
     await hooks.api.$patch(`/letters/batches/${batch.pk}/`, { is_downloaded: true });
     batch.is_downloaded = true;
-    await hooks.toast.info("Moved to letters archive", { position: POSITION.BOTTOM_RIGHT });
+    await hooks.toast.info(
+      "You'll receive an email with the archive once it's ready",
+      { position: POSITION.BOTTOM_RIGHT, timeout: 5.5 * 1000 }
+    );
     await loadSegments();
   }
 </script>
@@ -101,17 +105,15 @@
             </chakra.td>
 
             <chakra.td>
-              <CLink :href="batch.zip_file" is-external>
-                <CButton
-                  size="sm"
-                  variant="link"
-                  gap="2"
-                  left-icon="download"
-                  @click="markAsDownloaded(batch)"
-                >
-                  Download
-                </CButton>
-              </CLink>
+              <CButton
+                size="sm"
+                variant="link"
+                gap="2"
+                left-icon="download"
+                @click="triggerBatchDownload(batch)"
+              >
+                Download
+              </CButton>
             </chakra.td>
 
           </chakra.tr>
