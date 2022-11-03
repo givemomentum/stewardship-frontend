@@ -134,9 +134,9 @@
             :key="segment.pk"
           >
             <chakra.td>{{ segment.name }}</chakra.td>
-            <chakra.td data-is-numeric="true">${{ segment.donation_amount_min ?? '0' }}</chakra.td>
+            <chakra.td data-is-numeric="true">${{ segment.donation_amount_min?.toLocaleString() ?? '0' }}</chakra.td>
             <chakra.td data-is-numeric="true">
-              {{ segment.donation_amount_max ? '$' + segment.donation_amount_max.toLocaleString() : '∞' }}
+              {{ segment.donation_amount_max ? '$' + segment.donation_amount_max?.toLocaleString() : '∞' }}
             </chakra.td>
             <chakra.td>{{
                 segment.gift_history_filter === 'any' ? '' : segment.gift_history_filter.replace('_', ' ').replace('_', ' ')
