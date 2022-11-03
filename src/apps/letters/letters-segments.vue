@@ -40,7 +40,7 @@
     batch.is_downloaded = true;
     await hooks.toast.info(
       "You'll receive an email with the archive once it's ready",
-      { position: POSITION.BOTTOM_RIGHT, timeout: 5.5 * 1000 }
+      { position: POSITION.TOP_RIGHT, timeout: 5.5 * 1000 }
     );
     await loadSegments();
   }
