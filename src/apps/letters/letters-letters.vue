@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { formatDistance } from "date-fns";
   import { onBeforeMount, onUnmounted, ref, watch } from "vue";
-  import { useToast } from "vue-toastification";
+  import { POSITION, useToast } from "vue-toastification";
   import { PrimaryKey } from "~/apps/auth/interfaces";
   import { Letter, LetterBatch } from "~/apps/letters/interfaces";
   import { useLetterBatchStore } from "~/apps/letters/useLetterBatchStore";
@@ -86,8 +86,14 @@
       { is_viewed: false },
     );
     state.letterOpen.value.is_viewed = false;
-    const batch = hooks.batchStore.list.value.find(batch => state.letterOpen.value.batch === batch.pk);
+    const batch = hooks.batchStore.list.value.find(batch => props.batchPk === batch.pk);
     batch.letters_new_count += 1;
+  }
+  
+  async function markAsDownloaded() {
+    await hooks.api.$patch(`/letters/batches/${props.batchPk}/`, { is_downloaded: true });
+    const batch = hooks.batchStore.list.value.find(batch => props.batchPk === batch.pk);
+    batch.is_downloaded = true;
   }
 
   function handleKeyUp(event: KeyboardEvent) {

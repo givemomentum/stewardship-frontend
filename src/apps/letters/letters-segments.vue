@@ -1,14 +1,16 @@
 <script setup lang="ts">
+  import { Mails } from "lucide-vue-next";
   import { onBeforeMount, onMounted, ref } from "vue";
-  import { LetterSegment, LetterTemplate } from "~/apps/letters/interfaces";
+  import { POSITION, useToast } from "vue-toastification";
+  import { LetterBatch, LetterSegment, LetterTemplate } from "~/apps/letters/interfaces";
   import { useLetterBatchStore } from "~/apps/letters/useLetterBatchStore";
   import { useApi } from "~/composables/useApi";
-  import { Mails } from "lucide-vue-next";
   import { urls } from "~/urls";
 
   const hooks = {
     api: useApi(),
     batchStore: useLetterBatchStore(),
+    toast: useToast(),
   };
 
   const state = {
@@ -24,17 +26,34 @@
   });
 
   onMounted(async () => {
+    await loadSegments();
+  });
+  
+  async function loadSegments() {
     const res = await hooks.api.$get("/letters/segments/");
     state.segments.value = res.data;
-  });
+  }
+  
+  async function markAsDownloaded(batch: LetterBatch) {
+    await hooks.api.$patch(`/letters/batches/${batch.pk}/`, { is_downloaded: true });
+    batch.is_downloaded = true;
+    await hooks.toast.info("Moved to letters archive", { position: POSITION.BOTTOM_RIGHT });
+    await loadSegments();
+  }
 </script>
 
 <template>
   <CFlex direction="column" gap="10" pb="8">
-    <CFlex direction="column" gap="2" align="flex-start" w="fit-content">
+    <CFlex
+      v-if="hooks.batchStore.list.value.filter(batch => !batch.is_downloaded).length"
+      direction="column"
+      gap="2"
+      align="flex-start"
+      w="fit-content"
+    >
 
       <CFlex justify="space-between" align="center" w="100%" pr="6">
-        <CHeading variant="page-header" font-size="2xl">Batches</CHeading>
+        <CHeading variant="page-header" font-size="2xl">Pending</CHeading>
       </CFlex>
 
       <ChakraTable>
@@ -79,7 +98,13 @@
 
             <chakra.td>
               <CLink :href="batch.zip_file" is-external>
-                <CButton size="sm" variant="link" gap="2" left-icon="download">
+                <CButton
+                  size="sm"
+                  variant="link"
+                  gap="2"
+                  left-icon="download"
+                  @click="markAsDownloaded(batch)"
+                >
                   Download
                 </CButton>
               </CLink>
@@ -91,7 +116,7 @@
     </CFlex>
 
     <CFlex direction="column" gap="2">
-      <CHeading variant="page-header" font-size="2xl">Segments</CHeading>
+      <CHeading variant="page-header" font-size="2xl">Templates</CHeading>
 
       <ChakraTable>
         <chakra.thead>
@@ -115,9 +140,9 @@
 
             <chakra.td>
               <NuxtLink :to="urls.letters.segmentBatchList(segment.pk)">
-                <CButton size="sm" variant="link" gap="2">
-                  <Mails size="16" />
-                  See batches
+                <CButton size="sm" variant="link" gap="1" left-icon="archive">
+                  <span>Letters archive</span>
+                  <span v-if="segment.batches_sent_count">({{ segment.batches_sent_count }})</span>
                 </CButton>
               </NuxtLink>
             </chakra.td>

@@ -1,20 +1,5 @@
 import { PrimaryKey, UrlString } from "~/apps/auth/interfaces";
 
-export interface LetterSegment {
-  pk: PrimaryKey;
-  name: string;
-  unsent_batches_count: number;
-  unsent_letters_count: number;
-  template: LetterTemplate;
-  is_recurring: boolean;
-  donation_amount_min: URL;
-  donation_amount_max: URL;
-  donation_amount_total_min: number;
-  donation_amount_total_max: number;
-  created_at: string;
-  updated_at: string;
-}
-
 export class CrmDonor {
   pk: PrimaryKey;
   mailing_address: {
@@ -55,6 +40,21 @@ export interface Letter {
   html?: string;
   html_default?: string;
   is_viewed: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface LetterSegment {
+  pk: PrimaryKey;
+  name: string;
+  batches_unsent_count: number;
+  batches_sent_count: number;
+  template: LetterTemplate;
+  is_recurring: boolean;
+  donation_amount_min: URL;
+  donation_amount_max: URL;
+  donation_amount_total_min: number;
+  donation_amount_total_max: number;
   created_at: string;
   updated_at: string;
 }
