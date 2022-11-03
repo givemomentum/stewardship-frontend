@@ -75,7 +75,7 @@
       { html: state.letterHtml.value },
     );
     state.isSavingChanges.value = false;
-    hooks.toast.success("Letter saved");
+    hooks.toast.success("Letter saved", { position: POSITION.TOP_RIGHT });
     state.letterOpen.value.html = state.letterHtml.value;
   }
 

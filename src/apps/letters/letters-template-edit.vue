@@ -29,7 +29,7 @@
         props.template.html = state.templateHtml.value;
         hooks.toast.success(
           "Template saved",
-          { position: POSITION.BOTTOM_RIGHT },
+          { position: POSITION.TOP_RIGHT },
         );
       },
     }),
