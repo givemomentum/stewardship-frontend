@@ -1,5 +1,6 @@
 import { PrimaryKey, UrlString } from "~/apps/auth/interfaces";
 
+
 export class CrmDonor {
   pk: PrimaryKey;
   mailing_address: {
@@ -50,7 +51,7 @@ export interface LetterSegment {
   batches_unsent_count: number;
   batches_sent_count: number;
   template: LetterTemplate;
-  is_recurring: boolean;
+  gift_history_filter: string;
   donation_amount_min: URL;
   donation_amount_max: URL;
   donation_amount_total_min: number;

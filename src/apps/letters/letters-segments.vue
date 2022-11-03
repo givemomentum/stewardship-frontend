@@ -71,7 +71,7 @@
             v-for="batch in hooks.batchStore.list.value.filter(batch => !batch.is_downloaded)"
             :key="batch.pk"
           >
-            <chakra.td>{{batch.name || 'Oct 18 - Oct 25' }}</chakra.td>
+            <chakra.td>{{ batch.name || 'Oct 18 - Oct 25' }}</chakra.td>
 
             <chakra.td>
               {{ batch.segment.name }}
@@ -123,7 +123,7 @@
           <chakra.th>Name</chakra.th>
           <chakra.th>Donation min</chakra.th>
           <chakra.th>Donation max</chakra.th>
-          <chakra.th>Recurring filter</chakra.th>
+          <chakra.th>Gift history</chakra.th>
           <chakra.th />
           <chakra.th />
         </chakra.thead>
@@ -133,10 +133,15 @@
             v-for="segment in state.segments.value"
             :key="segment.pk"
           >
-            <chakra.td>{{segment.name}}</chakra.td>
+            <chakra.td>{{ segment.name }}</chakra.td>
             <chakra.td data-is-numeric="true">${{ segment.donation_amount_min ?? '0' }}</chakra.td>
-            <chakra.td data-is-numeric="true">{{ segment.donation_amount_max ? '$' + segment.donation_amount_max.toLocaleString() : '∞' }}</chakra.td>
-            <chakra.td>{{ segment.recurring_filter === 'any' ? '' : segment.recurring_filter.replace('_', ' ').replace('_', ' ') }}</chakra.td>
+            <chakra.td data-is-numeric="true">
+              {{ segment.donation_amount_max ? '$' + segment.donation_amount_max.toLocaleString() : '∞' }}
+            </chakra.td>
+            <chakra.td>{{
+                segment.gift_history_filter === 'any' ? '' : segment.gift_history_filter.replace('_', ' ').replace('_', ' ')
+              }}
+            </chakra.td>
 
             <chakra.td>
               <NuxtLink :to="urls.letters.segmentBatchList(segment.pk)">
