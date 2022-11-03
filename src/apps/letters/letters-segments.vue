@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { onMounted, ref } from "vue";
+  import { onBeforeMount, onMounted, ref } from "vue";
   import { LetterSegment, LetterTemplate } from "~/apps/letters/interfaces";
   import { useLetterBatchStore } from "~/apps/letters/useLetterBatchStore";
   import { useApi } from "~/composables/useApi";
@@ -18,6 +18,10 @@
     reviewedTrue: ref(true),
     reviewedFalse: ref(false),
   };
+
+  onBeforeMount(async() => {
+    await hooks.batchStore.load();
+  });
 
   onMounted(async () => {
     const res = await hooks.api.$get("/letters/segments/");

@@ -51,6 +51,8 @@
     if (!letterNew.is_viewed) {
       await hooks.api.$patch(`/letters/${letterNew.pk}/`, { is_viewed: true });
       letterNew.is_viewed = true;
+      const batch = hooks.batchStore.list.value.find(batch => letterNew.batch === batch.pk);
+      batch.letters_new_count -= 1;
     }
   });
 
@@ -84,6 +86,8 @@
       { is_viewed: false },
     );
     state.letterOpen.value.is_viewed = false;
+    const batch = hooks.batchStore.list.value.find(batch => state.letterOpen.value.batch === batch.pk);
+    batch.letters_new_count += 1;
   }
 
   function handleKeyUp(event: KeyboardEvent) {
@@ -138,7 +142,7 @@
   <CFlex gap="4" pb="8" h="100%" overflow="hidden">
 
     <CFlex direction="column">
-      <CFlex justify="space-between" v-if="true" min-w="510" gap="5">
+      <CFlex justify="space-between" min-w="510" gap="5">
         <MenuBreadcrumbs
           :items="[
             { label: 'Segments', url: urls.letters.segmentList },
@@ -149,25 +153,6 @@
         />
 
         <CFlex gap="5">
-          <VTooltip>
-            <CButton
-              mt="2"
-              left-icon="share-2"
-              size="sm"
-              variant="outline"
-              bg="white"
-              @click="hooks.toast.success('Link copied to your clipboard')"
-            >
-              Share
-            </CButton>
-
-            <template #popper>
-              <CBox font-size="xs">
-                Share the instant login link with your colleges
-              </CBox>
-            </template>
-          </VTooltip>
-
           <CLink :href="state.batch.value?.zip_file" is-external :_hover="{ textDecoration: 'none' }">
             <CButton
               mt="2"

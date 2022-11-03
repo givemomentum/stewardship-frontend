@@ -47,6 +47,7 @@ export class CrmGift {
 
 export interface Letter {
   pk: PrimaryKey;
+  batch: PrimaryKey;
   donor: CrmDonor;
   gift: CrmGift;
   template: LetterTemplate;
