@@ -39,7 +39,7 @@
     await hooks.api.$patch(`/letters/batches/${batch.pk}/`, { is_downloaded: true });
     batch.is_downloaded = true;
     await hooks.toast.info(
-      "The download initiated. You'll receive an email with the archive once it's ready",
+      "You'll receive an email with the archive once it's ready.",
       { position: POSITION.TOP_RIGHT, timeout: 8 * 1000, pauseOnFocusLoss: false }
     );
     await loadSegments();
