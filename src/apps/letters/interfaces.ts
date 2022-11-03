@@ -1,6 +1,5 @@
 import { PrimaryKey, UrlString } from "~/apps/auth/interfaces";
 
-
 export class CrmDonor {
   pk: PrimaryKey;
   mailing_address: {
@@ -14,6 +13,7 @@ export class CrmDonor {
   };
   first_name: string;
   last_name: string;
+  salutation: string;
   email: string;
   birthday: string;
   donated_total: number;
@@ -28,7 +28,7 @@ export class CrmGift {
   gift_type: string;
   acknowledgment_status: string;
   notes: string;
-  appeal?: { 
+  appeal?: {
     title: string;
   };
 }
@@ -66,6 +66,7 @@ export interface LetterBatch {
   pk: PrimaryKey;
   segment: LetterSegment;
   letters: Letter[];
+  name: string;
   letters_count: number;
   letters_new_count: number;
   is_downloaded: boolean;

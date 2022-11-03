@@ -1,57 +1,41 @@
 <script setup lang="ts">
-  import { PrimaryKey } from "~/apps/auth/interfaces";
-  import { LetterBatch } from "~/apps/letters/interfaces";
   import { useLetterBatchStore } from "~/apps/letters/useLetterBatchStore";
   import { useApi } from "~/composables/useApi";
   import { urls } from "~/urls";
-  import { toLocaleDateString } from "~/utils";
   import { Mails } from "lucide-vue-next";
-
-  const props = defineProps<{
-    pk: PrimaryKey;
-  }>();
 
   const hooks = {
     api: useApi(),
     batchStore: useLetterBatchStore(),
   };
-
-  function filterBatches(batchList: LetterBatch[]): LetterBatch[] {
-    return batchList.filter((batch) => batch.segment.pk === props.pk);
-  }
 </script>
 
 <template>
   <CFlex direction="column" gap="7" pb="8">
-    <MenuBreadcrumbs
-      :items="[
-        { label: 'Segments', url: urls.letters.segmentList },
-        { label: 'Batches', isCurrentPage: true },
-      ]"
-    />
+    <CHeading variant="page-header">
+      Archive
+    </CHeading>
 
     <ChakraTable>
       <chakra.thead>
-        <chakra.th>Date</chakra.th>
+        <chakra.th>Week</chakra.th>
         <chakra.th data-is-numeric="true">Letters</chakra.th>
-        <chakra.th data-is-numeric="true">New</chakra.th>
         <chakra.th />
         <chakra.th />
       </chakra.thead>
       <chakra.tbody>
         <chakra.tr
-          v-for="batch in filterBatches(hooks.batchStore.list.value)"
+          v-for="batch in hooks.batchStore.list.value.filter(batch => batch.is_downloaded)"
           :key="batch.pk"
         >
-          <chakra.td>{{ toLocaleDateString(batch.created_at) }}</chakra.td>
+          <chakra.td>{{ batch.name }}</chakra.td>
           <chakra.td data-is-numeric="true">{{ batch.letters_count }}</chakra.td>
-          <chakra.td data-is-numeric="true">{{ batch.letters_new_count }}</chakra.td>
 
           <chakra.td>
             <NuxtLink :to="urls.letters.batchLettersList(batch.pk)">
               <CButton size="sm" variant="link" gap="2">
                 <Mails size="16" />
-                Review
+                View letters
               </CButton>
             </NuxtLink>
           </chakra.td>

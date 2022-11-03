@@ -14,7 +14,7 @@ export namespace urls {
 
   export const letters = {
     segmentList: "/letters/segments",
-    segmentBatchList: (segmentPk: number) => `/letters/segments/${segmentPk}/batches`,
+    archive: "/letters/archive",
     batchLettersList: (batchPk: number) => `/letters/segments/batches/${batchPk}/letters`,
   };
 

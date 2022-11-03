@@ -65,6 +65,7 @@
           <MenuLeftItem
             v-if="hooks.userStore.isOrgYsgn"
             :path="urls.letters.segmentList"
+            path-base="/letters/"
             label="Letters"
             icon-name="mail"
           />

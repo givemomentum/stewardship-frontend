@@ -1,13 +1,12 @@
 <script setup lang="ts">
   import { formatDistance } from "date-fns";
   import { onBeforeMount, onUnmounted, ref, watch } from "vue";
-  import { POSITION, useToast } from "vue-toastification";
+  import { useToast } from "vue-toastification";
   import { PrimaryKey } from "~/apps/auth/interfaces";
   import { Letter, LetterBatch } from "~/apps/letters/interfaces";
   import { useLetterBatchStore } from "~/apps/letters/useLetterBatchStore";
   import { useLeftMenu } from "~/apps/menu/useLeftMenu";
   import { useApi } from "~/composables/useApi";
-  import { urls } from "~/urls";
 
   const props = defineProps<{
     batchPk: PrimaryKey;
@@ -51,7 +50,7 @@
     if (!letterNew.is_viewed) {
       await hooks.api.$patch(`/letters/${letterNew.pk}/`, { is_viewed: true });
       letterNew.is_viewed = true;
-      const batch = hooks.batchStore.list.value.find(batch => letterNew.batch === batch.pk);
+      const batch = hooks.batchStore.list.value.find((batch) => letterNew.batch === batch.pk);
       batch.letters_new_count -= 1;
     }
   });
@@ -64,7 +63,7 @@
   });
 
   function isLetterHtmlChanged(): boolean {
-    // todo when we update letterHtml.value in watch() above this does't get recalculated. since the code not isn't in <template>?
+    // todo when we update letterHtml.value in watch() above this does't get recalculated. since the code isn't in <template>?
     const htmlOriginal = state.letterOpen.value.html.valueOf() || state.letterOpen.value.html_default?.valueOf();
     return state.letterHtml.value.valueOf() !== htmlOriginal;
   }
@@ -86,13 +85,13 @@
       { is_viewed: false },
     );
     state.letterOpen.value.is_viewed = false;
-    const batch = hooks.batchStore.list.value.find(batch => props.batchPk === batch.pk);
+    const batch = hooks.batchStore.list.value.find((batch) => props.batchPk === batch.pk);
     batch.letters_new_count += 1;
   }
-  
+
   async function markAsDownloaded() {
     await hooks.api.$patch(`/letters/batches/${props.batchPk}/`, { is_downloaded: true });
-    const batch = hooks.batchStore.list.value.find(batch => props.batchPk === batch.pk);
+    const batch = hooks.batchStore.list.value.find((batch) => props.batchPk === batch.pk);
     batch.is_downloaded = true;
   }
 
@@ -148,20 +147,12 @@
   <CFlex gap="4" pb="8" h="100%" overflow="hidden">
 
     <CFlex direction="column">
-      <CFlex justify="space-between" min-w="510" gap="5">
-        <MenuBreadcrumbs
-          :items="[
-            { label: 'Segments', url: urls.letters.segmentList },
-            { label: 'Batches', url: urls.letters.segmentBatchList(getSegmentPk()) },
-            { label: 'Letters', isCurrentPage: true },
-          ]"
-          min-w="255"
-        />
+      <CFlex justify="space-between" min-w="510" gap="5" align="center">
+        <CHeading variant="page-header">Edit letters</CHeading>
 
         <CFlex gap="5">
           <CLink :href="state.batch.value?.zip_file" is-external :_hover="{ textDecoration: 'none' }">
             <CButton
-              mt="2"
               left-icon="download"
               size="sm"
               variant="outline"
@@ -314,7 +305,7 @@
         </CFlex>
       </CFlex>
     </CFlex>
-    
+
     <CBox visibility="hidden">
       <TinyMce />
     </CBox>
