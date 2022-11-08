@@ -32,12 +32,9 @@
       { children: `window._hsq = window._hsq ?? [];` },
     ],
   });
-  
-  onBeforeMount(() => {
-    hooks.userStore.loadUser();
-  });
 
-  onMounted(() => {
+  onMounted(async () => {
+    await hooks.userStore.loadUser();
     if (hooks.userStore.isLoggedIn) {
       const hotjar = window.hj;
       if (hotjar) {
