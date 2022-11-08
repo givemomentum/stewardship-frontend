@@ -39,7 +39,10 @@
       if (hooks.userStore.isLoggedIn) {
         const hotjar = window.hj;
         if (hotjar) {
+          console.log("identifying", hooks.userStore.user.email);
           hotjar("identify", hooks.userStore.user.email);
+        } else {
+          console.log("not identifying", hooks.userStore.user.email);
         }
         const hubspot = window._hsq;
         hubspot.push(["identify", { email: hooks.userStore.user.email }]);
