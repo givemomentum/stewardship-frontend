@@ -1,8 +1,10 @@
 <script setup lang="ts">
   import { useHead, useRuntimeConfig } from "#app";
   import { CFlex } from "@chakra-ui/vue-next";
-  import { onBeforeMount, onMounted } from "vue";
+  import { onMounted } from "vue";
   import { useUserStore } from "~/apps/auth/useUserStore";
+  import LogRocket from "logrocket";
+  import { configureScope } from "@sentry/vue";
 
   const hooks = {
     config: useRuntimeConfig(),
@@ -35,16 +37,30 @@
 
   onMounted(async () => {
     await hooks.userStore.loadUser();
+    LogRocket.init("alcw3f/stewardship");
+
     if (hooks.userStore.isLoggedIn) {
-      const hotjar = window.hj;
-      if (hotjar) {
-        console.log("identifying", hooks.userStore.user.email);
-        hotjar("identify", hooks.userStore.user.email);
-      } else {
-        console.log("not identifying", hooks.userStore.user.email);
-      }
+
       const hubspot = window._hsq;
       hubspot.push(["identify", { email: hooks.userStore.user.email }]);
+
+      LogRocket.identify(hooks.userStore.user.email, {
+        name: `${hooks.userStore.user.first_name} ${hooks.userStore.user.last_name}`,
+        email: hooks.userStore.user.email,
+        org: hooks.userStore.user.membership?.org,
+        is_org_admin: hooks.userStore.user.membership?.is_org_admin,
+      });
+      LogRocket.getSessionURL(sessionURL => {
+        configureScope(scope => {
+          scope.setExtra("sessionURL", sessionURL);
+        });
+      });
+
+      const hotjar = window.hj;
+      if (hotjar) {
+        hotjar("identify", hooks.userStore.user.email);
+      }
+
     } else {
       window.location.href = `${hooks.config.public.accountsBase}/login`;
     }
