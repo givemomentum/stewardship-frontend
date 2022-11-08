@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { useHead, useRuntimeConfig } from "#app";
   import { CFlex } from "@chakra-ui/vue-next";
-  import { onMounted } from "vue";
+  import { onBeforeMount, onMounted } from "vue";
   import { useUserStore } from "~/apps/auth/useUserStore";
 
   const hooks = {
@@ -32,20 +32,21 @@
       { children: `window._hsq = window._hsq ?? [];` },
     ],
   });
-
-  onMounted(async () => {
-    await hooks.userStore.loadUser();
-    if (hooks.userStore.isLoggedIn) {
-      const hotjar = window.hj;
-      if (hotjar) {
-        hotjar("identify", hooks.userStore.user.email);
+  
+  onBeforeMount(() => {
+    hooks.userStore.loadUser();
+    window.addEventListener("load", async () => {
+      if (hooks.userStore.isLoggedIn) {
+        const hotjar = window.hj;
+        if (hotjar) {
+          hotjar("identify", hooks.userStore.user.email);
+        }
+        const hubspot = window._hsq;
+        hubspot.push(["identify", { email: hooks.userStore.user.email }]);
+      } else {
+        window.location.href = `${hooks.config.public.accountsBase}/login`;
       }
-
-      const hubspot = window._hsq;
-      hubspot.push(["identify", { email: hooks.userStore.user.email }]);
-    } else {
-      window.location.href = `${hooks.config.public.accountsBase}/login`;
-    }
+    });
   });
 </script>
 
