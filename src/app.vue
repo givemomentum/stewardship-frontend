@@ -37,9 +37,19 @@
 
   onMounted(async () => {
     await hooks.userStore.loadUser();
-    LogRocket.init("alcw3f/stewardship");
-
-    if (hooks.userStore.isLoggedIn) {
+    
+    if (!hooks.userStore.isLoggedIn) {
+      window.location.href = `${hooks.config.public.accountsBase}/login`;
+      return;
+    }
+    
+    const isNeedToInitAnalytics = (
+      hooks.userStore.isLoggedIn
+      && hooks.config.public.env === "prod"
+      && !hooks.userStore.user.email.endsWith("givemomentum.com")
+    );
+    if (isNeedToInitAnalytics) {
+      LogRocket.init("alcw3f/stewardship");
 
       const hubspot = window._hsq;
       hubspot.push(["identify", { email: hooks.userStore.user.email }]);
@@ -61,8 +71,6 @@
         hotjar("identify", hooks.userStore.user.email);
       }
 
-    } else {
-      window.location.href = `${hooks.config.public.accountsBase}/login`;
     }
   });
 </script>
