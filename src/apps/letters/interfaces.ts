@@ -2,6 +2,8 @@ import { PrimaryKey, UrlString } from "~/apps/auth/interfaces";
 
 export class CrmDonor {
   pk: PrimaryKey;
+  gifts?: CrmGift[];
+  letter_label: string;
   mailing_address: {
     pk: PrimaryKey;
     address_line1: string;
@@ -17,6 +19,9 @@ export class CrmDonor {
   email: string;
   birthday: string;
   donated_total: number;
+  donation_biggest: number;
+  giving_since: string;
+  source_data: any;
 }
 
 export class CrmGift {

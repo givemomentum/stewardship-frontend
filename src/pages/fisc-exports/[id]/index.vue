@@ -47,10 +47,10 @@
 
   onMounted(() => {
     loadExport();
-    loadCSV(`/fisc/exports/${hooks.route.params.id}/download/gifts`).then((result) => {
+    loadCSV(`/fisc/exports/${hooks.route.params.id}/download/gifts`).then(result => {
       state.gifts.value = result;
     });
-    loadCSV(`/fisc/exports/${hooks.route.params.id}/download/optout`).then((result) => {
+    loadCSV(`/fisc/exports/${hooks.route.params.id}/download/optout`).then(result => {
       state.optouts.value = result;
     });
   });

@@ -44,7 +44,7 @@
     document.removeEventListener("keydown", handleKeyUp);
   });
 
-  watch(state.scanOpen, async (scanNew) => {
+  watch(state.scanOpen, async scanNew => {
     if (!scanNew.is_viewed) {
       await hooks.api.$patch(`/fisc/scans/${scanNew.pk}/`, { is_viewed: true });
       scanNew.is_viewed = true;

@@ -2,13 +2,18 @@
   import { CFlex, CText } from "@chakra-ui/vue-next";
   import { Task } from "~/apps/tasks/interfaces";
 
-  const props = defineProps<{ task: Task; isPreview?: boolean; }>();
+  const props = defineProps<{ task: Task; isPreview?: boolean; size?: string; fontWeight?: string; }>();
 </script>
 
 <template>
   <CFlex gap="3" direction="column">
     <CFlex align="center" justify="space-between" gap="4">
-      <CText font-size="lg">{{ task.title }}</CText>
+      <CText
+        :font-size="props.size ?? 'lg'"
+        :font-weight="props.fontWeight ?? 'normal'"
+      >
+        {{ task.title }}
+      </CText>
       <TaskAssignee :task="props.task" />
     </CFlex>
 

@@ -16,7 +16,7 @@
   };
 
   const state = {
-    comments: ref(props.task.comments.filter((comment) => comment.parent === null)),
+    comments: ref(props.task.comments.filter(comment => comment.parent === null)),
     isNoComments: ref(true),
   };
 
@@ -24,7 +24,7 @@
     try {
       const res = await hooks.api.$get(`${hooks.config.public.apiBase}/comments/?task=${props.task.pk}`);
       const commentsRaw: Comment[] = res.data;
-      state.comments.value = commentsRaw.filter((comment) => comment.parent === null);
+      state.comments.value = commentsRaw.filter(comment => comment.parent === null);
     } catch (err) {
       captureEvent(err);
     }

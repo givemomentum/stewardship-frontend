@@ -46,7 +46,7 @@
   }
 
   function serializeUsersAsOptions(): Array<DropdownOption<PrimaryKey>> {
-    return hooks.userListStore.userList.value.map((user) => getAssigneeDropdownOption(user));
+    return hooks.userListStore.userList.value.map(user => getAssigneeDropdownOption(user));
   }
 </script>
 

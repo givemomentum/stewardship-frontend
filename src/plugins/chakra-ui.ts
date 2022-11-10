@@ -19,6 +19,8 @@ import {
   feChevronUp,
   feMessageSquare,
   feX,
+  feCopy,
+  feCheckSquare,
 } from "feather-icons-paths";
 import {
   FaDiscord,
@@ -30,10 +32,11 @@ import {
   HiDocumentSearch,
   BiTools,
   MdSettingsOutlined,
+  LaMoneyBillSolid,
 } from "oh-vue-icons/icons";
 import { IconType } from "oh-vue-icons/types/icons";
 
-export default defineNuxtPlugin((nuxtApp) => {
+export default defineNuxtPlugin(nuxtApp => {
   nuxtApp.vueApp.use(ChakraUIVuePlugin as any, {
     extendTheme: extendTheme({
       components: {
@@ -106,10 +109,13 @@ export default defineNuxtPlugin((nuxtApp) => {
         feEye,
         feFileText,
         feArchive,
+        feCopy,
+        feCheckSquare,
         feShare_2,
       },
       extend: {
         ...getOhVueIconProps(FaDiscord),
+        ...getOhVueIconProps(LaMoneyBillSolid),
         ...getOhVueIconProps(IoMenu),
         ...getOhVueIconProps(RiArrowDownSFill),
         ...getOhVueIconProps(HiArrowNarrowRight),
@@ -147,7 +153,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     },
   });
 
-  domElements.forEach((tag) => {
+  domElements.forEach(tag => {
     nuxtApp.vueApp.component(`chakra.${tag}`, chakra(tag));
   });
 

@@ -1,4 +1,5 @@
 import { PrimaryKey, User } from "~/apps/auth/interfaces";
+import { CrmGift } from "~/apps/letters/interfaces";
 
 export interface Task {
   pk: PrimaryKey;
@@ -8,6 +9,8 @@ export interface Task {
   description_short: string;
   description_plaintext: string;
   donors: any[];
+  gifts?: CrmGift[];
+  gift_tasks: GiftTask[];
   status: TaskStatusStr;
   author: User;
   author_pk: PrimaryKey;
@@ -17,6 +20,13 @@ export interface Task {
   created_at: string;
   comments: Comment[];
   comments_count: number;
+}
+
+export interface GiftTask {
+  pk: PrimaryKey;
+  gift: PrimaryKey;
+  task: PrimaryKey;
+  is_completed: boolean;
 }
 
 export interface DropdownOption<Value = any> {

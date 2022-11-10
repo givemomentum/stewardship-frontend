@@ -2,7 +2,7 @@
   import { CFlex } from "@chakra-ui/vue-next";
   import { computed, ref } from "vue";
 
-  const props = defineProps<{ modelValue: boolean; isDisabled?: boolean; }>();
+  const props = defineProps<{ modelValue?: boolean; isDisabled?: boolean; }>();
 
   const state = {
     id: ref(Math.random().toString(16).slice(2)),

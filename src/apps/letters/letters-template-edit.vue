@@ -35,7 +35,7 @@
     }),
   };
 
-  watch(() => props.template, (templateNew) => {
+  watch(() => props.template, templateNew => {
     state.templateHtml.value = templateNew.html;
   });
 

@@ -44,19 +44,19 @@
     document.removeEventListener("keydown", handleKeyUp);
   });
 
-  watch(state.letterOpen, async (letterNew) => {
+  watch(state.letterOpen, async letterNew => {
     state.letterHtml.value = letterNew.html || (letterNew.html_default ?? "");
 
     if (!letterNew.is_viewed) {
       await hooks.api.$patch(`/letters/${letterNew.pk}/`, { is_viewed: true });
       letterNew.is_viewed = true;
-      const batch = hooks.batchStore.list.value.find((batch) => letterNew.batch === batch.pk);
+      const batch = hooks.batchStore.list.value.find(batch => letterNew.batch === batch.pk);
       batch.letters_new_count -= 1;
     }
   });
 
-  watch(state.batch, async (batchNew) => {
-    const letterOpenUpdated = batchNew.letters.find((letter) => letter.pk === state.letterOpen.value?.pk);
+  watch(state.batch, async batchNew => {
+    const letterOpenUpdated = batchNew.letters.find(letter => letter.pk === state.letterOpen.value?.pk);
     if (letterOpenUpdated) {
       state.letterHtml.value = letterOpenUpdated.html || letterOpenUpdated.html_default;
     }
@@ -85,14 +85,14 @@
       { is_viewed: false },
     );
     state.letterOpen.value.is_viewed = false;
-    const batch = hooks.batchStore.list.value.find((batch) => props.batchPk === batch.pk);
+    const batch = hooks.batchStore.list.value.find(batch => props.batchPk === batch.pk);
     batch.letters_new_count += 1;
   }
 
   async function triggerBatchDownload() {
     await hooks.api.$get(`/letters/batches/${props.batchPk}/download`);
     await hooks.api.$patch(`/letters/batches/${props.batchPk}/`, { is_downloaded: true });
-    const batch = hooks.batchStore.list.value.find((batch) => props.batchPk === batch.pk);
+    const batch = hooks.batchStore.list.value.find(batch => props.batchPk === batch.pk);
     batch.is_downloaded = true;
     await hooks.toast.info(
       "You'll receive an email with the archive once it's ready.",
@@ -136,7 +136,7 @@
   }
 
   function getSegmentPk(): PrimaryKey | null {
-    return hooks.batchStore.list.value.find((batch) => batch.pk === props.batchPk)?.segment?.pk;
+    return hooks.batchStore.list.value.find(batch => batch.pk === props.batchPk)?.segment?.pk;
   }
 
   function isSelected(letter: Letter): boolean {

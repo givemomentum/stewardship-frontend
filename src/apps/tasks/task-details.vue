@@ -1,18 +1,292 @@
 <script lang="ts" setup>
-  import { CFlex, CBox } from "@chakra-ui/vue-next";
+  import { useRuntimeConfig } from "#app";
+  import { useApi } from "#imports";
+  import { CFlex, CBox, useClipboard } from "@chakra-ui/vue-next";
+  import { onMounted, ref, watch } from "vue";
+  import { PrimaryKey } from "~/apps/auth/interfaces";
+  import { CrmGift } from "~/apps/letters/interfaces";
   import { Task } from "~/apps/tasks/interfaces";
+  import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
+  import { formatMoney, format } from "~/utils";
+  import { parseISO } from "date-fns";
 
   const props = defineProps<{ task: Task; }>();
 
+  const state = {
+    giftOpen: ref<CrmGift | null>(null),
+    giftSeries: ref<{ x: number, y: number }[]>([{ x: 5, y: 5 }]),
+    giftsCompleted: ref<PrimaryKey[]>([]),
+    donorCopyData: ref<string>(""),
+  };
+
+  const hooks = {
+    tasks: useTaskListStore(),
+    api: useApi(),
+    clipboard: useClipboard({ source: state.donorCopyData }),
+    config: useRuntimeConfig(),
+  };
+
+  onMounted(async () => {
+    await hooks.tasks.loadTaskGiftsHistory(props.task);
+    loadGiftsCompletionStatus(props.task);
+  });
+
+  watch(state.giftOpen, (giftNew?: CrmGift) => {
+    if (!giftNew) {
+      return;
+    }
+
+    state.giftSeries.value = giftNew.donor.gifts
+      .filter(gift => Number(gift.amount))
+      .map(gift => (
+        {
+          x: parseISO(gift.date).getTime(),
+          y: Number(gift.amount),
+        }
+      ));
+  });
+
+  watch(() => props.task.gift_tasks, gift_tasks => {
+    loadGiftsCompletionStatus(props.task);
+  });
+
+  function loadGiftsCompletionStatus(task?: Task) {
+    state.giftsCompleted.value = (task ?? props.task).gift_tasks
+      .filter(giftTask => giftTask.is_completed)
+      .map(giftTask => giftTask.gift);
+  }
+
+  function isCurrentGift(gift: CrmGift) {
+    return state.giftOpen.value?.pk === gift.pk;
+  }
+
+  function clickGift(gift: CrmGift) {
+    if (isCurrentGift(gift)) {
+      state.giftOpen.value = null;
+    } else {
+      state.giftOpen.value = gift;
+    }
+  }
+
+  function isGiftCompleted(gift: CrmGift) {
+    return Boolean(state.giftsCompleted.value.find(pk => pk === gift.pk));
+  }
+
+  async function toggleTaskGiftCompletedStatus(gift: CrmGift) {
+    const completedStatusNew = !isGiftCompleted(gift);
+    await hooks.tasks.markGiftTaskCompleted(props.task, gift, completedStatusNew);
+  }
+
+  const chartOptions = {
+    chart: {
+      type: "area",
+      stacked: false,
+      height: 280,
+      animations: {
+        enabled: false,
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    markers: {
+      size: 3,
+    },
+    fill: {
+      type: "gradient",
+      gradient: {
+        shadeIntensity: 1,
+        inverseColors: false,
+        opacityFrom: 0.5,
+        opacityTo: 0,
+        stops: [0, 90, 100],
+      },
+    },
+    yaxis: {
+      labels: {
+        formatter: amount => format.money(amount),
+      },
+    },
+    xaxis: {
+      type: "datetime",
+      tooltip: {
+        enabled: false,
+      },
+    },
+    tooltip: {
+      shared: false,
+      y: {
+        formatter: amount => format.money(amount),
+      },
+      x: {
+        formatter: (date: number) => format.dateFromUnix(date),
+      },
+    },
+  };
 </script>
 
 <template>
-  <CFlex gap="3" direction="column">
+  <CFlex gap="1" direction="column">
     <CBox p="6" pt="4" bg="white" border="1px solid" border-color="gray.100">
-      <TaskHead :task="props.task" />
+      <TaskHead :task="props.task" size="xl" font-weight="bold" />
     </CBox>
 
+    <CFlex v-if="props.task.gifts?.length" direction="column" p="6" pt="3" gap="1">
+
+      <CFlex justify="space-between">
+        <CHeading font-size="xl" font-weight="normal" color="gray.500">Gifts</CHeading>
+        <CFlex gap="7">
+          <VTooltip>
+            <div>
+              <CLink :href="`${hooks.config.public.apiBase}/tasks/${props.task.pk}/gifts-csv/`">
+                <CButton left-icon="download" variant="link">CSV</CButton>
+              </CLink>
+            </div>
+
+            <template #popper>
+              <CText font-size="xs">Download letter labels</CText>
+            </template>
+          </VTooltip>
+        </CFlex>
+      </CFlex>
+
+      <ChakraTable>
+        <chakra.thead>
+          <chakra.th>Name</chakra.th>
+          <chakra.th data-is-numeric="true">Amount</chakra.th>
+          <chakra.th data-is-numeric="true">Given total</chakra.th>
+          <chakra.th>Date</chakra.th>
+          <chakra.th>First gift</chakra.th>
+          <chakra.th />
+          <chakra.th />
+        </chakra.thead>
+
+        <chakra.tbody>
+          <template
+            v-for="gift in props.task.gifts"
+            :key="gift.pk"
+          >
+
+            <chakra.tr
+              @click="clickGift(gift)"
+              :_hover="{ cursor: 'pointer', bg: isCurrentGift(gift) ? 'white' : 'gray.50' }"
+              :bg="isCurrentGift(gift) ? 'white' : 'inherit'"
+            >
+              <chakra.td>{{ gift.donor.first_name }} {{ gift.donor.last_name }}</chakra.td>
+              <chakra.td data-is-numeric="true">{{ formatMoney(gift.amount) }}</chakra.td>
+              <chakra.td data-is-numeric="true">{{ formatMoney(gift.donor.donated_total) }}</chakra.td>
+              <chakra.td>{{ format.dateHuman(gift.date) }}</chakra.td>
+              <chakra.td>{{ format.dateAgo(gift.donor.giving_since) }}</chakra.td>
+
+              <chakra.td>
+                <VTooltip placement="top">
+                  <div>
+                    <CIconButton
+                      @click.stop="() => {
+                        state.donorCopyData.value = gift.donor.letter_label;
+                        hooks.clipboard.copy();
+                      }"
+                      size="sm"
+                      variant="link"
+                      icon="copy"
+                      ariaLabel="copy"
+                    />
+                  </div>
+
+                  <template #popper>
+                    <CText font-size="xs">Copy letter address to clipboard</CText>
+                  </template>
+                </VTooltip>
+              </chakra.td>
+
+              <chakra.td text-align="end !important">
+                <ChakraCheckbox
+                  :model-value="Boolean(state.giftsCompleted.value.find(pk => pk === gift.pk))"
+                  @update:model-value="toggleTaskGiftCompletedStatus(gift)"
+                />
+              </chakra.td>
+            </chakra.tr>
+
+            <chakra.tr
+              :opacity="isCurrentGift(gift) ? 1 : 0"
+              transition="all 0.2s"
+              bg="white"
+            >
+              <chakra.td
+                colspan="7"
+                border-bottom="0"
+                :py="isCurrentGift(gift) ? 'inherit' : '0 !important'"
+                :line-height="isCurrentGift(gift) ? 'inherit' : '0 !important'"
+                transition="all 0.2s"
+                w="fit-content"
+              >
+                <CFlex
+                  direction="column"
+                  :gap="isCurrentGift(gift) ? 5 : 0"
+                >
+
+                  <CFlex direction="column">
+                    <CFlex color="gray.400" font-size="xs">Biggest gift</CFlex>
+                    <CFlex font-size="md">{{ format.money(gift.donor.donation_biggest) }}</CFlex>
+                  </CFlex>
+                  <CFlex direction="column" v-if="gift.donor.email">
+                    <CFlex color="gray.400" font-size="xs">Email</CFlex>
+                    <CFlex font-size="md">{{ gift.donor.email }}</CFlex>
+                  </CFlex>
+                  <CFlex direction="column" v-if="gift.donor?.phone?.number">
+                    <CFlex color="gray.400" font-size="xs">Phone</CFlex>
+                    <CFlex font-size="md">{{ gift.donor?.phone?.number }}</CFlex>
+                  </CFlex>
+
+                  <CFlex direction="column">
+                    <CFlex color="gray.400" font-size="xs">Address</CFlex>
+                    <CFlex
+                      v-if="gift.donor.mailing_address.address_line1"
+                      font-size="md"
+                    >
+                      {{ gift.donor.mailing_address.address_line1 }},
+                      {{ gift.donor.mailing_address.city }},
+                      {{ gift.donor.mailing_address.zip }}
+                    </CFlex>
+                    <CFlex v-else font-size="md">−</CFlex>
+                  </CFlex>
+
+                  <CFlex direction="column">
+                    <CFlex color="gray.400" font-size="xs">Giving history</CFlex>
+                    <apexchart
+                      v-if="isCurrentGift(gift)"
+                      width="780"
+                      height="250"
+                      type="area"
+                      :options="chartOptions"
+                      :series="[{
+                        name: 'Amount',
+                        data: state.giftSeries.value,
+                      }]"
+                    />
+                  </CFlex>
+
+                </CFlex>
+
+              </chakra.td>
+            </chakra.tr>
+
+          </template>
+        </chakra.tbody>
+      </ChakraTable>
+
+    </CFlex>
+
     <CBox p="6" pt="0" bg="gray.75">
+      <CHeading
+        v-if="props.task.gifts?.length && props.task.comments_count"
+        font-size="xl"
+        font-weight="normal"
+        mt="-1"
+        color="gray.500"
+      >
+        Comments
+      </CHeading>
       <TaskComments :task="props.task" />
     </CBox>
   </CFlex>

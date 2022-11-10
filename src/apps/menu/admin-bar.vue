@@ -30,7 +30,7 @@
   });
 
   const comp = {
-    orgOptions: computed(() => state.orgs.value.map((org) => ({
+    orgOptions: computed(() => state.orgs.value.map(org => ({
       label: org.name,
       value: org.pk,
     }))),

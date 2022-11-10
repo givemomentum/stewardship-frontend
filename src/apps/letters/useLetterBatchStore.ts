@@ -37,6 +37,6 @@ export function useLetterBatchStore() {
     load: load,
     markAsDownloaded: markAsDownloaded,
     list: state.list,
-    countUnread: () => state.list.value.filter((batch) => !batch.is_downloaded).length,
+    countUnread: () => state.list.value.filter(batch => !batch.is_downloaded).length,
   };
 }

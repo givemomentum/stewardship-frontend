@@ -26,6 +26,7 @@ module.exports = {
     "no-underscore-dangle": 0, // not applicable
     "prefer-destructuring": 0, // poor code style
     "no-inner-declarations": 0,
+    "arrow-parens": ["error", "as-needed"],
     "import/prefer-default-export": 0,
     "import/extensions": 0,
     "@typescript-eslint/quotes": 0, // disable single quotes enforcement

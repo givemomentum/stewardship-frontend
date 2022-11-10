@@ -12,7 +12,7 @@
   };
 
   useHead({
-    titleTemplate: (titleChunk) => (titleChunk ? `${titleChunk} - Momentum` : "Momentum"),
+    titleTemplate: titleChunk => (titleChunk ? `${titleChunk} - Momentum` : "Momentum"),
     link: [{ rel: "icon", type: "image/svg+xml", href: "/favicon.webp" }],
     script: [
       {
@@ -29,7 +29,7 @@
       },
       {
         id: "hs-script-loader",
-        src: "//js.hs-scripts.com/20795930.js",
+        src: hooks.config.public.env === "prod" ? "//js.hs-scripts.com/20795930.js" : "",
       },
       { children: `window._hsq = window._hsq ?? [];` },
     ],
@@ -37,12 +37,12 @@
 
   onMounted(async () => {
     await hooks.userStore.loadUser();
-    
+
     if (!hooks.userStore.isLoggedIn) {
       window.location.href = `${hooks.config.public.accountsBase}/login`;
       return;
     }
-    
+
     const isNeedToInitAnalytics = (
       hooks.userStore.isLoggedIn
       && hooks.config.public.env === "prod"
@@ -70,7 +70,6 @@
       if (hotjar) {
         hotjar("identify", hooks.userStore.user.email);
       }
-
     }
   });
 </script>

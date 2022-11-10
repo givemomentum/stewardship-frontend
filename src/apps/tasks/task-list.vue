@@ -25,8 +25,9 @@
   };
 
   onMounted(async () => {
-    hooks.taskListStore.loadTasks();
     loadUsers();
+    await hooks.taskListStore.loadTasks();
+    await hooks.taskListStore.loadTaskGifts();
   });
 
   async function loadUsers() {
@@ -66,14 +67,26 @@
           color="gray.500"
         >
 
-          <CFlex
-            v-if="task.comments_count"
-            align="center"
-            color="gray.500"
-            gap="1"
-          >
-            <CIcon name="message-square" />
-            <CText>{{ task.comments_count }}</CText>
+          <CFlex gap="5">
+            <CFlex
+              v-if="task.comments_count"
+              align="center"
+              color="gray.500"
+              gap="1"
+            >
+              <CIcon name="message-square" />
+              <CText>{{ task.comments_count }}</CText>
+            </CFlex>
+
+            <CFlex
+              v-if="task.gifts?.length"
+              align="center"
+              color="gray.500"
+              gap="1"
+            >
+              <CIcon name="la-money-bill-solid" fill="gray.500" size="19px" />
+              <CText>{{ task.gifts.length }}</CText>
+            </CFlex>
           </CFlex>
 
           <CFlex>
