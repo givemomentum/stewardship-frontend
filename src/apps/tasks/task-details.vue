@@ -3,9 +3,7 @@
   import { useApi } from "#imports";
   import { CFlex, CBox, useClipboard } from "@chakra-ui/vue-next";
   import { onMounted, ref, watch } from "vue";
-  import { PrimaryKey } from "~/apps/auth/interfaces";
-  import { CrmGift } from "~/apps/letters/interfaces";
-  import { Task } from "~/apps/tasks/interfaces";
+  import { Recommendation, Task } from "~/apps/tasks/interfaces";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import { formatMoney, format } from "~/utils";
   import { parseISO } from "date-fns";
@@ -13,9 +11,8 @@
   const props = defineProps<{ task: Task; }>();
 
   const state = {
-    giftOpen: ref<CrmGift | null>(null),
+    recOpen: ref<Recommendation | null>(null),
     giftSeries: ref<{ x: number, y: number }[]>([{ x: 5, y: 5 }]),
-    giftsCompleted: ref<PrimaryKey[]>([]),
     donorCopyData: ref<string>(""),
   };
 
@@ -28,53 +25,40 @@
 
   onMounted(async () => {
     await hooks.tasks.loadTaskGiftsHistory(props.task);
-    loadGiftsCompletionStatus(props.task);
   });
 
-  watch(state.giftOpen, (giftNew?: CrmGift) => {
-    if (!giftNew) {
+  watch(state.recOpen, (recNew?: Recommendation) => {
+    if (!recNew) {
       return;
     }
 
-    state.giftSeries.value = giftNew.donor.gifts
-      .filter(gift => Number(gift.amount))
-      .map(gift => (
-        {
-          x: parseISO(gift.date).getTime(),
-          y: Number(gift.amount),
-        }
-      ));
+    if (recNew?.donor?.gifts) {
+      state.giftSeries.value = recNew.donor.gifts
+        .filter(gift => Number(gift.amount))
+        .map(gift => (
+          {
+            x: parseISO(gift.date).getTime(),
+            y: Number(gift.amount),
+          }
+        ));
+    }
   });
 
-  watch(() => props.task.gift_tasks, gift_tasks => {
-    loadGiftsCompletionStatus(props.task);
-  });
-
-  function loadGiftsCompletionStatus(task?: Task) {
-    state.giftsCompleted.value = (task ?? props.task).gift_tasks
-      .filter(giftTask => giftTask.is_completed)
-      .map(giftTask => giftTask.gift);
+  function isCurrentRec(rec: Recommendation) {
+    return state.recOpen.value?.pk === rec.pk;
   }
 
-  function isCurrentGift(gift: CrmGift) {
-    return state.giftOpen.value?.pk === gift.pk;
-  }
-
-  function clickGift(gift: CrmGift) {
-    if (isCurrentGift(gift)) {
-      state.giftOpen.value = null;
+  function clickRec(rec: Recommendation) {
+    if (isCurrentRec(rec)) {
+      state.recOpen.value = null;
     } else {
-      state.giftOpen.value = gift;
+      state.recOpen.value = rec;
     }
   }
 
-  function isGiftCompleted(gift: CrmGift) {
-    return Boolean(state.giftsCompleted.value.find(pk => pk === gift.pk));
-  }
-
-  async function toggleTaskGiftCompletedStatus(gift: CrmGift) {
-    const completedStatusNew = !isGiftCompleted(gift);
-    await hooks.tasks.markGiftTaskCompleted(props.task, gift, completedStatusNew);
+  async function toggleRecCompletedStatus(rec: Recommendation) {
+    rec.is_completed = !rec.is_completed;
+    await hooks.tasks.updateRecommendationCompletedStatus(rec);
   }
 
   const chartOptions = {
@@ -131,14 +115,15 @@
       <TaskHead :task="props.task" size="xl" font-weight="bold" />
     </CBox>
 
-    <CFlex v-if="props.task.gifts?.length" direction="column" p="6" pt="3" gap="1">
+    <CFlex v-if="props.task.recommendation_set?.recommendations?.length" direction="column" p="6" pt="3" gap="1">
 
       <CFlex justify="space-between">
         <CHeading font-size="xl" font-weight="normal" color="gray.500">Gifts</CHeading>
         <CFlex gap="7">
           <VTooltip>
             <div>
-              <CLink :href="`${hooks.config.public.apiBase}/tasks/${props.task.pk}/gifts-csv/`">
+              <CLink
+                :href="`${hooks.config.public.apiBase}/recs/recommendation-sets/${props.task.recommendation_set?.pk}/donor-csv`">
                 <CButton left-icon="download" variant="link">CSV</CButton>
               </CLink>
             </div>
@@ -163,27 +148,27 @@
 
         <chakra.tbody>
           <template
-            v-for="gift in props.task.gifts"
-            :key="gift.pk"
+            v-for="rec in props.task.recommendation_set.recommendations"
+            :key="rec.pk"
           >
 
             <chakra.tr
-              @click="clickGift(gift)"
-              :_hover="{ cursor: 'pointer', bg: isCurrentGift(gift) ? 'white' : 'gray.50' }"
-              :bg="isCurrentGift(gift) ? 'white' : 'inherit'"
+              @click="clickRec(rec)"
+              :_hover="{ cursor: 'pointer', bg: isCurrentRec(rec) ? 'white' : 'gray.50' }"
+              :bg="isCurrentRec(rec) ? 'white' : 'inherit'"
             >
-              <chakra.td>{{ gift.donor.first_name }} {{ gift.donor.last_name }}</chakra.td>
-              <chakra.td data-is-numeric="true">{{ formatMoney(gift.amount) }}</chakra.td>
-              <chakra.td data-is-numeric="true">{{ formatMoney(gift.donor.donated_total) }}</chakra.td>
-              <chakra.td>{{ format.dateHuman(gift.date) }}</chakra.td>
-              <chakra.td>{{ format.dateAgo(gift.donor.giving_since) }}</chakra.td>
+              <chakra.td>{{ rec.donor.first_name }} {{ rec.donor.last_name }}</chakra.td>
+              <chakra.td data-is-numeric="true">{{ formatMoney(rec.gift.amount) }}</chakra.td>
+              <chakra.td data-is-numeric="true">{{ formatMoney(rec.donor.donated_total) }}</chakra.td>
+              <chakra.td>{{ format.dateHuman(rec.gift.date) }}</chakra.td>
+              <chakra.td>{{ format.dateAgo(rec.donor.giving_since) }}</chakra.td>
 
               <chakra.td>
                 <VTooltip placement="top">
                   <div>
                     <CIconButton
                       @click.stop="() => {
-                        state.donorCopyData.value = gift.donor.letter_label;
+                        state.donorCopyData.value = rec.donor.letter_label;
                         hooks.clipboard.copy();
                       }"
                       size="sm"
@@ -201,52 +186,52 @@
 
               <chakra.td text-align="end !important">
                 <ChakraCheckbox
-                  :model-value="Boolean(state.giftsCompleted.value.find(pk => pk === gift.pk))"
-                  @update:model-value="toggleTaskGiftCompletedStatus(gift)"
+                  :model-value="rec.is_completed"
+                  @update:model-value="toggleRecCompletedStatus(rec)"
                 />
               </chakra.td>
             </chakra.tr>
 
             <chakra.tr
-              :opacity="isCurrentGift(gift) ? 1 : 0"
+              :opacity="isCurrentRec(rec) ? 1 : 0"
               transition="all 0.2s"
               bg="white"
             >
               <chakra.td
                 colspan="7"
                 border-bottom="0"
-                :py="isCurrentGift(gift) ? 'inherit' : '0 !important'"
-                :line-height="isCurrentGift(gift) ? 'inherit' : '0 !important'"
+                :py="isCurrentRec(rec) ? 'inherit' : '0 !important'"
+                :line-height="isCurrentRec(rec) ? 'inherit' : '0 !important'"
                 transition="all 0.2s"
                 w="fit-content"
               >
                 <CFlex
                   direction="column"
-                  :gap="isCurrentGift(gift) ? 5 : 0"
+                  :gap="isCurrentRec(rec) ? 5 : 0"
                 >
 
                   <CFlex direction="column">
                     <CFlex color="gray.400" font-size="xs">Biggest gift</CFlex>
-                    <CFlex font-size="md">{{ format.money(gift.donor.donation_biggest) }}</CFlex>
+                    <CFlex font-size="md">{{ format.money(rec.donor.donation_biggest) }}</CFlex>
                   </CFlex>
-                  <CFlex direction="column" v-if="gift.donor.email">
+                  <CFlex direction="column" v-if="rec.donor.email">
                     <CFlex color="gray.400" font-size="xs">Email</CFlex>
-                    <CFlex font-size="md">{{ gift.donor.email }}</CFlex>
+                    <CFlex font-size="md">{{ rec.donor.email }}</CFlex>
                   </CFlex>
-                  <CFlex direction="column" v-if="gift.donor?.phone?.number">
+                  <CFlex direction="column" v-if="rec.donor?.phone?.number">
                     <CFlex color="gray.400" font-size="xs">Phone</CFlex>
-                    <CFlex font-size="md">{{ gift.donor?.phone?.number }}</CFlex>
+                    <CFlex font-size="md">{{ rec.donor?.phone?.number }}</CFlex>
                   </CFlex>
 
                   <CFlex direction="column">
                     <CFlex color="gray.400" font-size="xs">Address</CFlex>
                     <CFlex
-                      v-if="gift.donor.mailing_address.address_line1"
+                      v-if="rec.donor.mailing_address.address_line1"
                       font-size="md"
                     >
-                      {{ gift.donor.mailing_address.address_line1 }},
-                      {{ gift.donor.mailing_address.city }},
-                      {{ gift.donor.mailing_address.zip }}
+                      {{ rec.donor.mailing_address.address_line1 }},
+                      {{ rec.donor.mailing_address.city }},
+                      {{ rec.donor.mailing_address.zip }}
                     </CFlex>
                     <CFlex v-else font-size="md">−</CFlex>
                   </CFlex>
@@ -254,7 +239,7 @@
                   <CFlex direction="column">
                     <CFlex color="gray.400" font-size="xs">Giving history</CFlex>
                     <apexchart
-                      v-if="isCurrentGift(gift)"
+                      v-if="isCurrentRec(rec)"
                       width="780"
                       height="250"
                       type="area"

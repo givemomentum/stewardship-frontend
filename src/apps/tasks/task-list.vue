@@ -27,7 +27,7 @@
   onMounted(async () => {
     loadUsers();
     await hooks.taskListStore.loadTasks();
-    await hooks.taskListStore.loadTaskGifts();
+    await hooks.taskListStore.loadTaskRecommendations();
   });
 
   async function loadUsers() {
@@ -79,17 +79,17 @@
             </CFlex>
 
             <CFlex
-              v-if="task.gifts?.length"
+              v-if="task.recommendation_set?.recommendations?.length"
               align="center"
               color="gray.500"
               gap="1"
             >
               <CIcon name="la-money-bill-solid" fill="gray.500" size="19px" />
-              <CText>{{ task.gifts.length }}</CText>
+              <CText>{{ task.recommendation_set.recommendations.length }}</CText>
             </CFlex>
           </CFlex>
 
-          <CFlex>
+          <CFlex ml="auto">
             {{
               formatDistance(new Date(task.created_at), new Date(), {
                 addSuffix: true,

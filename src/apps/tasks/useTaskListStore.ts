@@ -1,7 +1,6 @@
 import { ref } from "vue";
-import { CrmGift } from "~/apps/letters/interfaces";
 import { useApi } from "~/composables/useApi";
-import { Task } from "~/apps/tasks/interfaces";
+import { Recommendation, Task } from "~/apps/tasks/interfaces";
 
 const state = {
   tasks: ref<Task[]>([]),
@@ -18,32 +17,29 @@ export function useTaskListStore() {
     state.tasks.value = res.data ?? [];
   }
 
-  async function loadTaskGifts() {
-    const res = await hooks.api.$get("/tasks/?expand=gifts.donor");
+  async function loadTaskRecommendations() {
+    const res = await hooks.api.$get("/tasks/?expand=recommendation_set");
     state.tasks.value = res.data ?? [];
   }
 
   async function loadTaskGiftsHistory(taskRaw: Task) {
     const taskModifiable = getTaskModifiable(taskRaw);
     const promises = [];
-    for (const gift of taskModifiable?.gifts ?? []) {
-      const promise = hooks.api
-        .$get(`/crms/gifts/?donor=${gift.donor.pk}`)
-        .then(res => {
-            gift.donor.gifts = res.data;
-        });
-      promises.push(promise);
+    for (const rec of taskModifiable?.recommendation_set?.recommendations ?? []) {
+      if (rec.donor) {
+        const promise = hooks.api
+          .$get(`/crms/gifts/?donor=${rec.donor.pk}`)
+          .then(res => {
+            rec.donor.gifts = res.data;
+          });
+        promises.push(promise);
+      }
     }
     await Promise.all(promises);
   }
 
-  async function toggleGiftTaskCompletion(taskRaw: Task, giftRaw: CrmGift, isCompleted: boolean) {
-    const taskModifiable = getTaskModifiable(taskRaw);
-    const giftTask = taskModifiable.gift_tasks.find(gift_task => gift_task.gift === giftRaw.pk)!;
-    await hooks.api.$patch(`/tasks/task-gifts/${giftTask.pk}/`, { is_completed: isCompleted });
-    giftTask.is_completed = isCompleted;
-    // vue change detection triggers only on whole array updates, not attributes
-    taskModifiable.gift_tasks = [...taskModifiable.gift_tasks];
+  async function updateRecommendationCompletedStatus(rec: Recommendation) {
+    await hooks.api.$patch(`/recs/recommendations/${rec.pk}/`, { is_completed: rec.is_completed });
   }
 
   function getTaskModifiable(taskRaw: Task): Task {
@@ -55,8 +51,8 @@ export function useTaskListStore() {
     tasks: state.tasks,
     taskOpened: state.taskOpened,
     loadTasks: loadTasks,
-    loadTaskGifts: loadTaskGifts,
+    loadTaskRecommendations: loadTaskRecommendations,
     loadTaskGiftsHistory: loadTaskGiftsHistory,
-    markGiftTaskCompleted: toggleGiftTaskCompletion,
+    updateRecommendationCompletedStatus: updateRecommendationCompletedStatus,
   };
 }

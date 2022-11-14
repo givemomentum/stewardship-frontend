@@ -20,6 +20,19 @@ export interface Task {
   created_at: string;
   comments: Comment[];
   comments_count: number;
+  recommendation_set?: RecommendationSet;
+}
+
+export interface Recommendation {
+  pk: PrimaryKey;
+  donor?: any;
+  gift?: CrmGift;
+  is_completed: boolean;
+}
+
+export interface RecommendationSet {
+  pk: PrimaryKey;
+  recommendations: Recommendation[];
 }
 
 export interface GiftTask {
