@@ -157,7 +157,8 @@
               :_hover="{ cursor: 'pointer', bg: isCurrentRec(rec) ? 'white' : 'gray.50' }"
               :bg="isCurrentRec(rec) ? 'white' : 'inherit'"
             >
-              <chakra.td>{{ rec.donor.first_name }} {{ rec.donor.last_name }}</chakra.td>
+              <chakra.td v-if="rec.donor.first_name">{{ rec.donor.first_name }} {{ rec.donor.last_name }}</chakra.td>
+              <chakra.td v-else>{{ rec.donor.company_name }}</chakra.td>
               <chakra.td data-is-numeric="true">{{ formatMoney(rec.gift.amount) }}</chakra.td>
               <chakra.td data-is-numeric="true">{{ formatMoney(rec.donor.donated_total) }}</chakra.td>
               <chakra.td>{{ format.dateHuman(rec.gift.date) }}</chakra.td>
