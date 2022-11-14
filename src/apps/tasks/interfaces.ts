@@ -8,9 +8,6 @@ export interface Task {
   description: string;
   description_short: string;
   description_plaintext: string;
-  donors: any[];
-  gifts?: CrmGift[];
-  gift_tasks: GiftTask[];
   status: TaskStatusStr;
   author: User;
   author_pk: PrimaryKey;
@@ -33,13 +30,6 @@ export interface Recommendation {
 export interface RecommendationSet {
   pk: PrimaryKey;
   recommendations: Recommendation[];
-}
-
-export interface GiftTask {
-  pk: PrimaryKey;
-  gift: PrimaryKey;
-  task: PrimaryKey;
-  is_completed: boolean;
 }
 
 export interface DropdownOption<Value = any> {

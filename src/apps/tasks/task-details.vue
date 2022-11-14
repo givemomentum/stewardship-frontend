@@ -264,7 +264,7 @@
 
     <CBox p="6" pt="0" bg="gray.75">
       <CHeading
-        v-if="props.task.gifts?.length && props.task.comments_count"
+        v-if="props.task.recommendation_set?.recommendations?.length && props.task.comments_count"
         font-size="xl"
         font-weight="normal"
         mt="-1"
