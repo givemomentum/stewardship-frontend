@@ -19,6 +19,13 @@ export namespace format {
       return "";
   }
 
+  export function dateMonth(date?: string): string {
+    if (date) {
+      return datefns.format(datefns.parseISO(date), "MMM y");
+    }
+      return "";
+  }
+
   export function dateFromUnix(date: number): string {
     return datefns.format(new Date(date), "MMM d y");
   }

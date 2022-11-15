@@ -138,12 +138,13 @@
       <ChakraTable>
         <chakra.thead>
           <chakra.th>Name</chakra.th>
-          <chakra.th data-is-numeric="true">Amount</chakra.th>
-          <chakra.th data-is-numeric="true">Given total</chakra.th>
-          <chakra.th>Date</chakra.th>
+          <chakra.th>Amount</chakra.th>
+          <chakra.th>Gift Date</chakra.th>
+          <chakra.th>Lifetime Gifts</chakra.th>
           <chakra.th>First gift</chakra.th>
           <chakra.th />
           <chakra.th />
+          <!--          <chakra.th>Completed</chakra.th>-->
         </chakra.thead>
 
         <chakra.tbody>
@@ -158,11 +159,12 @@
               :bg="isCurrentRec(rec) ? 'white' : 'inherit'"
             >
               <chakra.td v-if="rec.donor.first_name">{{ rec.donor.first_name }} {{ rec.donor.last_name }}</chakra.td>
-              <chakra.td v-else>{{ rec.donor.company_name }}</chakra.td>
-              <chakra.td data-is-numeric="true">{{ formatMoney(rec.gift.amount) }}</chakra.td>
-              <chakra.td data-is-numeric="true">{{ formatMoney(rec.donor.donated_total) }}</chakra.td>
+              <chakra.td v-else-if="rec.donor.company_name">{{ rec.donor.company_name }}</chakra.td>
+              <chakra.td v-else>No name provided</chakra.td>
+              <chakra.td>{{ formatMoney(rec.gift.amount) }}</chakra.td>
               <chakra.td>{{ format.dateHuman(rec.gift.date) }}</chakra.td>
-              <chakra.td>{{ format.dateAgo(rec.donor.giving_since) }}</chakra.td>
+              <chakra.td>{{ formatMoney(rec.donor.donated_total) }}</chakra.td>
+              <chakra.td>{{ format.dateMonth(rec.donor.giving_since) }}</chakra.td>
 
               <chakra.td>
                 <VTooltip placement="top">
@@ -180,7 +182,7 @@
                   </div>
 
                   <template #popper>
-                    <CText font-size="xs">Copy letter address to clipboard</CText>
+                    <CText font-size="xs">Copy full name & address</CText>
                   </template>
                 </VTooltip>
               </chakra.td>
@@ -210,7 +212,6 @@
                   direction="column"
                   :gap="isCurrentRec(rec) ? 5 : 0"
                 >
-
                   <CFlex direction="column">
                     <CFlex color="gray.400" font-size="xs">Biggest gift</CFlex>
                     <CFlex font-size="md">{{ format.money(rec.donor.donation_biggest) }}</CFlex>
@@ -235,6 +236,11 @@
                       {{ rec.donor.mailing_address.zip }}
                     </CFlex>
                     <CFlex v-else font-size="md">−</CFlex>
+                  </CFlex>
+
+                  <CFlex v-if="rec.gift.notes" direction="column">
+                    <CFlex color="gray.400" font-size="xs">Notes</CFlex>
+                    <CFlex font-size="md">{{ rec.gift.notes }}</CFlex>
                   </CFlex>
 
                   <CFlex direction="column">
