@@ -24,6 +24,7 @@ export interface Recommendation {
   pk: PrimaryKey;
   donor?: any;
   gift?: CrmGift;
+  explanation: string;
   is_completed: boolean;
 }
 

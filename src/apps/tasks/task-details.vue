@@ -158,8 +158,7 @@
               :_hover="{ cursor: 'pointer', bg: isCurrentRec(rec) ? 'white' : 'gray.50' }"
               :bg="isCurrentRec(rec) ? 'white' : 'inherit'"
             >
-              <chakra.td v-if="rec.donor.first_name">{{ rec.donor.first_name }} {{ rec.donor.last_name }}</chakra.td>
-              <chakra.td v-else-if="rec.donor.company_name">{{ rec.donor.company_name }}</chakra.td>
+              <chakra.td v-if="rec.donor.name">{{ rec.donor.name }}</chakra.td>
               <chakra.td v-else>No name provided</chakra.td>
               <chakra.td>{{ formatMoney(rec.gift.amount) }}</chakra.td>
               <chakra.td>{{ format.dateHuman(rec.gift.date) }}</chakra.td>
@@ -212,13 +211,16 @@
                   direction="column"
                   :gap="isCurrentRec(rec) ? 5 : 0"
                 >
+                  <CFlex v-if="rec.explanation" color="gray.600" font-size="sm">
+                    Recommended because {{ rec.explanation }}
+                  </CFlex>
                   <CFlex direction="column">
                     <CFlex color="gray.400" font-size="xs">Biggest gift</CFlex>
                     <CFlex font-size="md">{{ format.money(rec.donor.donation_biggest) }}</CFlex>
                   </CFlex>
                   <CFlex direction="column" v-if="rec.donor.email">
                     <CFlex color="gray.400" font-size="xs">Email</CFlex>
-                    <CFlex font-size="md">{{ rec.donor.email }}</CFlex>
+                    <CFlex font-size="md">{{ rec.donor?.email }}</CFlex>
                   </CFlex>
                   <CFlex direction="column" v-if="rec.donor?.phone?.number">
                     <CFlex color="gray.400" font-size="xs">Phone</CFlex>
@@ -228,12 +230,10 @@
                   <CFlex direction="column">
                     <CFlex color="gray.400" font-size="xs">Address</CFlex>
                     <CFlex
-                      v-if="rec.donor.mailing_address.address_line1"
+                      v-if="rec.donor.mailing_address?.one_line"
                       font-size="md"
                     >
-                      {{ rec.donor.mailing_address.address_line1 }},
-                      {{ rec.donor.mailing_address.city }},
-                      {{ rec.donor.mailing_address.zip }}
+                      {{ rec.donor.mailing_address?.one_line }}
                     </CFlex>
                     <CFlex v-else font-size="md">−</CFlex>
                   </CFlex>
