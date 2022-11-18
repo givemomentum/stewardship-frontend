@@ -190,8 +190,8 @@
               :data-is-viewed="letter.is_viewed"
               class="table-row"
             >
-              <chakra.td v-if="letter.donor.first_name" pr="0 !important" white-space="nowrap">
-                {{ letter.donor.first_name }} {{ letter.donor.last_name }}
+              <chakra.td v-if="letter.donor.name" pr="0 !important" white-space="nowrap">
+                {{ letter.donor.name }}
               </chakra.td>
               <chakra.td v-else pr="0 !important" white-space="nowrap">
                 Unknown

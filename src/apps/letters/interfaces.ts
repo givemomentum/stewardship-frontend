@@ -13,8 +13,7 @@ export class CrmDonor {
     zip: string;
     country: string;
   };
-  first_name: string;
-  last_name: string;
+  name: string;
   salutation: string;
   email: string;
   birthday: string;
