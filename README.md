@@ -1,5 +1,7 @@
 ### Installation
 
+- start python server
+- cp .env.example .env
 - yarn install
 - yarn dev
 

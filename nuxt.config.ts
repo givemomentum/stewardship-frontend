@@ -1,14 +1,8 @@
-import { defineNuxtConfig } from "nuxt";
-import viteSentry from "vite-plugin-sentry";
-
 export default defineNuxtConfig({
   modules: [
     "@nuxt/ui",
     "@formkit/nuxt",
     "@pinia/nuxt",
-  ],
-  buildModules: [
-    "floating-vue/nuxt",
   ],
   runtimeConfig: {
     public: {
@@ -29,35 +23,14 @@ export default defineNuxtConfig({
     ],
   },
   ssr: false,
-  pageTransition: { mode: "fade", name: "page" },
   srcDir: "src/",
-  sourcemap: {
-    server: true,
-    client: true,
+  typescript: {
+    shim: false, // intellij handles it natively
   },
-  bundleSourceMaps: true,
   vite: {
     build: {
       sourcemap: true,
       minify: false,
     },
-    plugins: [
-      viteSentry({
-        url: "https://sentry.io",
-        authToken: process.env.SENTRY_AUTH_TOKEN,
-        org: "givemomentum",
-        project: "stewardship-frontend",
-        release: "1.0",
-        deploy: {
-          env: "prod"
-        },
-        setCommits: {
-          auto: true
-        },
-        sourceMaps: {
-          include: ["./output/public"],
-        },
-      }),
-    ],
   },
 });

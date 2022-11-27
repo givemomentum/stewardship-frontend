@@ -2,7 +2,7 @@
   "name": "stewardship-frontend",
   "license": "GPL-3.0-or-later",
   "engines": {
-    "node": "^16.0"
+    "node": "^18.0"
   },
   "scripts": {
     "build": "nuxi build",
@@ -12,11 +12,11 @@
     "lint": "yarn run eslint --fix src/"
   },
   "dependencies": {
-    "nuxt": "^3.0.0-rc.12",
-      "@nuxt/vite-builder": "^3.0.0-rc.12",
-    "@pinia/nuxt": "^0.4.3",
-    "@formkit/nuxt": "^1.0.0-beta.11",
-      "@formkit/themes": "^1.0.0-beta.11",
+    "nuxt": "^3.0.0",
+      "@nuxt/vite-builder": "^3.0.0",
+    "@pinia/nuxt": "^0.4.5",
+    "@formkit/nuxt": "^1.0.0-beta.12",
+      "@formkit/themes": "^1.0.0-beta.12",
 
     "vue": "^3.2.37",
     "oh-vue-icons": "^1.0.0-rc3",
@@ -24,19 +24,17 @@
       "axios": "^0.24",
     "vue-final-modal": "^3.4.4",
     "vue-debounce": "^4.0.0",
-    "@sipec/vue3-tags-input": "^3.0.4",
     "vue3-observe-visibility": "^0.1.2",
     "@ivanv/vue-collapse-transition": "^1.0.2",
     "floating-vue": "^2.0.0-beta.20",
     "@ckeditor/ckeditor5-vue": "^4.0.1",
       "@ckeditor/ckeditor5-build-balloon-block": "^35.1.0",
     "@tinymce/tinymce-vue": "^5.0.0",
-    "@sentry/vue": "^7.11.1",
-      "@sentry/tracing": "^7.11.1",
-      "@sentry/hub": "^7.15.0",
-      "vite-plugin-sentry": "^1.1.5",
+    "@sentry/vue": "^7.21.1",
+      "@sentry/tracing": "^7.21.1",
+      "@sentry/hub": "^7.21.1",
     "@sipec/vue3-tags-input": "^3.0.4",
-    "vue-select": "^4.0.0-beta.5",
+    "vue-select": "^4.0.0-beta.6",
     "vue-toastification": "^2.0.0-rc.5",
     "@vueuse/core": "^9.5.0",
     "@chakra-ui/vue-next": "^1.0.0-alpha.15",
@@ -55,7 +53,8 @@
       "apexcharts": "^3.36.3"
   },
   "devDependencies": {
-    "@nuxt/kit": "^3.0.0-rc.12",
+    "vue-router": "^4.1.6", "//": "abscence generates a Nuxt warning of some kind, not sure",
+    "@nuxt/kit": "^3.0.0",
     "@nuxt/ui": "^0.3.3",
       "vite": "^3.0.0", "//": "stub peer dep for @nuxt/ui",
     "eslint": "^8.6.0",
