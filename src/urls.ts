@@ -12,6 +12,12 @@ export namespace urls {
     detailScans: (id: number, date: string) => `/fisc-exports/${id}/scans/${date}/`,
   };
 
+  export const partners = { 
+    hor: {
+      donationList: "/partners/hor/donation-list",
+    }
+  };
+
   export const letters = {
     segmentList: "/letters/segments",
     archive: "/letters/archive",

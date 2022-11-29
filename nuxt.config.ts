@@ -17,6 +17,7 @@ export default defineNuxtConfig({
       "~/apps/letters",
       "~/apps/tasks",
       "~/apps/fisc",
+      "~/apps/partners/hor",
       "~/apps/chakra",
       "~/apps/menu",
       "~/apps/shared",

@@ -63,6 +63,13 @@
             icon-color-prop="fill"
           />
           <MenuLeftItem
+            v-if="hooks.userStore.isOrgHor"
+            :path="urls.partners.hor.donationList"
+            label="Donations"
+            icon-name="database"
+            icon-color-prop="color"
+          />
+          <MenuLeftItem
             v-if="hooks.userStore.isOrgYsgn"
             :path="urls.letters.segmentList"
             path-base="/letters/"

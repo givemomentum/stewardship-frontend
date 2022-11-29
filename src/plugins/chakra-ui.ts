@@ -20,6 +20,7 @@ import {
   feMessageSquare,
   feX,
   feCopy,
+  feDatabase,
   feCheckSquare,
 } from "feather-icons-paths";
 import {
@@ -113,6 +114,7 @@ export default defineNuxtPlugin(nuxtApp => {
         feCopy,
         feCheckSquare,
         feShare_2,
+        feDatabase,
       },
       extend: {
         ...getOhVueIconProps(FaDiscord),
