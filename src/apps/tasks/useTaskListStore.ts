@@ -44,7 +44,7 @@ export function useTaskListStore() {
 
   function getTaskModifiable(taskRaw: Task): Task {
     // make sure it's the monitored Proxy object, and not a Props arg
-    return state.tasks.value.find(task => task.pk === taskRaw.pk);
+    return state.tasks.value.find(task => task.pk === taskRaw.pk)!;
   }
 
   return {

@@ -11,8 +11,8 @@ export interface Task {
   status: TaskStatusStr;
   author: User;
   author_pk: PrimaryKey;
-  assignees: User[];
-  assignees_pks: PrimaryKey[];
+  assignee: User;
+  assignee_pk: PrimaryKey;
   org: PrimaryKey;
   created_at: string;
   comments: Comment[];

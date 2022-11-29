@@ -22,7 +22,8 @@
   async function onSelected(optionNew: DropdownOption<PrimaryKey>) {
     const res = await hooks.api.$patch(
       `/tasks/${props.task.slug}/`,
-      { assignees_pks: [optionNew.value], assignees: [{ pk: optionNew.value }] },
+      // needs both fields because of how DRF works
+      { assignee_pk: optionNew.value, assignee: { pk: optionNew.value } },
     );
     if (hooks.taskListStore.taskOpened.value) {
       hooks.taskListStore.taskOpened.value = res.data;
@@ -30,7 +31,7 @@
     await hooks.taskListStore.loadTasks();
   }
 
-  function getAssigneeDropdownOption(assignee: User | undefined): DropdownOption<PrimaryKey> {
+  function getAssigneeDropdownOption(assignee: User | undefined): DropdownOption<PrimaryKey> | null {
     if (!assignee) {
       return null;
     }
@@ -46,14 +47,14 @@
   }
 
   function serializeUsersAsOptions(): Array<DropdownOption<PrimaryKey>> {
-    return hooks.userListStore.userList.value.map(user => getAssigneeDropdownOption(user));
+    return hooks.userListStore.userList.value.map(user => getAssigneeDropdownOption(user)!);
   }
 </script>
 
 <template>
 
   <OptionSelect
-    :option-current="getAssigneeDropdownOption(props.task.assignees[0])"
+    :option-current="getAssigneeDropdownOption(props.task.assignee)"
     :options="serializeUsersAsOptions()"
     :on-selected="onSelected"
     pos="right"
