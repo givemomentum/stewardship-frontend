@@ -3,6 +3,8 @@
   "compilerOptions": {
     "types": [
       "@nuxt/types"
-    ]
+    ],
+    "noImplicitAny": false,
+    "strict": false
   }
 }
