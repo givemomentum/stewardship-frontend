@@ -14,6 +14,7 @@
     recOpen: ref<Recommendation | null>(null),
     giftSeries: ref<{ x: number, y: number }[]>([{ x: 5, y: 5 }]),
     donorCopyData: ref<string>(""),
+    copyTooltip: ref("Copy full name & address")
   };
 
   const hooks = {
@@ -107,6 +108,15 @@
       },
     },
   };
+  
+  function copyDonorInfo(rec: Recommendation) {
+    state.donorCopyData.value = rec.donor.letter_label;
+    hooks.clipboard.copy();
+    state.copyTooltip.value = "Copied";
+    setTimeout(() => {
+      state.copyTooltip.value = "Copy full name & address";
+    }, 1500);
+  }
 </script>
 
 <template>
@@ -166,13 +176,10 @@
               <chakra.td>{{ format.dateMonth(rec.donor.giving_since) }}</chakra.td>
 
               <chakra.td>
-                <VTooltip placement="top">
+                <VTooltip placement="top" :key="state.copyTooltip.value">
                   <div>
                     <CIconButton
-                      @click.stop="() => {
-                        state.donorCopyData.value = rec.donor.letter_label;
-                        hooks.clipboard.copy();
-                      }"
+                      @click.stop="() => copyDonorInfo(rec)"
                       size="sm"
                       variant="link"
                       icon="copy"
@@ -181,7 +188,7 @@
                   </div>
 
                   <template #popper>
-                    <CText font-size="xs">Copy full name & address</CText>
+                    <CText font-size="xs">{{state.copyTooltip.value}}</CText>
                   </template>
                 </VTooltip>
               </chakra.td>
@@ -285,6 +292,8 @@
 </template>
 
 <style lang="scss">
-  @import "~/styles/chakra-ui.scss";
-  @import "~/styles/formkit.scss";
+  //noinspection CssUnknownTarget
+  @import '~/styles/chakra-ui.scss';
+  //noinspection CssUnknownTarget
+  @import '~/styles/formkit.scss';
 </style>
