@@ -145,16 +145,15 @@
         </CFlex>
       </CFlex>
 
-      <ChakraTable>
+      <ChakraTable size="sm">
         <chakra.thead>
+          <chakra.th />
           <chakra.th>Name</chakra.th>
           <chakra.th>Amount</chakra.th>
           <chakra.th>Gift Date</chakra.th>
           <chakra.th>Lifetime Gifts</chakra.th>
           <chakra.th>First gift</chakra.th>
           <chakra.th />
-          <chakra.th />
-          <!--          <chakra.th>Completed</chakra.th>-->
         </chakra.thead>
 
         <chakra.tbody>
@@ -168,6 +167,20 @@
               :_hover="{ cursor: 'pointer', bg: isCurrentRec(rec) ? 'white' : 'gray.50' }"
               :bg="isCurrentRec(rec) ? 'white' : 'inherit'"
             >
+
+              <chakra.td text-align="end !important">
+                <CIcon
+                  @click.stop="toggleRecCompletedStatus(rec)"
+                  :name="rec.is_completed ? 'io-checkmark-circle' : 'io-checkmark-circle-outline'"
+                  mb="px"
+                  :_hover="{ color: 'teal.300', fill: 'teal.300' }"
+                  transition="all 0.3s"
+                  size="21px"
+                  :color="rec.is_completed ? 'teal.400' : 'gray.500'"
+                  :fill="rec.is_completed ? 'teal.400' : 'gray.500'"
+                />
+              </chakra.td>
+
               <chakra.td v-if="rec.donor.name">{{ rec.donor.name }}</chakra.td>
               <chakra.td v-else>No name provided</chakra.td>
               <chakra.td>{{ formatMoney(rec.gift.amount) }}</chakra.td>
@@ -193,12 +206,6 @@
                 </VTooltip>
               </chakra.td>
 
-              <chakra.td text-align="end !important">
-                <ChakraCheckbox
-                  :model-value="rec.is_completed"
-                  @update:model-value="toggleRecCompletedStatus(rec)"
-                />
-              </chakra.td>
             </chakra.tr>
 
             <chakra.tr
