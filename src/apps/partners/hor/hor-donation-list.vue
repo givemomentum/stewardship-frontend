@@ -30,7 +30,7 @@
     state.csvs.value = res.data;
   }
 
-  async function triggerBatchDownload(csv: Csv) {
+  async function markAsDownloaded(csv: Csv) {
     await hooks.api.$patch(`/csvs/${csv.pk}/`, { is_downloaded: true });
     csv.is_downloaded = true;
     await loadCsvs();
@@ -76,7 +76,7 @@
             </chakra.td>
 
             <chakra.td>
-              <CLink :href="`${hooks.config.public.apiBase}/csvs/${csv.pk}/download`">
+              <CLink :href="`${hooks.config.public.apiBase}/csvs/${csv.pk}/download`" @click="markAsDownloaded(csv)">
                 <CButton
                   size="sm"
                   variant="link"
