@@ -1,5 +1,5 @@
 import { PrimaryKey, User } from "~/apps/auth/interfaces";
-import { CrmGift } from "~/apps/letters/interfaces";
+import { CrmDonor, CrmGift } from "~/apps/letters/interfaces";
 
 export interface Task {
   pk: PrimaryKey;
@@ -22,7 +22,7 @@ export interface Task {
 
 export interface Recommendation {
   pk: PrimaryKey;
-  donor?: any;
+  donor?: CrmDonor;
   gift?: CrmGift;
   explanation: string;
   is_completed: boolean;
@@ -31,6 +31,7 @@ export interface Recommendation {
 export interface RecommendationSet {
   pk: PrimaryKey;
   recommendations: Recommendation[];
+  type: "donors" | "gifts";
 }
 
 export interface DropdownOption<Value = any> {

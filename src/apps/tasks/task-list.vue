@@ -84,7 +84,12 @@
               color="gray.500"
               gap="1"
             >
-              <CIcon name="la-money-bill-solid" fill="gray.500" size="19px" />
+              <CIcon
+                :name="task.recommendation_set.type === 'gifts' ? 'fa-donate' : 'bi-people-fill'"
+                fill="gray.400"
+                size="17px"
+                mb="px"
+              />
               <CText>{{ task.recommendation_set.recommendations.length }}</CText>
             </CFlex>
           </CFlex>

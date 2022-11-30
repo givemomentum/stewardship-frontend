@@ -1,11 +1,10 @@
 import { defineNuxtPlugin } from "#app";
-import { Integrations } from "@sentry/tracing";
 import * as Sentry from "@sentry/vue";
 
 /**
  * copy of https://github.com/nuxt-community/sentry-module/issues/358#issuecomment-1016983543
  */
-export default defineNuxtPlugin((nuxtApp) => {
+export default defineNuxtPlugin(nuxtApp => {
   if (nuxtApp.$config.public.env !== "dev") {
     Sentry.init({
       app: [nuxtApp.vueApp],
