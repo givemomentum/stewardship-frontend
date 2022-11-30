@@ -59,7 +59,10 @@
           </CFlex>
         </CFlex>
 
-        <CFlex direction="column" v-if="slotProps.rec.donor.source === 'blackbaud'">
+        <CFlex
+          direction="column"
+          v-if="slotProps.rec.donor.source === 'blackbaud' && slotProps.isCurrentRec"
+        >
           <CLink :href="`https://host.nxt.blackbaud.com/constituent/records/${slotProps.rec.donor.source_id}`" target="_blank">
             <CButton size="xs" right-icon="external-link" variant="outline" key="2">
               CRM Profile
