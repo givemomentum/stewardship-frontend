@@ -36,9 +36,9 @@ export function useForm(args: {
         method = args.method();
       }
       if (method === "PATCH") {
-        await hooks.api.$patch(path, resArgs);
+        await hooks.api.patch(path, resArgs);
       } else if (method === "POST") {
-        await hooks.api.$post(path, resArgs);
+        await hooks.api.post(path, resArgs);
       }
       state.isSuccess.value = true;
       args.onSuccess();

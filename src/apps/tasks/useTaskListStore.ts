@@ -13,12 +13,12 @@ export function useTaskListStore() {
   };
 
   async function loadTasks() {
-    const res = await hooks.api.$get("/tasks/");
+    const res = await hooks.api.get("/tasks/");
     state.tasks.value = res.data ?? [];
   }
 
   async function loadTaskRecommendations() {
-    const res = await hooks.api.$get("/tasks/?expand=recommendation_set");
+    const res = await hooks.api.get("/tasks/?expand=recommendation_set");
     state.tasks.value = res.data ?? [];
   }
 
@@ -28,7 +28,7 @@ export function useTaskListStore() {
     for (const rec of taskModifiable?.recommendation_set?.recommendations ?? []) {
       if (rec.donor) {
         const promise = hooks.api
-          .$get(`/crms/gifts/?donor=${rec.donor.pk}`)
+          .get(`/crms/gifts/?donor=${rec.donor.pk}`)
           .then(res => {
             rec.donor.gifts = res.data;
           });
@@ -39,7 +39,7 @@ export function useTaskListStore() {
   }
 
   async function updateRecommendationCompletedStatus(rec: Recommendation) {
-    await hooks.api.$patch(`/recs/recommendations/${rec.pk}/`, { is_completed: rec.is_completed });
+    await hooks.api.patch(`/recs/recommendations/${rec.pk}/`, { is_completed: rec.is_completed });
   }
 
   function getTaskModifiable(taskRaw: Task): Task {

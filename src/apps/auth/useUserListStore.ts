@@ -19,7 +19,7 @@ export function useUserListStore() {
   });
 
   async function loadUserList() {
-    const res = await hooks.api.$get(`/users/`);
+    const res = await hooks.api.get(`/users/`);
     const usersRaw: User[] = res.data;
     const usersUsable = usersRaw.filter(user => user.first_name && user.last_name);
     const usersWithAvatars = usersUsable.map(user =>

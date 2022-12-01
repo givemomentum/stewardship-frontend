@@ -20,14 +20,14 @@ export function useLetterBatchStore() {
   });
 
   async function load() {
-    state.requestPromise.value = hooks.api.$get(`/letters/batches/`);
+    state.requestPromise.value = hooks.api.get(`/letters/batches/`);
     const res = await state.requestPromise.value;
     state.list.value = res.data;
     state.requestPromise.value = null;
   }
 
   async function markAsDownloaded(batch: LetterBatch) {
-    await hooks.api.$patch(`/letters/batches/${batch.pk}/`, {
+    await hooks.api.patch(`/letters/batches/${batch.pk}/`, {
       is_downloaded: true,
     });
     await load();

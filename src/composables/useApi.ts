@@ -17,7 +17,7 @@ export function useApi() {
     },
   });
 
-  async function $get(path: string, config?: any) {
+  async function get(path: string, config?: any) {
     return axiosInstance.get(path, config);
   }
 
@@ -25,23 +25,23 @@ export function useApi() {
     return axiosInstance.delete(path, config);
   }
 
-  async function $post(path: string, data?: any, config?: any) {
+  async function post(path: string, data?: any, config?: any) {
     return axiosInstance.post(path, data, config);
   }
 
-  async function $put(path: string, data?: any, config?: any) {
+  async function put(path: string, data?: any, config?: any) {
     return axiosInstance.put(path, data, config);
   }
 
-  async function $patch(path: string, data?: any, config?: any) {
+  async function patch(path: string, data?: any, config?: any) {
     return axiosInstance.patch(path, data, config);
   }
 
-  function $url(path: string) {
+  function url(path: string) {
     return `${hooks.config.public.apiBase}${path}`;
   }
 
   return {
-    $get, $delete, $post: $post, $put, $patch, $url,
+    get: get, post: post, put: put, patch: patch, url: url,
   };
 }

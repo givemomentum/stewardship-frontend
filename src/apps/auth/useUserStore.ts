@@ -37,12 +37,12 @@ export const useUserStore = defineStore("user", {
       this.isLoading = true;
       const api = useApi();
 
-      const userRes = await api.$get("/users/me/");
+      const userRes = await api.get("/users/me/");
       if (userRes.status === 200) {
         this.user = userRes.data;
 
         // Fetch CSRF token after logging user in.
-        const csrfRes = await api.$get("/auth/csrf");
+        const csrfRes = await api.get("/auth/csrf");
         const token = csrfRes.headers[security.xsrfHeader];
         Cookies.set(security.xsrfCookie, token);
       }
@@ -52,7 +52,7 @@ export const useUserStore = defineStore("user", {
     async logout() {
       this.isLoading = true;
       const api = useApi();
-      await api.$post("/users/logout/");
+      await api.post("/users/logout/");
       this.user = null;
       this.isLoading = false;
 
