@@ -20,7 +20,7 @@
   };
 
   async function onSelected(optionNew: DropdownOption<PrimaryKey>) {
-    const res = await hooks.api.$patch(
+    const res = await hooks.api.patch(
       `/tasks/${props.task.slug}/`,
       // needs both fields because of how DRF works
       { assignee_pk: optionNew.value, assignee: { pk: optionNew.value } },

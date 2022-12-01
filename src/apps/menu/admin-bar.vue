@@ -25,7 +25,7 @@
   };
 
   onMounted(async () => {
-    const res = await hooks.api.$get("/orgs/admin/impersonation-options");
+    const res = await hooks.api.get("/orgs/admin/impersonation-options");
     state.orgs.value = res.data;
   });
 

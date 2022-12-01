@@ -30,13 +30,13 @@
   });
 
   async function loadSegments() {
-    const res = await hooks.api.$get("/letters/segments/");
+    const res = await hooks.api.get("/letters/segments/");
     state.segments.value = res.data;
   }
 
   async function triggerBatchDownload(batch: LetterBatch) {
-    await hooks.api.$get(`/letters/batches/${batch.pk}/download`);
-    await hooks.api.$patch(`/letters/batches/${batch.pk}/`, { is_downloaded: true });
+    await hooks.api.get(`/letters/batches/${batch.pk}/download`);
+    await hooks.api.patch(`/letters/batches/${batch.pk}/`, { is_downloaded: true });
     batch.is_downloaded = true;
     await hooks.toast.info(
       "You'll receive an email with the archive once it's ready.",

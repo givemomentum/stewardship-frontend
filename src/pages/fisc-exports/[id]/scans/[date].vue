@@ -46,7 +46,7 @@
 
   watch(state.scanOpen, async scanNew => {
     if (!scanNew.is_viewed) {
-      await hooks.api.$patch(`/fisc/scans/${scanNew.pk}/`, { is_viewed: true });
+      await hooks.api.patch(`/fisc/scans/${scanNew.pk}/`, { is_viewed: true });
       scanNew.is_viewed = true;
     }
   });
@@ -104,7 +104,7 @@
   }
 
   async function loadScans() {
-    const res = await hooks.api.$get(`/fisc/scans/?date=${hooks.route.params.date}`);
+    const res = await hooks.api.get(`/fisc/scans/?date=${hooks.route.params.date}`);
     state.scans.value = res.data;
     state.scansUnsorted.value = [...res.data];
     if (state.scanOpenIndex.value) {

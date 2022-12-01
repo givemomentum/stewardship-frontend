@@ -48,7 +48,7 @@
     state.letterHtml.value = letterNew.html || (letterNew.html_default ?? "");
 
     if (!letterNew.is_viewed) {
-      await hooks.api.$patch(`/letters/${letterNew.pk}/`, { is_viewed: true });
+      await hooks.api.patch(`/letters/${letterNew.pk}/`, { is_viewed: true });
       letterNew.is_viewed = true;
       const batch = hooks.batchStore.list.value.find(batch => letterNew.batch === batch.pk);
       batch.letters_new_count -= 1;
@@ -70,7 +70,7 @@
 
   async function saveLetterHtml() {
     state.isSavingChanges.value = true;
-    await hooks.api.$patch(
+    await hooks.api.patch(
       `/letters/${state.letterOpen.value.pk}/`,
       { html: state.letterHtml.value },
     );
@@ -80,7 +80,7 @@
   }
 
   async function markAsUnread() {
-    await hooks.api.$patch(
+    await hooks.api.patch(
       `/letters/${state.letterOpen.value.pk}/`,
       { is_viewed: false },
     );
@@ -90,8 +90,8 @@
   }
 
   async function triggerBatchDownload() {
-    await hooks.api.$get(`/letters/batches/${props.batchPk}/download`);
-    await hooks.api.$patch(`/letters/batches/${props.batchPk}/`, { is_downloaded: true });
+    await hooks.api.get(`/letters/batches/${props.batchPk}/download`);
+    await hooks.api.patch(`/letters/batches/${props.batchPk}/`, { is_downloaded: true });
     const batch = hooks.batchStore.list.value.find(batch => props.batchPk === batch.pk);
     batch.is_downloaded = true;
     await hooks.toast.info(
@@ -131,7 +131,7 @@
   }
 
   async function loadBatch(args?: { isIncludeHtmlDefault?: boolean }) {
-    const res = await hooks.api.$get(`/letters/batches/${props.batchPk}/?expand=letters${args?.isIncludeHtmlDefault ? ".html_default" : ""}`);
+    const res = await hooks.api.get(`/letters/batches/${props.batchPk}/?expand=letters${args?.isIncludeHtmlDefault ? ".html_default" : ""}`);
     state.batch.value = res.data;
   }
 

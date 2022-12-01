@@ -15,7 +15,7 @@
   };
 
   onMounted(async () => {
-    const res = await hooks.api.$get("/fisc/exports/");
+    const res = await hooks.api.get("/fisc/exports/");
     state.exports.value = res.data;
   });
 </script>

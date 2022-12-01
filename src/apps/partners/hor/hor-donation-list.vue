@@ -17,7 +17,7 @@
   };
 
   onBeforeMount(async () => {
-    const res = await hooks.api.$get("/csvs/");
+    const res = await hooks.api.get("/csvs/");
     state.csvs.value = res.data;
   });
 
@@ -26,12 +26,12 @@
   });
 
   async function loadCsvs() {
-    const res = await hooks.api.$get("/csvs/");
+    const res = await hooks.api.get("/csvs/");
     state.csvs.value = res.data;
   }
 
   async function markAsDownloaded(csv: Csv) {
-    await hooks.api.$patch(`/csvs/${csv.pk}/`, { is_downloaded: true });
+    await hooks.api.patch(`/csvs/${csv.pk}/`, { is_downloaded: true });
     csv.is_downloaded = true;
     await loadCsvs();
   }

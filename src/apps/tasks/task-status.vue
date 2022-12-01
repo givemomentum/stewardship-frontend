@@ -25,7 +25,7 @@
   };
 
   async function onSelected(optionNew: DropdownOption) {
-    const res = await hooks.api.$patch(
+    const res = await hooks.api.patch(
       `/tasks/${props.task.slug}/`,
       { status: optionNew.value },
     );

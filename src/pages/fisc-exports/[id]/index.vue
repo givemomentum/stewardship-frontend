@@ -26,12 +26,12 @@
   };
 
   async function loadExport() {
-    const res = await hooks.api.$get(`/fisc/exports/${hooks.route.params.id}`);
+    const res = await hooks.api.get(`/fisc/exports/${hooks.route.params.id}`);
     state.export.value = res.data;
   }
 
   async function loadCSV(path: string): Promise<CSVData> {
-    const csv = await hooks.api.$get(path);
+    const csv = await hooks.api.get(path);
     const parseResult = Papa.parse(csv.data, { header: true, skipEmptyLines: true });
     if (parseResult.errors.length > 0) {
       captureException(

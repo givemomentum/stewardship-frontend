@@ -17,12 +17,12 @@
   };
 
   const comp = {
-    blackbaudLink: computed(() => hooks.api.$url(`/crms/blackbaud/oauth_redirect/${state.adminOrg.value.pk}`)),
-    salesforceLink: computed(() => hooks.api.$url(`/crms/salesforce/oauth_redirect/${state.adminOrg.value.pk}`)),
+    blackbaudLink: computed(() => hooks.api.url(`/crms/blackbaud/oauth_redirect/${state.adminOrg.value.pk}`)),
+    salesforceLink: computed(() => hooks.api.url(`/crms/salesforce/oauth_redirect/${state.adminOrg.value.pk}`)),
   };
 
   onMounted(async () => {
-    const res = await hooks.api.$get(`/orgs/admin/${hooks.userStore.org.pk}`);
+    const res = await hooks.api.get(`/orgs/admin/${hooks.userStore.org.pk}`);
     state.adminOrg.value = res.data;
   });
 
