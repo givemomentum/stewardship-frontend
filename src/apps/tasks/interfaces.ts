@@ -18,6 +18,7 @@ export interface Task {
   comments: Comment[];
   comments_count: number;
   recommendation_set?: RecommendationSet;
+  is_published: boolean;
 }
 
 export interface Recommendation {
