@@ -14,6 +14,9 @@
       >
         {{ task.title }}
       </CText>
+      <CText v-if="!task.is_published" font-size="sm" font-weight="light" color="gray.500">
+        (not published)
+      </CText>
       <TaskAssignee :task="props.task" />
     </CFlex>
 

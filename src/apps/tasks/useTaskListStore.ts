@@ -10,15 +10,24 @@ const state = {
 export function useTaskListStore() {
   const hooks = {
     api: useApi(),
+    route: useRoute(),
   };
 
   async function loadTasks() {
-    const res = await hooks.api.get("/tasks/");
+    let path = "/tasks/";
+    if (!hooks.route.query.include_unpublished) {
+      path += "?is_published=true";
+    }
+    const res = await hooks.api.get(path);
     state.tasks.value = res.data ?? [];
   }
 
   async function loadTaskRecommendations() {
-    const res = await hooks.api.get("/tasks/?expand=recommendation_set");
+    let path = "/tasks/?expand=recommendation_set";
+    if (!hooks.route.query.include_unpublished) {
+      path += "&is_published=true";
+    }
+    const res = await hooks.api.get(path);
     state.tasks.value = res.data ?? [];
   }
 
