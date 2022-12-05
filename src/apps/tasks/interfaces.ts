@@ -17,7 +17,7 @@ export interface Task {
   created_at: string;
   comments: Comment[];
   comments_count: number;
-  recommendation_set?: RecommendationSet;
+  rec_set?: RecommendationSet;
   is_published: boolean;
 }
 
@@ -31,7 +31,7 @@ export interface Recommendation {
 
 export interface RecommendationSet {
   pk: PrimaryKey;
-  recommendations: Recommendation[];
+  recs: Recommendation[];
   type: "donors" | "gifts";
 }
 

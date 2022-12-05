@@ -35,7 +35,7 @@
         <VTooltip>
           <div>
             <CLink
-              :href="`${hooks.config.public.apiBase}/recs/recommendation-sets/${props.task.recommendation_set?.pk}/donor-csv`"
+              :href="`${hooks.config.public.apiBase}/recs/rec-sets/${props.task.rec_set?.pk}/donor-csv`"
             >
               <CButton left-icon="download" variant="link">CSV</CButton>
             </CLink>

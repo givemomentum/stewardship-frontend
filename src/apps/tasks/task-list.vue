@@ -79,18 +79,18 @@
             </CFlex>
 
             <CFlex
-              v-if="task.recommendation_set?.recommendations?.length"
+              v-if="task.rec_set?.recs?.length"
               align="center"
               color="gray.500"
               gap="1"
             >
               <CIcon
-                :name="task.recommendation_set.type === 'gifts' ? 'fa-donate' : 'bi-people-fill'"
+                :name="task.rec_set.type === 'gifts' ? 'fa-donate' : 'bi-people-fill'"
                 fill="gray.400"
                 size="17px"
                 mb="px"
               />
-              <CText>{{ task.recommendation_set.recommendations.length }}</CText>
+              <CText>{{ task.rec_set.recs.length }}</CText>
             </CFlex>
           </CFlex>
 

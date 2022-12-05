@@ -14,7 +14,7 @@
     await hooks.tasks.loadTaskGiftsHistory(props.task);
   });
 
-  console.log(props.task?.recommendation_set);
+  console.log(props.task?.rec_set);
 </script>
 
 <template>
@@ -24,17 +24,17 @@
     </CBox>
 
     <TaskDetailRecListGifts
-      v-if="props.task?.recommendation_set?.type === 'gifts'"
+      v-if="props.task?.rec_set?.type === 'gifts'"
       :task="props.task"
     />
     <TaskDetailRecListDonors
-      v-if="props.task?.recommendation_set?.type === 'donors'"
+      v-if="props.task?.rec_set?.type === 'donors'"
       :task="props.task"
     />
 
     <CBox p="6" pt="0" bg="gray.75">
       <CHeading
-        v-if="props.task.recommendation_set?.recommendations?.length && props.task.comments_count"
+        v-if="props.task.rec_set?.recs?.length && props.task.comments_count"
         font-size="xl"
         font-weight="normal"
         mt="-1"

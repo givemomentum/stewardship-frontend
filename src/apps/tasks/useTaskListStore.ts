@@ -23,7 +23,7 @@ export function useTaskListStore() {
   }
 
   async function loadTaskRecommendations() {
-    let path = "/tasks/?expand=recommendation_set";
+    let path = "/tasks/?expand=rec_set";
     if (!hooks.route.query.include_unpublished) {
       path += "&is_published=true";
     }
@@ -34,7 +34,7 @@ export function useTaskListStore() {
   async function loadTaskGiftsHistory(taskRaw: Task) {
     const taskModifiable = getTaskModifiable(taskRaw);
     const promises = [];
-    for (const rec of taskModifiable?.recommendation_set?.recommendations ?? []) {
+    for (const rec of taskModifiable?.rec_set?.recs ?? []) {
       if (rec.donor) {
         const promise = hooks.api
           .get(`/crms/gifts/?donor=${rec.donor.pk}`)
@@ -48,7 +48,7 @@ export function useTaskListStore() {
   }
 
   async function updateRecommendationCompletedStatus(rec: Recommendation) {
-    await hooks.api.patch(`/recs/recommendations/${rec.pk}/`, { is_completed: rec.is_completed });
+    await hooks.api.patch(`/recs/${rec.pk}/`, { is_completed: rec.is_completed });
   }
 
   function getTaskModifiable(taskRaw: Task): Task {

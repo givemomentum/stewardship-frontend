@@ -43,7 +43,7 @@
 
 <template>
   <CFlex
-    v-if="props.task.recommendation_set?.recommendations?.length"
+    v-if="props.task.rec_set?.recs?.length"
     direction="column"
     p="6"
     pt="3"
@@ -67,7 +67,7 @@
 
       <chakra.tbody>
         <template
-          v-for="rec in props.task.recommendation_set.recommendations"
+          v-for="rec in props.task.rec_set.recs"
           :key="rec.pk"
         >
 
