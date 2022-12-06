@@ -74,7 +74,8 @@
             :path="urls.letters.segmentList"
             path-base="/letters/"
             label="Letters"
-            icon-name="mail"
+            icon-name="letter"
+            icon-color-prop="fill"
           />
           <MenuLeftItem
             v-if="false"
