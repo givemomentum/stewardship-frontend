@@ -15,9 +15,16 @@ export namespace format {
     return "";
   }
 
-  export function dateHuman(date?: string): string {
+  export function dateHumanShort(date?: string): string {
     if (date) {
       return datefns.format(datefns.parseISO(date), "MMM d");
+    }
+    return "";
+  }
+
+  export function datetimeHumanShort(date?: string): string {
+    if (date) {
+      return datefns.format(datefns.parseISO(date), "MMM d, h:mmaaa");
     }
     return "";
   }

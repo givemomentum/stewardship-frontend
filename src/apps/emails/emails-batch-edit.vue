@@ -61,7 +61,7 @@
 
     tableRowRefs.value.forEach(ref => ref.style.height = "0");
     const tableRowOpen = tableRowRefs.value[state.emailOpenIndex.value];
-    const container: HTMLDivElement = tableRowOpen.querySelector(".donor-table-container");
+    const container: HTMLDivElement = tableRowOpen.querySelector(".email-table-inner-donor-table-container");
     tableRowOpen.style.height = `${container.scrollHeight + comp.rowHeight}px`;
   });
   
@@ -145,6 +145,22 @@
     const htmlOriginal = state.emailOpen.value.content_html || state.emailOpen.value.content_html_default;
     return state.emailContentHtml.value.valueOf() !== htmlOriginal.valueOf();
   }
+  
+  function getStatusStyle(email: Email) {
+    switch (email.status) {
+      case "pending":
+        return { color: "gray.800", bg: "gray.100" };
+      case "sent":
+        return { color: "teal.800", bg: "teal.100" };
+      case "opened":
+        return { color: "green.800", bg: "green.100" };
+      case "bounced":
+        return { color: "red.800", bg: "red.100" };
+      case "failed":
+        return { color: "red.800", bg: "red.100" };
+    }
+  }
+
 </script>
 
 <template>
@@ -168,12 +184,12 @@
       </CFlex>
 
       <CFlex h="fit-content">
-        <ChakraTable size="sm" :min-w="isBatchSent() ? '500px' : '370px'" class="letter-table" w="100%">
+        <ChakraTable size="sm" :min-w="isBatchSent() ? '500px' : '370px'" class="email-table" w="100%">
           <chakra.thead>
             <chakra.tr>
               <chakra.th>Donor</chakra.th>
               <chakra.th v-if="isBatchSent">Status</chakra.th>
-              <chakra.th v-if="isBatchSent">Open rate</chakra.th>
+              <chakra.th v-if="isBatchSent">Open count</chakra.th>
               <chakra.th v-if="isBatchSent">Opened at</chakra.th>
               <chakra.th v-if="!isBatchSent" data-is-numeric="true">Donated total</chakra.th>
               <chakra.th data-is-numeric="true">Modified</chakra.th>
@@ -200,9 +216,28 @@
                 Unknown
               </chakra.td>
 
-              <chakra.td v-if="isBatchSent" data-is-numeric="true">
-                {{ email.status }}
+              <chakra.td v-if="isBatchSent">
+                <CBox
+                  py="2px"
+                  px="2"
+                  w="fit-content"
+                  border-radius="lg"
+                  text-transform="capitalize"
+                  :bg="getStatusStyle(email).bg"
+                  :color="getStatusStyle(email).color"
+                >
+                  {{ email.status }}
+                </CBox>
               </chakra.td>
+
+              <chakra.td v-if="isBatchSent">
+                {{ email.open_count || "" }}
+              </chakra.td>
+
+              <chakra.td v-if="isBatchSent">
+                {{ format.datetimeHumanShort(email.opened_first_at) }}
+              </chakra.td>
+
               <chakra.td v-if="!isBatchSent" data-is-numeric="true">
                 {{ format.money(email.donor.donated_total) }}
               </chakra.td>
@@ -230,7 +265,7 @@
               </chakra.td>
 
               <CFlex
-                class="donor-table-container"
+                class="email-table-inner-donor-table-container"
                 pos="absolute" 
                 :top="comp.rowHeight"
                 bottom="0"
@@ -264,7 +299,7 @@
                     </CLink>
                   </CFlex>
                 </CFlex>
-                <chakra.table class="donor-table" data-size="none">
+                <chakra.table class="email-table-inner-donor-table" data-size="none">
                   <chakra.tbody>
 
                     <chakra.tr border-top="1px solid" border-color="gray.100">
@@ -274,22 +309,24 @@
 
                     <chakra.tr v-if="email.donor.mailing_address.address_line1">
                       <chakra.td>Address</chakra.td>
-                      <chakra.td>{{ email.donor.mailing_address.address_line1.slice(0, 31) }}, {{ email.donor.mailing_address.city }}</chakra.td>
+                      <chakra.td white-space="break-spaces !important">
+                        {{ email.donor.mailing_address.address_line1.slice(0, 31) }}, {{ email.donor.mailing_address.city }}
+                      </chakra.td>
                     </chakra.tr>
 
                     <chakra.tr>
-                      <chakra.td white-space="nowrap">First gift</chakra.td>
+                      <chakra.td>First gift</chakra.td>
                       <chakra.td>{{ format.date(email.donor.giving_since) || "-" }}</chakra.td>
                     </chakra.tr>
 
                     <chakra.tr>
-                      <chakra.td white-space="nowrap">Last action</chakra.td>
+                      <chakra.td>Last action</chakra.td>
                       <chakra.td>{{ format.date(email.donor.last_contact) || "-" }}</chakra.td>
                     </chakra.tr>
                     
                     <chakra.tr>
-                      <chakra.td white-space="nowrap">Reason</chakra.td>
-                      <chakra.td>{{
+                      <chakra.td>Reason</chakra.td>
+                      <chakra.td white-space="break-spaces !important">{{
                           state.batch.value?.rec_set?.recs?.find(rec => rec.donor.pk === email.donor.pk)?.explanation
                         }}
                       </chakra.td>
@@ -408,7 +445,11 @@
     height: 100%;
   }
   
-  .letter-table {
+  .email-table {
+    th {
+      white-space: nowrap;
+    }
+    
     .table-row {
       position: relative;
       transition: all 0.2s;
@@ -428,26 +469,29 @@
 
       td {
         vertical-align: top;
+        white-space: nowrap;
       }
-    }
-  }
 
-  .donor-table {
-    td {
-      padding-left: 0 !important;
-      padding-bottom: var(--space-1) !important;
-      border: 0;
-
-      &:first-of-type {
-        color: #98a4b4;
-      }
-    }
-    tr {
-      &:last-of-type {
+      .email-table-inner-donor-table {
         td {
-          padding-bottom: var(--space-3) !important;
+          padding-left: 0 !important;
+          padding-bottom: var(--space-1) !important;
+          border: 0;
+
+          &:first-of-type {
+            color: #98a4b4;
+          }
+        }
+        tr {
+          &:last-of-type {
+            td {
+              padding-bottom: var(--space-3) !important;
+            }
+          }
         }
       }
+
     }
   }
+
 </style>

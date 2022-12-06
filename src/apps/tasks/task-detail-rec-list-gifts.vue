@@ -70,7 +70,7 @@
       <chakra.td max-w="200px" v-if="slotProps.rec.donor.name">{{ slotProps.rec.donor.name }}</chakra.td>
       <chakra.td v-else>No name provided</chakra.td>
       <chakra.td>{{ format.money(slotProps.rec.gift.amount) }}</chakra.td>
-      <chakra.td>{{ format.dateHuman(slotProps.rec.gift.date) }}</chakra.td>
+      <chakra.td>{{ format.dateHumanShort(slotProps.rec.gift.date) }}</chakra.td>
       <chakra.td>{{ format.money(slotProps.rec.donor.donated_total) }}</chakra.td>
       <chakra.td>{{ format.dateMonth(slotProps.rec.donor.giving_since) }}</chakra.td>
 

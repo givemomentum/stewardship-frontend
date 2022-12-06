@@ -32,9 +32,11 @@ export interface Email {
   is_viewed: boolean;
   is_excluded: boolean;
   
+  status: "pending" | "sent" | "opened" | "bounced" | "failed";
   sent_at: string;
   delivered_at: string;
-  opened_at: string;
+  opened_first_at: string;
+  opened_last_at: string;
   is_bounced: boolean;
   click_count: number;
   open_count: number;
