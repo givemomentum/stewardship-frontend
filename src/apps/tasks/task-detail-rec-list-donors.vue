@@ -71,20 +71,15 @@
           </CFlex>
         </CFlex>
 
-        <CFlex
-          direction="column"
+        <CLink
           v-if="slotProps.rec.donor.crm_url"
+          :href="slotProps.rec.donor.crm_url"
+          h="0"
         >
-          <CLink
-            :href="slotProps.rec.donor.crm_url"
-            is-external
-            variant="none"
-          >
-            <CButton size="xs" right-icon="external-link" variant="outline" key="2">
-              CRM Profile
-            </CButton>
-          </CLink>
-        </CFlex>
+          <CButton size="xs" right-icon="external-link" variant="outline">
+            CRM Profile
+          </CButton>
+        </CLink>
 
       </CFlex>
     </template>
