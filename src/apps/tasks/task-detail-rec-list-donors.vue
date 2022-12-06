@@ -1,12 +1,24 @@
 <script lang="ts" setup>
   import { Task } from "~/apps/tasks/interfaces";
   import { format } from "~/utils";
+  import { urls } from "~/urls";
 
   const props = defineProps<{ task: Task }>();
 </script>
 
 <template>
   <TaskDetailRecList :task="props.task" title="Donors" columns-count="6">
+
+    <template v-slot:top-buttons v-if="false">
+      <NuxtLink :to="urls.emails.batches.edit(props.task.email_batch)">
+        <CButton
+          size="sm"
+          left-icon="mail"
+        >
+          Compose emails
+        </CButton>
+      </NuxtLink>
+    </template>
 
     <template v-slot:table-headers>
       <chakra.th>Name</chakra.th>
@@ -61,9 +73,13 @@
 
         <CFlex
           direction="column"
-          v-if="slotProps.rec.donor.source === 'blackbaud' && slotProps.isCurrentRec"
+          v-if="slotProps.rec.donor.crm_url"
         >
-          <CLink :href="`https://host.nxt.blackbaud.com/constituent/records/${slotProps.rec.donor.source_id}`" target="_blank">
+          <CLink
+            :href="slotProps.rec.donor.crm_url"
+            is-external
+            variant="none"
+          >
             <CButton size="xs" right-icon="external-link" variant="outline" key="2">
               CRM Profile
             </CButton>

@@ -13,8 +13,6 @@
   onMounted(async () => {
     await hooks.tasks.loadTaskGiftsHistory(props.task);
   });
-
-  console.log(props.task?.rec_set);
 </script>
 
 <template>
@@ -24,11 +22,17 @@
     </CBox>
 
     <TaskDetailRecListGifts
-      v-if="props.task?.rec_set?.type === 'gifts'"
+      v-if="(
+        props.task?.rec_set?.type === 'gifts'
+        || props.task?.rec_set?.type === 'letters'
+      )"
       :task="props.task"
     />
     <TaskDetailRecListDonors
-      v-if="props.task?.rec_set?.type === 'donors'"
+      v-if="(
+        props.task?.rec_set?.type === 'donors'
+        || props.task?.rec_set?.type === 'donor_emails'
+      )"
       :task="props.task"
     />
 

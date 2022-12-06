@@ -50,7 +50,7 @@
     gap="1"
   >
 
-    <CFlex justify="space-between">
+    <CFlex justify="space-between" align="center">
       <CHeading font-size="xl" font-weight="normal" color="gray.500">
         {{ props.title }}
       </CHeading>

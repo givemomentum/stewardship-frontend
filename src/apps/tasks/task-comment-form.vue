@@ -96,6 +96,12 @@
         margin-right: auto;
         margin-left: 0;
         margin-bottom: 0;
+        background: none !important;
+        border: 1px solid var(--colors-blue-500);
+        color: var(--colors-blue-500) !important;
+        &:hover {
+          background: var(--colors-blue-50) !important;
+        }
       }
     }
   }

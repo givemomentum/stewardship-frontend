@@ -20,6 +20,7 @@ export class CrmDonor {
   email: string;
   birthday: string;
   donated_total: number;
+  crm_url: URL;
   donation_biggest: number;
   giving_since: string;
   last_contact: string;

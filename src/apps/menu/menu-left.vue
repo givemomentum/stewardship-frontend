@@ -77,6 +77,13 @@
             icon-name="mail"
           />
           <MenuLeftItem
+            v-if="false"
+            :path="urls.emails.batches.list"
+            :path-base="urls.emails.base"
+            label="Emails"
+            icon-name="mail"
+          />
+          <MenuLeftItem
             v-if="hooks.userStore.isOrgAdmin"
             :path="urls.organization"
             label="Organization"

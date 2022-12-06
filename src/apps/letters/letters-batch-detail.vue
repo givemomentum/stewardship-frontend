@@ -64,8 +64,8 @@
 
   function isLetterHtmlChanged(): boolean {
     // todo when we update letterHtml.value in watch() above this does't get recalculated. since the code isn't in <template>?
-    const htmlOriginal = state.letterOpen.value.html.valueOf() || state.letterOpen.value.html_default?.valueOf();
-    return state.letterHtml.value.valueOf() !== htmlOriginal;
+    const htmlOriginal = state.letterOpen.value.html || state.letterOpen.value.html_default;
+    return state.letterHtml.value.valueOf() !== htmlOriginal.valueOf();
   }
 
   async function saveLetterHtml() {
@@ -305,7 +305,14 @@
             </CButton>
           </CFlex>
 
-          <TinyMce v-model="state.letterHtml.value" />
+          <TinyMce
+            v-model="state.letterHtml.value"
+            editor-box-shadow="0 1px 3px 0 rgba(0, 0, 0, 0.1),0 1px 2px 0 rgba(0, 0, 0, 0.06)"
+            editor-background="#f4f4f4"
+            width="850px"
+            min-height="1100px"
+            :is-show-menu-bar="true"
+          />
         </CFlex>
       </CFlex>
     </CFlex>

@@ -17,6 +17,11 @@
     config: useRuntimeConfig(),
   };
 
+  const comp = {
+    isRecLetters: props.task.rec_set?.type === "letters",
+    isRecGifts: props.task.rec_set?.type === "gifts",
+  };
+
   function copyDonorInfo(rec: Recommendation) {
     state.donorCopyData.value = rec.donor.letter_label;
     hooks.clipboard.copy();
@@ -28,9 +33,13 @@
 </script>
 
 <template>
-  <TaskDetailRecList :task="props.task" title="Gifts" columns-count="7">
+  <TaskDetailRecList
+    :task="props.task"
+    :title="comp.isRecLetters ? 'Letters' : 'Gifts'"
+    columns-count="7"
+  >
 
-    <template v-slot:top-buttons>
+    <template v-slot:top-buttons v-if="comp.isRecLetters">
       <CFlex gap="7">
         <VTooltip>
           <div>
@@ -54,7 +63,7 @@
       <chakra.th>Gift Date</chakra.th>
       <chakra.th>Lifetime Gifts</chakra.th>
       <chakra.th>First gift</chakra.th>
-      <chakra.th />
+      <chakra.th v-if="comp.isRecLetters" />
     </template>
 
     <template v-slot:table-columns="slotProps">
@@ -65,7 +74,7 @@
       <chakra.td>{{ format.money(slotProps.rec.donor.donated_total) }}</chakra.td>
       <chakra.td>{{ format.dateMonth(slotProps.rec.donor.giving_since) }}</chakra.td>
 
-      <chakra.td>
+      <chakra.td v-if="comp.isRecLetters">
         <VTooltip placement="top" :key="state.copyTooltip.value">
           <div>
             <CIconButton

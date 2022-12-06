@@ -20,6 +20,7 @@ export default defineNuxtConfig({
       "~/apps/partners/hor",
       "~/apps/chakra",
       "~/apps/menu",
+      "~/apps/emails",
       "~/apps/shared",
     ],
   },

@@ -1,3 +1,3 @@
 <template>
-  <LettersLetters :batchPk="Number($route.params.batchPk)" />
+  <LettersBatchDetail :batchPk="Number($route.params.batchPk)" />
 </template>

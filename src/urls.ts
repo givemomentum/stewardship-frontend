@@ -18,6 +18,14 @@ export namespace urls {
     },
   };
 
+  export const emails = {
+    base: "/emails/",
+    batches: {
+      list: "/emails/batches",
+      edit: (batchPk: number) => `/emails/batch-${batchPk}/edit`,
+    },
+  };
+
   export const letters = {
     segmentList: "/letters/segments",
     archive: "/letters/archive",
