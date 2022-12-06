@@ -9,19 +9,18 @@
   const hooks = {
     api: useApi(),
   };
-  
+
   const state = {
     batchList: ref([] as EmailBatch[]),
     templateOpen: ref<LetterTemplate | null>(null),
   };
-  
+
   onMounted(async () => {
     const res = await hooks.api.get("/emails/batches/");
     state.batchList.value = res.data;
   });
-  
-</script>
 
+</script>
 
 <template>
   <CFlex direction="column" gap="10" pb="8">
@@ -92,11 +91,11 @@
         </chakra.tbody>
       </ChakraTable>
 
-<!--      <CLink :to="urls.letters.archive" variant="none">-->
-<!--        <CButton size="sm" variant="outline" mt="4">Archive</CButton>-->
-<!--      </CLink>-->
+      <!--      <CLink :to="urls.letters.archive" variant="none">-->
+      <!--        <CButton size="sm" variant="outline" mt="4">Archive</CButton>-->
+      <!--      </CLink>-->
     </CFlex>
-    
+
     <CFlex direction="column" gap="2" max-w="sm">
       <CHeading variant="page-header" font-size="2xl">Templates</CHeading>
 
@@ -133,7 +132,7 @@
     <DrawlerSimple v-model="state.templateOpen.value" w="calc(850px + var(--spaces-6) * 2)">
       <EmailsBatchTemplateEdit :template="state.templateOpen.value" />
     </DrawlerSimple>
-    
+
   </CFlex>
 </template>
 

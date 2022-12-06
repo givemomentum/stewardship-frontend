@@ -69,7 +69,7 @@
             padding: var(--mce-padding);
           }
         }
-      `
+      `,
     }),
   };
 

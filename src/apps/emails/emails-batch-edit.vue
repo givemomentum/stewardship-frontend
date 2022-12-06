@@ -6,7 +6,7 @@
   import { useEmailBatchStore } from "~/apps/emails/useEmailBatchStore";
   import { useLeftMenu } from "~/apps/menu/useLeftMenu";
   import { format } from "~/utils";
-  
+
   const props = defineProps<{ batchPk: number; isViewOnly?: boolean; }>();
 
   const hooks = {
@@ -64,7 +64,7 @@
     const container: HTMLDivElement = tableRowOpen.querySelector(".email-table-inner-donor-table-container");
     tableRowOpen.style.height = `${container.scrollHeight + comp.rowHeight}px`;
   });
-  
+
   function isBatchSent(): boolean {
     return state.batch.value?.status === "sent";
   }
@@ -145,19 +145,19 @@
     const htmlOriginal = state.emailOpen.value.content_html || state.emailOpen.value.content_html_default;
     return state.emailContentHtml.value.valueOf() !== htmlOriginal.valueOf();
   }
-  
+
   function getStatusStyle(email: Email) {
     switch (email.status) {
-      case "pending":
-        return { color: "gray.800", bg: "gray.100" };
-      case "sent":
-        return { color: "teal.800", bg: "teal.100" };
-      case "opened":
-        return { color: "green.800", bg: "green.100" };
-      case "bounced":
-        return { color: "red.800", bg: "red.100" };
-      case "failed":
-        return { color: "red.800", bg: "red.100" };
+    case "pending":
+      return { color: "gray.800", bg: "gray.100" };
+    case "sent":
+      return { color: "teal.800", bg: "teal.100" };
+    case "opened":
+      return { color: "green.800", bg: "green.100" };
+    case "bounced":
+      return { color: "red.800", bg: "red.100" };
+    case "failed":
+      return { color: "red.800", bg: "red.100" };
     }
   }
 
@@ -244,11 +244,11 @@
               </chakra.td>
 
               <chakra.td data-is-numeric="true">
-                <CIcon v-if="email.content_html" name="check-square" mb="1" size="4" color="gray.500" /> 
+                <CIcon v-if="email.content_html" name="check-square" mb="1" size="4" color="gray.500" />
               </chakra.td>
 
               <chakra.td v-if="isBatchSent" data-is-numeric="true">
-                <CIcon v-if="email.is_excluded" name="check-square" mb="1" size="4" color="gray.500" /> 
+                <CIcon v-if="email.is_excluded" name="check-square" mb="1" size="4" color="gray.500" />
               </chakra.td>
               <chakra.td v-else data-is-numeric="true">
                 <VTooltip placement="right">
@@ -267,7 +267,7 @@
 
               <CFlex
                 class="email-table-inner-donor-table-container"
-                pos="absolute" 
+                pos="absolute"
                 :top="comp.rowHeight"
                 bottom="0"
                 left="0"
@@ -324,12 +324,12 @@
                       <chakra.td>Last action</chakra.td>
                       <chakra.td>{{ format.date(email.donor.last_contact) || "-" }}</chakra.td>
                     </chakra.tr>
-                    
+
                     <chakra.tr>
                       <chakra.td>Reason</chakra.td>
                       <chakra.td white-space="break-spaces !important">{{
-                          state.batch.value?.rec_set?.recs?.find(rec => rec.donor.pk === email.donor.pk)?.explanation
-                        }}
+                        state.batch.value?.rec_set?.recs?.find(rec => rec.donor.pk === email.donor.pk)?.explanation
+                      }}
                       </chakra.td>
                     </chakra.tr>
                   </chakra.tbody>
@@ -392,7 +392,7 @@
                   Send test email
                 </CButton>
               </div>
-    
+
               <template v-slot:popper>
                 <CText font-size="xs">Send this email to {{ hooks.userStore.user.email }}</CText>
               </template>
@@ -420,10 +420,10 @@
             :is-read-only="isBatchSent()"
             :is-show-toolbar="isBatchSent()"
           />
-          
+
         </CFlex>
       </CFlex>
-      
+
       <CFlex
         w="100"
         border-top="1px solid rgba(0,0,0,0)"
@@ -445,12 +445,12 @@
     background: var(--colors-gray-75) !important;
     height: 100%;
   }
-  
+
   .email-table {
     th {
       white-space: nowrap;
     }
-    
+
     .table-row {
       position: relative;
       transition: all 0.2s;

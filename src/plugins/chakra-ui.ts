@@ -191,7 +191,6 @@ export default defineNuxtPlugin(nuxtApp => {
       nuxtApp.vueApp.component(moduleName, ChakraModule[moduleName]);
     }
   }
-  nuxtApp.vueApp.component("CFlex", ChakraModule["CFlex"]);
 });
 
 function getOhVueIconProps(icon: IconType) {

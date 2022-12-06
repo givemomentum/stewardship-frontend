@@ -30,10 +30,10 @@ export interface Email {
   subject: string;
   content_html: string;
   content_html_default: string;
-  
+
   is_viewed: boolean;
   is_excluded: boolean;
-  
+
   status: "pending" | "sent" | "opened" | "bounced" | "failed";
   sent_at: string;
   delivered_at: string;

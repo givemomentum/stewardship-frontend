@@ -12,9 +12,7 @@
   const hooks = {
     taskListStore: useTaskListStore(),
     form: useForm({
-      path: () => {
-        return `recs/${props.rec.pk}/`;
-      },
+      path: () => `recs/${props.rec.pk}/`,
       getExtraData: () => ({
         action_state: "logged_by_user",
       }),
@@ -44,8 +42,11 @@
         validation-visibility="submit"
       />
 
-      <FormKit type="textarea" name="action_description" label="Description"
-               rows="10" />
+      <FormKit
+        type="textarea"
+        name="action_description"
+        label="Description"
+        rows="10" />
 
       <FormKit type="submit" label="Submit" size="md" />
     </CFlex>

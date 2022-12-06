@@ -3,7 +3,7 @@ import { PrimaryKey, UrlString } from "~/apps/auth/interfaces";
 export class CrmDonor {
   pk: PrimaryKey;
   source_id: PrimaryKey;
-  source:  "blackbaud" | "donor_perfect" | "salesforce" | "every_action" | "other";
+  source: "blackbaud" | "donor_perfect" | "salesforce" | "every_action" | "other";
   gifts?: CrmGift[];
   letter_label: string;
   mailing_address: {
@@ -17,7 +17,7 @@ export class CrmDonor {
   };
   name: string;
   salutation: string;
-  email: string
+  email: string;
   phone_number?: string;
   birthday: string;
   donated_total: number;
