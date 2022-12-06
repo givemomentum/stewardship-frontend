@@ -1,5 +1,7 @@
 <script setup lang="ts">
+  import { ref } from "vue";
   import { EmailBatch } from "~/apps/emails/interfaces";
+  import { LetterTemplate } from "~/apps/letters/interfaces";
   import { urls } from "~/urls";
   import { format } from "~/utils";
   import { Mails } from "lucide-vue-next";
@@ -10,6 +12,7 @@
   
   const state = {
     batchList: ref([] as EmailBatch[]),
+    templateOpen: ref<LetterTemplate | null>(null),
   };
   
   onMounted(async () => {
@@ -89,10 +92,48 @@
         </chakra.tbody>
       </ChakraTable>
 
-      <CLink :to="urls.letters.archive" variant="none">
-        <CButton size="sm" variant="outline" mt="4">Archive</CButton>
-      </CLink>
+<!--      <CLink :to="urls.letters.archive" variant="none">-->
+<!--        <CButton size="sm" variant="outline" mt="4">Archive</CButton>-->
+<!--      </CLink>-->
     </CFlex>
+    
+    <CFlex direction="column" gap="2" max-w="sm">
+      <CHeading variant="page-header" font-size="2xl">Templates</CHeading>
+
+      <ChakraTable size="sm">
+        <chakra.thead>
+          <chakra.th>Name</chakra.th>
+          <chakra.th />
+        </chakra.thead>
+
+        <chakra.tbody>
+          <chakra.tr
+            v-for="batch in state.batchList.value"
+            :key="batch.pk"
+          >
+            <chakra.td>{{ batch.template.title }}</chakra.td>
+
+            <chakra.td w="fit-content">
+              <CButton
+                @click="state.templateOpen.value = batch.template"
+                size="sm"
+                variant="link"
+                gap="px"
+                left-icon="edit"
+              >
+                Edit
+              </CButton>
+            </chakra.td>
+
+          </chakra.tr>
+        </chakra.tbody>
+      </ChakraTable>
+    </CFlex>
+
+    <DrawlerSimple v-model="state.templateOpen.value" w="calc(850px + var(--spaces-6) * 2)">
+      <EmailsBatchTemplateEdit :template="state.templateOpen.value" />
+    </DrawlerSimple>
+    
   </CFlex>
 </template>
 

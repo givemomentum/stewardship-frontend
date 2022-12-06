@@ -223,6 +223,7 @@
                   w="fit-content"
                   border-radius="lg"
                   text-transform="capitalize"
+                  font-size="xs"
                   :bg="getStatusStyle(email).bg"
                   :color="getStatusStyle(email).color"
                 >
