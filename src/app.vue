@@ -52,7 +52,7 @@
       LogRocket.init("alcw3f/stewardship");
 
       const hubspot = window._hsq;
-      hubspot.push(["identify", { email: hooks.userStore.user.email }]);
+      hubspot?.push(["identify", { email: hooks.userStore.user.email }]);
 
       LogRocket.identify(hooks.userStore.user.email, {
         name: `${hooks.userStore.user.first_name} ${hooks.userStore.user.last_name}`,
