@@ -47,6 +47,7 @@
 <template>
   <CFlex gap="3" direction="column">
     <CBox
+      min-w="787"
       p="6"
       pt="4"
       bg="white"
