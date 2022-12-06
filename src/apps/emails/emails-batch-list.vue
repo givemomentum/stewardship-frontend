@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { ref } from "vue";
-  import { EmailBatch } from "~/apps/emails/interfaces";
+  import { Email, EmailBatch } from "~/apps/emails/interfaces";
   import { LetterTemplate } from "~/apps/letters/interfaces";
   import { urls } from "~/urls";
   import { format } from "~/utils";
@@ -19,6 +19,17 @@
     const res = await hooks.api.get("/emails/batches/");
     state.batchList.value = res.data;
   });
+
+  function getStatusStyle(batch: EmailBatch) {
+    switch (batch.status) {
+      case "prepopulated":
+        return { color: "gray.800", bg: "gray.100" };
+      case "pending":
+        return { color: "gray.800", bg: "gray.100" };
+      case "sent":
+        return { color: "teal.800", bg: "teal.100" };
+    }
+  }
 
 </script>
 
@@ -58,7 +69,19 @@
             </chakra.td>
 
             <chakra.td data-is-numeric="true">
-              {{ batch.status }}
+              <CBox
+                py="2px"
+                px="2"
+                w="fit-content"
+                border-radius="lg"
+                text-transform="capitalize"
+                font-size="xs"
+                :bg="getStatusStyle(batch).bg"
+                :color="getStatusStyle(batch).color"
+              >
+                {{ batch.status }}
+              </CBox>
+
             </chakra.td>
 
             <chakra.td data-is-numeric="true">
@@ -74,7 +97,7 @@
             </chakra.td>
 
             <chakra.td>
-              {{ batch.template.name }}
+              {{ batch.template.title }}
             </chakra.td>
 
             <chakra.td>
