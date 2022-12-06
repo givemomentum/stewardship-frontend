@@ -37,6 +37,11 @@
 
   async function toggleRecCompletedStatus(rec: Recommendation) {
     rec.is_completed = !rec.is_completed;
+    if (rec.is_completed) {
+      rec.state = "completed";
+    } else {
+      rec.state = "new";
+    }
     await hooks.tasks.updateRecommendationCompletedStatus(rec);
   }
 </script>

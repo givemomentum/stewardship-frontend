@@ -48,7 +48,7 @@ export function useTaskListStore() {
   }
 
   async function updateRecommendationCompletedStatus(rec: Recommendation) {
-    await hooks.api.patch(`/recs/${rec.pk}/`, { is_completed: rec.is_completed });
+    await hooks.api.patch(`/recs/${rec.pk}/`, { is_completed: rec.is_completed, state: rec.state });
   }
 
   function getTaskModifiable(taskRaw: Task): Task {

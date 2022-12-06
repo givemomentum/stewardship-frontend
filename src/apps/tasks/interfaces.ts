@@ -27,7 +27,8 @@ export interface Recommendation {
   donor?: CrmDonor;
   gift?: CrmGift;
   explanation: string;
-  is_completed: boolean;
+  is_completed: boolean;  // Deprecated
+  state: "new" | "completed" | "dismissed";
 }
 
 export interface RecommendationSet {
