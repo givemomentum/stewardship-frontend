@@ -51,6 +51,14 @@ export function useTaskListStore() {
     await hooks.api.patch(`/recs/${rec.pk}/`, { is_completed: rec.is_completed, state: rec.state });
   }
 
+  async function logAction(rec: Recommendation, action: string) {
+    await hooks.api.patch(`/recs/${rec.pk}/`, {
+      action_description: rec.action_description,
+      action_type: rec.action_type,
+      action_state: rec.action_state,
+    });
+  }
+
   function getTaskModifiable(taskRaw: Task): Task {
     // make sure it's the monitored Proxy object, and not a Props arg
     return state.tasks.value.find(task => task.pk === taskRaw.pk)!;

@@ -29,6 +29,9 @@ export interface Recommendation {
   explanation: string;
   is_completed: boolean;  // Deprecated
   state: "new" | "completed" | "dismissed";
+  action_description: string;
+  action_type: "none" | "call" | "letter" | "email" | "other";
+  action_state: "none" | "logged_by_user" | "stored_to_crm";
 }
 
 export interface RecommendationSet {

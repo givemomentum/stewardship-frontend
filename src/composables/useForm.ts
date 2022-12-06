@@ -11,7 +11,7 @@ export function useForm(args: {
   getExtraData?: () => any;
   serializers?: { [key: string]: (value: any) => any };
   method?: HttpMethod | (() => HttpMethod);
-  onSuccess?: () => Promise<void>;
+  onSuccess?: (data) => Promise<void>;
 }) {
   const state = {
     isSuccess: ref(false),
@@ -41,7 +41,7 @@ export function useForm(args: {
         await hooks.api.post(path, resArgs);
       }
       state.isSuccess.value = true;
-      args.onSuccess();
+      args.onSuccess(data);
     } catch (error) {
       console.log(error);
       captureException(error);
