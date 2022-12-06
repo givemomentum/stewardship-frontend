@@ -93,3 +93,10 @@
     </CBox>
   </CFlex>
 </template>
+
+<style lang="scss">
+  //noinspection CssUnknownTarget
+  @import '~/styles/chakra-ui.scss';
+  //noinspection CssUnknownTarget
+  @import '~/styles/formkit.scss';
+</style>
