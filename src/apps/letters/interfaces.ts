@@ -17,13 +17,16 @@ export class CrmDonor {
   };
   name: string;
   salutation: string;
-  email: string;
+  email: string
+  phone_number?: string;
   birthday: string;
   donated_total: number;
   crm_url: URL;
-  donation_biggest: number;
-  giving_since: string;
-  last_contact: string;
+  donation_biggest?: number;
+  giving_since?: string;
+  last_contact?: string;
+  last_gift_date?: string;
+  last_gift_amount?: number;
   donation_average: number;
   source_data: any;
 }
