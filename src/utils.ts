@@ -53,4 +53,11 @@ export namespace format {
     }
     return "";
   }
+
+  export function percentage(num: number): string {
+    if (num) {
+      return `${num.toFixed(2)}%`;
+    }
+    return "";
+  }
 }

@@ -17,6 +17,8 @@ export interface EmailBatch {
   status: "prepopulated" | "pending" | "sent";
   emails_unviewed_count: number;
   emails_count: number;
+  open_count: number;
+  bounce_count: number;
 }
 
 export interface Email {

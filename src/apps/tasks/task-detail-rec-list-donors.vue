@@ -2,8 +2,22 @@
   import { Task } from "~/apps/tasks/interfaces";
   import { format } from "~/utils";
   import { urls } from "~/urls";
+  import { EmailBatch } from "~/apps/emails/interfaces";
 
   const props = defineProps<{ task: Task }>();
+  
+  const hooks = {
+    api: useApi(),
+  };
+  
+  const state = {
+    emailBatch: ref(null as EmailBatch | null),
+  };
+  
+  onMounted(async () => {
+    const res = await hooks.api.get(`/emails/batches/${props.task.email_batch}/`);
+    state.emailBatch.value = res.data;
+  });
 </script>
 
 <template>
@@ -15,7 +29,7 @@
           size="sm"
           left-icon="mail"
         >
-          Compose emails
+          {{ state.emailBatch.value?.status === 'sent' ? 'Review sent emails' : 'Compose emails' }}
         </CButton>
       </NuxtLink>
     </template>
