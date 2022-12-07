@@ -29,6 +29,7 @@ export function useTaskListStore() {
     }
     const res = await hooks.api.get(path);
     state.tasks.value = res.data ?? [];
+    state.taskOpened.value = state.tasks.value.find(task => task.pk === state.taskOpened.value?.pk) ?? null;
   }
 
   async function loadTaskGiftsHistory(taskRaw: Task) {
