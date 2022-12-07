@@ -152,6 +152,8 @@
       return { color: "gray.800", bg: "gray.100" };
     case "sent":
       return { color: "teal.800", bg: "teal.100" };
+    case "excluded":
+      return { color: "orange.800", bg: "orange.100" };
     case "opened":
       return { color: "green.800", bg: "green.100" };
     case "bounced":
@@ -188,12 +190,12 @@
           <chakra.thead>
             <chakra.tr>
               <chakra.th>Donor</chakra.th>
-              <chakra.th v-if="isBatchSent">Status</chakra.th>
-              <chakra.th v-if="isBatchSent">Open count</chakra.th>
-              <chakra.th v-if="isBatchSent">Opened at</chakra.th>
-              <chakra.th v-if="!isBatchSent" data-is-numeric="true">Donated total</chakra.th>
+              <chakra.th v-if="isBatchSent()">Status</chakra.th>
+              <chakra.th v-if="isBatchSent()">Open count</chakra.th>
+              <chakra.th v-if="isBatchSent()">Opened at</chakra.th>
+              <chakra.th v-if="!isBatchSent()" data-is-numeric="true">Donated total</chakra.th>
               <chakra.th data-is-numeric="true">Modified</chakra.th>
-              <chakra.th data-is-numeric="true">Excluded</chakra.th>
+              <chakra.th v-if="!isBatchSent()" data-is-numeric="true">Excluded</chakra.th>
             </chakra.tr>
           </chakra.thead>
 
@@ -216,7 +218,7 @@
                 Unknown
               </chakra.td>
 
-              <chakra.td v-if="isBatchSent">
+              <chakra.td v-if="isBatchSent()">
                 <CBox
                   py="2px"
                   px="2"
@@ -231,15 +233,15 @@
                 </CBox>
               </chakra.td>
 
-              <chakra.td v-if="isBatchSent">
+              <chakra.td v-if="isBatchSent()">
                 {{ email.open_count || "" }}
               </chakra.td>
 
-              <chakra.td v-if="isBatchSent">
+              <chakra.td v-if="isBatchSent()">
                 {{ format.datetimeHumanShort(email.opened_first_at) }}
               </chakra.td>
 
-              <chakra.td v-if="!isBatchSent" data-is-numeric="true">
+              <chakra.td v-if="!isBatchSent()" data-is-numeric="true">
                 {{ format.money(email.donor.donated_total) }}
               </chakra.td>
 
@@ -247,15 +249,12 @@
                 <CIcon v-if="email.content_html" name="check-square" mb="1" size="4" color="gray.500" />
               </chakra.td>
 
-              <chakra.td v-if="isBatchSent" data-is-numeric="true">
-                <CIcon v-if="email.is_excluded" name="check-square" mb="1" size="4" color="gray.500" />
-              </chakra.td>
-              <chakra.td v-else data-is-numeric="true">
+              <chakra.td v-if="!isBatchSent()" data-is-numeric="true">
                 <VTooltip placement="right">
                   <div>
                     <ChakraCheckbox
                       :model-value="email.is_excluded"
-                      @click="toggleEmailExclusion(email)"
+                      @click.stop="toggleEmailExclusion(email)"
                     />
                   </div>
                   <template v-slot:popper>
@@ -363,7 +362,7 @@
           align="flex-end"
           key="3"
         >
-          <CFlex gap="3" v-if="!isBatchSent">
+          <CFlex gap="3" v-if="!isBatchSent()">
             <CButton
               @click="saveEmailHtml()"
               :is-loading="state.isSavingChanges.value"

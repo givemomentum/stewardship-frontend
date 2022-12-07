@@ -34,7 +34,7 @@ export interface Email {
   is_viewed: boolean;
   is_excluded: boolean;
 
-  status: "pending" | "sent" | "opened" | "bounced" | "failed";
+  status: "pending" | "sent" | "opened" | "bounced" | "failed" | "excluded";
   sent_at: string;
   delivered_at: string;
   opened_first_at: string;
