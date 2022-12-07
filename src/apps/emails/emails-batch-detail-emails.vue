@@ -7,6 +7,7 @@
   import { useLeftMenu } from "~/apps/menu/useLeftMenu";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import { format } from "~/utils";
+  import { urls } from "~/urls";
 
   const props = defineProps<{ batchPk: number; isViewOnly?: boolean; }>();
 
@@ -106,8 +107,8 @@
     await hooks.api.post(`/emails/batches/${props.batchPk}/send/`);
     state.batch.value.status = "sent";
     hooks.toast.success("Email batch sent", { position: POSITION.TOP_RIGHT });
-    await hooks.taskStore.loadTasks();
-    await hooks.taskStore.loadTaskRecommendations();
+    hooks.taskStore.loadTaskRecommendations();
+    navigateTo(urls.emails.batches.list);
   }
 
   function handleKeyUp(event: KeyboardEvent) {
