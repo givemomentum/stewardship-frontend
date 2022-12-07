@@ -29,6 +29,10 @@ export class CrmDonor {
   last_gift_amount?: number;
   donation_average: number;
   source_data: any;
+  do_not_contact: boolean;
+  do_not_call: boolean;
+  do_not_email: boolean;
+  do_not_mail: boolean;
 }
 
 export class CrmGift {

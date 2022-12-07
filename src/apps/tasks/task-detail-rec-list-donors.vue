@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import { Recommendation, Task } from "~/apps/tasks/interfaces";
+  import { CrmDonor } from "~/apps/letters/interfaces";
   import { format } from "~/utils";
   import { urls } from "~/urls";
   import { EmailBatch } from "~/apps/emails/interfaces";
@@ -48,6 +49,28 @@
       state.alertMessage.value = null;
     }, 5000);
     closeLoggingModal();
+  }
+
+  function getCommunicationPreferences(donor: CrmDonor) {
+    if (donor.source != "salesforce") {
+      return "";  // Only Salesforce has trustworthy communication preferences at the moment.
+    }
+
+    const preferences = [];
+    if (donor.do_not_contact) {
+      preferences.push("Do Not Contact");
+    }
+    if (donor.do_not_call) {
+      preferences.push("Do Not Callt");
+    }
+    if (donor.do_not_email) {
+      preferences.push("Do Not Email");
+    }
+    if (donor.do_not_mail) {
+      preferences.push("Do Not Mail");
+    }
+
+    return preferences.join(", ");
   }
 </script>
 
@@ -103,18 +126,18 @@
       <chakra.td>{{ format.money(slotProps.rec.donor.donated_total) }}</chakra.td>
       <chakra.td>
         <CLink
-          v-if="slotProps.rec.donor.crm_url"
           :href="slotProps.rec.donor.crm_url"
           h="0"
           is-external
+          @click.stop=""
         >
           <CButton right-icon="external-link" variant="link">
-            {{ slotProps.rec.donor.source_id }}
+            <!-- Workaround for Donor Perfect link issue: Show Donor Id, so she can copy it.-->
+            {{
+              slotProps.rec.donor.source == "donor_perfect" ? slotProps.rec.donor.source_id : "View"
+            }}
           </CButton>
         </CLink>
-        <chakra.span v-else>
-          {{ slotProps.rec.donor.source_id }}
-        </chakra.span>
       </chakra.td>
       <chakra.td>
         <CButton
@@ -151,6 +174,12 @@
               {{ format.money(slotProps.rec.donor.donation_biggest) }}, and most recent gift was
               {{ format.money(slotProps.rec.donor.last_gift_amount) }} in
               {{ format.dateMonth(slotProps.rec.donor.last_gift_date) }}
+            </CFlex>
+          </CFlex>
+          <CFlex direction="column" v-if="getCommunicationPreferences(slotProps.rec.donor)">
+            <CFlex color="gray.400" font-size="xs">Communication Preferences</CFlex>
+            <CFlex font-size="md">
+              {{ getCommunicationPreferences(slotProps.rec.donor) }}
             </CFlex>
           </CFlex>
           <CFlex direction="column" v-if="slotProps.rec.donor.email">
