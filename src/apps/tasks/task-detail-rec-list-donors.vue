@@ -44,7 +44,6 @@
     state.loggingModalRec.value.action_state = data.action_state;
     state.loggingModalRec.value.action_type = data.action_type;
     state.loggingModalRec.value.action_description = data.action_description;
-    state.loggingModalRec.value.is_completed = true;
     state.loggingModalRec.value.state = "completed";
 
     setTimeout(() => {

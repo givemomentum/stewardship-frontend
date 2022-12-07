@@ -48,8 +48,8 @@ export function useTaskListStore() {
     await Promise.all(promises);
   }
 
-  async function updateRecommendationCompletedStatus(rec: Recommendation) {
-    await hooks.api.patch(`/recs/${rec.pk}/`, { is_completed: rec.is_completed, state: rec.state });
+  async function updateRecommendationState(rec: Recommendation) {
+    await hooks.api.patch(`/recs/${rec.pk}/`, { state: rec.state });
   }
 
   async function logAction(rec: Recommendation, action: string) {
@@ -71,6 +71,6 @@ export function useTaskListStore() {
     loadTasks: loadTasks,
     loadTaskRecommendations: loadTaskRecommendations,
     loadTaskGiftsHistory: loadTaskGiftsHistory,
-    updateRecommendationCompletedStatus: updateRecommendationCompletedStatus,
+    updateRecommendationState: updateRecommendationState,
   };
 }

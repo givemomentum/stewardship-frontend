@@ -36,13 +36,12 @@
   }
 
   async function toggleRecCompletedStatus(rec: Recommendation) {
-    rec.is_completed = !rec.is_completed;
-    if (rec.is_completed) {
+    if (rec.state == "new") {
       rec.state = "completed";
-    } else {
+    } else if (rec.state == "completed") {
       rec.state = "new";
     }
-    await hooks.tasks.updateRecommendationCompletedStatus(rec);
+    await hooks.tasks.updateRecommendationState(rec);
   }
 </script>
 
@@ -85,13 +84,13 @@
             <chakra.td text-align="end !important">
               <CIcon
                 @click.stop="toggleRecCompletedStatus(rec)"
-                :name="rec.is_completed ? 'io-checkmark-circle' : 'io-checkmark-circle-outline'"
+                :name="rec.state === 'completed' ? 'io-checkmark-circle' : 'io-checkmark-circle-outline'"
                 mb="px"
                 :_hover="{ color: 'teal.300', fill: 'teal.300' }"
                 transition="all 0.3s"
                 size="21px"
-                :color="rec.is_completed ? 'teal.400' : 'gray.500'"
-                :fill="rec.is_completed ? 'teal.400' : 'gray.500'"
+                :color="rec.state === 'completed' ? 'teal.400' : 'gray.500'"
+                :fill="rec.state === 'completed' ? 'teal.400' : 'gray.500'"
               />
             </chakra.td>
 
