@@ -93,11 +93,11 @@
             </chakra.td>
 
             <chakra.td data-is-numeric="true">
-              {{ format.percentage(batch.open_count / batch.emails_count) }}
+              {{ format.percentage((batch.open_count / batch.emails_count) * 100) }}
             </chakra.td>
 
             <chakra.td data-is-numeric="true">
-              {{ format.percentage(batch.bounce_count / batch.emails_count) }}
+              {{ format.percentage((batch.bounce_count / batch.emails_count) * 100) }}
             </chakra.td>
 
             <chakra.td>
