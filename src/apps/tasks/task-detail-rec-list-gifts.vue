@@ -36,7 +36,7 @@
   <TaskDetailRecList
     :task="props.task"
     :title="comp.isRecLetters ? 'Letters' : 'Gifts'"
-    columns-count="7"
+    columns-count="8"
   >
 
     <template v-slot:top-buttons v-if="comp.isRecLetters">

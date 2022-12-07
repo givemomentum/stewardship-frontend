@@ -99,7 +99,7 @@
     <CAlertIcon />
     <CAlertDescription>{{ state.alertMessage.value }}</CAlertDescription>
   </CAlert>
-  <TaskDetailRecList :task="props.task" title="Donors" columns-count="6">
+  <TaskDetailRecList :task="props.task" title="Donors" columns-count="7">
 
     <template v-slot:top-buttons v-if="props.task.email_batch">
       <NuxtLink :to="urls.emails.batches.edit(props.task.email_batch)">

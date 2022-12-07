@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { CFlex } from "@chakra-ui/vue-next";
-  import { onMounted, ref } from "vue";
+  import { onMounted, ref, computed } from "vue";
   import { Recommendation, Task } from "~/apps/tasks/interfaces";
   import RecDonorGiftChart from "~/apps/tasks/rec-donor-gift-chart.vue";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
@@ -19,6 +19,23 @@
     tasks: useTaskListStore(),
   };
 
+  const comp = {
+    sortedTasks: computed(() => {
+      const sorted = props.task.rec_set.recs.slice().sort((a, b) => {
+        const a_dismissed = a.state === 'dismissed';
+        const b_dismissed = b.state === 'dismissed';
+        if (a_dismissed && !b_dismissed) {
+          return 1;
+        } else if (!a_dismissed && b_dismissed) {
+          return -1;
+        } else {
+          return a.pk - b.pk;
+        }
+      });
+      return sorted;
+    }),
+  }
+
   onMounted(async () => {
     await hooks.tasks.loadTaskGiftsHistory(props.task);
   });
@@ -36,10 +53,19 @@
   }
 
   async function toggleRecCompletedStatus(rec: Recommendation) {
-    if (rec.state == "new") {
-      rec.state = "completed";
-    } else if (rec.state == "completed") {
+    if (rec.state === "completed") {
       rec.state = "new";
+    } else {
+      rec.state = "completed";
+    }
+    await hooks.tasks.updateRecommendationState(rec);
+  }
+
+  async function toggleRecDismissed(rec: Recommendation) {
+    if (rec.state === "dismissed") {
+      rec.state = "new";
+    } else {
+      rec.state = "dismissed";
     }
     await hooks.tasks.updateRecommendationState(rec);
   }
@@ -65,13 +91,13 @@
     <ChakraTable size="sm">
       <chakra.thead>
         <chakra.th w="0" />
-
         <slot name="table-headers" />
+        <chakra.th w="0" />
       </chakra.thead>
 
       <chakra.tbody>
         <template
-          v-for="rec in props.task.rec_set.recs"
+          v-for="rec in comp.sortedTasks.value"
           :key="rec.pk"
         >
 
@@ -79,6 +105,7 @@
             @click="toggleRecOpen(rec)"
             :_hover="{ cursor: 'pointer', bg: isCurrentRec(rec) ? 'white' : 'gray.50' }"
             :bg="isCurrentRec(rec) ? 'white' : 'inherit'"
+            :opacity="rec.state === 'dismissed' ? '0.5' : '1'"
           >
 
             <chakra.td text-align="end !important">
@@ -95,6 +122,12 @@
             </chakra.td>
 
             <slot name="table-columns" :rec="rec" />
+
+            <chakra.td padding-left="0">
+              <CButton @click.stop="toggleRecDismissed(rec)" variant="ghost" size="xs" pl="0">
+                {{ rec.state == 'dismissed' ? 'Restore' : 'Dismiss' }}
+              </CButton>
+            </chakra.td>
 
           </chakra.tr>
 
