@@ -34,6 +34,10 @@
         return { color: "teal.800", bg: "teal.100" };
     }
   }
+  
+  function isBatchSent(batch: EmailBatch) {
+    return batch.status === "sent";
+  }
 
 </script>
 
@@ -93,11 +97,11 @@
             </chakra.td>
 
             <chakra.td data-is-numeric="true">
-              {{ format.percentage((batch.open_count / batch.emails_count) * 100) }}
+              {{ isBatchSent(batch) ? format.percentage((batch.open_count / batch.emails_count) * 100) : '' }}
             </chakra.td>
 
             <chakra.td data-is-numeric="true">
-              {{ format.percentage((batch.bounce_count / batch.emails_count) * 100) }}
+              {{ isBatchSent(batch) ? format.percentage((batch.bounce_count / batch.emails_count) * 100) : '' }}
             </chakra.td>
 
             <chakra.td>
