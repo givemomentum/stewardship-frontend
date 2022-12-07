@@ -79,6 +79,7 @@
           />
           <MenuLeftItem
             v-if="hooks.userStore.user.membership.org.is_enable_app_emails"
+            :path="urls.emails.batches.list"
             :path-base="urls.emails.base"
             label="Emails"
             icon-name="mail"
