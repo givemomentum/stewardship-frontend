@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { ref } from "vue";
-  import { Email, EmailBatch } from "~/apps/emails/interfaces";
+  import { Email, EmailBatch, EmailTemplate } from "~/apps/emails/interfaces";
   import { LetterTemplate } from "~/apps/letters/interfaces";
   import { urls } from "~/urls";
   import { format } from "~/utils";
@@ -12,12 +12,16 @@
 
   const state = {
     batchList: ref([] as EmailBatch[]),
+    templateList: ref([] as EmailTemplate[]),
     templateOpen: ref<LetterTemplate | null>(null),
   };
 
   onMounted(async () => {
-    const res = await hooks.api.get("/emails/batches/");
-    state.batchList.value = res.data;
+    const resBatches = await hooks.api.get("/emails/batches/");
+    state.batchList.value = resBatches.data;
+
+    const resTemplates = await hooks.api.get("/emails/templates/");
+    state.templateList.value = resTemplates.data;
   });
 
   function getStatusStyle(batch: EmailBatch) {
@@ -130,14 +134,14 @@
 
         <chakra.tbody>
           <chakra.tr
-            v-for="batch in state.batchList.value"
-            :key="batch.pk"
+            v-for="template in state.templateList.value"
+            :key="template.pk"
           >
-            <chakra.td>{{ batch.template.title }}</chakra.td>
+            <chakra.td>{{ template.title }}</chakra.td>
 
             <chakra.td w="fit-content">
               <CButton
-                @click="state.templateOpen.value = batch.template"
+                @click="state.templateOpen.value = template"
                 size="sm"
                 variant="link"
                 gap="px"
