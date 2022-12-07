@@ -38,12 +38,12 @@
 
   async function onLoggingSuccess(data: any) {
     state.alertMessage.value = `Successfully logged action for ${state.loggingModalRec.value.donor?.name}`;
-    state.loggingModalRec.value.action_state = data["action_state"]
-    state.loggingModalRec.value.action_type = data["action_type"]
-    state.loggingModalRec.value.action_description = data["action_description"]
+    state.loggingModalRec.value.action_state = data.action_state;
+    state.loggingModalRec.value.action_type = data.action_type;
+    state.loggingModalRec.value.action_description = data.action_description;
     state.loggingModalRec.value.is_completed = true;
     state.loggingModalRec.value.state = "completed";
-    
+
     setTimeout(() => {
       state.alertMessage.value = null;
     }, 5000);
@@ -53,8 +53,11 @@
 
 <template>
   <!-- TODO: Factor this out into a component -->
-  <vue-final-modal v-model="state.showLoggingModal.value" name="Log to CRM" classes="modal-container"
-                   content-class="modal-content">
+  <vue-final-modal
+    v-model="state.showLoggingModal.value"
+    name="Log to CRM"
+    classes="modal-container"
+    content-class="modal-content">
     <button class="modal__close" @click="closeLoggingModal">
       <CIcon
         name="md-close-outlined"
@@ -74,7 +77,7 @@
   </CAlert>
   <TaskDetailRecList :task="props.task" title="Donors" columns-count="6">
 
-    <template v-slot:top-buttons v-if="false">
+    <template v-slot:top-buttons v-if="props.task.email_batch" v-if="false">
       <NuxtLink :to="urls.emails.batches.edit(props.task.email_batch)">
         <CButton
           size="sm"
@@ -90,7 +93,7 @@
       <chakra.th>Last gift</chakra.th>
       <chakra.th>Lifetime giving</chakra.th>
       <chakra.th>CRM Profile</chakra.th>
-      <chakra.th></chakra.th>
+      <chakra.th />
     </template>
 
     <template v-slot:table-columns="slotProps">
@@ -102,7 +105,8 @@
         <CLink
           v-if="slotProps.rec.donor.crm_url"
           :href="slotProps.rec.donor.crm_url"
-          h="0" is-external
+          h="0"
+          is-external
         >
           <CButton right-icon="external-link" variant="link">
             {{ slotProps.rec.donor.source_id }}
@@ -113,7 +117,12 @@
         </chakra.span>
       </chakra.td>
       <chakra.td>
-        <CButton v-if="slotProps.rec.action_state === 'none'" size="sm" @click.stop="openLoggingModal(slotProps.rec)">
+        <CButton
+          v-if="slotProps.rec.action_state === 'none'"
+          @click.stop="openLoggingModal(slotProps.rec)"
+          size="sm"
+          variant="outline"
+        >
           Log
         </CButton>
         <VTooltip v-else>
