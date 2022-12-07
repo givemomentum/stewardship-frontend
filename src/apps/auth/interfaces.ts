@@ -8,6 +8,8 @@ export interface Org {
   contact_first_name: string;
   contact_last_name: string;
   support_email: string;
+  is_enable_app_emails: boolean;
+  is_enable_app_letters: boolean;
 }
 
 export interface BlackbaudConnection {

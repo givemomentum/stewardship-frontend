@@ -106,11 +106,11 @@
 
             <chakra.td>
               <CButton
+                @click="triggerBatchDownload(batch)"
                 size="sm"
                 variant="link"
                 gap="2"
                 left-icon="download"
-                @click="triggerBatchDownload(batch)"
               >
                 Download
               </CButton>
