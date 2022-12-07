@@ -6,11 +6,13 @@
   import { EmailBatch } from "~/apps/emails/interfaces";
   import { ref, onMounted } from "vue";
   import { useApi } from "~/composables/useApi";
+  import { useRuntimeConfig } from "#app";
 
   const props = defineProps<{ task: Task }>();
 
   const hooks = {
     api: useApi(),
+    config: useRuntimeConfig(),
   };
 
   const state = {
@@ -109,6 +111,23 @@
           {{ state.emailBatch.value?.status === 'sent' ? 'Review sent emails' : 'Compose emails' }}
         </CButton>
       </NuxtLink>
+    </template>
+    <template v-slot:top-buttons v-else>
+      <CFlex gap="7">
+        <VTooltip>
+          <div>
+            <CLink
+              :href="`${hooks.config.public.apiBase}/recs/rec-sets/${props.task.rec_set?.pk}/donor-csv`"
+            >
+              <CButton left-icon="download" variant="link">CSV</CButton>
+            </CLink>
+          </div>
+
+          <template v-slot:popper>
+            <CText font-size="xs">Download as CSV</CText>
+          </template>
+        </VTooltip>
+      </CFlex>
     </template>
 
     <template v-slot:table-headers>

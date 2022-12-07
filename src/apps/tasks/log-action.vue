@@ -15,6 +15,8 @@
       path: () => `recs/${props.rec.pk}/`,
       getExtraData: () => ({
         action_state: "logged_by_user",
+        is_completed: true,
+        state: "completed",
       }),
       onSuccess: props.onSuccess,
       method: "PATCH",
