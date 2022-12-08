@@ -58,7 +58,7 @@
       LogRocket.identify(hooks.userStore.user.email, {
         name: `${hooks.userStore.user.first_name} ${hooks.userStore.user.last_name}`,
         email: hooks.userStore.user.email,
-        org: hooks.userStore.user.membership?.org,
+        org: hooks.userStore.user.membership?.org.name,
         is_org_admin: hooks.userStore.user.membership?.is_org_admin,
       });
       LogRocket.getSessionURL(sessionURL => {
