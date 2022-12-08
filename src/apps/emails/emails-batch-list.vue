@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { ref } from "vue";
-  import { Email, EmailBatch, EmailTemplate } from "~/apps/emails/interfaces";
+  import { EmailBatch, EmailTemplate } from "~/apps/emails/interfaces";
   import { LetterTemplate } from "~/apps/letters/interfaces";
   import { urls } from "~/urls";
   import { format } from "~/utils";
@@ -26,15 +26,15 @@
 
   function getStatusStyle(batch: EmailBatch) {
     switch (batch.status) {
-      case "prepopulated":
-        return { color: "gray.800", bg: "gray.100" };
-      case "pending":
-        return { color: "gray.800", bg: "gray.100" };
-      case "sent":
-        return { color: "teal.800", bg: "teal.100" };
+    case "prepopulated":
+      return { color: "gray.800", bg: "gray.100" };
+    case "pending":
+      return { color: "gray.800", bg: "gray.100" };
+    case "sent":
+      return { color: "teal.800", bg: "teal.100" };
     }
   }
-  
+
   function isBatchSent(batch: EmailBatch) {
     return batch.status === "sent";
   }

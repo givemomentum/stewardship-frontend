@@ -54,7 +54,7 @@
 
   function getCommunicationPreferences(donor: CrmDonor) {
     if (donor.source != "salesforce") {
-      return "";  // Only Salesforce has trustworthy communication preferences at the moment.
+      return ""; // Only Salesforce has trustworthy communication preferences at the moment.
     }
 
     const preferences = [];

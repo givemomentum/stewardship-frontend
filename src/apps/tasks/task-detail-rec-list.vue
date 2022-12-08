@@ -22,19 +22,18 @@
   const comp = {
     sortedTasks: computed(() => {
       const sorted = props.task.rec_set.recs.slice().sort((a, b) => {
-        const a_dismissed = a.state === 'dismissed';
-        const b_dismissed = b.state === 'dismissed';
+        const a_dismissed = a.state === "dismissed";
+        const b_dismissed = b.state === "dismissed";
         if (a_dismissed && !b_dismissed) {
           return 1;
-        } else if (!a_dismissed && b_dismissed) {
+        } if (!a_dismissed && b_dismissed) {
           return -1;
-        } else {
-          return a.pk - b.pk;
         }
+        return a.pk - b.pk;
       });
       return sorted;
     }),
-  }
+  };
 
   onMounted(async () => {
     await hooks.tasks.loadTaskGiftsHistory(props.task);
