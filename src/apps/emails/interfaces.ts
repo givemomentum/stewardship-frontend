@@ -19,6 +19,7 @@ export interface EmailBatch {
   emails_count: number;
   open_count: number;
   bounce_count: number;
+  created_at: string;
 }
 
 export interface Email {

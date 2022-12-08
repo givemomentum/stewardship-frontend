@@ -70,7 +70,7 @@
             v-for="batch in state.batchList.value"
             :key="batch.pk"
           >
-            <chakra.td>{{ batch.task.title }}</chakra.td>
+            <chakra.td>{{ batch.task?.title }}</chakra.td>
 
             <chakra.td>
               {{ format.dateHumanShort(batch.created_at) }}
