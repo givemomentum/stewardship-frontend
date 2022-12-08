@@ -44,7 +44,7 @@
     state.loggingModalRec.value.action_state = responseData.action_state;
     state.loggingModalRec.value.action_type = responseData.action_type;
     state.loggingModalRec.value.action_description = responseData.action_description;
-    state.loggingModalRec.value.state = responseData.action_state;
+    state.loggingModalRec.value.state = responseData.state;
 
     setTimeout(() => {
       state.alertMessage.value = null;
