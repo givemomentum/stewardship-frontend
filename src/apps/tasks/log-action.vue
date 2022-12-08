@@ -12,13 +12,9 @@
   const hooks = {
     taskListStore: useTaskListStore(),
     form: useForm({
-      path: () => `recs/${props.rec.pk}/`,
-      getExtraData: () => ({
-        action_state: "logged_by_user",
-        state: "completed",
-      }),
+      path: () => `recs/${props.rec.pk}/log_action/`,
       onSuccess: props.onSuccess,
-      method: "PATCH",
+      method: "POST",
     }),
   };
 

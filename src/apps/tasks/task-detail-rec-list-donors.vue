@@ -39,12 +39,12 @@
     state.showLoggingModal.value = false;
   }
 
-  async function onLoggingSuccess(data: any) {
+  async function onLoggingSuccess(_, responseData: any) {
     state.alertMessage.value = `Successfully logged action for ${state.loggingModalRec.value.donor?.name}`;
-    state.loggingModalRec.value.action_state = data.action_state;
-    state.loggingModalRec.value.action_type = data.action_type;
-    state.loggingModalRec.value.action_description = data.action_description;
-    state.loggingModalRec.value.state = "completed";
+    state.loggingModalRec.value.action_state = responseData.action_state;
+    state.loggingModalRec.value.action_type = responseData.action_type;
+    state.loggingModalRec.value.action_description = responseData.action_description;
+    state.loggingModalRec.value.state = responseData.action_state;
 
     setTimeout(() => {
       state.alertMessage.value = null;

@@ -11,7 +11,7 @@ export function useForm(args: {
   getExtraData?: () => any;
   serializers?: { [key: string]: (value: any) => any };
   method?: HttpMethod | (() => HttpMethod);
-  onSuccess?: (data) => Promise<void>;
+  onSuccess?: (formData, responseData) => Promise<void>;
 }) {
   const state = {
     isSuccess: ref(false),
@@ -35,13 +35,15 @@ export function useForm(args: {
       if (typeof args.method === "function") {
         method = args.method();
       }
+
+      let res;
       if (method === "PATCH") {
-        await hooks.api.patch(path, resArgs);
+        res = await hooks.api.patch(path, resArgs);
       } else if (method === "POST") {
-        await hooks.api.post(path, resArgs);
+        res = await hooks.api.post(path, resArgs);
       }
       state.isSuccess.value = true;
-      args.onSuccess(data);
+      args.onSuccess(data, res.data);
     } catch (error) {
       console.log(error);
       captureException(error);

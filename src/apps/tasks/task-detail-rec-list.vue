@@ -128,7 +128,6 @@
                 {{ rec.state == 'dismissed' ? 'Restore' : 'Dismiss' }}
               </CButton>
             </chakra.td>
-
           </chakra.tr>
 
           <chakra.tr
