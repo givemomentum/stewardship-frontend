@@ -70,7 +70,7 @@
             icon-color-prop="color"
           />
           <MenuLeftItem
-            v-if="hooks.userStore.user.membership.org.is_enable_app_letters"
+            v-if="hooks.userStore.user?.membership?.org?.is_enable_app_letters"
             :path="urls.letters.segmentList"
             path-base="/letters/"
             label="Letters"
@@ -78,7 +78,7 @@
             icon-color-prop="fill"
           />
           <MenuLeftItem
-            v-if="hooks.userStore.user.membership.org.is_enable_app_emails"
+            v-if="hooks.userStore.user?.membership?.org?.is_enable_app_emails"
             :path="urls.emails.batches.list"
             :path-base="urls.emails.base"
             label="Emails"
