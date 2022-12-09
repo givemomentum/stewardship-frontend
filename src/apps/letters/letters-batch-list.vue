@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { useRuntimeConfig } from "#app";
   import { Mails } from "lucide-vue-next";
   import { onBeforeMount, onMounted, ref } from "vue";
   import { POSITION, useToast } from "vue-toastification";
@@ -11,6 +12,7 @@
     api: useApi(),
     batchStore: useLetterBatchStore(),
     toast: useToast(),
+    config: useRuntimeConfig(),
   };
 
   const state = {
@@ -67,6 +69,7 @@
           <chakra.th data-is-numeric="true">Downloaded</chakra.th>
           <chakra.th />
           <chakra.th />
+          <chakra.th />
         </chakra.thead>
 
         <chakra.tbody>
@@ -112,8 +115,25 @@
                 gap="2"
                 left-icon="download"
               >
-                Download
+                Letters PDF
               </CButton>
+            </chakra.td>
+
+            <chakra.td>
+              <CLink
+                variant="none"
+                :href="`${hooks.config.public.apiBase}/letters/batches/${batch.pk}/labels/download`"
+                is-external
+              >
+                <CButton
+                  size="sm"
+                  variant="link"
+                  gap="2"
+                  left-icon="download"
+                >
+                  Addresses CSV
+                </CButton>
+              </CLink>
             </chakra.td>
 
           </chakra.tr>
