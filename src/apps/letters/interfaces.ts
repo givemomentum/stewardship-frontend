@@ -33,6 +33,9 @@ export class CrmDonor {
   do_not_call: boolean;
   do_not_email: boolean;
   do_not_mail: boolean;
+
+  dedication: string;
+  dedication_comment: string;
 }
 
 export class CrmGift {

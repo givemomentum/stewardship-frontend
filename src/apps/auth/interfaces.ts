@@ -4,6 +4,7 @@ export type UrlString = string;
 
 export interface Org {
   pk: PrimaryKey;
+  slug: string | "kessler" | "hor" | "ysgn";
   name: string;
   contact_first_name: string;
   contact_last_name: string;

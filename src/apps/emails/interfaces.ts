@@ -6,6 +6,8 @@ export interface EmailTemplate {
   pk: PrimaryKey;
   title: string;
   content_html: string;
+  subject: string;
+  email_from: string;
   variables: EmailTemplateVariable[];
 }
 

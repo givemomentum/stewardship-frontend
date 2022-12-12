@@ -33,12 +33,23 @@
   onBeforeMount(async () => {
     hooks.menu.collapse();
     document.addEventListener("keydown", handleKeyUp);
+  });
+
+  onMounted(async () => {
+    const resEmails = await hooks.api.get(`/emails/?batch=${props.batchPk}`);
+    state.emails.value = resEmails.data;
 
     const res = await hooks.api.get(`/emails/batches/${props.batchPk}/?expand=rec_set`);
     state.batch.value = res.data;
 
-    const resEmails = await hooks.api.get(`/emails/?batch=${props.batchPk}`);
-    state.emails.value = resEmails.data;
+    if (state.emails.value.length > 0 && state.emailOpen.value === null) {
+      // state.batch.value contains donor info, let it render the data first
+      // so that `scrollHeight` is accurate. onUpdated doesn't quite work.
+      setTimeout(() => {
+        state.emailOpen.value = state.emails.value[0];
+        state.emailOpenIndex.value = 0;
+      }, 200);
+    }
   });
 
   onUnmounted(() => {
@@ -62,11 +73,15 @@
       await toggleViewedStatus(emailNew);
     }
 
+    updateDonorInfoRowHeight();
+  });
+  
+  function updateDonorInfoRowHeight() {
     tableRowRefs.value.forEach(ref => ref.style.height = "0");
     const tableRowOpen = tableRowRefs.value[state.emailOpenIndex.value];
     const container: HTMLDivElement = tableRowOpen.querySelector(".email-table-inner-donor-table-container");
     tableRowOpen.style.height = `${container.scrollHeight + comp.rowHeight}px`;
-  });
+  }
 
   function isBatchSent(): boolean {
     return state.batch.value?.status === "sent";
@@ -329,11 +344,19 @@
                       <chakra.td>{{ format.date(email.donor.last_contact) || "-" }}</chakra.td>
                     </chakra.tr>
 
+                    <chakra.tr v-if="hooks.userStore.user.membership.org.slug === 'kessler'">
+                      <chakra.td>Dedication</chakra.td>
+                      <chakra.td white-space="break-spaces !important">{{
+                        state.batch.value?.rec_set?.recs?.find(rec => rec.donor.pk === email.donor.pk)?.gift?.dedication
+                      }}
+                      </chakra.td>
+                    </chakra.tr>
+
                     <chakra.tr>
                       <chakra.td>Reason</chakra.td>
                       <chakra.td white-space="break-spaces !important">{{
-                        state.batch.value?.rec_set?.recs?.find(rec => rec.donor.pk === email.donor.pk)?.explanation
-                      }}
+                          state.batch.value?.rec_set?.recs?.find(rec => rec.donor.pk === email.donor.pk)?.explanation
+                        }}
                       </chakra.td>
                     </chakra.tr>
                   </chakra.tbody>
