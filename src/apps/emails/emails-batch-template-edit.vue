@@ -72,9 +72,9 @@
               <FormKit type="submit" label="Save changes" size="md" />
             </CFlex>
           </CFlex>
-          
+
           <CFlex w="100%" gap="6" mt="6">
-            <FormKit name="subject" label="Subjet" />
+            <FormKit name="subject" label="Subject" />
             <FormKit name="email_from" label="Email from" />
           </CFlex>
 
