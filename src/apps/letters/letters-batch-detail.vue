@@ -64,7 +64,7 @@
 
   function isLetterHtmlChanged(): boolean {
     // todo when we update letterHtml.value in watch() above this does't get recalculated. since the code isn't in <template>?
-    const htmlOriginal = state.letterOpen.value.html || state.letterOpen.value.html_default;
+    const htmlOriginal = state.letterOpen.value?.html || state.letterOpen.value?.html_default;
     return state.letterHtml.value.valueOf() !== htmlOriginal.valueOf();
   }
 
