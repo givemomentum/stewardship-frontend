@@ -1,6 +1,5 @@
 import { PrimaryKey } from "~/apps/auth/interfaces";
-import { CrmDonor } from "~/apps/letters/interfaces";
-import { RecommendationSet, Task } from "~/apps/tasks/interfaces";
+import { Recommendation, RecommendationSet, Task } from "~/apps/tasks/interfaces";
 
 export interface EmailTemplate {
   pk: PrimaryKey;
@@ -26,7 +25,7 @@ export interface EmailBatch {
 
 export interface Email {
   pk: PrimaryKey;
-  donor: CrmDonor;
+  rec: Recommendation;
   batch: EmailBatch;
   template: EmailTemplate;
 

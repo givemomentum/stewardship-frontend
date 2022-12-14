@@ -39,7 +39,7 @@
     const resEmails = await hooks.api.get(`/emails/?batch=${props.batchPk}`);
     state.emails.value = resEmails.data;
 
-    const res = await hooks.api.get(`/emails/batches/${props.batchPk}/?expand=rec_set`);
+    const res = await hooks.api.get(`/emails/batches/${props.batchPk}/`);
     state.batch.value = res.data;
 
     if (state.emails.value.length > 0 && state.emailOpen.value === null) {
@@ -168,18 +168,18 @@
 
   function getStatusStyle(email: Email) {
     switch (email.status) {
-    case "pending":
-      return { color: "gray.800", bg: "gray.100" };
-    case "sent":
-      return { color: "teal.800", bg: "teal.100" };
-    case "excluded":
-      return { color: "orange.800", bg: "orange.100" };
-    case "opened":
-      return { color: "green.800", bg: "green.100" };
-    case "bounced":
-      return { color: "red.800", bg: "red.100" };
-    case "failed":
-      return { color: "red.800", bg: "red.100" };
+      case "pending":
+        return { color: "gray.800", bg: "gray.100" };
+      case "sent":
+        return { color: "teal.800", bg: "teal.100" };
+      case "excluded":
+        return { color: "orange.800", bg: "orange.100" };
+      case "opened":
+        return { color: "green.800", bg: "green.100" };
+      case "bounced":
+        return { color: "red.800", bg: "red.100" };
+      case "failed":
+        return { color: "red.800", bg: "red.100" };
     }
   }
 
@@ -231,8 +231,8 @@
               :data-is-viewed="email.is_viewed"
               class="table-row"
             >
-              <chakra.td v-if="email.donor.name" pr="0 !important" white-space="nowrap">
-                {{ email.donor.name }}
+              <chakra.td v-if="email.rec.donor.name" pr="0 !important" white-space="nowrap">
+                {{ email.rec.donor.name }}
               </chakra.td>
               <chakra.td v-else pr="0 !important" white-space="nowrap">
                 Unknown
@@ -262,7 +262,7 @@
               </chakra.td>
 
               <chakra.td v-if="!isBatchSent()" data-is-numeric="true">
-                {{ format.money(email.donor.donated_total) }}
+                {{ format.money(email.rec.donor.donated_total) }}
               </chakra.td>
 
               <chakra.td data-is-numeric="true">
@@ -303,8 +303,8 @@
                 <CFlex pos="relative">
                   <CFlex pos="absolute" right="0">
                     <CLink
-                      v-if="email.donor.crm_url"
-                      :href="email.donor.crm_url"
+                      v-if="email.rec.donor.crm_url"
+                      :href="email.rec.donor.crm_url"
                       is-external
                       variant="none"
                     >
@@ -324,39 +324,46 @@
 
                     <chakra.tr border-top="1px solid" border-color="gray.100">
                       <chakra.td>Email</chakra.td>
-                      <chakra.td>{{ email.donor.email }}</chakra.td>
+                      <chakra.td>{{ email.rec.donor.email }}</chakra.td>
                     </chakra.tr>
 
-                    <chakra.tr v-if="email.donor.mailing_address.address_line1">
+                    <chakra.tr v-if="email.rec.donor.mailing_address.address_line1">
                       <chakra.td>Address</chakra.td>
                       <chakra.td white-space="break-spaces !important">
-                        {{ email.donor.mailing_address.address_line1.slice(0, 31) }}, {{ email.donor.mailing_address.city }}
+                        {{ email.rec.donor.mailing_address.address_line1.slice(0, 31) }},
+                        {{ email.rec.donor.mailing_address.city }}
                       </chakra.td>
                     </chakra.tr>
 
                     <chakra.tr>
                       <chakra.td>First gift</chakra.td>
-                      <chakra.td>{{ format.date(email.donor.giving_since) || "-" }}</chakra.td>
+                      <chakra.td>{{ format.date(email.rec.donor.giving_since) || "-" }}</chakra.td>
                     </chakra.tr>
 
                     <chakra.tr>
                       <chakra.td>Last action</chakra.td>
-                      <chakra.td>{{ format.date(email.donor.last_contact) || "-" }}</chakra.td>
+                      <chakra.td>{{ format.date(email.rec.donor.last_contact) || "-" }}</chakra.td>
                     </chakra.tr>
 
-                    <chakra.tr v-if="hooks.userStore.user.membership.org.slug === 'kessler'">
-                      <chakra.td>Dedication</chakra.td>
-                      <chakra.td white-space="break-spaces !important">{{
-                        state.batch.value?.rec_set?.recs?.find(rec => rec.donor.pk === email.donor.pk)?.gift?.dedication
-                      }}
-                      </chakra.td>
+                    <chakra.tr
+                      v-if="email.rec?.donor"
+                      v-for="(data, fieldName) in email.rec.donor.custom_data"
+                      :key="fieldName">
+                      <chakra.td>{{ data["label"] }}</chakra.td>
+                      <chakra.td white-space="break-spaces !important">{{ data["value"] }}</chakra.td>
                     </chakra.tr>
 
-                    <chakra.tr>
+                    <chakra.tr
+                      v-if="email.rec?.gift"
+                      v-for="(data, fieldName) in email.rec.gift.custom_data"
+                      :key="fieldName">
+                      <chakra.td>{{ data["label"] }}</chakra.td>
+                      <chakra.td white-space="break-spaces !important">{{ data["value"] }}</chakra.td>
+                    </chakra.tr>
+
+                    <chakra.tr v-if="email.rec?.explanation">
                       <chakra.td>Reason</chakra.td>
-                      <chakra.td white-space="break-spaces !important">{{
-                        state.batch.value?.rec_set?.recs?.find(rec => rec.donor.pk === email.donor.pk)?.explanation
-                      }}
+                      <chakra.td white-space="break-spaces !important">{{ email.rec?.explanation }}
                       </chakra.td>
                     </chakra.tr>
                   </chakra.tbody>
@@ -510,6 +517,7 @@
             color: #98a4b4;
           }
         }
+
         tr {
           &:last-of-type {
             td {

@@ -58,6 +58,8 @@ export class CrmGift {
   appeal?: {
     title: string;
   };
+
+  custom_data: { [field: string]: any };
 }
 
 export class CrmDonor {
@@ -94,6 +96,5 @@ export class CrmDonor {
   do_not_email: boolean;
   do_not_mail: boolean;
 
-  dedication: string;
-  dedication_comment: string;
+  custom_data: { [field: string]: any };
 }

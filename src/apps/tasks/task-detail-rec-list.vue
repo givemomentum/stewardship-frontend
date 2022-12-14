@@ -26,7 +26,8 @@
         const b_dismissed = b.state === "dismissed";
         if (a_dismissed && !b_dismissed) {
           return 1;
-        } if (!a_dismissed && b_dismissed) {
+        }
+        if (!a_dismissed && b_dismissed) {
           return -1;
         }
         return a.pk - b.pk;
@@ -155,6 +156,24 @@
                   :rec="rec"
                   :is-current-rec="isCurrentRec(rec)"
                 />
+
+                <CFlex
+                  direction="column"
+                  v-if="rec.donor"
+                  v-for="(data, fieldName) in rec.donor.custom_data"
+                  :key="fieldName">
+                  <CFlex color="gray.400" font-size="xs">{{ data["label"] }}</CFlex>
+                  <CFlex font-size="md">{{ data["value"] }}</CFlex>
+                </CFlex>
+
+                <CFlex
+                  direction="column"
+                  v-if="rec.gift"
+                  v-for="(data, fieldName) in rec.gift.custom_data"
+                  :key="fieldName">
+                  <CFlex color="gray.400" font-size="xs">{{ data["label"] }}</CFlex>
+                  <CFlex font-size="md">{{ data["value"] }}</CFlex>
+                </CFlex>
 
                 <CFlex
                   direction="column"
