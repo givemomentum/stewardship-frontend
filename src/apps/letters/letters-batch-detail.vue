@@ -135,10 +135,6 @@
     state.batch.value = res.data;
   }
 
-  function getSegmentPk(): PrimaryKey | null {
-    return hooks.batchStore.list.value.find(batch => batch.pk === props.batchPk)?.segment?.pk;
-  }
-
   function isSelected(letter: Letter): boolean {
     return letter.pk === state.letterOpen.value?.pk;
   }
@@ -190,19 +186,19 @@
               :data-is-viewed="letter.is_viewed"
               class="table-row"
             >
-              <chakra.td v-if="letter.donor.name" pr="0 !important" white-space="nowrap">
-                {{ letter.donor.name }}
+              <chakra.td v-if="letter.rec.donor.name" pr="0 !important" white-space="nowrap">
+                {{ letter.rec.donor.name }}
               </chakra.td>
               <chakra.td v-else pr="0 !important" white-space="nowrap">
                 Unknown
               </chakra.td>
 
               <chakra.td data-is-numeric="true">
-                ${{ Number(letter.gift.amount).toLocaleString('en-US', { maximumFractionDigits: 0 }) }}
+                ${{ Number(letter.rec.gift.amount).toLocaleString('en-US', { maximumFractionDigits: 0 }) }}
               </chakra.td>
 
               <chakra.td white-space="nowrap" data-is-numeric="true">
-                ${{ letter.donor.donated_total.toLocaleString('en-US', { maximumFractionDigits: 0 }) }}
+                ${{ letter.rec.donor.donated_total.toLocaleString('en-US', { maximumFractionDigits: 0 }) }}
               </chakra.td>
 
               <chakra.td data-is-numeric="true">
@@ -229,27 +225,27 @@
                   <chakra.tbody>
                     <chakra.tr border-top="1px solid" border-color="gray.100">
                       <chakra.td>Email</chakra.td>
-                      <chakra.td>{{ letter.donor.email }}</chakra.td>
+                      <chakra.td>{{ letter.rec.donor.email }}</chakra.td>
                     </chakra.tr>
 
-                    <chakra.tr v-if="letter.donor.mailing_address.address_line1">
+                    <chakra.tr v-if="letter.rec.donor.mailing_address.address_line1">
                       <chakra.td>Address</chakra.td>
-                      <chakra.td>{{ letter.donor.mailing_address.address_line1.slice(0, 31) }}, {{ letter.donor.mailing_address.city }}</chakra.td>
+                      <chakra.td>{{ letter.rec.donor.mailing_address.address_line1.slice(0, 31) }}, {{ letter.rec.donor.mailing_address.city }}</chakra.td>
                     </chakra.tr>
 
                     <chakra.tr>
                       <chakra.td white-space="nowrap">First donation</chakra.td>
-                      <chakra.td>{{ formatDate(letter.donor.giving_since) }}</chakra.td>
+                      <chakra.td>{{ formatDate(letter.rec.donor.giving_since) }}</chakra.td>
                     </chakra.tr>
 
                     <chakra.tr>
                       <chakra.td>Notes</chakra.td>
-                      <chakra.td white-space="nowrap">{{ letter.gift.notes }}</chakra.td>
+                      <chakra.td white-space="nowrap">{{ letter.rec.gift.notes }}</chakra.td>
                     </chakra.tr>
 
                     <chakra.tr>
                       <chakra.td border-bottom="0" pb="0 !important">Appeal</chakra.td>
-                      <chakra.td border-bottom="0" pb="0 !important">{{ letter.gift.appeal?.title }}</chakra.td>
+                      <chakra.td border-bottom="0" pb="0 !important">{{ letter.rec.gift.appeal?.title }}</chakra.td>
                     </chakra.tr>
                   </chakra.tbody>
                 </chakra.table>
@@ -325,6 +321,11 @@
 </template>
 
 <style lang="scss">
+  html, body {
+    background: var(--colors-gray-75) !important;
+    height: 100%;
+  }
+
   .letter-table {
     .table-row {
       position: relative;

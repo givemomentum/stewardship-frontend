@@ -3,7 +3,7 @@
   import { Mails } from "lucide-vue-next";
   import { onBeforeMount, onMounted, ref } from "vue";
   import { POSITION, useToast } from "vue-toastification";
-  import { LetterBatch, LetterSegment, LetterTemplate } from "~/apps/letters/interfaces";
+  import { LetterBatch, LetterTemplate } from "~/apps/letters/interfaces";
   import { useLetterBatchStore } from "~/apps/letters/useLetterBatchStore";
   import { useApi } from "~/composables/useApi";
   import { urls } from "~/urls";
@@ -16,7 +16,7 @@
   };
 
   const state = {
-    segments: ref<LetterSegment[]>([]),
+    templates: ref<LetterTemplate[]>([]),
     templateOpen: ref<LetterTemplate | null>(null),
 
     reviewedTrue: ref(true),
@@ -28,12 +28,12 @@
   });
 
   onMounted(async () => {
-    await loadSegments();
+    await loadTemplates();
   });
 
-  async function loadSegments() {
-    const res = await hooks.api.get("/letters/segments/");
-    state.segments.value = res.data;
+  async function loadTemplates() {
+    const res = await hooks.api.get("/letters/templates/");
+    state.templates.value = res.data;
   }
 
   async function triggerBatchDownload(batch: LetterBatch) {
@@ -44,7 +44,7 @@
       "You'll receive an email with the archive once it's ready.",
       { position: POSITION.TOP_RIGHT, timeout: 8 * 1000, pauseOnFocusLoss: false },
     );
-    await loadSegments();
+    await loadTemplates();
   }
 </script>
 
@@ -62,8 +62,8 @@
 
       <ChakraTable>
         <chakra.thead>
-          <chakra.th>Date</chakra.th>
-          <chakra.th>Segment</chakra.th>
+          <chakra.th>Name</chakra.th>
+          <chakra.th>Template</chakra.th>
           <chakra.th data-is-numeric="true">Letters</chakra.th>
           <chakra.th data-is-numeric="true">Reviewed</chakra.th>
           <chakra.th data-is-numeric="true">Downloaded</chakra.th>
@@ -77,10 +77,10 @@
             v-for="batch in hooks.batchStore.list.value"
             :key="batch.pk"
           >
-            <chakra.td>{{ batch.name || 'Oct 18 - Oct 25' }}</chakra.td>
+            <chakra.td>{{ batch.task.title }}</chakra.td>
 
             <chakra.td>
-              {{ batch.segment.name }}
+              {{ batch.template.name }}
             </chakra.td>
 
             <chakra.td data-is-numeric="true">
@@ -140,43 +140,30 @@
         </chakra.tbody>
       </ChakraTable>
 
-      <NuxtLink :to="urls.letters.archive" :_hover="{ textDecoration: 'none' }">
-        <CButton size="sm" variant="outline" mt="4">See archive</CButton>
-      </NuxtLink>
+      <!--      <NuxtLink :to="urls.letters.archive" :_hover="{ textDecoration: 'none' }">-->
+      <!--        <CButton size="sm" variant="outline" mt="4">See archive</CButton>-->
+      <!--      </NuxtLink>-->
     </CFlex>
 
-    <CFlex direction="column" gap="2">
+    <CFlex direction="column" gap="2" min-w="400px" max-w="fit-content">
       <CHeading variant="page-header" font-size="2xl">Templates</CHeading>
 
       <ChakraTable>
         <chakra.thead>
           <chakra.th>Name</chakra.th>
-          <chakra.th data-is-numeric="true">Min donation</chakra.th>
-          <chakra.th data-is-numeric="true">Max donation</chakra.th>
-          <chakra.th>Gift history</chakra.th>
           <chakra.th />
         </chakra.thead>
 
         <chakra.tbody>
           <chakra.tr
-            v-for="segment in state.segments.value"
-            :key="segment.pk"
+            v-for="template in state.templates.value"
+            :key="template.pk"
           >
-            <chakra.td>{{ segment.name }}</chakra.td>
-            <chakra.td data-is-numeric="true">
-              ${{ segment.donation_amount_min?.toLocaleString() ?? "0" }}
-            </chakra.td>
-            <chakra.td data-is-numeric="true">
-              {{ segment.donation_amount_max ? '$' + segment.donation_amount_max?.toLocaleString() : 'Unlimited' }}
-            </chakra.td>
-            <chakra.td text-transform="capitalize">{{
-              segment.gift_history_filter === 'any' ? '' : segment.gift_history_filter.replace('_', ' ').replace('_', ' ')
-            }}
-            </chakra.td>
+            <chakra.td>{{ template.name }}</chakra.td>
 
             <chakra.td>
               <CButton
-                @click="state.templateOpen.value = segment.template"
+                @click="state.templateOpen.value = template"
                 size="sm"
                 variant="link"
                 gap="px"

@@ -75,7 +75,7 @@
 
     updateDonorInfoRowHeight();
   });
-  
+
   function updateDonorInfoRowHeight() {
     tableRowRefs.value.forEach(ref => ref.style.height = "0");
     const tableRowOpen = tableRowRefs.value[state.emailOpenIndex.value];
@@ -355,8 +355,8 @@
                     <chakra.tr>
                       <chakra.td>Reason</chakra.td>
                       <chakra.td white-space="break-spaces !important">{{
-                          state.batch.value?.rec_set?.recs?.find(rec => rec.donor.pk === email.donor.pk)?.explanation
-                        }}
+                        state.batch.value?.rec_set?.recs?.find(rec => rec.donor.pk === email.donor.pk)?.explanation
+                      }}
                       </chakra.td>
                     </chakra.tr>
                   </chakra.tbody>

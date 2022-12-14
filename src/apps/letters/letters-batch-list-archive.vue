@@ -40,7 +40,7 @@
             </NuxtLink>
           </chakra.td>
           <chakra.td>
-            <CLink :href="batch.zip_file" is-external>
+            <CLink :href="batch.pdf_file" is-external>
               <CButton size="sm" variant="link" gap="2" left-icon="download">
                 Download all
               </CButton>

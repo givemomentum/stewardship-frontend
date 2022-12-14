@@ -11,7 +11,7 @@
     isShowMenuBar?: boolean;
     isShowToolbar?: boolean;
 
-    width?: number;
+    width?: number | string;
     padding?: string;
     minHeight?: string;
     editorBoxShadow?: string;

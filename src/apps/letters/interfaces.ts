@@ -1,4 +1,64 @@
 import { PrimaryKey, UrlString } from "~/apps/auth/interfaces";
+import { Task } from "~/apps/tasks/interfaces";
+
+export interface Letter {
+  pk: PrimaryKey;
+  batch: PrimaryKey;
+  rec: {
+    pk: PrimaryKey;
+    donor: CrmDonor;
+    gift: CrmGift;
+  };
+  html?: string;
+  html_default?: string;
+  is_viewed: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface LetterBatch {
+  pk: PrimaryKey;
+  rec_set: any;
+  task: Task;
+  template: LetterTemplate;
+
+  letters: Letter[];
+  letters_count: number;
+  letters_new_count: number;
+  is_downloaded: boolean;
+  pdf_file: UrlString;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface LetterTemplate {
+  pk: PrimaryKey;
+  name: string;
+  html: string;
+  variables: Array<LetterTemplateVariable>;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface LetterTemplateVariable {
+  key: string;
+  label?: string;
+  value_fallback: string;
+}
+
+export class CrmGift {
+  pk: PrimaryKey;
+  source_data: any;
+  donor?: CrmDonor;
+  amount: string;
+  date: string;
+  gift_type: string;
+  acknowledgment_status: string;
+  notes: string;
+  appeal?: {
+    title: string;
+  };
+}
 
 export class CrmDonor {
   pk: PrimaryKey;
@@ -36,75 +96,4 @@ export class CrmDonor {
 
   dedication: string;
   dedication_comment: string;
-}
-
-export class CrmGift {
-  pk: PrimaryKey;
-  source_data: any;
-  donor?: CrmDonor;
-  amount: string;
-  date: string;
-  gift_type: string;
-  acknowledgment_status: string;
-  notes: string;
-  appeal?: {
-    title: string;
-  };
-}
-
-export interface Letter {
-  pk: PrimaryKey;
-  batch: PrimaryKey;
-  donor: CrmDonor;
-  gift: CrmGift;
-  template: LetterTemplate;
-  segment: LetterSegment;
-  html?: string;
-  html_default?: string;
-  is_viewed: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface LetterSegment {
-  pk: PrimaryKey;
-  name: string;
-  batches_unsent_count: number;
-  batches_sent_count: number;
-  template: LetterTemplate;
-  gift_history_filter: string;
-  donation_amount_min: URL;
-  donation_amount_max: URL;
-  donation_amount_total_min: number;
-  donation_amount_total_max: number;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface LetterBatch {
-  pk: PrimaryKey;
-  segment: LetterSegment;
-  letters: Letter[];
-  name: string;
-  letters_count: number;
-  letters_new_count: number;
-  is_downloaded: boolean;
-  zip_file: UrlString;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface LetterTemplate {
-  pk: PrimaryKey;
-  name: string;
-  html: string;
-  variables: Array<LetterTemplateVariable>;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface LetterTemplateVariable {
-  key: string;
-  label?: string;
-  value_fallback: string;
 }
