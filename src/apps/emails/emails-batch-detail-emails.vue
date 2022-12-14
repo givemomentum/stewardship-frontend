@@ -24,6 +24,7 @@
     batch: ref<EmailBatch>(null),
     emails: ref<Email[]>([]),
     emailContentHtml: ref(""),
+    emailSubject: ref(""),
     isSavingChanges: ref(false),
 
     emailOpen: ref<Email | null>(null),
@@ -68,6 +69,7 @@
 
   watch(state.emailOpen, async emailNew => {
     state.emailContentHtml.value = emailNew.content_html || (emailNew.content_html_default ?? "");
+    state.emailSubject.value = emailNew.subject || emailNew.batch.template.subject;
 
     if (!emailNew.is_viewed) {
       await toggleViewedStatus(emailNew);
@@ -87,15 +89,19 @@
     return state.batch.value?.status === "sent";
   }
 
-  async function saveEmailHtml() {
+  async function saveEmailChanges() {
     state.isSavingChanges.value = true;
     await hooks.api.patch(
       `/emails/${state.emailOpen.value.pk}/`,
-      { content_html: state.emailContentHtml.value },
+      {
+        content_html: state.emailContentHtml.value,
+        subject: state.emailSubject.value
+      },
     );
     state.isSavingChanges.value = false;
     hooks.toast.success("Email saved", { position: POSITION.TOP_RIGHT });
     state.emailOpen.value.content_html = state.emailContentHtml.value;
+    state.emailOpen.value.subject = state.emailSubject.value;
   }
 
   async function toggleViewedStatus(email: Email) {
@@ -163,23 +169,27 @@
   function isEmailHtmlChanged(): boolean {
     // todo when we update emailContentHtml.value in watch() above this doesn't get recalculated. since the code isn't in <template>?
     const htmlOriginal = state.emailOpen.value.content_html || state.emailOpen.value.content_html_default;
-    return state.emailContentHtml.value.valueOf() !== htmlOriginal.valueOf();
+    const subjectOriginal = state.emailOpen.value.subject || state.emailOpen.value.batch.template.subject;
+    return (
+      state.emailContentHtml.value.valueOf() !== htmlOriginal.valueOf()
+      || state.emailSubject.value?.valueOf() !== subjectOriginal?.valueOf()
+    );
   }
 
   function getStatusStyle(email: Email) {
     switch (email.status) {
-      case "pending":
-        return { color: "gray.800", bg: "gray.100" };
-      case "sent":
-        return { color: "teal.800", bg: "teal.100" };
-      case "excluded":
-        return { color: "orange.800", bg: "orange.100" };
-      case "opened":
-        return { color: "green.800", bg: "green.100" };
-      case "bounced":
-        return { color: "red.800", bg: "red.100" };
-      case "failed":
-        return { color: "red.800", bg: "red.100" };
+    case "pending":
+      return { color: "gray.800", bg: "gray.100" };
+    case "sent":
+      return { color: "teal.800", bg: "teal.100" };
+    case "excluded":
+      return { color: "orange.800", bg: "orange.100" };
+    case "opened":
+      return { color: "green.800", bg: "green.100" };
+    case "bounced":
+      return { color: "red.800", bg: "red.100" };
+    case "failed":
+      return { color: "red.800", bg: "red.100" };
     }
   }
 
@@ -399,7 +409,7 @@
         >
           <CFlex gap="3" v-if="!isBatchSent()">
             <CButton
-              @click="saveEmailHtml()"
+              @click="saveEmailChanges()"
               :is-loading="state.isSavingChanges.value"
               size="sm"
               z-index="toast"
@@ -445,6 +455,11 @@
             >
               Mark unread
             </CButton>
+          </CFlex>
+          
+          <CFlex gap="3px" v-if="!isBatchSent()" w="100%" direction="column">
+            <CFormLabel font-size="sm" color="gray.500">Subject</CFormLabel>
+            <CInput v-model="state.emailSubject.value" bg="white" name="subject" w="100%"/>
           </CFlex>
 
           <TinyMce
