@@ -221,6 +221,26 @@
                 gap="3"
                 font-size="sm"
               >
+                <CFlex pos="relative">
+                  <CFlex pos="absolute" right="0">
+                    <CLink
+                      v-if="letter.rec.donor.crm_url"
+                      :href="letter.rec.donor.crm_url"
+                      is-external
+                      variant="none"
+                    >
+                      <CButton
+                        mt="3"
+                        size="xs"
+                        variant="outline"
+                        left-icon="external-link"
+                      >
+                        CRM profile
+                      </CButton>
+                    </CLink>
+                  </CFlex>
+                </CFlex>
+
                 <chakra.table class="donor-table" data-size="none">
                   <chakra.tbody>
                     <chakra.tr border-top="1px solid" border-color="gray.100">
