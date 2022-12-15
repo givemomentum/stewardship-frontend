@@ -230,7 +230,7 @@
                 font-size="sm"
               >
                 <CFlex pos="relative">
-                  <CFlex pos="absolute" top="3" right="0" >
+                  <CFlex pos="absolute" top="3" right="0">
                     <CLink
                       v-if="letter.rec.donor.crm_url"
                       :href="letter.rec.donor.crm_url"

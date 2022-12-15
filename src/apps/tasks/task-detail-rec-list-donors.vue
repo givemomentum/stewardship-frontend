@@ -2,9 +2,7 @@
   import { Recommendation, Task } from "~/apps/tasks/interfaces";
   import { CrmDonor } from "~/apps/letters/interfaces";
   import { format } from "~/utils";
-  import { urls } from "~/urls";
-  import { EmailBatch } from "~/apps/emails/interfaces";
-  import { ref, onMounted } from "vue";
+  import { ref } from "vue";
   import { useApi } from "~/composables/useApi";
   import { useRuntimeConfig } from "#app";
 
@@ -16,18 +14,10 @@
   };
 
   const state = {
-    emailBatch: ref(null as EmailBatch | null),
     loggingModalRec: ref(null as Recommendation | null),
     showLoggingModal: ref(false),
     alertMessage: ref<string | null>(null),
   };
-
-  onMounted(async () => {
-    if (props.task.email_batch) {
-      const res = await hooks.api.get(`/emails/batches/${props.task.email_batch}/`);
-      state.emailBatch.value = res.data;
-    }
-  });
 
   function openLoggingModal(rec: Recommendation) {
     state.loggingModalRec.value = rec;
@@ -100,34 +90,6 @@
     <CAlertDescription>{{ state.alertMessage.value }}</CAlertDescription>
   </CAlert>
   <TaskDetailRecList :task="props.task" title="Donors" columns-count="7">
-
-    <template v-slot:top-buttons v-if="props.task.email_batch">
-      <NuxtLink :to="urls.emails.batches.edit(props.task.email_batch)">
-        <CButton
-          size="sm"
-          left-icon="mail"
-        >
-          {{ state.emailBatch.value?.status === 'sent' ? 'Review sent emails' : 'Compose emails' }}
-        </CButton>
-      </NuxtLink>
-    </template>
-    <template v-slot:top-buttons v-else>
-      <CFlex gap="7">
-        <VTooltip>
-          <div>
-            <CLink
-              :href="`${hooks.config.public.apiBase}/recs/rec-sets/${props.task.rec_set?.pk}/donor-csv`"
-            >
-              <CButton left-icon="download" variant="link">CSV</CButton>
-            </CLink>
-          </div>
-
-          <template v-slot:popper>
-            <CText font-size="xs">Download as CSV</CText>
-          </template>
-        </VTooltip>
-      </CFlex>
-    </template>
 
     <template v-slot:table-headers>
       <chakra.th>Name</chakra.th>

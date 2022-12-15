@@ -3,7 +3,6 @@ import { CrmDonor, CrmGift } from "~/apps/letters/interfaces";
 
 export interface Task {
   pk: PrimaryKey;
-  email_batch?: PrimaryKey;
   slug: string;
   title: string;
   description: string;
@@ -37,6 +36,8 @@ export interface RecommendationSet {
   pk: PrimaryKey;
   recs: Recommendation[];
   type: "donors" | "gifts" | "letters" | "donor_emails";
+  email_batch?: PrimaryKey;
+  letter_batch?: PrimaryKey;
 }
 
 export interface DropdownOption<Value = any> {

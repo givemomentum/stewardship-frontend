@@ -95,7 +95,7 @@
       `/emails/${state.emailOpen.value.pk}/`,
       {
         content_html: state.emailContentHtml.value,
-        subject: state.emailSubject.value
+        subject: state.emailSubject.value,
       },
     );
     state.isSavingChanges.value = false;
@@ -457,10 +457,10 @@
               Mark unread
             </CButton>
           </CFlex>
-          
+
           <CFlex gap="3px" v-if="!isBatchSent()" w="100%" direction="column">
             <CFormLabel font-size="sm" color="gray.500">Subject</CFormLabel>
-            <CInput v-model="state.emailSubject.value" bg="white" name="subject" w="100%"/>
+            <CInput v-model="state.emailSubject.value" bg="white" name="subject" w="100%" />
           </CFlex>
 
           <TinyMce

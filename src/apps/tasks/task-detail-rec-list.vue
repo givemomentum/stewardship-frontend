@@ -4,6 +4,10 @@
   import { Recommendation, Task } from "~/apps/tasks/interfaces";
   import RecDonorGiftChart from "~/apps/tasks/rec-donor-gift-chart.vue";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
+  import { urls } from "~/urls";
+  import { useApi } from "~/composables/useApi";
+  import { EmailBatch } from "~/apps/emails/interfaces";
+  import { useRuntimeConfig } from "#app";
 
   const props = defineProps<{
     task: Task;
@@ -13,10 +17,13 @@
 
   const state = {
     recOpen: ref<Recommendation | null>(null),
+    emailBatch: ref(null as EmailBatch | null),
   };
 
   const hooks = {
+    config: useRuntimeConfig(),
     tasks: useTaskListStore(),
+    api: useApi(),
   };
 
   const comp = {
@@ -37,6 +44,10 @@
   };
 
   onMounted(async () => {
+    if (props.task.rec_set?.email_batch) {
+      const res = await hooks.api.get(`/emails/batches/${props.task.rec_set.email_batch}/`);
+      state.emailBatch.value = res.data;
+    }
     await hooks.tasks.loadTaskGiftsHistory(props.task);
   });
 
@@ -84,6 +95,42 @@
       <CHeading font-size="xl" font-weight="normal" color="gray.500">
         {{ props.title }}
       </CHeading>
+
+      <NuxtLink
+        :to="urls.emails.batches.edit(props.task.rec_set.email_batch)"
+        v-if="props.task.rec_set?.email_batch">
+        <CButton
+          size="sm"
+          left-icon="mail"
+        >
+          {{ state.emailBatch.value?.status === 'sent' ? 'Review sent emails' : 'Compose emails' }}
+        </CButton>
+      </NuxtLink>
+
+      <NuxtLink
+        :to="urls.letters.batchLettersList(props.task.rec_set.letter_batch)"
+        v-else-if="props.task.rec_set?.letter_batch">
+        <CButton
+          size="sm"
+          left-icon="mail"
+        >
+          Review letters
+        </CButton>
+      </NuxtLink>
+      <CFlex gap="7" v-else>
+        <VTooltip>
+          <div>
+            <CLink
+              :href="`${hooks.config.public.apiBase}/recs/rec-sets/${props.task.rec_set?.pk}/donor-csv`"
+            >
+              <CButton left-icon="download" variant="link">CSV</CButton>
+            </CLink>
+          </div>
+          <template v-slot:popper>
+            <CText font-size="xs">Download as CSV</CText>
+          </template>
+        </VTooltip>
+      </CFlex>
 
       <slot name="top-buttons" />
     </CFlex>

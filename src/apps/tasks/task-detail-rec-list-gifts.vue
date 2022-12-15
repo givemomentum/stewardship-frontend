@@ -38,25 +38,6 @@
     :title="comp.isRecLetters ? 'Letters' : 'Gifts'"
     columns-count="8"
   >
-
-    <template v-slot:top-buttons v-if="comp.isRecLetters">
-      <CFlex gap="7">
-        <VTooltip>
-          <div>
-            <CLink
-              :href="`${hooks.config.public.apiBase}/recs/rec-sets/${props.task.rec_set?.pk}/donor-csv`"
-            >
-              <CButton left-icon="download" variant="link">CSV</CButton>
-            </CLink>
-          </div>
-
-          <template v-slot:popper>
-            <CText font-size="xs">Download letter labels</CText>
-          </template>
-        </VTooltip>
-      </CFlex>
-    </template>
-
     <template v-slot:table-headers>
       <chakra.th>Name</chakra.th>
       <chakra.th>Amount</chakra.th>
@@ -87,7 +68,7 @@
           </div>
 
           <template v-slot:popper>
-            <CText font-size="xs">{{state.copyTooltip.value}}</CText>
+            <CText font-size="xs">{{ state.copyTooltip.value }}</CText>
           </template>
         </VTooltip>
       </chakra.td>
