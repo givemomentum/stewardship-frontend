@@ -86,6 +86,7 @@
           <TinyMce
             :variables="props.template.variables"
             v-model="state.templateHtml.value"
+            content-css-default="font-family: Calibri; font-size: 11pt;"
           />
         </CFlex>
 

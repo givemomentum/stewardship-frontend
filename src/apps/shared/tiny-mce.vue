@@ -16,6 +16,7 @@
     minHeight?: string;
     editorBoxShadow?: string;
     editorBackground?: string;
+    contentCssDefault?: string;
   }>();
 
   const state = {
@@ -35,6 +36,7 @@
       menubar: props.isShowMenuBar ?? true,
       statusbar: false,
       // can't use css vars in /styles/tiny-mce.css because the editor is an iframe, plus easy to keep those in one place
+      // language=CSS
       content_style: `
         :root {
           --mce-padding: ${props.padding ?? "1in"};
@@ -68,6 +70,10 @@
             box-sizing: border-box;
             padding: var(--mce-padding);
           }
+        }
+        
+        body {
+          ${props.contentCssDefault ?? ""}
         }
       `,
     }),

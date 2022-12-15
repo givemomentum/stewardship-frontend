@@ -15,3 +15,8 @@ VueJS 3, Nuxt 3, Chakra UI (vue-next), TypeScript, Vercel
 - `floating-vue` doesn't work with chakra elements, but wrapping its slot children in a `div` works
 - HMR doesn't work with chakra well, specifically `CFlex` and some chakra props, like `alignItems` and `justifyContent`, but adding & removing a `key="1"` props helps to force-trigger it
 - files in `/public/` sometimes don't reload until you delete the `.nuxt` generated folder, a cache bug
+
+### Table list requirements
+
+- max-w + v-tooltip for donor names that are too long
+- white-space=nowrap for all smaller table headers

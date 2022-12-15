@@ -170,7 +170,7 @@
             <chakra.tr>
               <chakra.th>Donor</chakra.th>
               <chakra.th data-is-numeric="true">Donation</chakra.th>
-              <chakra.th data-is-numeric="true">Donated total</chakra.th>
+              <chakra.th data-is-numeric="true" white-space="nowrap">Donated total</chakra.th>
               <chakra.th data-is-numeric="true">Modified</chakra.th>
             </chakra.tr>
           </chakra.thead>
@@ -186,7 +186,13 @@
               :data-is-viewed="letter.is_viewed"
               class="table-row"
             >
-              <chakra.td v-if="letter.rec.donor.name" pr="0 !important" white-space="nowrap">
+              <chakra.td
+                v-if="letter.rec.donor.name"
+                pr="0 !important"
+                white-space="nowrap"
+                max-w="260px"
+                overflow="hidden"
+              >
                 {{ letter.rec.donor.name }}
               </chakra.td>
               <chakra.td v-else pr="0 !important" white-space="nowrap">
@@ -308,6 +314,7 @@
             width="850px"
             min-height="1100px"
             :is-show-menu-bar="true"
+            content-css-default="font-family: Calibri; font-size: 11pt;"
           />
         </CFlex>
       </CFlex>
