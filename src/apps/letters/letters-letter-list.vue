@@ -238,6 +238,7 @@
                       variant="none"
                     >
                       <CButton
+                        v-if="isSelected(letter)"
                         mt="3"
                         size="xs"
                         variant="outline"
