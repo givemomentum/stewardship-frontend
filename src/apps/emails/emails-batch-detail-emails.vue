@@ -329,6 +329,7 @@
                     </CLink>
                   </CFlex>
                 </CFlex>
+
                 <chakra.table class="email-table-inner-donor-table" data-size="none">
                   <chakra.tbody>
 

@@ -170,7 +170,9 @@
             <chakra.tr>
               <chakra.th>Donor</chakra.th>
               <chakra.th data-is-numeric="true">Donation</chakra.th>
-              <chakra.th data-is-numeric="true" white-space="nowrap">Donated total</chakra.th>
+              <chakra.th data-is-numeric="true" white-space="nowrap">
+                Donated total
+              </chakra.th>
               <chakra.th data-is-numeric="true">Modified</chakra.th>
             </chakra.tr>
           </chakra.thead>
@@ -213,7 +215,7 @@
 
               <CFlex
                 pos="absolute"
-                top="46px"
+                top="34px"
                 bottom="0"
                 left="0"
                 direction="column"
@@ -227,6 +229,26 @@
                 gap="3"
                 font-size="sm"
               >
+                <CFlex pos="relative">
+                  <CFlex pos="absolute" top="3" right="0" >
+                    <CLink
+                      v-if="letter.rec.donor.crm_url"
+                      :href="letter.rec.donor.crm_url"
+                      is-external
+                      variant="none"
+                    >
+                      <CButton
+                        mt="3"
+                        size="xs"
+                        variant="outline"
+                        left-icon="external-link"
+                      >
+                        CRM profile
+                      </CButton>
+                    </CLink>
+                  </CFlex>
+                </CFlex>
+
                 <chakra.table class="donor-table" data-size="none">
                   <chakra.tbody>
                     <chakra.tr border-top="1px solid" border-color="gray.100">
