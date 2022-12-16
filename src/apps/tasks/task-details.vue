@@ -1,18 +1,8 @@
 <script lang="ts" setup>
   import { CFlex, CBox } from "@chakra-ui/vue-next";
-  import { onMounted } from "vue";
   import { Task } from "~/apps/tasks/interfaces";
-  import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
 
   const props = defineProps<{ task: Task; }>();
-
-  const hooks = {
-    tasks: useTaskListStore(),
-  };
-
-  onMounted(async () => {
-    await hooks.tasks.loadTaskGiftsHistory(props.task);
-  });
 </script>
 
 <template>

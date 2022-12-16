@@ -26,7 +26,6 @@ export interface EmailBatch {
 export interface Email {
   pk: PrimaryKey;
   rec: Recommendation;
-  batch: EmailBatch;
   template: EmailTemplate;
 
   subject: string;

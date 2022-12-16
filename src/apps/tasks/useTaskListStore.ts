@@ -32,32 +32,18 @@ export function useTaskListStore() {
     state.taskOpened.value = state.tasks.value.find(task => task.pk === state.taskOpened.value?.pk) ?? null;
   }
 
-  async function loadTaskGiftsHistory(taskRaw: Task) {
+  async function loadGiftHistory(taskRaw: Task) {
     const taskModifiable = getTaskModifiable(taskRaw);
-    const promises = [];
-    for (const rec of taskModifiable?.rec_set?.recs ?? []) {
-      if (rec.donor) {
-        const promise = hooks.api
-          .get(`/crms/gifts/?donor=${rec.donor.pk}`)
-          .then(res => {
-            rec.donor.gifts = res.data;
-          });
-        promises.push(promise);
+    if (taskModifiable.rec_set) {
+      const res = await hooks.api.get(`/rec-sets/${taskModifiable.rec_set.pk}/?expand=recs.donor.gifts`);
+      if (res.data) {
+        taskModifiable.rec_set = res.data;
       }
     }
-    await Promise.all(promises);
   }
 
   async function updateRecommendationState(rec: Recommendation) {
     await hooks.api.patch(`/recs/${rec.pk}/`, { state: rec.state });
-  }
-
-  async function logAction(rec: Recommendation, action: string) {
-    await hooks.api.patch(`/recs/${rec.pk}/`, {
-      action_description: rec.action_description,
-      action_type: rec.action_type,
-      action_state: rec.action_state,
-    });
   }
 
   function getTaskModifiable(taskRaw: Task): Task {
@@ -70,7 +56,7 @@ export function useTaskListStore() {
     taskOpened: state.taskOpened,
     loadTasks: loadTasks,
     loadTaskRecommendations: loadTaskRecommendations,
-    loadTaskGiftsHistory: loadTaskGiftsHistory,
+    loadGiftHistory: loadGiftHistory,
     updateRecommendationState: updateRecommendationState,
   };
 }

@@ -69,7 +69,7 @@
 
   watch(state.emailOpen, async emailNew => {
     state.emailContentHtml.value = emailNew.content_html || (emailNew.content_html_default ?? "");
-    state.emailSubject.value = emailNew.subject || emailNew.batch.template.subject;
+    state.emailSubject.value = emailNew.subject || state.batch.value.template.subject;
 
     if (!emailNew.is_viewed) {
       await toggleViewedStatus(emailNew);
@@ -169,7 +169,7 @@
   function isEmailHtmlChanged(): boolean {
     // todo when we update emailContentHtml.value in watch() above this doesn't get recalculated. since the code isn't in <template>?
     const htmlOriginal = state.emailOpen.value.content_html || state.emailOpen.value.content_html_default;
-    const subjectOriginal = state.emailOpen.value.subject || state.emailOpen.value.batch.template.subject;
+    const subjectOriginal = state.emailOpen.value.subject || state.batch.value.template.subject;
     return (
       state.emailContentHtml.value.valueOf() !== htmlOriginal.valueOf()
       || state.emailSubject.value?.valueOf() !== subjectOriginal?.valueOf()
