@@ -65,7 +65,7 @@
   function isLetterHtmlChanged(): boolean {
     // todo when we update letterHtml.value in watch() above this does't get recalculated. since the code isn't in <template>?
     const htmlOriginal = state.letterOpen.value?.html || state.letterOpen.value?.html_default;
-    return state.letterHtml.value.valueOf() !== htmlOriginal.valueOf();
+    return state.letterHtml.value?.valueOf() !== htmlOriginal?.valueOf();
   }
 
   async function saveLetterHtml() {
@@ -316,6 +316,23 @@
             >
               Save changes
             </CButton>
+
+            <CLink
+              :href="state.letterOpen.value.download_pdf_url"
+              is-external
+              variant="none"
+            >
+              <CButton
+                size="sm"
+                variant="outline"
+                left-icon="download"
+                z-index="toast"
+                border-radius="lg"
+                transition="opacity 0.2s"
+              >
+                PDF
+              </CButton>
+            </CLink>
 
             <CButton
               @click="markAsUnread()"

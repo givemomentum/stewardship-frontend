@@ -12,6 +12,7 @@ export interface Letter {
   html?: string;
   html_default?: string;
   is_viewed: boolean;
+  download_pdf_url: string;
   created_at: string;
   updated_at: string;
 }
