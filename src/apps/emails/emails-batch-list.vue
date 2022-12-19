@@ -70,7 +70,7 @@
             v-for="batch in state.batchList.value"
             :key="batch.pk"
           >
-            <chakra.td>{{ batch.task?.title }}</chakra.td>
+            <chakra.td>{{ batch.title }}</chakra.td>
 
             <chakra.td>
               {{ format.dateHumanShort(batch.created_at) }}
@@ -112,7 +112,10 @@
               <NuxtLink :to="urls.emails.batches.edit(batch.pk)">
                 <CButton size="sm" variant="link" gap="2" pt="2px">
                   <Mails size="16" />
-                  <chakra.span v-if="batch.emails_unviewed_count">Review ({{ batch.emails_unviewed_count }})</chakra.span>
+                  <chakra.span v-if="batch.emails_unviewed_count">Review ({{
+                    batch.emails_unviewed_count
+                  }})
+                  </chakra.span>
                   <chakra.span v-else>Review</chakra.span>
                 </CButton>
               </NuxtLink>
