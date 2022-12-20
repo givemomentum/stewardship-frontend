@@ -3,6 +3,7 @@
   import { onBeforeMount, onUnmounted, ref, watch } from "vue";
   import { POSITION, useToast } from "vue-toastification";
   import { PrimaryKey } from "~/apps/auth/interfaces";
+  import { Email } from "~/apps/emails/interfaces";
   import { Letter, LetterBatch } from "~/apps/letters/interfaces";
   import { useLetterBatchStore } from "~/apps/letters/useLetterBatchStore";
   import { useLeftMenu } from "~/apps/menu/useLeftMenu";
@@ -129,6 +130,12 @@
       }, 0);
     }
   }
+  
+  async function toggleLetterExclusion(letter: Letter) {
+    const isExcludedFlipped = !letter.is_excluded;
+    await hooks.api.patch(`/letters/${letter.pk}/`, { is_excluded: isExcludedFlipped });
+    letter.is_excluded = isExcludedFlipped;
+  }
 
   async function loadBatch(args?: { isIncludeHtmlDefault?: boolean }) {
     const res = await hooks.api.get(`/letters/batches/${props.batchPk}/?expand=letters${args?.isIncludeHtmlDefault ? ".html_default" : ""}`);
@@ -174,6 +181,7 @@
                 Donated total
               </chakra.th>
               <chakra.th data-is-numeric="true">Modified</chakra.th>
+              <chakra.th data-is-numeric="true">Excluded</chakra.th>
             </chakra.tr>
           </chakra.thead>
 
@@ -210,7 +218,22 @@
               </chakra.td>
 
               <chakra.td data-is-numeric="true">
-                <ChakraCheckbox v-if="letter.html" v-model="state.changedTrue.value" is-disabled />
+                <CIcon v-if="letter.html" name="check-square" mb="1" size="4" color="gray.500" />
+              </chakra.td>
+              
+              <chakra.td data-is-numeric="true">
+                <VTooltip placement="right">
+                  <div>
+                    <ChakraCheckbox
+                      :model-value="letter.is_excluded"
+                      @click.stop="toggleLetterExclusion(letter)"
+                    />
+                  </div>
+                  <template v-slot:popper>
+                    <CText font-size="xs" v-if="letter.is_excluded">Include this letter in the PDF export</CText>
+                    <CText font-size="xs" v-else>Exclude this letter from the PDF export</CText>
+                  </template>
+                </VTooltip>
               </chakra.td>
 
               <CFlex
