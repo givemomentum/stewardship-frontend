@@ -47,9 +47,12 @@ export namespace format {
     return "";
   }
 
-  export function money(amount?: string | number): string {
+  export function money(amount?: string | number, decimals: number = 0): string {
     if (amount) {
-      return `$${Number(amount).toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
+      return `$${Number(amount).toLocaleString(
+        "en-US",
+        { minimumFractionDigits: decimals, maximumFractionDigits: decimals }
+      )}`;
     }
     return "";
   }
