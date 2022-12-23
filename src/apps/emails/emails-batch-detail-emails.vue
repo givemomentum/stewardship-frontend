@@ -358,7 +358,7 @@
 
                     <chakra.tr>
                       <chakra.td>Last gift date</chakra.td>
-                      <chakra.td>{{ format.dateHumanShort(email.rec.donor.last_gift_date) || "-" }}</chakra.td>
+                      <chakra.td>{{ format.date(email.rec.donor.last_gift_date) || "-" }}</chakra.td>
                     </chakra.tr>
 
                     <chakra.tr>
