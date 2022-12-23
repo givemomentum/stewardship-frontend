@@ -79,7 +79,7 @@
         <CFlex color="gray.400" font-size="xs">Biggest gift</CFlex>
         <CFlex font-size="md">{{ format.money(slotProps.rec.donor.donation_biggest) }}</CFlex>
       </CFlex>
-      <CFlex direction="column" v-if="slotProps.rec.donor.email">
+      <CFlex direction="column" v-if="slotProps.rec.donor?.email">
         <CFlex color="gray.400" font-size="xs">Email</CFlex>
         <CFlex font-size="md">{{ slotProps.rec.donor?.email }}</CFlex>
       </CFlex>
