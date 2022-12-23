@@ -57,7 +57,7 @@
         <chakra.thead>
           <chakra.th>Task</chakra.th>
           <chakra.th>Created at</chakra.th>
-          <chakra.th>Satus</chakra.th>
+          <chakra.th>Status</chakra.th>
           <chakra.th data-is-numeric="true">Emails</chakra.th>
           <chakra.th data-is-numeric="true">Open rate</chakra.th>
           <chakra.th data-is-numeric="true">Bounce rate</chakra.th>
