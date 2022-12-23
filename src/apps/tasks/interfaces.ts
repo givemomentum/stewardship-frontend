@@ -61,7 +61,7 @@ export interface Rule {
   donor_custom_fields: any;
   gift_custom_fields: any;
 
-  emails_to_donors_bcc: string;
+  emails_to_donors_cc: string;
 
   default_assignee: PrimaryKey;
   task_title: string;

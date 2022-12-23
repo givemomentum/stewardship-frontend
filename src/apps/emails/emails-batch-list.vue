@@ -22,6 +22,9 @@
 
     const resTemplates = await hooks.api.get("/emails/templates/");
     state.templateList.value = resTemplates.data;
+    
+    const resBatchesWithRecSetes = await hooks.api.get("/emails/batches/?expand=rec_set");
+    state.batchList.value = resBatchesWithRecSetes.data;
   });
 
   function getStatusStyle(batch: EmailBatch) {
@@ -61,6 +64,7 @@
           <chakra.th data-is-numeric="true">Emails</chakra.th>
           <chakra.th data-is-numeric="true">Open rate</chakra.th>
           <chakra.th data-is-numeric="true">Bounce rate</chakra.th>
+          <chakra.th>CC</chakra.th>
           <chakra.th>Template</chakra.th>
           <chakra.th />
         </chakra.thead>
@@ -102,6 +106,10 @@
 
             <chakra.td data-is-numeric="true">
               {{ isBatchSent(batch) ? format.percentage((batch.bounce_count / batch.emails_count) * 100) : '' }}
+            </chakra.td>
+
+            <chakra.td>
+              {{ batch.rec_set?.rule?.emails_to_donors_cc }}
             </chakra.td>
 
             <chakra.td>
