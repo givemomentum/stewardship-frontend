@@ -128,7 +128,7 @@
     await hooks.api.post(`/emails/batches/${props.batchPk}/send/`);
     state.batch.value.status = "sent";
     hooks.toast.success("Email batch sent", { position: POSITION.TOP_RIGHT });
-    hooks.taskStore.loadTaskRecommendations();
+    hooks.taskStore.loadTaskRecs();
     navigateTo(urls.emails.batches.list);
   }
 

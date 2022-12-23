@@ -27,7 +27,7 @@
   onMounted(async () => {
     loadUsers();
     await hooks.taskListStore.loadTasks();
-    await hooks.taskListStore.loadTaskRecommendations();
+    await hooks.taskListStore.loadTaskRecs();
   });
 
   async function loadUsers() {
@@ -90,7 +90,7 @@
                 size="17px"
                 mb="px"
               />
-              <CText>{{ task.rec_set.recs.length }}</CText>
+              <CText>{{ task.rec_set.recs?.length }}</CText>
             </CFlex>
           </CFlex>
 

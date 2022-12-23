@@ -22,7 +22,7 @@ export function useTaskListStore() {
     state.tasks.value = res.data ?? [];
   }
 
-  async function loadTaskRecommendations() {
+  async function loadTaskRecs() {
     let path = "/tasks/?expand=rec_set";
     if (!hooks.route.query.include_unpublished) {
       path += "&is_published=true";
@@ -32,7 +32,7 @@ export function useTaskListStore() {
     state.taskOpened.value = state.tasks.value.find(task => task.pk === state.taskOpened.value?.pk) ?? null;
   }
 
-  async function loadGiftHistory(taskRaw: Task) {
+  async function loadRecsAndGiftHistory(taskRaw: Task) {
     const taskModifiable = getTaskModifiable(taskRaw);
     if (taskModifiable.rec_set) {
       const res = await hooks.api.get(`/rec-sets/${taskModifiable.rec_set.pk}/?expand=recs.donor.gifts`);
@@ -42,7 +42,7 @@ export function useTaskListStore() {
     }
   }
 
-  async function updateRecommendationState(rec: Recommendation) {
+  async function updateRecState(rec: Recommendation) {
     await hooks.api.patch(`/recs/${rec.pk}/`, { state: rec.state });
   }
 
@@ -55,8 +55,8 @@ export function useTaskListStore() {
     tasks: state.tasks,
     taskOpened: state.taskOpened,
     loadTasks: loadTasks,
-    loadTaskRecommendations: loadTaskRecommendations,
-    loadGiftHistory: loadGiftHistory,
-    updateRecommendationState: updateRecommendationState,
+    loadTaskRecs: loadTaskRecs,
+    loadRecsAndGiftHistory: loadRecsAndGiftHistory,
+    updateRecState: updateRecState,
   };
 }

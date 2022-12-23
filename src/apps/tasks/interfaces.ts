@@ -35,9 +35,40 @@ export interface Recommendation {
 export interface RecommendationSet {
   pk: PrimaryKey;
   recs: Recommendation[];
+  rule: Rule;
   type: "donors" | "gifts" | "letters" | "donor_emails";
   email_batch?: PrimaryKey;
   letter_batch?: PrimaryKey;
+}
+
+export interface Rule {
+  pk: PrimaryKey;
+
+  is_trigger_active: boolean;
+  trigger_class: string;
+  trigger_kwargs: any;
+
+  is_grouper_active: boolean;
+  grouper_class: string;
+  grouper_kwargs: any;
+
+  is_executor_active: boolean;
+  executor_class: string;
+  executor_kwargs: any;
+
+  rec_set_type: "donors" | "gifts" | "emails";
+
+  donor_custom_fields: any;
+  gift_custom_fields: any;
+
+  emails_to_donors_bcc: string;
+
+  default_assignee: PrimaryKey;
+  task_title: string;
+  task_description_template: string;
+  is_show_dismiss_button_on_task: boolean;
+  is_show_log_button_on_task: boolean;
+  is_published_automatically: boolean;
 }
 
 export interface DropdownOption<Value = any> {

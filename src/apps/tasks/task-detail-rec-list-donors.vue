@@ -96,7 +96,7 @@
       <chakra.th>Last gift</chakra.th>
       <chakra.th>Lifetime giving</chakra.th>
       <chakra.th>CRM Profile</chakra.th>
-      <chakra.th />
+      <chakra.th v-if="props.task.rec_set.rule.is_show_log_button_on_task" />
     </template>
 
     <template v-slot:table-columns="slotProps">
@@ -119,7 +119,7 @@
           </CButton>
         </CLink>
       </chakra.td>
-      <chakra.td>
+      <chakra.td v-if="props.task.rec_set.rule.is_show_log_button_on_task">
         <CButton
           v-if="slotProps.rec.action_state === 'none'"
           @click.stop="openLoggingModal(slotProps.rec)"

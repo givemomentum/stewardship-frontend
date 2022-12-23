@@ -2,7 +2,6 @@
   import { CFlex } from "@chakra-ui/vue-next";
   import { onMounted, ref, computed } from "vue";
   import { Recommendation, Task } from "~/apps/tasks/interfaces";
-  import RecDonorGiftChart from "~/apps/tasks/rec-donor-gift-chart.vue";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import { urls } from "~/urls";
   import { useApi } from "~/composables/useApi";
@@ -28,7 +27,7 @@
 
   const comp = {
     sortedTasks: computed(() => {
-      const sorted = props.task.rec_set.recs.slice().sort((a, b) => {
+      const sorted = props.task.rec_set.recs?.slice()?.sort((a, b) => {
         const a_dismissed = a.state === "dismissed";
         const b_dismissed = b.state === "dismissed";
         if (a_dismissed && !b_dismissed) {
@@ -48,7 +47,7 @@
       const res = await hooks.api.get(`/emails/batches/${props.task.rec_set.email_batch}/`);
       state.emailBatch.value = res.data;
     }
-    await hooks.tasks.loadGiftHistory(props.task);
+    await hooks.tasks.loadRecsAndGiftHistory(props.task);
   });
 
   function toggleRecOpen(rec: Recommendation) {
@@ -69,7 +68,7 @@
     } else {
       rec.state = "completed";
     }
-    await hooks.tasks.updateRecommendationState(rec);
+    await hooks.tasks.updateRecState(rec);
   }
 
   async function toggleRecDismissed(rec: Recommendation) {
@@ -78,7 +77,7 @@
     } else {
       rec.state = "dismissed";
     }
-    await hooks.tasks.updateRecommendationState(rec);
+    await hooks.tasks.updateRecState(rec);
   }
 </script>
 
@@ -139,7 +138,10 @@
       <chakra.thead>
         <chakra.th w="0" />
         <slot name="table-headers" />
-        <chakra.th w="0" />
+        <chakra.th
+          v-if="props.task.rec_set.rule.is_show_dismiss_button_on_task"
+          w="0"
+        />
       </chakra.thead>
 
       <chakra.tbody>
@@ -170,8 +172,16 @@
 
             <slot name="table-columns" :rec="rec" />
 
-            <chakra.td padding-left="0">
-              <CButton @click.stop="toggleRecDismissed(rec)" variant="ghost" size="xs" pl="0">
+            <chakra.td
+              v-if="props.task.rec_set.rule.is_show_dismiss_button_on_task"
+              padding-left="0"
+            >
+              <CButton
+                @click.stop="toggleRecDismissed(rec)"
+                variant="ghost"
+                size="xs"
+                pl="0"
+              >
                 {{ rec.state == 'dismissed' ? 'Restore' : 'Dismiss' }}
               </CButton>
             </chakra.td>
