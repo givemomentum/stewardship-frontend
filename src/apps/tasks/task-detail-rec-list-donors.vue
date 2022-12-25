@@ -100,13 +100,13 @@
     </template>
 
     <template v-slot:table-columns="slotProps">
-      <chakra.td max-w="200px" v-if="slotProps.rec.donor.name">{{ slotProps.rec.donor.name }}</chakra.td>
+      <chakra.td max-w="200px" v-if="slotProps.rec.donor?.name">{{ slotProps.rec.donor?.name }}</chakra.td>
       <chakra.td v-else>No name provided</chakra.td>
-      <chakra.td>{{ format.dateMonth(slotProps.rec.donor.last_gift_date) }}</chakra.td>
-      <chakra.td>{{ format.money(slotProps.rec.donor.donated_total) }}</chakra.td>
+      <chakra.td>{{ format.dateMonth(slotProps.rec.donor?.last_gift_date) }}</chakra.td>
+      <chakra.td>{{ format.money(slotProps.rec.donor?.donated_total) }}</chakra.td>
       <chakra.td>
         <CLink
-          :href="slotProps.rec.donor.crm_url"
+          :href="slotProps.rec.donor?.crm_url"
           h="0"
           is-external
           @click.stop=""
@@ -114,7 +114,7 @@
           <CButton right-icon="external-link" variant="link">
             <!-- Workaround for Donor Perfect link issue: Show Donor Id, so she can copy it.-->
             {{
-              slotProps.rec.donor.source == "donor_perfect" ? slotProps.rec.donor.source_id : "View"
+              slotProps.rec.donor?.source == "donor_perfect" ? slotProps.rec.donor.source_id : "View"
             }}
           </CButton>
         </CLink>
