@@ -64,7 +64,7 @@
           <chakra.th data-is-numeric="true">Emails</chakra.th>
           <chakra.th data-is-numeric="true">Open rate</chakra.th>
           <chakra.th data-is-numeric="true">Bounce rate</chakra.th>
-          <chakra.th>CC</chakra.th>
+          <chakra.th v-if="state.batchList.value?.find(batch => batch.rec_set?.rule?.emails_to_donors_cc)">CC</chakra.th>
           <chakra.th>Template</chakra.th>
           <chakra.th />
         </chakra.thead>
@@ -108,7 +108,7 @@
               {{ isBatchSent(batch) ? format.percentage((batch.bounce_count / batch.emails_count) * 100) : '' }}
             </chakra.td>
 
-            <chakra.td>
+            <chakra.td v-if="state.batchList.value?.find(batchItem => batchItem.rec_set?.rule?.emails_to_donors_cc)">
               {{ batch.rec_set?.rule?.emails_to_donors_cc }}
             </chakra.td>
 

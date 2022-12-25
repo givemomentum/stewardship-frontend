@@ -25,6 +25,7 @@
     emails: ref<Email[]>([]),
     emailContentHtml: ref(""),
     emailSubject: ref(""),
+    emailCcList: ref(""),
     isSavingChanges: ref(false),
 
     emailOpen: ref<Email | null>(null),
@@ -70,6 +71,7 @@
   watch(state.emailOpen, async emailNew => {
     state.emailContentHtml.value = emailNew.content_html || (emailNew.content_html_default ?? "");
     state.emailSubject.value = emailNew.subject || state.batch.value.template.subject;
+    state.emailCcList.value = emailNew.cc_list;
 
     if (!emailNew.is_viewed) {
       await toggleViewedStatus(emailNew);
@@ -96,12 +98,14 @@
       {
         content_html: state.emailContentHtml.value,
         subject: state.emailSubject.value,
+        cc_list: state.emailCcList.value,
       },
     );
     state.isSavingChanges.value = false;
     hooks.toast.success("Email saved", { position: POSITION.TOP_RIGHT });
     state.emailOpen.value.content_html = state.emailContentHtml.value;
     state.emailOpen.value.subject = state.emailSubject.value;
+    state.emailOpen.value.cc_list = state.emailCcList.value;
   }
 
   async function toggleViewedStatus(email: Email) {
@@ -166,13 +170,14 @@
     return email.pk === state.emailOpen.value?.pk;
   }
 
-  function isEmailHtmlChanged(): boolean {
+  function isEmailChanged(): boolean {
     // todo when we update emailContentHtml.value in watch() above this doesn't get recalculated. since the code isn't in <template>?
     const htmlOriginal = state.emailOpen.value.content_html || state.emailOpen.value.content_html_default;
     const subjectOriginal = state.emailOpen.value.subject || state.batch.value.template.subject;
     return (
       state.emailContentHtml.value.valueOf() !== htmlOriginal.valueOf()
       || state.emailSubject.value?.valueOf() !== subjectOriginal?.valueOf()
+      || state.emailCcList.value?.valueOf() !== state.emailOpen.value.cc_list.valueOf()
     );
   }
 
@@ -323,6 +328,7 @@
                         size="xs"
                         variant="outline"
                         left-icon="external-link"
+                        bg="white"
                       >
                         CRM profile
                       </CButton>
@@ -427,7 +433,7 @@
               size="sm"
               z-index="toast"
               border-radius="lg"
-              :opacity="isEmailHtmlChanged() ? 1 : 0"
+              :opacity="isEmailChanged() ? 1 : 0"
               transition="opacity 0.2s"
             >
               Save changes
@@ -470,10 +476,30 @@
             </CButton>
           </CFlex>
 
-          <CFlex gap="3px" v-if="!isBatchSent()" w="100%" direction="column">
-            <CFormLabel font-size="sm" color="gray.500">Subject</CFormLabel>
-            <CInput v-model="state.emailSubject.value" bg="white" name="subject" w="100%" />
-          </CFlex>
+          <CHStack w="100%" gap="5">
+            <CFlex gap="3px" w="100%" direction="column">
+              <CFormLabel font-size="sm" color="gray.500">Subject</CFormLabel>
+              <CInput
+                v-model="state.emailSubject.value"
+                :is-read-only="isBatchSent()"
+                bg="white"
+                name="subject"
+                w="100%"
+              />
+            </CFlex>
+  
+            <CFlex gap="3px" w="100%" direction="column">
+              <CFormLabel font-size="sm" color="gray.500">CC</CFormLabel>
+              <CInput
+                v-model="state.emailCcList.value"
+                :is-read-only="isBatchSent()"
+                bg="white"
+                name="cc_list"
+                :placeholder="isBatchSent() ? '' : 'john@mail.com, max@mail.com'"
+                w="100%"
+              />
+            </CFlex>
+          </CHStack>
 
           <TinyMce
             v-model="state.emailContentHtml.value"

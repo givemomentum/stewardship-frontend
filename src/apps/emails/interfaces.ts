@@ -29,6 +29,7 @@ export interface Email {
   template: EmailTemplate;
 
   subject: string;
+  cc_list: string;
   content_html: string;
   content_html_default: string;
 
