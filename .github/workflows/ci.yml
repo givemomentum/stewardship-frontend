@@ -1,0 +1,29 @@
+name: ci
+
+on:
+  pull_request:
+
+env:
+  # Make sure to sync with the version in the .node-version file
+  NODE_VERSION: "18.12.1"
+
+jobs:
+  codecheck:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Lint
+        run: yarn run lint
