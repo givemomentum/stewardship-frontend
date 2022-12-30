@@ -42,7 +42,11 @@
     closeLoggingModal();
   }
 
-  function getCommunicationPreferences(donor: CrmDonor) {
+  function getCommunicationPreferences(donor?: CrmDonor) {
+    if (!donor) {
+      return "";
+    }
+    
     if (donor.source == "blackbaud") {
       return ""; // Blackbaud doesn't have trustworthy communication preferences at the moment.
     }
@@ -114,7 +118,7 @@
           <CButton right-icon="external-link" variant="link">
             <!-- Workaround for Donor Perfect link issue: Show Donor Id, so she can copy it.-->
             {{
-              slotProps.rec.donor?.source == "donor_perfect" ? slotProps.rec.donor.source_id : "View"
+              slotProps.rec.donor?.source == "donor_perfect" ? slotProps.rec.donor?.source_id : "View"
             }}
           </CButton>
         </CLink>
@@ -147,13 +151,13 @@
       <CFlex direction="row" justify="space-between">
 
         <CFlex direction="column" :gap="slotProps.isCurrentRec ? 3 : 0">
-          <CFlex direction="column" v-if="slotProps.rec.donor.donation_biggest">
+          <CFlex direction="column" v-if="slotProps.rec.donor?.donation_biggest">
             <CFlex color="gray.400" font-size="xs">Giving summary</CFlex>
             <CFlex font-size="md">
-              Giving since {{ format.dateMonth(slotProps.rec.donor.giving_since) }}. Largest gift was
-              {{ format.money(slotProps.rec.donor.donation_biggest) }}, and most recent gift was
-              {{ format.money(slotProps.rec.donor.last_gift_amount) }} in
-              {{ format.dateMonth(slotProps.rec.donor.last_gift_date) }}
+              Giving since {{ format.dateMonth(slotProps.rec.donor?.giving_since) }}. Largest gift was
+              {{ format.money(slotProps.rec.donor?.donation_biggest) }}, and most recent gift was
+              {{ format.money(slotProps.rec.donor?.last_gift_amount) }} in
+              {{ format.dateMonth(slotProps.rec.donor?.last_gift_date) }}
             </CFlex>
           </CFlex>
           <CFlex direction="column" v-if="getCommunicationPreferences(slotProps.rec.donor)">
@@ -166,7 +170,7 @@
             <CFlex color="gray.400" font-size="xs">Email</CFlex>
             <CFlex font-size="md">{{ slotProps.rec.donor?.email }}</CFlex>
           </CFlex>
-          <CFlex direction="column" v-if="slotProps.rec.donor.phone_number">
+          <CFlex direction="column" v-if="slotProps.rec.donor?.phone_number">
             <CFlex color="gray.400" font-size="xs">Phone</CFlex>
             <CFlex font-size="md">{{ slotProps.rec.donor?.phone_number }}</CFlex>
           </CFlex>
@@ -175,13 +179,13 @@
             <CFlex font-size="md">{{ slotProps.rec.donor?.phone?.number }}</CFlex>
           </CFlex>
 
-          <CFlex direction="column" v-if="slotProps.rec.donor.mailing_address?.one_line">
+          <CFlex direction="column" v-if="slotProps.rec.donor?.mailing_address?.one_line">
             <CFlex color="gray.400" font-size="xs">Address</CFlex>
             <CFlex
-              v-if="slotProps.rec.donor.mailing_address?.one_line"
+              v-if="slotProps.rec.donor?.mailing_address?.one_line"
               font-size="md"
             >
-              {{ slotProps.rec.donor.mailing_address?.one_line }}
+              {{ slotProps.rec.donor?.mailing_address?.one_line }}
             </CFlex>
           </CFlex>
 

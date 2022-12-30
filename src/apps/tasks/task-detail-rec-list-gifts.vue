@@ -77,7 +77,7 @@
     <template v-slot:rec-unfolded="slotProps">
       <CFlex direction="column">
         <CFlex color="gray.400" font-size="xs">Biggest gift</CFlex>
-        <CFlex font-size="md">{{ format.money(slotProps.rec.donor.donation_biggest) }}</CFlex>
+        <CFlex font-size="md">{{ format.money(slotProps.rec.donor?.donation_biggest) }}</CFlex>
       </CFlex>
       <CFlex direction="column" v-if="slotProps.rec.donor?.email">
         <CFlex color="gray.400" font-size="xs">Email</CFlex>
@@ -91,10 +91,10 @@
       <CFlex direction="column">
         <CFlex color="gray.400" font-size="xs">Address</CFlex>
         <CFlex
-          v-if="slotProps.rec.donor.mailing_address?.one_line"
+          v-if="slotProps.rec.donor?.mailing_address?.one_line"
           font-size="md"
         >
-          {{ slotProps.rec.donor.mailing_address?.one_line }}
+          {{ slotProps.rec.donor?.mailing_address?.one_line }}
         </CFlex>
         <CFlex v-else font-size="md">−</CFlex>
       </CFlex>

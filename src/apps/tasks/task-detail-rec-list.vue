@@ -217,7 +217,7 @@
                 <CFlex
                   direction="column"
                   v-if="rec.donor"
-                  v-for="(data, fieldName) in rec.donor.custom_data"
+                  v-for="(data, fieldName) in rec.donor?.custom_data"
                   :key="fieldName">
                   <CFlex color="gray.400" font-size="xs">{{ data["label"] }}</CFlex>
                   <CFlex font-size="md">{{ data["value"] }}</CFlex>
