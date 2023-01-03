@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { onMounted, ref, watch } from "vue";
+  import { ref, watch } from "vue";
   import { Recommendation } from "~/apps/tasks/interfaces";
   import { format } from "~/utils";
   import { parseISO } from "date-fns";
@@ -12,7 +12,7 @@
     giftSeries: ref<{ x: number, y: number }[]>([{ x: 5, y: 5 }]),
   };
 
-  onMounted(() => {
+  onBeforeMount(() => {
     loadChartData(props.rec);
   });
 
@@ -85,14 +85,16 @@
 </script>
 
 <template>
-  <apexchart
-    width="780"
-    height="250"
-    type="area"
-    :options="chartOptions"
-    :series="[{
-      name: 'Amount',
-      data: state.giftSeries.value,
-    }]"
-  />
+  <div>
+    <apexchart
+      width="780"
+      height="250"
+      type="area"
+      :options="chartOptions"
+      :series="[{
+        name: 'Amount',
+        data: state.giftSeries.value,
+      }]"
+    />
+  </div>
 </template>
