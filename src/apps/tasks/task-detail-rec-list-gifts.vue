@@ -99,7 +99,7 @@
         <CFlex v-else font-size="md">−</CFlex>
       </CFlex>
 
-      <CFlex v-if="slotProps.rec.gift.notes" direction="column">
+      <CFlex v-if="slotProps.rec.gift?.notes" direction="column">
         <CFlex color="gray.400" font-size="xs">Notes</CFlex>
         <CFlex font-size="md">{{ slotProps.rec.gift.notes }}</CFlex>
       </CFlex>
