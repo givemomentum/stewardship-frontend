@@ -17,6 +17,8 @@
   const state = {
     recOpen: ref<Recommendation | null>(null),
     emailBatch: ref(null as EmailBatch | null),
+    isRecStateSaving: ref(false),
+    isShowRecStateSavedCheck: ref(false),
   };
 
   const hooks = {
@@ -47,20 +49,29 @@
 
   async function toggleRecCompletedStatus(rec: Recommendation) {
     if (rec.state === "completed") {
-      rec.state = "new";
+      await setRecState(rec, "new");
     } else {
-      rec.state = "completed";
+      await setRecState(rec, "completed");
     }
-    await hooks.tasks.updateRecState(rec);
   }
 
   async function toggleRecDismissed(rec: Recommendation) {
     if (rec.state === "dismissed") {
-      rec.state = "new";
+      await setRecState(rec, "new");
     } else {
-      rec.state = "dismissed";
+      await setRecState(rec, "dismissed");
     }
+  }
+
+  async function setRecState(rec: Recommendation, recState: Recommendation["state"]) {
+    state.isRecStateSaving.value = true;
+    rec.state = recState;
     await hooks.tasks.updateRecState(rec);
+    state.isRecStateSaving.value = false;
+    state.isShowRecStateSavedCheck.value = true;
+    setTimeout(() => {
+      state.isShowRecStateSavedCheck.value = false;
+    }, 3000);
   }
 </script>
 
@@ -120,11 +131,15 @@
     <ChakraTable size="sm">
       <chakra.thead>
         <chakra.th w="0" />
+
         <slot name="table-headers" />
+
         <chakra.th
           v-if="props.task.rec_set.rule.is_show_dismiss_button_on_task"
           w="0"
-        />
+        >
+          Dismiss
+        </chakra.th>
       </chakra.thead>
 
       <chakra.tbody>
@@ -142,16 +157,100 @@
           >
 
             <chakra.td text-align="end !important">
-              <CIcon
-                @click.stop="toggleRecCompletedStatus(rec)"
-                :name="rec.state === 'completed' ? 'io-checkmark-circle' : 'io-checkmark-circle-outline'"
-                mb="px"
-                :_hover="{ color: 'teal.300', fill: 'teal.300' }"
-                transition="all 0.3s"
-                size="21px"
-                :color="rec.state === 'completed' ? 'teal.400' : 'gray.500'"
-                :fill="rec.state === 'completed' ? 'teal.400' : 'gray.500'"
-              />
+              <VDropdown
+                v-if="rec.state !== 'dismissed'"
+                placement="top"
+                :triggers="['focus', 'click']"
+                :showTriggers="['focus', 'click', 'hover']"
+              >
+                <div style="display: flex">
+                  <CIcon
+                    v-if="rec.state === 'completed' || rec.state === 'new'"
+                    @click.stop="toggleRecCompletedStatus(rec)"
+                    :name="rec.state === 'completed' ? 'io-checkmark-circle' : 'io-checkmark-circle-outline'"
+                    mb="px"
+                    :_hover="{ color: 'teal.300', fill: 'teal.300' }"
+                    transition="all 0.3s"
+                    size="21px"
+                    :color="rec.state === 'completed' ? 'teal.400' : 'gray.500'"
+                    :fill="rec.state === 'completed' ? 'teal.400' : 'gray.500'"
+                  />
+                  <CIcon
+                    v-if="rec.state === 'follow_up_needed'"
+                    @click.stop="toggleRecCompletedStatus(rec)"
+                    name="co-clock"
+                    mb="px"
+                    :_hover="{ color: 'teal.300', fill: 'teal.300' }"
+                    transition="all 0.3s"
+                    color="gray.500"
+                    ml="-px"
+                    size="23px"
+                  />
+                </div>
+                
+                <template v-slot:popper>
+                  <CVStack p="2" spacing="1" font-size="sm">
+                    <CFlex gap="2">
+                      <CText font-size="xs" color="gray.400">Status</CText>
+                      <CSpinner
+                        v-if="state.isRecStateSaving.value"
+                        size="xs"
+                        color="gray.400"
+                      />
+                      <CText
+                        color="green.500"
+                        font-size="xs"
+                        :opacity="(state.isShowRecStateSavedCheck.value && !state.isRecStateSaving.value) ? 1 : 0"
+                        transition="opacity 0.3s"
+                      >
+                        saved
+                      </CText>
+                    </CFlex>
+
+                    <CFlex gap="2">
+                      <CFormLabel display="flex" gap="2" m="0" font-size="sm">
+                        <input
+                          @click="setRecState(rec, 'new')"
+                          type="radio"
+                          name="state"
+                          value="completed"
+                          :checked="rec.state === 'new'"
+                          :key="rec.pk + 'new'"
+                        >
+                        <CText>Unhandled</CText>
+                      </CFormLabel>
+                    </CFlex>
+
+                    <CFlex gap="2">
+                      <CFormLabel display="flex" gap="2" m="0" font-size="sm">
+                        <input
+                          @click="setRecState(rec, 'completed')"
+                          type="radio"
+                          name="state"
+                          value="completed"
+                          :checked="rec.state === 'completed'"
+                          :key="rec.pk + 'completed'"
+                        >
+                        <CText>Completed</CText>
+                      </CFormLabel>
+                    </CFlex>
+
+                    <CFlex gap="2">
+                      <CFormLabel display="flex" gap="2" m="0" font-size="sm">
+                        <input
+                          @click="setRecState(rec, 'follow_up_needed')"
+                          type="radio"
+                          name="state"
+                          value="follow_up_needed"
+                          :checked="rec.state === 'follow_up_needed'"
+                          :key="rec.pk + 'follow_up_needed'"
+                        >
+                        <CText>To follow up later</CText>
+                      </CFormLabel>
+                    </CFlex>
+                  </CVStack>
+                </template>
+              </VDropdown>
             </chakra.td>
 
             <slot name="table-columns" :rec="rec" />
@@ -168,6 +267,7 @@
                     :icon="rec.state === 'dismissed' ? 'plus' : 'x'"
                     size="sm"
                     pl="0"
+                    aria-label="dismiss"
                   />
                 </div>
                 <template v-slot:popper>
@@ -175,6 +275,7 @@
                 </template>
               </VTooltip>
             </chakra.td>
+
           </chakra.tr>
 
           <chakra.tr

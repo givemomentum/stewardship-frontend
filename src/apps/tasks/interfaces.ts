@@ -26,7 +26,7 @@ export interface Recommendation {
   donor?: CrmDonor;
   gift?: CrmGift;
   explanation: string;
-  state: "new" | "completed" | "dismissed";
+  state: "new" | "completed" | "follow_up_needed" | "dismissed";
   action_description: string;
   action_type: "none" | "call" | "letter" | "email" | "other";
   action_state: "none" | "logged_by_user" | "stored_to_crm";
@@ -68,6 +68,7 @@ export interface Rule {
   task_description_template: string;
   is_show_dismiss_button_on_task: boolean;
   is_show_log_button_on_task: boolean;
+  is_show_completion_modal_on_rec: boolean;
   is_published_automatically: boolean;
 }
 

@@ -116,7 +116,7 @@
           @click.stop=""
           :opacity="slotProps.rec.state === 'dismissed' ? 0.5 : 1"
         >
-          <CButton right-icon="external-link" variant="link">
+          <CButton right-icon="external-link" variant="link" size="sm">
             <!-- Workaround for Donor Perfect link issue: Show Donor Id, so she can copy it.-->
             {{
               slotProps.rec.donor?.source == "donor_perfect" ? slotProps.rec.donor?.source_id : "View"
