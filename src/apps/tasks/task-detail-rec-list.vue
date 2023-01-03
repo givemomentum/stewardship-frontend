@@ -62,6 +62,15 @@
     }
     await hooks.tasks.updateRecState(rec);
   }
+
+  async function toggleRecFollowUp(rec: Recommendation) {
+    if (rec.is_follow_up_needed) {
+      rec.is_follow_up_needed = false;
+    } else {
+      rec.is_follow_up_needed = true;
+    }
+    await hooks.tasks.setRecFollowUp(rec, rec.is_follow_up_needed);
+  }
 </script>
 
 <template>
@@ -120,6 +129,11 @@
     <ChakraTable size="sm">
       <chakra.thead>
         <chakra.th w="0" />
+        <chakra.th
+          v-if="props.task.rec_set.rule.is_show_follow_up_button_on_task"
+          w="0"
+        />
+
         <slot name="table-headers" />
         <chakra.th
           v-if="props.task.rec_set.rule.is_show_dismiss_button_on_task"
@@ -153,6 +167,26 @@
                 :fill="rec.state === 'completed' ? 'teal.400' : 'gray.500'"
               />
             </chakra.td>
+            
+            <chakra.td
+              v-if="props.task.rec_set.rule.is_show_follow_up_button_on_task"
+              padding-left="0"
+            >
+              <VTooltip>
+                <div>
+                  <CIcon
+                    @click.stop="toggleRecFollowUp(rec)"
+                    :name="rec.is_follow_up_needed ? 'bi-clock-fill' : 'bi-clock'"
+                    size="21px"
+                    mb="px"
+                    :fill="rec.is_follow_up_needed ? 'teal.400' : 'gray.500'"
+                  />
+                </div>
+                <template v-slot:popper>
+                  <CText font-size="xs">{{ rec.is_follow_up_needed ? 'Remove the follow up' : 'Follow up later' }}</CText>
+                </template>
+              </VTooltip>
+            </chakra.td>
 
             <slot name="table-columns" :rec="rec" />
 
@@ -168,6 +202,7 @@
                     :icon="rec.state === 'dismissed' ? 'plus' : 'x'"
                     size="sm"
                     pl="0"
+                    area-label="Dismiss"
                   />
                 </div>
                 <template v-slot:popper>

@@ -27,6 +27,7 @@ export interface Recommendation {
   gift?: CrmGift;
   explanation: string;
   state: "new" | "completed" | "dismissed";
+  is_follow_up_needed: boolean;
   action_description: string;
   action_type: "none" | "call" | "letter" | "email" | "other";
   action_state: "none" | "logged_by_user" | "stored_to_crm";
@@ -67,6 +68,7 @@ export interface Rule {
   task_title: string;
   task_description_template: string;
   is_show_dismiss_button_on_task: boolean;
+  is_show_follow_up_button_on_task: boolean;
   is_show_log_button_on_task: boolean;
   is_published_automatically: boolean;
 }

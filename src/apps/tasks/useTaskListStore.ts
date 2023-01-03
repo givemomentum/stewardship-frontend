@@ -46,6 +46,10 @@ export function useTaskListStore() {
     await hooks.api.patch(`/recs/${rec.pk}/`, { state: rec.state });
   }
 
+  async function setRecFollowUp(rec: Recommendation, isFollowUpNeeded: boolean) {
+    await hooks.api.patch(`/recs/${rec.pk}/`, { is_follow_up_needed: isFollowUpNeeded });
+  }
+
   function getTaskModifiable(taskRaw: Task): Task {
     // make sure it's the monitored Proxy object, and not a Props arg
     return state.tasks.value.find(task => task.pk === taskRaw.pk)!;
@@ -58,5 +62,6 @@ export function useTaskListStore() {
     loadTaskRecs: loadTaskRecs,
     loadRecsAndGiftHistory: loadRecsAndGiftHistory,
     updateRecState: updateRecState,
+    setRecFollowUp: setRecFollowUp,
   };
 }
