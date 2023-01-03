@@ -25,23 +25,6 @@
     api: useApi(),
   };
 
-  const comp = {
-    sortedTasks: computed(() => {
-      const sorted = props.task.rec_set.recs?.slice()?.sort((a, b) => {
-        const a_dismissed = a.state === "dismissed";
-        const b_dismissed = b.state === "dismissed";
-        if (a_dismissed && !b_dismissed) {
-          return 1;
-        }
-        if (!a_dismissed && b_dismissed) {
-          return -1;
-        }
-        return a.pk - b.pk;
-      });
-      return sorted;
-    }),
-  };
-
   onMounted(async () => {
     if (props.task.rec_set?.email_batch) {
       const res = await hooks.api.get(`/emails/batches/${props.task.rec_set.email_batch}/`);
@@ -146,7 +129,7 @@
 
       <chakra.tbody>
         <template
-          v-for="rec in comp.sortedTasks.value"
+          v-for="rec in props.task.rec_set.recs"
           :key="rec.pk"
         >
 
@@ -154,7 +137,8 @@
             @click="toggleRecOpen(rec)"
             :_hover="{ cursor: 'pointer', bg: isCurrentRec(rec) ? 'white' : 'gray.50' }"
             :bg="isCurrentRec(rec) ? 'white' : 'inherit'"
-            :opacity="rec.state === 'dismissed' ? '0.5' : '1'"
+            :color="rec.state === 'dismissed' ? 'gray.400' : ''"
+            :text-decoration="rec.state === 'dismissed' ? 'line-through' : ''"
           >
 
             <chakra.td text-align="end !important">
@@ -176,14 +160,20 @@
               v-if="props.task.rec_set.rule.is_show_dismiss_button_on_task"
               padding-left="0"
             >
-              <CButton
-                @click.stop="toggleRecDismissed(rec)"
-                variant="ghost"
-                size="xs"
-                pl="0"
-              >
-                {{ rec.state == 'dismissed' ? 'Restore' : 'Dismiss' }}
-              </CButton>
+              <VTooltip>
+                <div>
+                  <CIconButton
+                    @click.stop="toggleRecDismissed(rec)"
+                    variant="ghost"
+                    :icon="rec.state === 'dismissed' ? 'plus' : 'x'"
+                    size="sm"
+                    pl="0"
+                  />
+                </div>
+                <template v-slot:popper>
+                  <CText font-size="xs">{{ rec.state === 'dismissed' ? 'Restore' : 'Dismiss' }}</CText>
+                </template>
+              </VTooltip>
             </chakra.td>
           </chakra.tr>
 

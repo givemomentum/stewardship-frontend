@@ -114,6 +114,7 @@
           h="0"
           is-external
           @click.stop=""
+          :opacity="slotProps.rec.state === 'dismissed' ? 0.5 : 1"
         >
           <CButton right-icon="external-link" variant="link">
             <!-- Workaround for Donor Perfect link issue: Show Donor Id, so she can copy it.-->
@@ -123,7 +124,11 @@
           </CButton>
         </CLink>
       </chakra.td>
-      <chakra.td v-if="props.task.rec_set.rule.is_show_log_button_on_task">
+
+      <chakra.td
+        v-if="props.task.rec_set.rule.is_show_log_button_on_task"
+        :opacity="slotProps.rec.state === 'dismissed' ? 0.5 : 1"
+      >
         <CButton
           v-if="slotProps.rec.action_state === 'none'"
           @click.stop="openLoggingModal(slotProps.rec)"
