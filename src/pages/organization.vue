@@ -42,7 +42,10 @@
             The Blackbaud connection for {{ state.adminOrg.value.blackbaud_connection.linked_entity_name }} was
             successfully linked by {{
               state.adminOrg.value.blackbaud_connection.linked_user_email
-            }}.
+            }}
+            (<!-- -->
+            <CLink textDecoration="underline" :href="comp.blackbaudLink.value">click here</CLink>
+            to relink).
           </CText>
           <CText
             v-else-if="state.adminOrg.value.blackbaud_connection && !state.adminOrg.value.blackbaud_connection.connection_successful">
