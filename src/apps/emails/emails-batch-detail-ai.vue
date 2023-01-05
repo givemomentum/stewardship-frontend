@@ -33,7 +33,7 @@
     promptExamples: [
       `Make it friendlier`,
       `Ask to share with their network`,
-      `Ask about meeting for a cup of coffee or online chat`,
+      `Ask about meeting for a cup of coffee`,
     ]
   };
   
