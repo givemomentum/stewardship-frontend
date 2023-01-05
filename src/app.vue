@@ -93,6 +93,16 @@
     <CFlex px="10" pt="6" pr="6">
       <NuxtPage v-if="hooks.userStore.isLoggedIn" />
     </CFlex>
+    
+    <!--  for preloading & caching external mce js files, otherwise it takes a while  -->
+    <CBox
+      v-if="hooks.userStore.user?.membership?.org?.is_enable_app_emails"
+      visibility="hidden"
+      style="display: none"
+    >
+      <TinyMce padding="1rem" />
+    </CBox>
+
   </CFlex>
 
 </template>
