@@ -44,15 +44,6 @@
 
     const res = await hooks.api.get(`/emails/batches/${props.batchPk}/`);
     state.batch.value = res.data;
-
-    if (state.emails.value.length > 0 && state.emailOpen.value === null) {
-      // state.batch.value contains donor info, let it render the data first
-      // so that `scrollHeight` is accurate. onUpdated doesn't quite work.
-      setTimeout(() => {
-        state.emailOpen.value = state.emails.value[0];
-        state.emailOpenIndex.value = 0;
-      }, 200);
-    }
     
     const outputsRes = await hooks.api.get(`/ai/prompt-outputs/`);
     for (const email of state.emails.value) {
