@@ -68,6 +68,7 @@ export interface Rule {
   task_title: string;
   task_description_template: string;
   is_show_dismiss_button_on_task: boolean;
+  is_enable_emails_ai_writer: boolean;
   is_show_follow_up_button_on_task: boolean;
   is_show_log_button_on_task: boolean;
   is_published_automatically: boolean;

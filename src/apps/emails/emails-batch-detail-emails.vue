@@ -2,7 +2,7 @@
   import { onBeforeMount, onUnmounted, ref, watch } from "vue";
   import { POSITION, useToast } from "vue-toastification";
   import { useUserStore } from "~/apps/auth/useUserStore";
-  import { EmailBatch, Email } from "~/apps/emails/interfaces";
+  import { EmailBatch, Email, PromptOutput } from "~/apps/emails/interfaces";
   import { useEmailBatchStore } from "~/apps/emails/useEmailBatchStore";
   import { useLeftMenu } from "~/apps/menu/useLeftMenu";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
@@ -30,6 +30,7 @@
 
     emailOpen: ref<Email | null>(null),
     emailOpenIndex: ref<number | null>(null),
+    isEmailAiOpen: ref(false),
   };
 
   onBeforeMount(async () => {
@@ -52,7 +53,23 @@
         state.emailOpenIndex.value = 0;
       }, 200);
     }
+    
+    const outputsRes = await hooks.api.get(`/ai/prompt-outputs/`);
+    for (const email of state.emails.value) {
+      email.prompt_outputs = outputsRes.data.filter(
+        (output: PromptOutput) => output.email === email.pk
+      );
+    }
   });
+
+  async function updateEmailPromptOutputs(promptOutput: PromptOutput) {
+    state.emailOpen.value.prompt_outputs.push(promptOutput);
+  }
+
+  async function updateEmailContentFromAI(promptOutputString: string) {
+    state.emailContentHtml.value = promptOutputString;
+    await saveEmailChanges();
+  }
 
   onUnmounted(() => {
     hooks.menu.unfold();
@@ -102,7 +119,10 @@
       },
     );
     state.isSavingChanges.value = false;
-    hooks.toast.success("Email saved", { position: POSITION.TOP_RIGHT });
+    hooks.toast.success(
+      "Email saved",
+      { position: POSITION.TOP_RIGHT, timeout: 1500, pauseOnFocusLoss: false, hideProgressBar: true }
+    );
     state.emailOpen.value.content_html = state.emailContentHtml.value;
     state.emailOpen.value.subject = state.emailSubject.value;
     state.emailOpen.value.cc_list = state.emailCcList.value;
@@ -439,6 +459,21 @@
               Save changes
             </CButton>
 
+            <CButton
+              v-if="state.emailOpen.value?.prompt_outputs?.length"
+              @click="state.isEmailAiOpen.value = true"
+              variant="outline"
+              size="sm"
+              z-index="toast"
+              left-icon="bi-magic"
+              border-radius="lg"
+              opacity="1"
+              transition="opacity 0.2s"
+              fill="blue.500"
+            >
+              AI Writer
+            </CButton>
+
             <VTooltip>
               <div>
                 <CButton
@@ -501,13 +536,33 @@
             </CFlex>
           </CHStack>
 
-          <TinyMce
-            v-model="state.emailContentHtml.value"
-            padding="1rem"
-            :is-show-menu-bar="false"
-            :is-read-only="isBatchSent()"
-            :is-show-toolbar="isBatchSent()"
-          />
+          <CBox pos="relative">
+            <TinyMce
+              v-model="state.emailContentHtml.value"
+              padding="1rem"
+              :is-show-menu-bar="false"
+              :is-read-only="isBatchSent()"
+              :is-show-toolbar="isBatchSent()"
+            />
+            
+            <CButton
+              @click="state.emailContentHtml.value = state.emailOpen.value.content_html_default; saveEmailChanges()"
+              v-tooltip="{
+                content: 'Reset to the default template',
+                placement: 'top',
+                trigger: 'hover'
+              }"
+              size="sm"
+              variant="outline"
+              pos="absolute"
+              bottom="5"
+              right="18px"
+              bg="white"
+              z-index="toast"
+            >
+              Revert
+            </CButton>
+          </CBox>
 
         </CFlex>
       </CFlex>
@@ -523,6 +578,14 @@
     <CBox visibility="hidden" style="display: none">
       <TinyMce padding="1rem" />
     </CBox>
+
+    <EmailsBatchDetailAi
+      v-if="state.isEmailAiOpen.value"
+      @drawer-closed="state.isEmailAiOpen.value = false"
+      @email-prompt-output-created="(promptOutput) => updateEmailPromptOutputs(promptOutput)"
+      @email-content-updated="(promptOutput) => updateEmailContentFromAI(promptOutput)"
+      :email="state.emailOpen.value"
+    />
 
   </CFlex>
 

@@ -41,6 +41,7 @@ import {
   MdMarkemailunreadOutlined,
   RiMailSendLine,
   MdCloseOutlined,
+  BiMagic,
   BiClock,
   BiClockFill,
 } from "oh-vue-icons/icons";
@@ -68,7 +69,6 @@ export default defineNuxtPlugin(nuxtApp => {
               fontWeight: "normal",
             },
             outline: {
-              borderColor: "blue.500",
               fontWeight: "normal",
             },
             link: {
@@ -148,6 +148,7 @@ export default defineNuxtPlugin(nuxtApp => {
         ...getOhVueIconProps(RiMailSendLine),
         ...getOhVueIconProps(MdCloseOutlined),
         ...getOhVueIconProps(BiClockFill),
+        ...getOhVueIconProps(BiMagic),
         ...getOhVueIconProps(BiClock),
         people: {
           path: `

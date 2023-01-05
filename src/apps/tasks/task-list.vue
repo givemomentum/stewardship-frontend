@@ -106,9 +106,9 @@
       </CFlex>
     </CFlex>
 
-    <DrawlerSimple v-model="hooks.taskListStore.taskOpened.value">
+    <ChakraDrawer v-model="hooks.taskListStore.taskOpened.value">
       <TaskDetails :task="hooks.taskListStore.taskOpened.value" :users="state.users.value" />
-    </DrawlerSimple>
+    </ChakraDrawer>
   </CFlex>
 
 </template>

@@ -171,9 +171,9 @@
       </ChakraTable>
     </CFlex>
 
-    <DrawlerSimple v-model="state.templateOpen.value" w="calc(850px + var(--spaces-6) * 2)">
+    <ChakraDrawer v-model="state.templateOpen.value" w="calc(850px + var(--spaces-6) * 2)">
       <EmailsBatchTemplateEdit :template="state.templateOpen.value" />
-    </DrawlerSimple>
+    </ChakraDrawer>
 
   </CFlex>
 </template>

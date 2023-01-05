@@ -20,3 +20,6 @@ VueJS 3, Nuxt 3, Chakra UI (vue-next), TypeScript, Vercel
 
 - max-w + v-tooltip for donor names that are too long
 - white-space=nowrap for all smaller table headers
+
+### todo
+- move chakra/ into shared/

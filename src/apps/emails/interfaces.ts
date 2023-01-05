@@ -44,6 +44,16 @@ export interface Email {
   is_bounced: boolean;
   click_count: number;
   open_count: number;
+
+  prompt_outputs?: PromptOutput[];
+}
+
+export interface PromptOutput {
+  pk: PrimaryKey;
+  email: PrimaryKey;
+  prompt: string;
+  output: string;
+  created_at: string;
 }
 
 export interface EmailTemplateVariable {
