@@ -56,7 +56,7 @@
       preferences.push("Do Not Contact");
     }
     if (donor.do_not_call) {
-      preferences.push("Do Not Callt");
+      preferences.push("Do Not Call");
     }
     if (donor.do_not_email) {
       preferences.push("Do Not Email");
@@ -75,8 +75,13 @@
     v-model="state.showLoggingModal.value"
     name="Log to CRM"
     classes="modal-container"
-    content-class="modal-content">
-    <button class="modal__close" @click="closeLoggingModal">
+    content-class="modal-content"
+  >
+    <button
+      @click="closeLoggingModal"
+      class="modal__close"
+      aria-label="close"
+    >
       <CIcon
         name="md-close-outlined"
         font-size="2xl"
@@ -85,8 +90,12 @@
     </button>
     <span class="modal__title">Log to CRM</span>
     <div class="modal__content">
-      <LogAction v-if="state.loggingModalRec.value" :rec="state.loggingModalRec.value" :on-success="onLoggingSuccess" />
     </div>
+    <LogAction
+      v-if="state.loggingModalRec.value"
+      :rec="state.loggingModalRec.value"
+      :on-success="onLoggingSuccess"
+    />
   </vue-final-modal>
 
   <CAlert v-if="state.alertMessage.value" status="success" mt="2">

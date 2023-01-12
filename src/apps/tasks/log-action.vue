@@ -6,7 +6,7 @@
 
   const props = defineProps<{
     rec: Recommendation;
-    onSuccess: CallableFunction;
+    onSuccess: (form, responseData) => Promise<void>;
   }>();
 
   const hooks = {
