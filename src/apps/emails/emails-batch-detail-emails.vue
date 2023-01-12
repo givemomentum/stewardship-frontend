@@ -78,7 +78,7 @@
 
   watch(state.emailOpen, async emailNew => {
     state.emailContentHtml.value = emailNew.content_html || (emailNew.content_html_default ?? "");
-    state.emailSubject.value = emailNew.subject || state.batch.value.template.subject;
+    state.emailSubject.value = emailNew.subject || state.batch.value?.template?.subject;
     state.emailCcList.value = emailNew.cc_list;
 
     if (!emailNew.is_viewed) {

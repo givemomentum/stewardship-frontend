@@ -77,7 +77,7 @@
             v-for="batch in hooks.batchStore.list.value"
             :key="batch.pk"
           >
-            <chakra.td>{{ batch.task.title }}</chakra.td>
+            <chakra.td>{{ batch.task?.title }}</chakra.td>
 
             <chakra.td>
               {{ batch.template.name }}
