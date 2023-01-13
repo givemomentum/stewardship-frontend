@@ -30,6 +30,7 @@
 
     emailOpen: ref<Email | null>(null),
     emailOpenIndex: ref<number | null>(null),
+    emailEditorKey: ref<any>(null),
     isEmailAiOpen: ref(false),
   };
 
@@ -77,9 +78,12 @@
   const tableRowRefs = ref([]);
 
   watch(state.emailOpen, async emailNew => {
+    state.emailEditorKey.value = emailNew.pk;
     state.emailContentHtml.value = emailNew.content_html || (emailNew.content_html_default ?? "");
     state.emailSubject.value = emailNew.subject || state.batch.value?.template?.subject;
     state.emailCcList.value = emailNew.cc_list;
+    
+    handleTinyEditorLoadingBug();
 
     if (!emailNew.is_viewed) {
       await toggleViewedStatus(emailNew);
@@ -87,6 +91,29 @@
 
     updateDonorInfoRowHeight();
   });
+  
+  async function handleTinyEditorLoadingBug() {
+    // wait for Vue to render the editor 
+    while (true) {
+      const tinyContainer = document.querySelector(".tiny-container");
+      if (tinyContainer) {
+        break;
+      }
+      await nextTick();
+    }
+
+    while (true) {
+      const tinyIframe = document.querySelector(".tiny-container iframe");
+      if (tinyIframe) {
+        break;
+      }
+      
+      // force rerender the editor until it renders itself
+      // otherwise fails. Most likely a bug on the tiny editor side
+      state.emailEditorKey.value += Math.random();
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+  }
 
   function updateDonorInfoRowHeight() {
     tableRowRefs.value.forEach(ref => ref.style.height = "0");
@@ -527,8 +554,9 @@
             </CFlex>
           </CHStack>
 
-          <CBox pos="relative">
+          <CBox pos="relative" class="tiny-container">
             <TinyMce
+              :key="state.emailEditorKey.value"
               v-model="state.emailContentHtml.value"
               padding="1rem"
               :is-show-menu-bar="false"
