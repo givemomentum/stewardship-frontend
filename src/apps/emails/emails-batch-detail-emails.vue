@@ -419,7 +419,7 @@
 
     <CFlex pos="relative" w="100%" h="100%">
       <CFlex
-        v-if="state.emailOpen.value && state.emailContentHtml.value"
+        v-if="state.emailOpen.value"
         direction="row"
         pos="fixed"
         top="-2px"

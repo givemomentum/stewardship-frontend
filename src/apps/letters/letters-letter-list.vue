@@ -312,7 +312,7 @@
 
     <CFlex pos="relative" w="100%" h="100%">
       <CFlex
-        v-if="state.letterOpen.value && state.letterHtml.value"
+        v-if="state.letterOpen.value"
         direction="row"
         pos="fixed"
         top="-2px"
