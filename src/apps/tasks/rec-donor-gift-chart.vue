@@ -26,7 +26,8 @@
   function loadChartData(rec: Recommendation) {
     if (rec?.donor?.gifts?.length) {
       state.giftSeries.value = rec.donor.gifts
-        .filter(gift => Number(gift.amount))
+        // TODO: It would be better to filter gifts on the backend, but this is technically much easier to do.
+        .filter(gift => Number(gift.amount) && ["one_time", "recurring_payment"].includes(gift.gift_type))
         .map(gift => (
           {
             x: parseISO(gift.date).getTime(),
