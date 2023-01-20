@@ -80,6 +80,8 @@ export class CrmDonor {
     country: string;
   };
   name: string;
+  first_name: string;
+  last_name: string;
   salutation: string;
   email: string;
   phone_number?: string;

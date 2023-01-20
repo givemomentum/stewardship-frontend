@@ -57,6 +57,12 @@
   });
 
   watch(state.batch, async batchNew => {
+    state.batch.value.letters = state.batch.value.letters.sort((a, b) => {
+      if (a.rec.donor.last_name < b.rec.donor.last_name) return -1;
+      if (a.rec.donor.last_name > b.rec.donor.last_name) return 1;
+      return 0;
+    });
+    
     const letterOpenUpdated = batchNew.letters.find(letter => letter.pk === state.letterOpen.value?.pk);
     if (letterOpenUpdated) {
       state.letterHtml.value = letterOpenUpdated.html || letterOpenUpdated.html_default;

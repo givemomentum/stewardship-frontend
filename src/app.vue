@@ -50,6 +50,17 @@
       && !hooks.userStore.user.email.endsWith("givemomentum.com")
     );
     if (isNeedToInitAnalytics) {
+      Sentry.setUser({
+        email: hooks.userStore.user.email,
+        id: hooks.userStore.user.pk.toString(),
+        name: `${hooks.userStore.user.first_name} ${hooks.userStore.user.last_name}`,
+        org: hooks.userStore.user.membership?.org?.name,
+        org_pk: hooks.userStore.user.membership?.org?.pk,
+        is_org_admin: hooks.userStore.user.membership?.is_org_admin,
+        is_enable_app_emails: hooks.userStore.user.membership?.org?.is_enable_app_emails,
+        is_enable_app_letters: hooks.userStore.user.membership?.org?.is_enable_app_letters,
+      });
+      
       LogRocket.init("alcw3f/stewardship");
 
       const hubspot = window._hsq;
@@ -71,17 +82,6 @@
       if (hotjar) {
         hotjar("identify", hooks.userStore.user.email);
       }
-
-      Sentry.setUser({
-        email: hooks.userStore.user.email,
-        id: hooks.userStore.user.pk.toString(),
-        name: `${hooks.userStore.user.first_name} ${hooks.userStore.user.last_name}`,
-        org: hooks.userStore.user.membership?.org?.name,
-        org_pk: hooks.userStore.user.membership?.org?.pk,
-        is_org_admin: hooks.userStore.user.membership?.is_org_admin,
-        is_enable_app_emails: hooks.userStore.user.membership?.org?.is_enable_app_emails,
-        is_enable_app_letters: hooks.userStore.user.membership?.org?.is_enable_app_letters,
-      });
     }
   });
 </script>
