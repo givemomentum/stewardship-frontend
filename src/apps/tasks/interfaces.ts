@@ -31,6 +31,8 @@ export interface Recommendation {
   action_description: string;
   action_type: "none" | "call" | "letter" | "email" | "other";
   action_state: "none" | "logged_by_user" | "stored_to_crm";
+  score: number;
+  score_info: any;
 }
 
 export interface RecommendationSet {
@@ -72,6 +74,7 @@ export interface Rule {
   is_show_follow_up_button_on_task: boolean;
   is_show_log_button_on_task: boolean;
   is_published_automatically: boolean;
+  order_recs_by: "score_descending" | "id_ascending";
 }
 
 export interface DropdownOption<Value = any> {

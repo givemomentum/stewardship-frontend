@@ -1,6 +1,6 @@
 import { ref } from "vue";
 import { useApi } from "~/composables/useApi";
-import { Recommendation, Task } from "~/apps/tasks/interfaces";
+import { Recommendation, RecommendationSet, Task } from "~/apps/tasks/interfaces";
 
 const state = {
   tasks: ref<Task[]>([]),
@@ -13,12 +13,38 @@ export function useTaskListStore() {
     route: useRoute(),
   };
 
+  function sortRecs(rec_set: RecommendationSet) {
+    if (!rec_set.recs) {
+      return;
+    }
+
+    switch (rec_set.rule?.order_recs_by) {
+      case "id_ascending":
+        rec_set.recs.sort((a, b) => a.pk - b.pk);
+        break;
+      case "score_descending":
+        rec_set.recs.sort((a, b) => b.score - a.score);
+        break;
+    }
+  }
+
+  function sortRecsForAllTasks(tasks: Task[]) {
+    for (let task of tasks) {
+      if (task.rec_set) {
+        sortRecs(task.rec_set);
+      }
+    }
+  }
+
   async function loadTasks() {
     let path = "/tasks/";
     if (!hooks.route.query.include_unpublished) {
       path += "?is_published=true";
     }
     const res = await hooks.api.get(path);
+    if (res.data) {
+      sortRecsForAllTasks(res.data);
+    }
     state.tasks.value = res.data ?? [];
   }
 
@@ -28,6 +54,9 @@ export function useTaskListStore() {
       path += "&is_published=true";
     }
     const res = await hooks.api.get(path);
+    if (res.data) {
+      sortRecsForAllTasks(res.data);
+    }
     state.tasks.value = res.data ?? [];
     state.taskOpened.value = state.tasks.value.find(task => task.pk === state.taskOpened.value?.pk) ?? null;
   }
@@ -37,6 +66,7 @@ export function useTaskListStore() {
     if (taskModifiable.rec_set) {
       const res = await hooks.api.get(`/rec-sets/${taskModifiable.rec_set.pk}/?expand=recs.donor.gifts`);
       if (res.data) {
+        sortRecs(res.data)
         taskModifiable.rec_set = res.data;
       }
     }
