@@ -30,9 +30,8 @@
       { status: optionNew.value },
     );
     if (hooks.taskListStore.taskOpened.value) {
-      hooks.taskListStore.taskOpened.value = res.data;
+      hooks.taskListStore.taskOpened.value.status = res.data.status;
     }
-    await hooks.taskListStore.loadTasks();
   }
 
   function getStatusDropdownOption(status: TaskStatusStr): DropdownOption<TaskStatusStr> {

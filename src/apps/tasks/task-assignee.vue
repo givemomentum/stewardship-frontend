@@ -26,9 +26,8 @@
       { assignee_pk: optionNew.value, assignee: { pk: optionNew.value } },
     );
     if (hooks.taskListStore.taskOpened.value) {
-      hooks.taskListStore.taskOpened.value = res.data;
+      hooks.taskListStore.taskOpened.value.assignee = res.data.assignee;
     }
-    await hooks.taskListStore.loadTasks();
   }
 
   function getAssigneeDropdownOption(assignee: User | undefined): DropdownOption<PrimaryKey> | null {
