@@ -43,23 +43,23 @@
       window.location.href = `${hooks.config.public.accountsBase}/login`;
       return;
     }
+    
+    Sentry.setUser({
+      email: hooks.userStore.user.email,
+      id: hooks.userStore.user.pk.toString(),
+      name: `${hooks.userStore.user.first_name} ${hooks.userStore.user.last_name}`,
+      org: hooks.userStore.user.membership?.org?.name,
+      org_pk: hooks.userStore.user.membership?.org?.pk,
+      is_org_admin: hooks.userStore.user.membership?.is_org_admin,
+      is_enable_app_emails: hooks.userStore.user.membership?.org?.is_enable_app_emails,
+      is_enable_app_letters: hooks.userStore.user.membership?.org?.is_enable_app_letters,
+    });
 
     const isNeedToInitAnalytics = (
-      hooks.userStore.isLoggedIn
-      && hooks.config.public.env === "prod"
+      hooks.config.public.env === "prod"
       && !hooks.userStore.user.email.endsWith("givemomentum.com")
     );
     if (isNeedToInitAnalytics) {
-      Sentry.setUser({
-        email: hooks.userStore.user.email,
-        id: hooks.userStore.user.pk.toString(),
-        name: `${hooks.userStore.user.first_name} ${hooks.userStore.user.last_name}`,
-        org: hooks.userStore.user.membership?.org?.name,
-        org_pk: hooks.userStore.user.membership?.org?.pk,
-        is_org_admin: hooks.userStore.user.membership?.is_org_admin,
-        is_enable_app_emails: hooks.userStore.user.membership?.org?.is_enable_app_emails,
-        is_enable_app_letters: hooks.userStore.user.membership?.org?.is_enable_app_letters,
-      });
       
       LogRocket.init("alcw3f/stewardship");
 
