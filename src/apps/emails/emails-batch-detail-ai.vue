@@ -160,10 +160,10 @@
 <style lang="scss" scoped>
   :deep(blockquote) {
     background: white;
-    padding: var(--space-5);
-    border-radius: var(--radii-md);
+    padding: var(--chakra-space-5);
+    border-radius: var(--chakra-radii-md);
     border: 1px solid;
-    border-color: var(--colors-gray-100);
+    border-color: var(--chakra-colors-gray-100);
   }
   
     

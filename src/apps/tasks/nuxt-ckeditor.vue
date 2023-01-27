@@ -47,19 +47,19 @@
 
 <style lang="scss">
   :root {
-    --ck-resizer-border-radius: var(--radii-md);
-    --ck-color-base-border: var(--colors-gray-200);
-    --ck-color-base-foreground: var(--colors-gray-50);
+    --ck-resizer-border-radius: var(--chakra-radii-md);
+    --ck-color-base-border: var(--chakra-colors-gray-200);
+    --ck-color-base-foreground: var(--chakra-colors-gray-50);
   }
 
   .ck.ck-toolbar.ck-toolbar_grouping {
-    border-radius: var(--radii-md) !important;
+    border-radius: var(--chakra-radii-md) !important;
     border-bottom-right-radius: 0 !important;
     border-bottom-left-radius: 0 !important;
   }
   .ck.ck-content.ck-editor__editable {
-    border-radius: var(--radii-md) !important;
-    border: 1px solid var(--colors-gray-200);
+    border-radius: var(--chakra-radii-md) !important;
+    border: 1px solid var(--chakra-colors-gray-200);
     background: white;
   }
 
@@ -121,7 +121,7 @@
     }
 
     a {
-      color: var(--colors-blue-500);
+      color: var(--chakra-colors-blue-500);
       cursor: pointer;
     }
   }

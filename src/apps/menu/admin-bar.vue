@@ -85,8 +85,8 @@
 
 <style lang="scss">
   .menu-admin {
-    background: var(--colors-blue-800);
-    color: var(--colors-blue-100);
+    background: var(--chakra-colors-blue-800);
+    color: var(--chakra-colors-blue-100);
     position: fixed;
     width: 100%;
     bottom: 0;

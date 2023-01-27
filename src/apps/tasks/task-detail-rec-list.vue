@@ -202,7 +202,7 @@
                     :icon="rec.state === 'dismissed' ? 'plus' : 'x'"
                     size="sm"
                     pl="0"
-                    area-label="Dismiss"
+                    aria-label="Dismiss"
                   />
                 </div>
                 <template v-slot:popper>

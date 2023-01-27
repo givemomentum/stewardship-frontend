@@ -302,16 +302,16 @@
 
     .table-row {
       &:hover {
-        background: var(--colors-gray-100);
+        background: var(--chakra-colors-gray-100);
         cursor: pointer;
       }
 
       &[data-is-selected=true] {
-        background: var(--colors-gray-200);
+        background: var(--chakra-colors-gray-200);
       }
 
       &[data-is-viewed=false] {
-        color: var(--colors-blue-600);
+        color: var(--chakra-colors-blue-600);
       }
     }
   }

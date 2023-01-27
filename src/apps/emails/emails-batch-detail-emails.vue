@@ -621,7 +621,7 @@
 
 <style lang="scss">
   html, body {
-    background: var(--colors-gray-75) !important;
+    background: var(--chakra-colors-gray-75) !important;
     height: 100%;
   }
 
@@ -635,7 +635,7 @@
       transition: all 0.2s;
 
       &:hover {
-        background: var(--colors-gray-50);
+        background: var(--chakra-colors-gray-50);
         cursor: pointer;
       }
 
@@ -644,7 +644,7 @@
       }
 
       &[data-is-viewed='false'] {
-        color: var(--colors-blue-600);
+        color: var(--chakra-colors-blue-600);
       }
 
       td {
@@ -655,7 +655,7 @@
       .email-table-inner-donor-table {
         td {
           padding-left: 0 !important;
-          padding-bottom: var(--space-1) !important;
+          padding-bottom: var(--chakra-space-1) !important;
           border: 0;
 
           &:first-of-type {
@@ -666,7 +666,7 @@
         tr {
           &:last-of-type {
             td {
-              padding-bottom: var(--space-3) !important;
+              padding-bottom: var(--chakra-space-3) !important;
             }
           }
         }

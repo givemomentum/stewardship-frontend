@@ -15,20 +15,20 @@
 <style lang="scss">
   .table {
     th {
-      font-family: var(--fonts-heading);
-      font-weight: var(--fontWeights-bold);
+      font-family: var(--chakra-fonts-heading);
+      font-weight: var(--chakra-fontWeights-bold);
       text-transform: uppercase;
-      line-height: var(--lineHeights-4);
+      line-height: var(--chakra-lineHeights-4);
       font-size: 0.65rem;
-      color: var(--colors-gray-600);
-      border-color: var(--colors-gray-200);
+      color: var(--chakra-colors-gray-600);
+      border-color: var(--chakra-colors-gray-200);
       border-bottom-width: 1px;
       text-align: start;
     }
 
     td {
-      font-size: var(--fontSizes-sm);
-      border-color: var(--colors-gray-200);
+      font-size: var(--chakra-fontSizes-sm);
+      border-color: var(--chakra-colors-gray-200);
       border-bottom-width: 1px;
       text-align: start;
     }
@@ -43,9 +43,9 @@
   table[data-size=md] {
     @extend .table;
 
-    $px: var(--space-6);
-    $py-th: var(--space-4);
-    $py: var(--space-4);
+    $px: var(--chakra-space-6);
+    $py-th: var(--chakra-space-4);
+    $py: var(--chakra-space-4);
 
     th {
       padding-inline-start: $px;
@@ -65,9 +65,9 @@
   table[data-size=sm] {
     @extend .table;
 
-    $px: var(--space-4);
-    $py-th: var(--space-2);
-    $py: var(--space-3);
+    $px: var(--chakra-space-4);
+    $py-th: var(--chakra-space-2);
+    $py: var(--chakra-space-3);
 
     th {
       padding-inline-start: $px;

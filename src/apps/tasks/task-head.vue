@@ -44,7 +44,7 @@
 <style lang="scss">
   .task-desc {
     a {
-      color: var(--colors-blue-500);
+      color: var(--chakra-colors-blue-500);
     }
   }
 </style>

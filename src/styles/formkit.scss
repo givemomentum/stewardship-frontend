@@ -2,7 +2,7 @@
 
 .formkit-form {
   .formkit-actions {
-    margin-top: var(--space-6);
+    margin-top: var(--chakra-space-6);
     
     .formkit-outer[data-type=submit] {
       margin-bottom: 0;
@@ -12,10 +12,10 @@
   .formkit-outer {
     max-width: 100%;
     width: 100%;
-    margin-bottom: var(--space-3) !important;
+    margin-bottom: var(--chakra-space-3) !important;
   
     &[data-type="textarea"], &[data-type="text"] {
-      margin-bottom: var(--space-6);
+      margin-bottom: var(--chakra-space-6);
     }
   
     .formkit-wrapper {
@@ -67,7 +67,7 @@
     .formkit-input[type="submit"] {
       filter: brightness(1.1);
       pointer-events: none;      
-      background: var(--colors-gray-400) !important;
+      background: var(--chakra-colors-gray-400) !important;
       color: white !important;
       cursor: not-allowed;
 
@@ -89,5 +89,5 @@
 }
 
 :root {
-  --fk-border-radius: var(--radii-md);
+  --fk-border-radius: var(--chakra-radii-md);
 }

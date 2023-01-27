@@ -120,6 +120,6 @@
     max-height: calc(100vh - $toolbar-height - $page-pt);
   }
   .tox {
-    z-index: var(--zIndices-popover) !important;
+    z-index: var(--chakra-zIndices-popover) !important;
   }
 </style>

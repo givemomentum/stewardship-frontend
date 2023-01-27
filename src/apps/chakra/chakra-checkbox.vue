@@ -75,7 +75,7 @@
 
   &:hover {
     .chakra-checkbox__control {
-      border-color: var(--colors-blue-100);
+      border-color: var(--chakra-colors-blue-100);
     }
   }
 
@@ -87,7 +87,7 @@
         border-color: inherit;
 
         &.chakra-checkbox__control__checked {
-          border-color: var(--colors-blue-500);
+          border-color: var(--chakra-colors-blue-500);
         }
       }
     }
@@ -109,13 +109,13 @@
   }
 
   .chakra-checkbox__control {
-    width: var(--sizes-4);
-    transition: box-shadow var(--transition-duration-normal);
+    width: var(--chakra-sizes-4);
+    transition: box-shadow var(--chakra-transition-duration-normal);
     border: 2px solid;
     border-color: inherit;
-    border-radius: var(--radii-sm);
-    color: var(--colors-white);
-    height: var(--sizes-4);
+    border-radius: var(--chakra-radii-sm);
+    color: var(--chakra-colors-white);
+    height: var(--chakra-sizes-4);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -125,8 +125,8 @@
     background: white;
 
     &.chakra-checkbox__control__checked {
-      background: var(--colors-blue-500) !important;
-      border-color: var(--colors-blue-500);
+      background: var(--chakra-colors-blue-500) !important;
+      border-color: var(--chakra-colors-blue-500);
       color: white;
     }
   }

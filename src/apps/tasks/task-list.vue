@@ -115,7 +115,7 @@
 
 <style lang="scss">
   html, body {
-    background: var(--colors-gray-75) !important;
+    background: var(--chakra-colors-gray-75) !important;
     height: 100%;
   }
 
