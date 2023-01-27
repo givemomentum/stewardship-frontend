@@ -578,7 +578,6 @@
               v-tooltip="{
                 content: 'Reset to the default template',
                 placement: 'top',
-                trigger: 'hover'
               }"
               size="sm"
               variant="outline"
