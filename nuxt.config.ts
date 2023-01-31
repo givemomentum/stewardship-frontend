@@ -1,6 +1,7 @@
 export default defineNuxtConfig({
   modules: [
     "@nuxt/ui",
+    "@nuxtjs/emotion", // supposed to be added by @chakra-ui/nuxt-next, but it's broken so I add it manually
     "@formkit/nuxt",
     "@pinia/nuxt",
   ],

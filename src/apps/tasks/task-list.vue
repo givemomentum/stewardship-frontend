@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import { CFlex, CText, CIcon, CHeading } from "@chakra-ui/vue-next";
   import { useRuntimeConfig } from "#app";
   import { onMounted, ref } from "vue";
   import { useApi } from "~/composables/useApi";
@@ -119,16 +118,16 @@
     height: 100%;
   }
 
-  // chakra drawer is broken, revisit one they fix it
-  .chakra-modal__content-container {
-    width: 0;
-    height: 0;
-
-    section {
-      z-index: 1400;
-    }
-  }
-
-  .chakra-modal__overlay {
-  }
+  //// chakra drawer is broken, revisit one they fix it
+  //.chakra-modal__content-container {
+  //  width: 0;
+  //  height: 0;
+  //
+  //  section {
+  //    z-index: 1400;
+  //  }
+  //}
+  //
+  //.chakra-modal__overlay {
+  //}
 </style>

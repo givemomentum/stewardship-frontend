@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import { CFlex, CLink, CHeading, CButton } from "@chakra-ui/vue-next";
   import { FiscScan } from "~/apps/fisc/interfaces";
   import { urls } from "~/urls";
 

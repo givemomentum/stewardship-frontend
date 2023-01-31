@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import { chakra } from "@chakra-ui/vue-next";
 
   const props = defineProps<{
     size?: "sm" | "md" | "lg";
@@ -7,9 +6,9 @@
 </script>
 
 <template>
-  <chakra.table :data-size="props.size ?? 'md'" class="table">
+  <table :data-size="props.size ?? 'md'" class="table">
     <slot />
-  </chakra.table>
+  </table>
 </template>
 
 <style lang="scss">

@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-  import { CFlex } from "@chakra-ui/vue-next";
   import { onMounted, ref, computed } from "vue";
   import { Recommendation, Task } from "~/apps/tasks/interfaces";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import { CFlex } from "@chakra-ui/vue-next";
   import { useForm } from "~/composables/useForm";
 
   const hooks = {

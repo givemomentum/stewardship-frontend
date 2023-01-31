@@ -2,7 +2,6 @@
   import { useApi } from "~/composables/useApi";
   import { useUserListStore } from "~/apps/auth/useUserListStore";
   import { PrimaryKey, User } from "~/apps/auth/interfaces";
-  import { CFlex } from "@chakra-ui/vue-next";
   import { DropdownOption, Task } from "~/apps/tasks/interfaces";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import OptionSelect from "~/apps/shared/option-select.vue";

@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-  import { CFlex, CBox } from "@chakra-ui/vue-next";
   import { Task } from "~/apps/tasks/interfaces";
 
   const props = defineProps<{ task: Task; }>();

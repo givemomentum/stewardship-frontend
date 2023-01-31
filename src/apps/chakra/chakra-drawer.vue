@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-  import { CBox } from "@chakra-ui/vue-next";
   import { computed, onMounted, onUnmounted } from "vue";
 
   const props = defineProps<{

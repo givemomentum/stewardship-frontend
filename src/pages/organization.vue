@@ -1,7 +1,6 @@
 <!-- Warning: This page's URL is referenced from the backend oauth return flow,
      so don't move it without updating. -->
 <script setup lang="ts">
-  import { CBox, CLink, CText, CFlex, CHeading } from "@chakra-ui/vue-next";
   import { useUserStore } from "~/apps/auth/useUserStore";
   import { AdminOrg } from "~/apps/auth/interfaces";
   import { onMounted, ref, computed } from "vue";

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { CBox } from "@chakra-ui/vue-next";
   import { vueThemingProps } from "@chakra-ui/vue-utils";
 
   export default {

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import { CFlex, CHeading, CButton, chakra } from "@chakra-ui/vue-next";
   import { useRoute } from "#app";
   import { useApi } from "#imports";
   import { captureException } from "@sentry/hub";

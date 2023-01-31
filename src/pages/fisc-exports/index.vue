@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import { CFlex, CHeading, CButton, chakra, CLink } from "@chakra-ui/vue-next";
   import { onMounted, ref } from "vue";
   import { useApi } from "~/composables/useApi";
   import { FiscExport } from "~/apps/fisc/interfaces";

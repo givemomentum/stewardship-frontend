@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-  import { CFlex, CText } from "@chakra-ui/vue-next";
   import { Task } from "~/apps/tasks/interfaces";
 
   const props = defineProps<{ task: Task; isPreview?: boolean; size?: string; fontWeight?: string; }>();

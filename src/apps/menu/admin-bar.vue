@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-  import { CLink } from "@chakra-ui/vue-next";
   import { onMounted, ref, computed } from "vue";
   import { useRuntimeConfig } from "#app";
   import { useApi } from "~/composables/useApi";

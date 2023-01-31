@@ -1,8 +1,8 @@
 import ChakraUIVuePlugin, {
   chakra,
   extendTheme,
+  ChakraComponents,
 } from "@chakra-ui/vue-next";
-import * as ChakraModule from "@chakra-ui/vue-next";
 import { domElements } from "@chakra-ui/vue-system";
 import { defineNuxtPlugin } from "#app";
 import {
@@ -211,11 +211,11 @@ export default defineNuxtPlugin(nuxtApp => {
   });
 
   // ChakraUIVuePlugin is supposed to do that, but it's either broken or not implemented
-  for (const moduleName in ChakraModule) {
+  for (const moduleName in ChakraComponents) {
     const isComponent = moduleName.startsWith("C");
     if (isComponent) {
       // @ts-ignore
-      nuxtApp.vueApp.component(moduleName, ChakraModule[moduleName]);
+      nuxtApp.vueApp.component(moduleName, ChakraComponents[moduleName]);
     }
   }
 });

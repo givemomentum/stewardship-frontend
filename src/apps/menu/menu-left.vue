@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import { useRuntimeConfig } from "#app";
-  import { CBox, CFlex, chakra } from "@chakra-ui/vue-next";
   import { useLeftMenu } from "~/apps/menu/useLeftMenu";
   import { useLetterBatchStore } from "~/apps/letters/useLetterBatchStore";
   import { urls } from "~/urls";

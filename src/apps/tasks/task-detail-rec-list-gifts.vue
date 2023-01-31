@@ -1,6 +1,5 @@
 <script lang="ts" setup>
   import { useRuntimeConfig } from "#app";
-  import { useClipboard } from "@chakra-ui/vue-next";
   import { ref } from "vue";
   import { Recommendation, Task } from "~/apps/tasks/interfaces";
   import { format } from "~/utils";
@@ -22,6 +21,7 @@
     isRecGifts: props.task.rec_set?.type === "gifts",
   };
 
+  // todo doesn't appear to be used anywhere, even on YSGN for whom it was built
   function copyDonorInfo(rec: Recommendation) {
     state.donorCopyData.value = rec.donor.letter_label;
     hooks.clipboard.copy();

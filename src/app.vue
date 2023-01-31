@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import { useHead, useRuntimeConfig } from "#app";
-  import { CFlex } from "@chakra-ui/vue-next";
   import { onMounted } from "vue";
   import { useUserStore } from "~/apps/auth/useUserStore";
   import LogRocket from "logrocket";

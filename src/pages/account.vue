@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import { CButton, CFlex, CHeading } from "@chakra-ui/vue-next";
   import { useUserStore } from "~/apps/auth/useUserStore";
 
   const hooks = {

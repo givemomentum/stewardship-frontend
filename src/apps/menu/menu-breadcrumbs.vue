@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-  import { CBreadcrumb, CIcon, CBreadcrumbItem } from "@chakra-ui/vue-next";
 
   const props = defineProps<{
     items: BreadcrumbItem[];

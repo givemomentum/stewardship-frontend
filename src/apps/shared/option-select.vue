@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-  import { CFlex, CBox, CSpinner } from "@chakra-ui/vue-next";
   import { captureException } from "@sentry/hub";
   import { ref, watch } from "vue";
   import { DropdownOption } from "~/apps/tasks/interfaces";

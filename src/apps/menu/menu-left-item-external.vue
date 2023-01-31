@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import { CIcon, CLink, CFlex, chakra } from "@chakra-ui/vue-next";
   import { useLeftMenu } from "~/apps/menu/useLeftMenu";
 
   const props = defineProps<{

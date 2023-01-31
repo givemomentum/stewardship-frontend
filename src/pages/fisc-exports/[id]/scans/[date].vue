@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import { useRoute } from "#app";
-  import { CFlex, chakra, CIcon, CBox } from "@chakra-ui/vue-next";
   import { onBeforeMount, onMounted, onUnmounted, ref, watch, Ref } from "vue";
   import MenuBreadcrumbs from "~/apps/menu/menu-breadcrumbs.vue";
   import { useApi } from "~/composables/useApi";

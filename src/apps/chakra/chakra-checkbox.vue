@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-  import { CFlex } from "@chakra-ui/vue-next";
   import { computed, ref } from "vue";
 
   const props = defineProps<{ modelValue?: boolean; isDisabled?: boolean; }>();

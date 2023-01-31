@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import { CFlex, CHeading, CAlert, CAlertIcon, CAlertDescription, CBox } from "@chakra-ui/vue-next";
   import { ref, watch } from "vue";
   import { useApi } from "~/composables/useApi";
   import { useForm } from "~/composables/useForm";
