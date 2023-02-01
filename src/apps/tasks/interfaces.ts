@@ -99,12 +99,6 @@ export interface Comment {
 }
 
 export type TaskStatusStr =
-  "pending" |
   "recommended" |
-  "recommendation_declined" |
-  "review" |
-  "scheduled" |
-  "in_progress" |
   "completed" |
-  "failed" |
-  "archived";
+  "declined";

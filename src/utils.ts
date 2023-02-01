@@ -17,7 +17,7 @@ export namespace format {
 
   export function dateHumanShort(date?: string): string {
     if (date) {
-      return datefns.format(datefns.parseISO(date), "MMM d");
+      return datefns.format(datefns.parseISO(date), "MMM do",);
     }
     return "";
   }

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import { Task } from "~/apps/tasks/interfaces";
+  import { format } from "~/utils";
 
   const props = defineProps<{
     task: Task;
@@ -12,15 +13,20 @@
 <template>
   <CFlex gap="3" direction="column">
     <CFlex align="center" justify="space-between" gap="4">
-      <CText
-        :font-size="props.size ?? 'lg'"
-        :font-weight="props.fontWeight ?? 'normal'"
-      >
-        {{ task.title }}
-      </CText>
-      <CText v-if="!task.is_published" font-size="sm" font-weight="light" color="gray.500">
-        (not published)
-      </CText>
+      <CFlex gap="3" flex-wrap="nowrap">
+        <CText
+          :font-size="props.size ?? 'lg'"
+          :font-weight="props.fontWeight ?? 'normal'"
+        >
+          {{ task.title }}
+        </CText>
+        <CTag>
+          {{ format.dateHumanShort(task.created_at) }}
+        </CTag>
+        <CTag v-if="!task.is_published" colorScheme="red">
+          Unpub
+        </CTag>
+      </CFlex>
       <TaskAssignee :task="props.task" />
     </CFlex>
 

@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import { useRuntimeConfig } from "#app";
-  import { onMounted, ref } from "vue";
   import { useUserListStore } from "~/apps/auth/useUserListStore";
   import { Task } from "~/apps/tasks/interfaces";
   import { useApi } from "~/composables/useApi";
