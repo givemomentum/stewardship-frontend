@@ -51,12 +51,18 @@
 <template>
   <CFlex v-if="hooks.userStore.isLoggedIn" direction="column" gap="7">
 
-    <CFlex justify="space-between" w="100%" align="center">
+    <CFlex justify="space-between" w="100%" align="center" min-w="700px">
       <CHeading variant="page-header">
         Tasks
       </CHeading>
-      <NuxtLink :to="urls.tasks.listArchive">
-        <CButton left-icon="archive" size="sm" variant="outline">Archive</CButton>
+      <NuxtLink v-if="!props.isArchive" :to="urls.tasks.listArchive">
+        <CButton
+          left-icon="archive"
+          size="sm"
+          variant="outline"
+        >
+          Archive
+        </CButton>
       </NuxtLink>
     </CFlex>
 
