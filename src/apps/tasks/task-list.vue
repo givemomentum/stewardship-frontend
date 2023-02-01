@@ -1,15 +1,15 @@
 <script setup lang="ts">
   import { useRuntimeConfig } from "#app";
   import { onMounted, ref } from "vue";
-  import { useApi } from "~/composables/useApi";
-  import { User } from "~/apps/auth/interfaces";
+  import { useUserListStore } from "~/apps/auth/useUserListStore";
   import { Task } from "~/apps/tasks/interfaces";
+  import { useApi } from "~/composables/useApi";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import { useUserStore } from "~/apps/auth/useUserStore";
   import { formatDistance } from "date-fns";
 
   const props = defineProps<{
-    taskOpened?: Task;
+    taskOpenedSlug?: string;
   }>();
 
   const hooks = {
@@ -17,22 +17,27 @@
     api: useApi(),
     userStore: useUserStore(),
     taskListStore: useTaskListStore(),
-  };
-
-  const state = {
-    users: ref<User[]>([]),
+    userListStore: useUserListStore(),
   };
 
   onMounted(async () => {
-    loadUsers();
     await hooks.taskListStore.loadTasks();
+    if (props.taskOpenedSlug) {
+      hooks.taskListStore.taskOpened.value = hooks.taskListStore.tasks.value.find(
+        (task) => task.slug === props.taskOpenedSlug
+      );
+    }
     await hooks.taskListStore.loadTaskRecs();
   });
 
-  async function loadUsers() {
-    const res = await hooks.api.get("/users/");
-    state.users.value = res.data;
-  }
+  watch(hooks.taskListStore.taskOpened, (task?: Task) => {
+    // router.push always forces a full reload 
+    if (task) {
+      history.pushState({}, "", `/tasks/${task.slug}`);
+    } else {
+      history.pushState({}, "", `/tasks`);
+    }
+  });
 </script>
 
 <template>
@@ -57,7 +62,7 @@
         border="1px solid white"
         :_hover="{ cursor: 'pointer', borderColor: 'gray.200' }"
       >
-        <TaskHead :task="task" :is-preview="true" :users="state.users.value" />
+        <TaskHead :task="task" :is-preview="true" />
 
         <CFlex
           :justify="task.comments_count ? 'space-between' : 'flex-end'"
@@ -106,7 +111,7 @@
     </CFlex>
 
     <ChakraDrawer v-model="hooks.taskListStore.taskOpened.value">
-      <TaskDetails :task="hooks.taskListStore.taskOpened.value" :users="state.users.value" />
+      <TaskDetails :task="hooks.taskListStore.taskOpened.value" />
     </ChakraDrawer>
   </CFlex>
 
@@ -117,17 +122,4 @@
     background: var(--chakra-colors-gray-75) !important;
     height: 100%;
   }
-
-  //// chakra drawer is broken, revisit one they fix it
-  //.chakra-modal__content-container {
-  //  width: 0;
-  //  height: 0;
-  //
-  //  section {
-  //    z-index: 1400;
-  //  }
-  //}
-  //
-  //.chakra-modal__overlay {
-  //}
 </style>

@@ -1,25 +1,13 @@
 <script setup lang="ts">
-  import { useRoute } from "#app";
-  import { useApi } from "#imports";
-  import { onBeforeMount, ref } from "vue";
-  import { Task } from "~/apps/tasks/interfaces";
-
   const hooks = {
     route: useRoute(),
-    api: useApi(),
   };
 
   const state = {
-    task: ref<Task | null>(null),
+    taskSlugInitial: ref<string | string[]>(hooks.route.params.slug),
   };
-
-  onBeforeMount(async () => {
-    const res = await hooks.api.get(`/tasks/${hooks.route.params.slug}`);
-    state.task.value = res.data;
-  });
-
 </script>
 
 <template>
-  <TaskList :task-opened="state.task.value" />
+  <TaskList :task-opened-slug="state.taskSlugInitial.value" />
 </template>

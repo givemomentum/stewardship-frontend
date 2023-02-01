@@ -1,7 +1,12 @@
 <script lang="ts" setup>
   import { Task } from "~/apps/tasks/interfaces";
 
-  const props = defineProps<{ task: Task; isPreview?: boolean; size?: string; fontWeight?: string; }>();
+  const props = defineProps<{
+    task: Task;
+    isPreview?: boolean;
+    size?: string;
+    fontWeight?: string;
+  }>();
 </script>
 
 <template>
