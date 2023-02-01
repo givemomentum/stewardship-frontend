@@ -12,17 +12,19 @@ export function useTaskListStore() {
     api: useApi(),
   };
 
-  async function loadTasks(args?: { isArchive?: boolean; isPublishedOnly?: boolean }) {
+  async function loadTasks(args?: { isShowAllTasks?: boolean; isPublishedOnly?: boolean }) {
     let path = "/tasks/";
+    const params = [];
     if (args.isPublishedOnly) {
-      path += "?is_published=true";
+      params.push("is_published=true")
     }
-    if (args.isArchive) {
-      path += "&status_exclude=recommended";
+    if (!args.isShowAllTasks) {
+      params.push("status=recommended")
     }
-    if (!args.isArchive) {
-      path += "&status=recommended";
+    if (params.length > 0) {
+      path += "?" + params.join("&")
     }
+
     const res = await hooks.api.get(path);
     if (res.data) {
       sortRecsForAllTasks(res.data);
@@ -30,17 +32,19 @@ export function useTaskListStore() {
     state.tasks.value = res.data ?? [];
   }
 
-  async function loadTaskRecs(args?: { isArchive?: boolean; isPublishedOnly?: boolean }) {
-    let path = "/tasks/?expand=rec_set";
+  async function loadTaskRecs(args?: { isShowAllTasks?: boolean; isPublishedOnly?: boolean }) {
+    let path = "/tasks/";
+    const params = ["expand=rec_set"];
     if (args.isPublishedOnly) {
-      path += "&is_published=true";
+      params.push("is_published=true")
     }
-    if (args.isArchive) {
-      path += "&status_exclude=recommended";
+    if (!args.isShowAllTasks) {
+      params.push("status=recommended")
     }
-    if (!args.isArchive) {
-      path += "&status=recommended";
+    if (params.length > 0) {
+      path += "?" + params.join("&")
     }
+
     const res = await hooks.api.get(path);
     if (res.data) {
       sortRecsForAllTasks(res.data);

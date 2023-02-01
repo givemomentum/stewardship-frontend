@@ -7,6 +7,6 @@
 <template>
   <TaskList
     :is-published-only="!$route.query.include_unpublished"
-    is-archive
+    is-show-all-tasks
   />
 </template>

@@ -7,10 +7,11 @@
   import { useUserStore } from "~/apps/auth/useUserStore";
   import { formatDistance } from "date-fns";
   import { urls } from "~/urls";
+  import { computed } from "vue";
 
   const props = defineProps<{
     taskOpenedSlug?: string;
-    isArchive?: boolean;
+    isShowAllTasks?: boolean;
     isPublishedOnly?: boolean;
   }>();
 
@@ -21,15 +22,24 @@
     taskListStore: useTaskListStore(),
     userListStore: useUserListStore(),
   };
-  
+
   const state = {
     isRecSetLoaded: ref(false),
   };
 
+  const comp = {
+    currentTasksLink: computed(() => {
+      return `${urls.tasks.list}${props.isPublishedOnly ? '' : '?include_unpublished=true'}`;
+    }),
+    allTasksLink: computed(() => {
+      return `${urls.tasks.listAll}${props.isPublishedOnly ? '' : '?include_unpublished=true'}`;
+    }),
+  }
+
   onMounted(async () => {
     await hooks.taskListStore.loadTasks({
       isPublishedOnly: props.isPublishedOnly ?? true,
-      isArchive: props.isArchive,
+      isShowAllTasks: props.isShowAllTasks,
     });
     if (props.taskOpenedSlug) {
       hooks.taskListStore.taskOpened.value = hooks.taskListStore.tasks.value.find(
@@ -38,7 +48,7 @@
     }
     await hooks.taskListStore.loadTaskRecs({
       isPublishedOnly: props.isPublishedOnly ?? true,
-      isArchive: props.isArchive,
+      isShowAllTasks: props.isShowAllTasks,
     });
     state.isRecSetLoaded.value = true;
   });
@@ -51,6 +61,7 @@
       history.pushState({}, "", `/tasks`);
     }
   });
+
 </script>
 
 <template>
@@ -58,7 +69,7 @@
 
     <CFlex justify="space-between" w="100%" align="center" min-w="700px">
       <CHeading variant="page-header">
-        {{ props.isArchive ? 'Archive' : 'Tasks' }}
+        {{ props.isShowAllTasks ? 'All Tasks' : 'Tasks' }}
       </CHeading>
     </CFlex>
 
@@ -86,14 +97,14 @@
             :is-preview="true"
             :is-rec-set-loaded="state.isRecSetLoaded.value"
           />
-  
+
           <CFlex
             :justify="task.comments_count ? 'space-between' : 'flex-end'"
             align="center"
             font-size="xs"
             color="gray.500"
           >
-  
+
             <CFlex gap="5">
               <CFlex
                 v-if="task.comments_count"
@@ -104,7 +115,7 @@
                 <CIcon name="message-square" />
                 <CText>{{ task.comments_count }}</CText>
               </CFlex>
-  
+
               <CFlex
                 v-if="task.rec_set?.recs?.length"
                 align="center"
@@ -120,7 +131,7 @@
                 <CText>{{ task.rec_set.recs?.length }}</CText>
               </CFlex>
             </CFlex>
-  
+
             <CFlex ml="auto">
               {{
                 formatDistance(new Date(task.created_at), new Date(), {
@@ -128,28 +139,35 @@
                 })
               }}
             </CFlex>
-  
+
           </CFlex>
         </CFlex>
       </CLink>
 
       <CBox v-if="!hooks.taskListStore.tasks.value.length && state.isRecSetLoaded.value">
-        <CHeading v-if="!props.isArchive" font-size="xl" font-weight="normal"> 
+         <CHeading v-if="!props.isShowAllTasks" font-size="xl" font-weight="normal">
           You're all done 🎉 !
         </CHeading>
-        <CBox v-if="props.isArchive">
-          No archived tasks yet.
+        <CBox v-if="props.isShowAllTasks">
+          No tasks yet.
         </CBox>
       </CBox>
-      
+
       <CBox mt="2">
-        <NuxtLink v-if="!props.isArchive" :to="urls.tasks.listArchive">
+        <NuxtLink v-if="!props.isShowAllTasks" :to="comp.allTasksLink">
           <CButton
-            left-icon="archive"
             size="sm"
             variant="outline"
           >
-            Show all tasks
+            Show completed tasks
+          </CButton>
+        </NuxtLink>
+        <NuxtLink v-if="props.isShowAllTasks" :to="comp.currentTasksLink">
+          <CButton
+            size="sm"
+            variant="outline"
+          >
+            Hide completed tasks
           </CButton>
         </NuxtLink>
       </CBox>
