@@ -10,14 +10,22 @@
     api: useApi(),
     taskListStore: useTaskListStore(),
   };
-
+  
   const comp = {
-    options: [
+    optionsAvailable: [
       getStatusDropdownOption("recommended"),
       getStatusDropdownOption("completed"),
       getStatusDropdownOption("declined"),
-    ] as DropdownOption<TaskStatusStr>[],
+    ],
   };
+
+  const state = {
+    options: ref<DropdownOption<TaskStatusStr>[]>(comp.optionsAvailable),
+  };
+  
+  watch(() => props.task.status, (statusNew: TaskStatusStr) => {
+    state.options.value = comp.optionsAvailable.filter(option => option.value !== statusNew);
+  }, { immediate: true });
 
   async function onSelected(optionNew: DropdownOption) {
     const res = await hooks.api.patch(
@@ -36,7 +44,7 @@
     case "completed":
       return { id: status, value: status, label: status.replace("_", " "), color: "gray.800", bg: "gray.100" };
     case "declined":
-      return { id: status, value: status, label: status.replace("_", " "), color: "gray.800", bg: "gray.100" };
+      return { id: status, value: status, label: status.replace("_", " "), color: "blue.800", bg: "blue.100" };
     }
   }
 
@@ -46,7 +54,7 @@
 
   <OptionSelect
     :option-current="getStatusDropdownOption(props.task.status)"
-    :options="comp.options"
+    :options="state.options.value"
     :on-selected="onSelected"
   />
 
