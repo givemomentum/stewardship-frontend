@@ -9,5 +9,8 @@
 </script>
 
 <template>
-  <TaskList :task-opened-slug="state.taskSlugInitial.value" />
+  <TaskList
+    :task-opened-slug="state.taskSlugInitial.value"
+    :is-published-only="!hooks.route.query.include_unpublished"
+  />
 </template>

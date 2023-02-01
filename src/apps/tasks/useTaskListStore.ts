@@ -10,7 +10,6 @@ const state = {
 export function useTaskListStore() {
   const hooks = {
     api: useApi(),
-    route: useRoute(),
   };
 
   function sortRecs(rec_set: RecommendationSet) {
@@ -36,10 +35,16 @@ export function useTaskListStore() {
     }
   }
 
-  async function loadTasks() {
+  async function loadTasks(args?: { isArchive?: boolean; isPublishedOnly?: boolean }) {
     let path = "/tasks/";
-    if (!hooks.route.query.include_unpublished) {
+    if (args.isPublishedOnly) {
       path += "?is_published=true";
+    }
+    if (args.isArchive) {
+      path += "&status_exclude=recommended";
+    }
+    if (!args.isArchive) {
+      path += "&status=recommended";
     }
     const res = await hooks.api.get(path);
     if (res.data) {
@@ -48,10 +53,16 @@ export function useTaskListStore() {
     state.tasks.value = res.data ?? [];
   }
 
-  async function loadTaskRecs() {
+  async function loadTaskRecs(args?: { isArchive?: boolean; isPublishedOnly?: boolean }) {
     let path = "/tasks/?expand=rec_set";
-    if (!hooks.route.query.include_unpublished) {
+    if (args.isPublishedOnly) {
       path += "&is_published=true";
+    }
+    if (args.isArchive) {
+      path += "&status_exclude=recommended";
+    }
+    if (!args.isArchive) {
+      path += "&status=recommended";
     }
     const res = await hooks.api.get(path);
     if (res.data) {

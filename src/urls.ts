@@ -3,6 +3,7 @@ export namespace urls {
 
   export const tasks = {
     list: "/tasks",
+    listArchive: "/tasks/archive",
     detail: (slug: string) => `/tasks/${slug}`,
   };
 

@@ -6,9 +6,12 @@
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import { useUserStore } from "~/apps/auth/useUserStore";
   import { formatDistance } from "date-fns";
+  import { urls } from "~/urls";
 
   const props = defineProps<{
     taskOpenedSlug?: string;
+    isArchive?: boolean;
+    isPublishedOnly?: boolean;
   }>();
 
   const hooks = {
@@ -20,13 +23,19 @@
   };
 
   onMounted(async () => {
-    await hooks.taskListStore.loadTasks();
+    await hooks.taskListStore.loadTasks({
+      isPublishedOnly: props.isPublishedOnly ?? true,
+      isArchive: props.isArchive,
+    });
     if (props.taskOpenedSlug) {
       hooks.taskListStore.taskOpened.value = hooks.taskListStore.tasks.value.find(
         (task) => task.slug === props.taskOpenedSlug
       );
     }
-    await hooks.taskListStore.loadTaskRecs();
+    await hooks.taskListStore.loadTaskRecs({
+      isPublishedOnly: props.isPublishedOnly ?? true,
+      isArchive: props.isArchive,
+    });
   });
 
   watch(hooks.taskListStore.taskOpened, (task?: Task) => {
@@ -42,9 +51,14 @@
 <template>
   <CFlex v-if="hooks.userStore.isLoggedIn" direction="column" gap="7">
 
-    <CHeading variant="page-header">
-      Tasks
-    </CHeading>
+    <CFlex justify="space-between" w="100%" align="center">
+      <CHeading variant="page-header">
+        Tasks
+      </CHeading>
+      <NuxtLink :to="urls.tasks.listArchive">
+        <CButton left-icon="archive" size="sm" variant="outline">Archive</CButton>
+      </NuxtLink>
+    </CFlex>
 
     <CFlex gap="6" direction="column">
       <CFlex
