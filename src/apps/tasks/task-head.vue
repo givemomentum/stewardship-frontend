@@ -22,7 +22,7 @@
           {{ task.title }}
         </CText>
         <CTag v-if="props.isRecSetLoaded">
-          {{ format.dateHumanShort(props.task.rec_set?.recs_datetime_filter_end ?? props.task.created_at) }}
+          {{ format.dateHumanShort(props.task.rec_set?.recs_datetime_filter_end ?? props.task.rec_set?.recs_datetime_filter_start ?? props.task.created_at) }}
         </CTag>
         <CTag v-if="!task.is_published" colorScheme="red">
           Unpub

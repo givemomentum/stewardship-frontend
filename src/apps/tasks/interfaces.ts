@@ -43,6 +43,7 @@ export interface RecommendationSet {
   email_batch?: PrimaryKey;
   letter_batch?: PrimaryKey;
   recs_datetime_filter_end?: string;
+  recs_datetime_filter_start?: string;
 }
 
 export interface Rule {

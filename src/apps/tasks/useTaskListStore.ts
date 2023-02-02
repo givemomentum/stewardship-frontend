@@ -12,29 +12,6 @@ export function useTaskListStore() {
     api: useApi(),
   };
 
-  function sortRecs(rec_set: RecommendationSet) {
-    if (!rec_set.recs) {
-      return;
-    }
-
-    switch (rec_set.rule?.order_recs_by) {
-      case "id_ascending":
-        rec_set.recs.sort((a, b) => a.pk - b.pk);
-        break;
-      case "score_descending":
-        rec_set.recs.sort((a, b) => b.score - a.score);
-        break;
-    }
-  }
-
-  function sortRecsForAllTasks(tasks: Task[]) {
-    for (let task of tasks) {
-      if (task.rec_set) {
-        sortRecs(task.rec_set);
-      }
-    }
-  }
-
   async function loadTasks(args?: { isArchive?: boolean; isPublishedOnly?: boolean }) {
     let path = "/tasks/";
     if (args.isPublishedOnly) {
@@ -94,6 +71,29 @@ export function useTaskListStore() {
   function getTaskModifiable(taskRaw: Task): Task {
     // make sure it's the monitored Proxy object, and not a Props arg
     return state.tasks.value.find(task => task.pk === taskRaw.pk)!;
+  }
+
+  function sortRecsForAllTasks(tasks: Task[]) {
+    for (let task of tasks) {
+      if (task.rec_set) {
+        sortRecs(task.rec_set);
+      }
+    }
+  }
+
+  function sortRecs(rec_set: RecommendationSet) {
+    if (!rec_set.recs) {
+      return;
+    }
+
+    switch (rec_set.rule?.order_recs_by) {
+      case "id_ascending":
+        rec_set.recs.sort((a, b) => a.pk - b.pk);
+        break;
+      case "score_descending":
+        rec_set.recs.sort((a, b) => b.score - a.score);
+        break;
+    }
   }
 
   return {
