@@ -11,7 +11,7 @@
   }>();
 
   const state = {
-    optionCurrent: ref(props.optionCurrent),
+    optionCurrent: ref<DropdownOption | null>(props.optionCurrent),
     isDropdownOpen: ref(false),
     isSavingOption: ref(false),
   };
@@ -79,11 +79,11 @@
           transition-property="all"
           transition-duration="normal"
           text-transform="capitalize"
-          :bg="state.optionCurrent.value.bg ?? ''"
-          :color="state.optionCurrent.value.color ?? 'initial'"
+          :bg="state.optionCurrent.value?.bg ?? ''"
+          :color="state.optionCurrent.value?.color ?? 'initial'"
         >
           <chakra.span :opacity="state.isSavingOption.value ? 0.5 : 1">
-            {{ state.optionCurrent.value.label ?? state.optionCurrent.value.value }}
+            {{ state.optionCurrent.value?.label ?? state.optionCurrent.value?.value }}
           </chakra.span>
         </CBox>
       </slot>
