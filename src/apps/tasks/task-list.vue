@@ -21,6 +21,10 @@
     taskListStore: useTaskListStore(),
     userListStore: useUserListStore(),
   };
+  
+  const state = {
+    isRecSetLoaded: ref(false),
+  };
 
   onMounted(async () => {
     await hooks.taskListStore.loadTasks({
@@ -36,6 +40,7 @@
       isPublishedOnly: props.isPublishedOnly ?? true,
       isArchive: props.isArchive,
     });
+    state.isRecSetLoaded.value = true;
   });
 
   watch(hooks.taskListStore.taskOpened, (task?: Task) => {
@@ -58,66 +63,75 @@
     </CFlex>
 
     <CFlex gap="6" direction="column">
-      <CFlex
+      <CLink
         v-for="task in hooks.taskListStore.tasks.value"
         :key="task.pk"
-        @click="hooks.taskListStore.taskOpened.value = task"
-        direction="column"
-        gap="3"
-        p="4"
-        max-w="700px"
-        min-w="600px"
-        bg="white"
+        @click.prevent="hooks.taskListStore.taskOpened.value = task"
+        :href="urls.tasks.detail(task.slug)"
+        :_hover="{ cursor: 'pointer', borderColor: 'gray.200' }"
         border-radius="lg"
         border="1px solid white"
-        :_hover="{ cursor: 'pointer', borderColor: 'gray.200' }"
       >
-        <TaskHead :task="task" :is-preview="true" />
-
         <CFlex
-          :justify="task.comments_count ? 'space-between' : 'flex-end'"
-          align="center"
-          font-size="xs"
-          color="gray.500"
+          direction="column"
+          gap="3"
+          p="4"
+          max-w="700px"
+          min-w="600px"
+          bg="white"
+          border-radius="lg"
         >
-
-          <CFlex gap="5">
-            <CFlex
-              v-if="task.comments_count"
-              align="center"
-              color="gray.500"
-              gap="1"
-            >
-              <CIcon name="message-square" />
-              <CText>{{ task.comments_count }}</CText>
+          <TaskHead
+            :task="task"
+            :is-preview="true"
+            :is-rec-set-loaded="state.isRecSetLoaded.value"
+          />
+  
+          <CFlex
+            :justify="task.comments_count ? 'space-between' : 'flex-end'"
+            align="center"
+            font-size="xs"
+            color="gray.500"
+          >
+  
+            <CFlex gap="5">
+              <CFlex
+                v-if="task.comments_count"
+                align="center"
+                color="gray.500"
+                gap="1"
+              >
+                <CIcon name="message-square" />
+                <CText>{{ task.comments_count }}</CText>
+              </CFlex>
+  
+              <CFlex
+                v-if="task.rec_set?.recs?.length"
+                align="center"
+                color="gray.500"
+                gap="1"
+              >
+                <CIcon
+                  :name="task.rec_set.type === 'gifts' ? 'fa-donate' : 'bi-people-fill'"
+                  fill="gray.400"
+                  size="17px"
+                  mb="px"
+                />
+                <CText>{{ task.rec_set.recs?.length }}</CText>
+              </CFlex>
             </CFlex>
-
-            <CFlex
-              v-if="task.rec_set?.recs?.length"
-              align="center"
-              color="gray.500"
-              gap="1"
-            >
-              <CIcon
-                :name="task.rec_set.type === 'gifts' ? 'fa-donate' : 'bi-people-fill'"
-                fill="gray.400"
-                size="17px"
-                mb="px"
-              />
-              <CText>{{ task.rec_set.recs?.length }}</CText>
+  
+            <CFlex ml="auto">
+              {{
+                formatDistance(new Date(task.created_at), new Date(), {
+                  addSuffix: true,
+                })
+              }}
             </CFlex>
+  
           </CFlex>
-
-          <CFlex ml="auto">
-            {{
-              formatDistance(new Date(task.created_at), new Date(), {
-                addSuffix: true,
-              })
-            }}
-          </CFlex>
-
         </CFlex>
-      </CFlex>
+      </CLink>
       
       <CBox mt="2">
         <NuxtLink v-if="!props.isArchive" :to="urls.tasks.listArchive">

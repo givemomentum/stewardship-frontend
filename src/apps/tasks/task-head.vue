@@ -5,6 +5,7 @@
   const props = defineProps<{
     task: Task;
     isPreview?: boolean;
+    isRecSetLoaded?: boolean;
     size?: string;
     fontWeight?: string;
   }>();
@@ -20,8 +21,8 @@
         >
           {{ task.title }}
         </CText>
-        <CTag v-if="false">
-          {{ format.dateHumanShort(task.created_at) }}
+        <CTag v-if="props.isRecSetLoaded">
+          {{ format.dateHumanShort(props.task.rec_set?.recs_datetime_filter_end ?? props.task.created_at) }}
         </CTag>
         <CTag v-if="!task.is_published" colorScheme="red">
           Unpub
