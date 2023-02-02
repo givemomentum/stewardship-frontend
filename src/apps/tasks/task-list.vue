@@ -132,6 +132,15 @@
           </CFlex>
         </CFlex>
       </CLink>
+
+      <CBox v-if="!hooks.taskListStore.tasks.value.length && state.isRecSetLoaded.value">
+        <CHeading v-if="!props.isArchive" font-size="xl" font-weight="normal"> 
+          You're all done 🎉 !
+        </CHeading>
+        <CBox v-if="props.isArchive">
+          No archived tasks yet.
+        </CBox>
+      </CBox>
       
       <CBox mt="2">
         <NuxtLink v-if="!props.isArchive" :to="urls.tasks.listArchive">
