@@ -20,7 +20,7 @@
         >
           {{ task.title }}
         </CText>
-        <CTag>
+        <CTag v-if="false">
           {{ format.dateHumanShort(task.created_at) }}
         </CTag>
         <CTag v-if="!task.is_published" colorScheme="red">
