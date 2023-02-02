@@ -119,15 +119,17 @@
         </CFlex>
       </CFlex>
       
-      <NuxtLink v-if="!props.isArchive" :to="urls.tasks.listArchive">
-        <CButton
-          left-icon="archive"
-          size="sm"
-          variant="outline"
-        >
-          Show all tasks
-        </CButton>
-      </NuxtLink>
+      <CBox mt="2">
+        <NuxtLink v-if="!props.isArchive" :to="urls.tasks.listArchive">
+          <CButton
+            left-icon="archive"
+            size="sm"
+            variant="outline"
+          >
+            Show all tasks
+          </CButton>
+        </NuxtLink>
+      </CBox>
 
     </CFlex>
 
