@@ -60,7 +60,7 @@
       w="fit-content"
       font-size="sm"
       tabindex="0"
-      @click="(event) => onDropdownClick(event)"
+      @click.prevent="(event) => onDropdownClick(event)"
       @blur="state.isDropdownOpen.value = false"
     >
       <slot
