@@ -53,17 +53,8 @@
 
     <CFlex justify="space-between" w="100%" align="center" min-w="700px">
       <CHeading variant="page-header">
-        Tasks
+        {{ props.isArchive ? 'Archive' : 'Tasks' }}
       </CHeading>
-      <NuxtLink v-if="!props.isArchive" :to="urls.tasks.listArchive">
-        <CButton
-          left-icon="archive"
-          size="sm"
-          variant="outline"
-        >
-          Archive
-        </CButton>
-      </NuxtLink>
     </CFlex>
 
     <CFlex gap="6" direction="column">
@@ -127,6 +118,17 @@
 
         </CFlex>
       </CFlex>
+      
+      <NuxtLink v-if="!props.isArchive" :to="urls.tasks.listArchive">
+        <CButton
+          left-icon="archive"
+          size="sm"
+          variant="outline"
+        >
+          Show all tasks
+        </CButton>
+      </NuxtLink>
+
     </CFlex>
 
     <ChakraDrawer v-model="hooks.taskListStore.taskOpened.value">
