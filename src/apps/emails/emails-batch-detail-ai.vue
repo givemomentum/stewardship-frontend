@@ -22,6 +22,13 @@
   };
   
   const drawerScrollableEl = ref<HTMLElement | null>(null);
+  
+  onMounted(() => {
+    document.getElementById("hubspot-conversations-iframe").style.visibility = "hidden";
+  });
+  onUnmounted(() => {
+    document.getElementById("hubspot-conversations-iframe").style.visibility = "visible";
+  });
 
   const emit = defineEmits<{
     (event: 'drawerClosed');
