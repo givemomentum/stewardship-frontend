@@ -22,13 +22,6 @@
   };
   
   const drawerScrollableEl = ref<HTMLElement | null>(null);
-  
-  onMounted(() => {
-    document.getElementById("hubspot-conversations-iframe").style.visibility = "hidden";
-  });
-  onUnmounted(() => {
-    document.getElementById("hubspot-conversations-iframe").style.visibility = "visible";
-  });
 
   const emit = defineEmits<{
     (event: 'drawerClosed');
@@ -177,5 +170,9 @@
     
   :deep(p:not(:first-child)) {
     margin-top: 1em;
+  }
+  
+  #hubspot-conversations-iframe {
+    visibility: hidden;
   }
 </style>
