@@ -171,8 +171,4 @@
   :deep(p:not(:first-child)) {
     margin-top: 1em;
   }
-  
-  #hubspot-conversations-iframe {
-    visibility: hidden;
-  }
 </style>
