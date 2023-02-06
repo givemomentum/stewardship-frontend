@@ -139,6 +139,7 @@
       <CFlex
         w="100%"
         direction="column"
+        pb="24"
         gap="4"
         align="flex-end"
         key="3"
