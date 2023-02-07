@@ -27,6 +27,7 @@ export default defineNuxtConfig({
       "~/apps/shared",
     ],
   },
+  sourcemap: true,
   ssr: false,
   srcDir: "src/",
   typescript: {
