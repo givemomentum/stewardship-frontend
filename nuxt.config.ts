@@ -42,7 +42,7 @@ export default defineNuxtConfig({
       sentryVitePlugin({
         org: "givemomentum",
         project: "stewardship-frontend",
-        include: ".nuxt/dist",
+        include: ".nuxt/dist/client",
         authToken: process.env.SENTRY_AUTH_TOKEN,
       }),
     ],
