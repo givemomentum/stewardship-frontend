@@ -159,7 +159,9 @@
     const isViewed = !email.is_viewed;
     await hooks.api.patch(`/emails/${email.pk}/`, { is_viewed: isViewed });
     email.is_viewed = isViewed;
-    comp.batchGlobal.value.emails_unviewed_count += isViewed ? -1 : +1;
+    if (comp.batchGlobal.value) {
+      comp.batchGlobal.value.emails_unviewed_count += isViewed ? -1 : +1;
+    }
   }
 
   async function toggleEmailExclusion(email: Email) {
