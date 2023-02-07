@@ -62,8 +62,7 @@
       />
     </button>
     <span class="modal__title">Log to CRM</span>
-    <div class="modal__content">
-    </div>
+    <div class="modal__content" />
     <LogAction
       v-if="state.loggingModalRec.value"
       :rec="state.loggingModalRec.value"
@@ -192,13 +191,13 @@
 </template>
 
 <style scoped>
-  ::v-deep .modal-container {
+  :deep .modal-container {
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
-  ::v-deep .modal-content {
+  :deep .modal-content {
     position: relative;
     display: flex;
     flex-direction: column;
