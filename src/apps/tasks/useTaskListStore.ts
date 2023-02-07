@@ -15,10 +15,10 @@ export function useTaskListStore() {
   async function loadTasks(args?: { isShowAllTasks?: boolean; isPublishedOnly?: boolean }) {
     let path = "/tasks/";
     const params = [];
-    if (args.isPublishedOnly) {
+    if (args?.isPublishedOnly) {
       params.push("is_published=true")
     }
-    if (!args.isShowAllTasks) {
+    if (!args?.isShowAllTasks) {
       params.push("status=recommended")
     }
     if (params.length > 0) {
@@ -35,10 +35,10 @@ export function useTaskListStore() {
   async function loadTaskRecs(args?: { isShowAllTasks?: boolean; isPublishedOnly?: boolean }) {
     let path = "/tasks/";
     const params = ["expand=rec_set"];
-    if (args.isPublishedOnly) {
+    if (args?.isPublishedOnly) {
       params.push("is_published=true")
     }
-    if (!args.isShowAllTasks) {
+    if (!args?.isShowAllTasks) {
       params.push("status=recommended")
     }
     if (params.length > 0) {
