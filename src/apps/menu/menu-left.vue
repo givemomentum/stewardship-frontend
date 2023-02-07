@@ -42,7 +42,7 @@
           border-radius="lg"
           font-size="xs"
         >
-          ALPHA
+          BETA
         </CBox>
       </CFlex>
 
