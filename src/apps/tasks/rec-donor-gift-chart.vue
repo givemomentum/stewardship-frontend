@@ -64,7 +64,7 @@
   const chartOptions = {
     chart: {
       type: "area",
-      stacked: true,
+      stacked: false,
       height: 280,
       animations: {
         enabled: false,
