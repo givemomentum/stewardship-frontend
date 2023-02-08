@@ -1,3 +1,5 @@
+import { sentryVitePlugin } from "@sentry/vite-plugin";
+
 export default defineNuxtConfig({
   modules: [
     "@nuxt/ui",
@@ -25,6 +27,7 @@ export default defineNuxtConfig({
       "~/apps/shared",
     ],
   },
+  sourcemap: true,
   ssr: false,
   srcDir: "src/",
   typescript: {
@@ -35,5 +38,13 @@ export default defineNuxtConfig({
       sourcemap: true,
       minify: false,
     },
+    plugins: [
+      sentryVitePlugin({
+        org: "givemomentum",
+        project: "stewardship-frontend",
+        include: ".nuxt/dist/client",
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+      }),
+    ],
   },
 });
