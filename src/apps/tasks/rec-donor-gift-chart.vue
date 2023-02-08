@@ -35,7 +35,7 @@
   });
 
   function createChartSeries(donor: CrmDonor): GiftSeries {
-    if (!donor && donor.gifts) {
+    if (!donor?.gifts?.length) {
       return;
     }
     return {
