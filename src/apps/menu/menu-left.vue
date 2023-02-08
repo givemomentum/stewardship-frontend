@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import { useRuntimeConfig } from "#app";
   import { useLeftMenu } from "~/apps/menu/useLeftMenu";
-  import { useLetterBatchStore } from "~/apps/letters/useLetterBatchStore";
   import { urls } from "~/urls";
   import { useUserStore } from "~/apps/auth/useUserStore";
 
@@ -9,7 +8,6 @@
     config: useRuntimeConfig(),
     userStore: useUserStore(),
     menu: useLeftMenu(),
-    batchStore: useLetterBatchStore(),
   };
 </script>
 
