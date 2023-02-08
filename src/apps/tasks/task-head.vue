@@ -1,6 +1,7 @@
 <script lang="ts" setup>
   import { useUserStore } from "~/apps/auth/useUserStore";
   import { Task } from "~/apps/tasks/interfaces";
+  import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import { format } from "~/utils";
 
   const props = defineProps<{
@@ -10,8 +11,10 @@
     size?: string;
     fontWeight?: string;
   }>();
+
   const hooks = {
     userStore: useUserStore(),
+    taskListStore: useTaskListStore(),
   };
   
   const comp = {
@@ -27,9 +30,11 @@
           :font-size="props.size ?? 'lg'"
           :font-weight="props.fontWeight ?? 'normal'"
         >
-          {{ task.title }}
+          {{ props.task.title }}
         </CText>
 
+        <CTag>
+          {{ format.dateHumanShort(props.task.date) }}
         <CTag v-if="props.isRecSetLoaded && !comp.isOrgKesslerEdgeCase.value">
           {{ format.dateHumanShort(props.task.rec_set?.recs_datetime_filter_end ?? props.task.created_at) }}
         </CTag>

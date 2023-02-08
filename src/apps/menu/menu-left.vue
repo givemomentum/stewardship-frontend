@@ -17,8 +17,8 @@
       direction="column"
       pos="sticky"
       top="0"
-      p="6"
-      :pr="hooks.menu.isFullWidth.value ? 7 : 6"
+      :p="hooks.menu.isFullWidth.value ? { base: 3, '2xl': 6 } : { base: 3, '2xl': 3 }"
+      :pr="hooks.menu.isFullWidth.value ? { base: 3, '2xl': 6 } : { base: 3, '2xl': 3 }"
       h="auto"
       min-h="100vh"
       color="blue.100"
@@ -27,8 +27,12 @@
     >
 
       <CFlex pl="1" gap="4" align="center">
-        <chakra.img v-if="hooks.menu.isFullWidth.value" src="/momentum-logo.svg" color="white" max-w="185px" />
-        <chakra.img v-else src="/momentum-logo-only.svg" max-w="50px" />
+        <NuxtLink v-if="hooks.menu.isFullWidth.value" :to="urls.tasks.list">
+          <chakra.img src="/momentum-logo.svg" color="white" max-w="185px" />
+        </NuxtLink>
+        <NuxtLink v-else :to="urls.tasks.list" pt="3">
+          <chakra.img src="/momentum-logo-only.svg" max-w="50px" />
+        </NuxtLink>
         <CBox
           v-if="hooks.menu.isFullWidth.value"
           mt="6px"

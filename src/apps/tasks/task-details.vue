@@ -2,7 +2,7 @@
   import { Task } from "~/apps/tasks/interfaces";
 
   const props = defineProps<{ task: Task; }>();
-  
+
   useHead({
     title: props.task.title,
   });

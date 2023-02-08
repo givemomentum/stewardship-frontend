@@ -4,7 +4,7 @@
   };
 
   const state = {
-    taskSlugInitial: ref<string | string[]>(hooks.route.params.slug),
+    taskSlugInitial: ref<string | string[]>(hooks.route.params["task-slug"]),
   };
 </script>
 

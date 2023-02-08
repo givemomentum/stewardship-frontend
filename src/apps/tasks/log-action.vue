@@ -2,7 +2,6 @@
   import { Recommendation } from "~/apps/tasks/interfaces";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import { useForm } from "~/composables/useForm";
-  import { ref } from "vue";
 
   const props = defineProps<{
     rec: Recommendation;
@@ -16,10 +15,6 @@
       onSuccess: props.onSuccess,
       method: "POST",
     }),
-  };
-
-  const state = {
-    alertMessage: ref<string | null>(null),
   };
 </script>
 

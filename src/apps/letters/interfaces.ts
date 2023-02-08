@@ -95,6 +95,7 @@ export class CrmDonor {
   last_gift_amount?: number;
   last_recurring_gift_date?: string;
   donation_average: number;
+  rec_expected_value: number;
   source_data: any;
   do_not_contact: boolean;
   do_not_call: boolean;
@@ -102,4 +103,18 @@ export class CrmDonor {
   do_not_mail: boolean;
   spouse_name: string;
   custom_data: { [field: string]: any };
+
+  actions?: CrmAction[];
+}
+
+export class CrmAction {
+  pk: PrimaryKey;
+  donor: PrimaryKey;
+  title: string;
+  description: string;
+  category: string;
+  is_completed: boolean;
+  completed_date: string;
+  action_created_at: string;
+  action_updated_at: string;
 }

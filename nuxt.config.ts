@@ -19,7 +19,8 @@ export default defineNuxtConfig({
     dirs: [
       "~/components",
       "~/apps/letters",
-      "~/apps/tasks",
+      "~/apps/tasks", // todo nuxt resolver is broken, will have to move this to tasks/task
+      "~/apps/tasks/recs",
       "~/apps/fisc",
       "~/apps/partners/hor",
       "~/apps/chakra",
@@ -45,6 +46,7 @@ export default defineNuxtConfig({
         project: "stewardship-frontend",
         include: ".nuxt/dist/client",
         authToken: process.env.SENTRY_AUTH_TOKEN,
+        telemetry: false,
       }),
     ],
   },

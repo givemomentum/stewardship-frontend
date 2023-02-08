@@ -42,9 +42,8 @@
       bottom="0"
       :w="props.w ?? '4xl'"
       box-shadow="lg"
-      bg="gray.75"
+      bg="white"
       z-index="modal"
-      overflow-y="scroll"
     >
       <slot />
     </CBox>

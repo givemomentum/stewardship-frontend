@@ -28,40 +28,39 @@
   };
 
   const comp = {
-    currentTasksLink: computed(() => {
-      return `${urls.tasks.list}${props.isPublishedOnly ? '' : '?include_unpublished=true'}`;
-    }),
-    allTasksLink: computed(() => {
-      return `${urls.tasks.listAll}${props.isPublishedOnly ? '' : '?include_unpublished=true'}`;
-    }),
-  }
+    currentTasksLink: computed(() => `${urls.tasks.list}${props.isPublishedOnly ? "" : "?include_unpublished=true"}`),
+    allTasksLink: computed(() => `${urls.tasks.listAll}${props.isPublishedOnly ? "" : "?include_unpublished=true"}`),
+  };
 
   onMounted(async () => {
+    if (hooks.taskListStore.isRecsLoaded.value) {
+      return;
+    }
+
     await hooks.taskListStore.loadTasks({
       isPublishedOnly: props.isPublishedOnly ?? true,
       isShowAllTasks: props.isShowAllTasks,
     });
     if (props.taskOpenedSlug) {
       hooks.taskListStore.taskOpened.value = hooks.taskListStore.tasks.value.find(
-        (task) => task.slug === props.taskOpenedSlug
+        task => task.slug === props.taskOpenedSlug,
       );
     }
-    await hooks.taskListStore.loadTaskRecs({
+    await hooks.taskListStore.loadTaskListAndRecs({
       isPublishedOnly: props.isPublishedOnly ?? true,
       isShowAllTasks: props.isShowAllTasks,
     });
-    state.isRecSetLoaded.value = true;
   });
 
   watch(hooks.taskListStore.taskOpened, (task?: Task) => {
-    // router.push always forces a full reload 
     if (task) {
-      history.pushState({}, "", `/tasks/${task.slug}`);
+      navigateTo(urls.tasks.detail(task.slug));
+    } else if (props.isShowAllTasks) {
+      navigateTo(urls.tasks.listAll);
     } else {
-      history.pushState({}, "", `/tasks`);
+      navigateTo(urls.tasks.list);
     }
   });
-
 </script>
 
 <template>
@@ -95,7 +94,6 @@
           <TaskHead
             :task="task"
             :is-preview="true"
-            :is-rec-set-loaded="state.isRecSetLoaded.value"
           />
 
           <CFlex
@@ -117,23 +115,7 @@
               </CFlex>
 
               <CFlex
-                v-if="task.rec_set?.rec_progress"
-                align="center"
-                color="gray.500"
-                gap="1"
-              >
-                <CIcon
-                  :name="task.rec_set.type === 'gifts' ? 'fa-donate' : 'bi-people-fill'"
-                  fill="gray.400"
-                  size="17px"
-                  mb="px"
-                />
-                <CText>
-                  {{ task.rec_set?.rec_progress }}
-                </CText>
-              </CFlex>
-              <CFlex
-                v-else-if="task.rec_set?.recs?.length"
+                v-if="task.rec_set?.recs?.length"
                 align="center"
                 color="gray.500"
                 gap="1"
@@ -160,7 +142,7 @@
         </CFlex>
       </CLink>
 
-      <CBox v-if="!hooks.taskListStore.tasks.value.length && state.isRecSetLoaded.value">
+      <CBox v-if="!hooks.taskListStore.tasks.value.length && hooks.taskListStore.isRecsLoaded.value">
         <CHeading v-if="!props.isShowAllTasks" font-size="xl" font-weight="normal">
           You're all done 🎉 !
         </CHeading>
@@ -197,9 +179,9 @@
 
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
   html, body {
-    background: var(--chakra-colors-gray-75) !important;
+    background: var(--chakra-colors-gray-75);
     height: 100%;
   }
 </style>

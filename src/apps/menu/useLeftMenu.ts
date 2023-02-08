@@ -25,7 +25,7 @@ export function useLeftMenu() {
     isFullWidth,
     isAdminBarVisible,
     collapse,
-    unfold,
+    unfold: unfold,
     showAdminBar,
     hideAdminBar,
   };

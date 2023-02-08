@@ -30,7 +30,7 @@
 
     const resTemplates = await hooks.api.get("/emails/templates/");
     state.templateList.value = resTemplates.data;
-    
+
     const resBatchesWithRecSetes = await hooks.api.get("/emails/batches/?expand=rec_set");
     state.batchList.value = resBatchesWithRecSetes.data.filter((batch: EmailBatch) => {
       const batchDate = parseISO(batch.created_at);

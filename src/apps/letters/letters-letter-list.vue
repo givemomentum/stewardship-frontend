@@ -3,7 +3,6 @@
   import { onBeforeMount, onUnmounted, ref, watch } from "vue";
   import { POSITION, useToast } from "vue-toastification";
   import { PrimaryKey } from "~/apps/auth/interfaces";
-  import { Email } from "~/apps/emails/interfaces";
   import { Letter, LetterBatch } from "~/apps/letters/interfaces";
   import { useLetterBatchStore } from "~/apps/letters/useLetterBatchStore";
   import { useLeftMenu } from "~/apps/menu/useLeftMenu";
@@ -62,7 +61,7 @@
       if (a.rec.donor.last_name > b.rec.donor.last_name) return 1;
       return 0;
     });
-    
+
     const letterOpenUpdated = batchNew.letters.find(letter => letter.pk === state.letterOpen.value?.pk);
     if (letterOpenUpdated) {
       state.letterHtml.value = letterOpenUpdated.html || letterOpenUpdated.html_default;
@@ -136,7 +135,7 @@
       }, 0);
     }
   }
-  
+
   async function toggleLetterExclusion(letter: Letter) {
     const isExcludedFlipped = !letter.is_excluded;
     await hooks.api.patch(`/letters/${letter.pk}/`, { is_excluded: isExcludedFlipped });
@@ -226,7 +225,7 @@
               <chakra.td data-is-numeric="true">
                 <CIcon v-if="letter.html" name="check-square" mb="1" size="4" color="gray.500" />
               </chakra.td>
-              
+
               <chakra.td data-is-numeric="true">
                 <VTooltip placement="right">
                   <div>
@@ -398,7 +397,7 @@
 
 <style lang="scss">
   html, body {
-    background: var(--chakra-colors-gray-75) !important;
+    background: var(--chakra-colors-gray-75);
     height: 100%;
   }
 

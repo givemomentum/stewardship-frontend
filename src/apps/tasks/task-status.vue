@@ -10,7 +10,7 @@
     api: useApi(),
     taskListStore: useTaskListStore(),
   };
-  
+
   const comp = {
     optionsAvailable: [
       getStatusDropdownOption("recommended"),
@@ -22,7 +22,7 @@
   const state = {
     options: ref<DropdownOption<TaskStatusStr>[]>(comp.optionsAvailable),
   };
-  
+
   watch(() => props.task.status, (statusNew: TaskStatusStr) => {
     state.options.value = comp.optionsAvailable.filter(option => option.value !== statusNew);
   }, { immediate: true });

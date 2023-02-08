@@ -69,13 +69,6 @@
       is_enable_app_letters: hooks.userStore.user.membership?.org?.is_enable_app_letters,
     });
 
-    if (hooks.userStore.org && hooks.userStore.org.is_enable_beta_features) {
-      if (window.location.origin !== hooks.config.public.betaUrl) {
-        window.location.href = hooks.config.public.betaUrl + window.location.pathname;
-        return;
-      }
-    }
-
     const isNeedToInitAnalytics = (
       hooks.config.public.env === "prod"
       && !hooks.userStore.user.email.endsWith("givemomentum.com")
@@ -111,7 +104,7 @@
 
   <CFlex h="100%" align="stretch">
     <MenuLeft />
-    <CFlex px="10" pt="6" pr="6">
+    <CFlex px="10" pt="6" pr="6" w="100%">
       <NuxtPage v-if="hooks.userStore.isLoggedIn" />
     </CFlex>
 
@@ -127,3 +120,8 @@
   </CFlex>
 
 </template>
+
+<style lang="scss">
+  //noinspection CssUnknownTarget
+  @import '~/styles/chakra-ui.scss';
+</style>

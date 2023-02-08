@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { onMounted, ref, computed } from "vue";
+  import { onMounted, ref } from "vue";
   import { Recommendation, Task } from "~/apps/tasks/interfaces";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import { urls } from "~/urls";
@@ -31,28 +31,11 @@
       const res = await hooks.api.get(`/emails/batches/${props.task.rec_set.email_batch}/`);
       state.emailBatch.value = res.data;
     }
-    await hooks.tasks.loadRecsAndGiftHistory(props.task);
+    await hooks.tasks.loadTaskOpenedRecsAndGiftHistory();
   });
-
-  function toggleRecOpen(rec: Recommendation) {
-    if (isCurrentRec(rec)) {
-      state.recOpen.value = null;
-    } else {
-      state.recOpen.value = rec;
-    }
-  }
 
   function isCurrentRec(rec: Recommendation): boolean {
     return state.recOpen.value?.pk === rec.pk;
-  }
-
-  async function toggleRecCompletedStatus(rec: Recommendation) {
-    if (rec.state === "completed") {
-      rec.state = "new";
-    } else {
-      rec.state = "completed";
-    }
-    await hooks.tasks.updateRecState(rec);
   }
 
   async function toggleRecDismissed(rec: Recommendation) {
@@ -71,6 +54,11 @@
       rec.is_follow_up_needed = true;
     }
     await hooks.tasks.setRecFollowUp(rec, rec.is_follow_up_needed);
+  }
+
+  function openRec(rec: Recommendation) {
+    hooks.tasks.recOpened.value = rec;
+    navigateTo(urls.tasks.detailRec(props.task.slug, rec.slug));
   }
 </script>
 
@@ -149,7 +137,7 @@
         >
 
           <chakra.tr
-            @click="toggleRecOpen(rec)"
+            @click="openRec(rec)"
             :_hover="{ cursor: 'pointer', bg: isCurrentRec(rec) ? 'white' : 'gray.50' }"
             :bg="isCurrentRec(rec) ? 'white' : 'inherit'"
             :color="rec.state === 'dismissed' ? 'gray.400' : ''"
@@ -284,8 +272,3 @@
 
   </CFlex>
 </template>
-
-<style lang="scss">
-  //noinspection CssUnknownTarget
-  @import '~/styles/chakra-ui.scss';
-</style>

@@ -69,6 +69,9 @@
       animations: {
         enabled: false,
       },
+      toolbar: {
+        show: false,
+      },
     },
     dataLabels: {
       enabled: false,
@@ -76,6 +79,7 @@
     markers: {
       size: 3,
     },
+    colors: ["#38B2AC"],
     fill: {
       type: "gradient",
       gradient: {
@@ -112,7 +116,7 @@
 <template>
   <div>
     <apexchart
-      width="780"
+      width="100%"
       height="250"
       type="area"
       :options="chartOptions"

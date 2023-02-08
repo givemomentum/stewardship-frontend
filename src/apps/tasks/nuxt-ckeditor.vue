@@ -72,7 +72,7 @@
 
   .ck-content {
     width: 100%;
-    
+
     h2 {
       font-size: 1.8rem;
       font-weight: bold;

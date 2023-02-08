@@ -1,4 +1,5 @@
 import { PrimaryKey, User } from "~/apps/auth/interfaces";
+import { Email, EmailTemplate } from "~/apps/emails/interfaces";
 import { CrmDonor, CrmGift } from "~/apps/letters/interfaces";
 
 export interface Task {
@@ -19,17 +20,20 @@ export interface Task {
   comments_count: number;
   rec_set?: RecommendationSet;
   is_published: boolean;
+  date: string;
 }
 
 export interface Recommendation {
   pk: PrimaryKey;
   donor?: CrmDonor;
   gift?: CrmGift;
+  email?: Email;
+  slug: string;
   explanation: string;
   state: "new" | "completed" | "dismissed";
   is_follow_up_needed: boolean;
   action_description: string;
-  action_type: "none" | "call" | "letter" | "email" | "other";
+  action_type: "none" | "call" | "letter" | "email" | "message" | "other";
   action_state: "none" | "logged_by_user" | "stored_to_crm";
   score: number;
   score_info: any;
@@ -67,6 +71,8 @@ export interface Rule {
   gift_custom_fields: any;
 
   emails_to_donors_cc: string;
+
+  email_template?: EmailTemplate;
 
   default_assignee: PrimaryKey;
   task_title: string;

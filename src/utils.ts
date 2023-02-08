@@ -18,7 +18,7 @@ export namespace format {
 
   export function dateHumanShort(date?: string): string {
     if (date) {
-      return datefns.format(datefns.parseISO(date), "MMM do",);
+      return datefns.format(datefns.parseISO(date), "MMM do");
     }
     return "";
   }
@@ -52,7 +52,7 @@ export namespace format {
     if (amount) {
       return `$${Number(amount).toLocaleString(
         "en-US",
-        { minimumFractionDigits: decimals, maximumFractionDigits: decimals }
+        { minimumFractionDigits: decimals, maximumFractionDigits: decimals },
       )}`;
     }
     return "";
