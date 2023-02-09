@@ -56,7 +56,7 @@ export function useTaskListStore() {
   async function loadRecsAndGiftHistory(taskRaw: Task) {
     const taskModifiable = getTaskModifiable(taskRaw);
     if (taskModifiable.rec_set) {
-      const res = await hooks.api.get(`/rec-sets/${taskModifiable.rec_set.pk}/?expand=recs.donor.gifts`);
+      const res = await hooks.api.get(`/rec-sets/${taskModifiable.rec_set.pk}/?expand=recs.donor.household,recs.donor.gifts`);
       if (res.data) {
         sortRecs(res.data)
         taskModifiable.rec_set = res.data;

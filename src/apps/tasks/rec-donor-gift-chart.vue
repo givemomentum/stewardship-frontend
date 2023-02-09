@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import { ref, watch } from "vue";
+  import { CrmDonor } from "~/apps/letters/interfaces";
   import { Recommendation } from "~/apps/tasks/interfaces";
   import { format } from "~/utils";
   import { parseISO } from "date-fns";
@@ -8,8 +9,18 @@
     rec: Recommendation;
   }>();
 
+  interface GiftSeries {
+    name: string,
+    data: ({ x: number, y: number })[]
+  }
+
+  const defaultGiftSerieses = [{
+    name: "Amount",
+    data: [{ x: 5, y: 5 }],
+  }];
+
   const state = {
-    giftSeries: ref<{ x: number, y: number }[]>([{ x: 5, y: 5 }]),
+    giftSerieses: ref<GiftSeries[]>(defaultGiftSerieses),
   };
 
   onBeforeMount(() => {
@@ -23,9 +34,13 @@
     loadChartData(recNew);
   });
 
-  function loadChartData(rec: Recommendation) {
-    if (rec?.donor?.gifts?.length) {
-      state.giftSeries.value = rec.donor.gifts
+  function createChartSeries(donor: CrmDonor): GiftSeries {
+    if (!donor?.gifts?.length) {
+      return;
+    }
+    return {
+      name: donor.name || "Donor",
+      data: donor.gifts
         // TODO: It would be better to filter gifts on the backend, but this is technically much easier to do.
         .filter(gift => Number(gift.amount) && ["one_time", "recurring_payment"].includes(gift.gift_type))
         .map(gift => (
@@ -33,8 +48,17 @@
             x: parseISO(gift.date).getTime(),
             y: Number(gift.amount),
           }
-        ));
+        )),
+    };
+  }
+
+  function loadChartData(rec: Recommendation) {
+    if (!rec?.donor) {
+      return;
     }
+    const householdDonors = rec.donor.household?.donors;
+    const donorsToChart = householdDonors?.length ? householdDonors : [rec.donor];
+    state.giftSerieses.value = donorsToChart.map((donor: CrmDonor) => createChartSeries(donor)).filter(val => val);
   }
 
   const chartOptions = {
@@ -92,10 +116,7 @@
       height="250"
       type="area"
       :options="chartOptions"
-      :series="[{
-        name: 'Amount',
-        data: state.giftSeries.value,
-      }]"
+      :series="state.giftSerieses.value"
     />
   </div>
 </template>
