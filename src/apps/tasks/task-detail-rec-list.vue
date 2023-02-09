@@ -58,7 +58,7 @@
 
   function openRec(rec: Recommendation) {
     hooks.tasks.recOpened.value = rec;
-    navigateTo(urls.tasks.detailRec(props.task.slug, rec.slug));
+    navigateTo(urls.tasks.detailRec(props.task.slug, rec.pk, rec.slug));
   }
 </script>
 

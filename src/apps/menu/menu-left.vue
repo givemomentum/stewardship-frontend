@@ -12,7 +12,7 @@
 </script>
 
 <template>
-  <CFlex display="unset">
+  <CFlex display="unset" z-index="1">
     <CFlex
       direction="column"
       pos="sticky"
