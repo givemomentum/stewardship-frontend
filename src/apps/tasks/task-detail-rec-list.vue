@@ -6,7 +6,6 @@
   import { useApi } from "~/composables/useApi";
   import { EmailBatch } from "~/apps/emails/interfaces";
   import { useRuntimeConfig } from "#app";
-  import { useUserStore } from "~/apps/auth/useUserStore";
 
   const props = defineProps<{
     task: Task;
@@ -23,7 +22,6 @@
     config: useRuntimeConfig(),
     tasks: useTaskListStore(),
     api: useApi(),
-    user: useUserStore(),
   };
 
   onMounted(async () => {
@@ -77,19 +75,9 @@
       </CHeading>
 
       <NuxtLink
-        :to="urls.emails.batches.edit(props.task.rec_set.email_batch)"
-        v-if="props.task.rec_set?.email_batch && hooks.user.org.is_enable_app_emails">
-        <CButton
-          size="sm"
-          left-icon="mail"
-        >
-          {{ state.emailBatch.value?.status === 'sent' ? 'Review sent emails' : 'Compose emails' }}
-        </CButton>
-      </NuxtLink>
-
-      <NuxtLink
         :to="urls.letters.batchLettersList(props.task.rec_set.letter_batch)"
-        v-else-if="props.task.rec_set?.letter_batch">
+        v-if="props.task.rec_set?.letter_batch"
+      >
         <CButton
           size="sm"
           left-icon="mail"
@@ -97,6 +85,7 @@
           Review letters
         </CButton>
       </NuxtLink>
+
       <CFlex gap="7" v-else>
         <VTooltip>
           <div>
@@ -118,10 +107,6 @@
     <ChakraTable size="sm">
       <chakra.thead>
         <chakra.th w="0" />
-        <chakra.th
-          v-if="props.task.rec_set.rule.is_show_follow_up_button_on_task"
-          w="0"
-        />
 
         <slot name="table-headers" />
         <chakra.th

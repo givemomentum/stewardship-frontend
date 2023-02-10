@@ -6,6 +6,7 @@
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import { useUserStore } from "~/apps/auth/useUserStore";
   import { formatDistance } from "date-fns";
+  import { useBackgroundColorControl } from "~/composables/useBackgroundColorControl";
   import { urls } from "~/urls";
   import { computed } from "vue";
 
@@ -18,6 +19,7 @@
   const hooks = {
     config: useRuntimeConfig(),
     api: useApi(),
+    bgColorControl: useBackgroundColorControl(),
     userStore: useUserStore(),
     taskListStore: useTaskListStore(),
     userListStore: useUserListStore(),
@@ -51,6 +53,9 @@
       isShowAllTasks: props.isShowAllTasks,
     });
   });
+
+  onMounted(() => hooks.bgColorControl.color.value = "gray.75");
+  onBeforeUnmount(() => hooks.bgColorControl.color.value = "white");
 
   watch(hooks.taskListStore.taskOpened, (task?: Task) => {
     if (task) {
@@ -156,6 +161,7 @@
           <CButton
             size="sm"
             variant="outline"
+            bg="white"
           >
             Show completed tasks
           </CButton>
@@ -178,10 +184,3 @@
   </CFlex>
 
 </template>
-
-<style lang="scss" scoped>
-  html, body {
-    background: var(--chakra-colors-gray-75);
-    height: 100%;
-  }
-</style>

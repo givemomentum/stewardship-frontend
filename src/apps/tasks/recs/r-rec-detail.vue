@@ -1,13 +1,14 @@
 <script lang="ts" setup>
   import { ActiveHeadEntry } from "@vueuse/head";
   import { useLeftMenu } from "~/apps/menu/useLeftMenu";
-  import RRecActionEmail from "~/apps/tasks/recs/r-rec-action-email.vue";
-  import RRecActionLog from "~/apps/tasks/recs/r-rec-action-log.vue";
-  import RRecDetailNavigation from "~/apps/tasks/recs/r-rec-detail-navigation.vue";
-  import RRecEmailTemplateBtn from "~/apps/tasks/recs/r-rec-email-template-btn.vue";
-  import RRecExpectedValue from "~/apps/tasks/recs/r-rec-expected-value.vue";
-  import RRecLastActions from "~/apps/tasks/recs/r-rec-last-actions.vue";
+  import RRecActionEmail from "~/apps/tasks/recs/r-action-email.vue";
+  import RRecActionLog from "~/apps/tasks/recs/r-action-log.vue";
+  import RDonorGiftChart from "~/apps/tasks/recs/r-donor-gift-chart.vue";
+  import RRecDetailNavigation from "~/apps/tasks/recs/r-nav-header.vue";
+  import RRecEmailTemplateBtn from "~/apps/tasks/recs/r-btn-email-template.vue";
+  import RRecLastActions from "~/apps/tasks/recs/r-last-actions.vue";
   import RRecSummary from "~/apps/tasks/recs/r-rec-summary.vue";
+  import { useRecStatus } from "~/apps/tasks/recs/useRecStatus";
   import { useComp, useHooks } from "~/structs";
   import { format } from "~/utils";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
@@ -23,6 +24,7 @@
     return {
       taskListStore: taskListStore,
       leftMenu: useLeftMenu(),
+      status: useRecStatus(),
       head: useHead({
         title: taskListStore.recOpened.value?.donor.name,
       }) as ActiveHeadEntry<any>,
@@ -45,8 +47,7 @@
       task: computed(() => hooks.taskListStore.taskOpened.value),
       rec: computed(() => recProxy.value),
       actionTypes: actionTypes,
-      isCompleted: computed(() => recProxy.value?.state === "completed"),
-      isSkipped: computed(() => recProxy.value?.state === "dismissed"),
+
       recType: computed(() => {
         if (recProxy.value?.state === "completed" && actionTypes.includes(recProxy.value?.action_type)) {
           return recProxy.value.action_type;
@@ -57,6 +58,11 @@
         return "other";
       }),
       spaceLg: 7,
+      taskCompletionPercentage: computed(() => {
+        const tasksCompleted = hooks.taskListStore.taskOpened.value?.rec_set?.recs.filter(rec => rec.state !== "new").length;
+        const tasksTotal = hooks.taskListStore.taskOpened.value?.rec_set?.recs.length;
+        return Math.round((tasksCompleted / tasksTotal) * 100);
+      }),
     }
   });
 
@@ -106,13 +112,13 @@
       </CFlex>
       <CIcon name="chevron-right" mt="1px" size="12" />
       <CIcon
-        v-if="comp.isCompleted.value"
+        v-if="hooks.status.isCompleted.value"
         name="check-circle"
         color="green.500"
         size="7"
         mr="2"
       />
-      <CFlex font-weight="bold" :color="comp.isCompleted.value ? 'green.600' : ''">
+      <CFlex font-weight="bold" :color="hooks.status.isCompleted.value ? 'green.600' : ''">
         {{ hooks.taskListStore.recOpened.value?.donor.name }}
       </CFlex>
 
@@ -141,15 +147,15 @@
 
     <CFlex :gap="{ base: 8, '2xl': 14 }" direction="row" key="2">
 
-      <CFlex direction="column" :gap="comp.spaceLg" w="100%">
-        <RRecDetailNavigation :task="comp.task.value" :rec="comp.rec.value" />
+      <CFlex direction="column" :gap="comp.spaceLg" w="100%" max-w="900px">
 
-        <RRecExpectedValue :task="comp.task.value" :rec="comp.rec.value" />
+        <RRecDetailNavigation :task="comp.task.value" :rec="comp.rec.value" />
 
         <CFlex pos="relative" w="100%">
           <ChakraTabs
             :tabKeys="comp.actionTypes"
             :selected="comp.recType.value"
+            :is-tabs-visible="!(hooks.status.isHandled.value)"
           >
             <template v-slot:email>
               <RRecActionEmail
@@ -168,28 +174,31 @@
             </template>
 
             <template v-slot:call>
-              <RRecActionLog :rec="comp.rec.value" type="call" />
+              <RRecActionLog v-if="comp.rec.value" :rec="comp.rec.value" type="call" />
             </template>
             <template v-slot:message>
-              <RRecActionLog :rec="comp.rec.value" type="message" />
+              <RRecActionLog v-if="comp.rec.value" :rec="comp.rec.value" type="message" />
             </template>
             <template v-slot:other>
-              <RRecActionLog :rec="comp.rec.value" type="other" />
+              <RRecActionLog v-if="comp.rec.value" :rec="comp.rec.value" type="other" />
             </template>
           </ChakraTabs>
-
         </CFlex>
 
       </CFlex>
 
       <CFlex direction="column" gap="10" w="100%" max-w="800px">
-        <RRecSummary v-if="comp.rec.value" :rec="comp.rec.value" />
+        <RRecSummary
+          v-if="comp.rec.value"
+          :rec="comp.rec.value"
+          :task="comp.task.value"
+        />
 
         <CFlex gap="4" direction="column">
           <CHeading font-size="2xl" color="gray.500" font-weight="normal">
             Giving history
           </CHeading>
-          <RecDonorGiftChart v-if="comp.rec.value" :rec="comp.rec.value" />
+          <RDonorGiftChart v-if="comp.rec.value" :rec="comp.rec.value" />
         </CFlex>
 
         <RRecLastActions
@@ -202,9 +211,3 @@
 
   </CFlex>
 </template>
-
-<style lang="scss" scoped>
-  html, body {
-    background: white !important;
-  }
-</style>

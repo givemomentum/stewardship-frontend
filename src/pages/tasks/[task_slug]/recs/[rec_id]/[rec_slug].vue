@@ -29,7 +29,7 @@
   .slide-left-leave-active,
   .slide-right-enter-active,
   .slide-right-leave-active {
-    transition: all 0.3s;
+    transition: all 0.15s;
   }
   .slide-left-enter-from {
     opacity: 0;

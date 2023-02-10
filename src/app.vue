@@ -5,10 +5,12 @@
   import LogRocket from "logrocket";
   import { configureScope } from "@sentry/vue";
   import * as Sentry from "@sentry/vue";
+  import { useBackgroundColorControl } from "~/composables/useBackgroundColorControl";
 
   const hooks = {
     config: useRuntimeConfig(),
     userStore: useUserStore(),
+    bgColorControl: useBackgroundColorControl(),
   };
 
   useHead({
@@ -104,7 +106,7 @@
 
   <CFlex h="100%" align="stretch">
     <MenuLeft />
-    <CFlex px="10" pt="6" pr="6" w="100%">
+    <CFlex px="10" pt="6" pr="6" w="100%" :bg="hooks.bgColorControl.color.value">
       <NuxtPage v-if="hooks.userStore.isLoggedIn" />
     </CFlex>
 

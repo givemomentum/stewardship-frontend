@@ -2,6 +2,7 @@
   const props = defineProps<{
     tabKeys: string[];
     selected?: string;
+    isTabsVisible?: boolean;
   }>();
 
   const state = {
@@ -20,7 +21,7 @@
 <template>
   <CVStack class="c-tabs" w="100%">
 
-    <CFlex class="c-tabs-select">
+    <CFlex class="c-tabs-select" v-if="isTabsVisible ?? true">
 
       <CFlex
         justify="space-between"

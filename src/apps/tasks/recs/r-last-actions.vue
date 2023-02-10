@@ -13,6 +13,9 @@
 
   const comp = {
     actionDescShortList: computed(() => props.actions.map(action => {
+      if (action.description.length <= 80) {
+        return action.description;
+      }
       const descShort = action.description.slice(0, 80);
       return `${descShort} ...`;
     })),
@@ -48,7 +51,7 @@
             text-transform="capitalize"
             font-weight="bold"
           >
-            {{ action.category }}
+            {{ action.category ?? 'Other' }}
           </CFlex>
           <CFlex color="gray.500">{{ format.date(action.action_created_at) }}</CFlex>
         </CFlex>
@@ -72,7 +75,7 @@
             <chakra.span class="desc-short" v-html="comp.actionDescShortList.value[actionIndex]" />
             <CButton
               display="flex-inline"
-              v-if="!state.actionDescFullIndexes.value.includes(actionIndex)"
+              v-if="!state.actionDescFullIndexes.value.includes(actionIndex) && action.description.length > 80"
               @click="state.actionDescFullIndexes.value.push(actionIndex)"
               variant="ghost"
               size="sm"

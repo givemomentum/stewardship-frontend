@@ -23,6 +23,14 @@ export interface Task {
   date: string;
 }
 
+export type RecState = "new"
+    | "completed"
+    | "dismissed"
+    | "skipped_as_unqualified"
+    | "skipped_as_already_handled"
+    | "skipped_to_next_month"
+    | "skipped_to_next_quarter";
+
 export interface Recommendation {
   pk: PrimaryKey;
   donor?: CrmDonor;
@@ -30,7 +38,7 @@ export interface Recommendation {
   email?: Email;
   slug: string;
   explanation: string;
-  state: "new" | "completed" | "dismissed";
+  state: RecState;
   is_follow_up_needed: boolean;
   action_description: string;
   action_type: "none" | "call" | "letter" | "email" | "message" | "other";

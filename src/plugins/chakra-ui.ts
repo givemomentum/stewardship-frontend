@@ -23,9 +23,11 @@ import {
   feDatabase,
   feCheckSquare,
   fePlus,
+  feList,
 } from "feather-icons-paths";
 import {
   FaDiscord,
+  BiListCheck,
   FaMapMarkerAlt,
   HiArrowNarrowRight,
   IoMenu,
@@ -132,8 +134,10 @@ export default defineNuxtPlugin(nuxtApp => {
         feShare_2,
         feDatabase,
         fePlus,
+        feList,
       },
       extend: {
+        ...getOhVueIconProps(BiListCheck),
         ...getOhVueIconProps(FaDiscord),
         ...getOhVueIconProps(LaMoneyBillSolid),
         ...getOhVueIconProps(IoMenu),

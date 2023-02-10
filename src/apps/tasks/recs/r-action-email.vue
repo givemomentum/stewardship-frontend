@@ -4,9 +4,11 @@
   import { useUserStore } from "~/apps/auth/useUserStore";
   import { Email, PromptOutput } from "~/apps/emails/interfaces";
   import { Recommendation } from "~/apps/tasks/interfaces";
+  import RRecSkipBtn from "~/apps/tasks/recs/r-btn-skip.vue";
+  import { useRecNav } from "~/apps/tasks/recs/useRecNav";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import { useNotify } from "~/composables/useNotify";
-  import RRecActionEmailAi from "~/apps/tasks/recs/r-rec-action-email-ai.vue";
+  import RRecActionEmailAi from "~/apps/tasks/recs/r-action-email-ai.vue";
 
   const props = defineProps<{
     rec: Recommendation;
@@ -17,6 +19,7 @@
     api: useApi(),
     notify: useNotify(),
     taskListStore: useTaskListStore(),
+    nav: useRecNav(),
   };
 
   const state = {
@@ -24,6 +27,7 @@
     emailSubject: ref(""),
     emailCcList: ref(""),
     isSavingChanges: ref(false),
+    isSendingEmail: ref(false),
     isEmailAiOpen: ref(false),
 
     emailOpen: ref<Email | null>(null),
@@ -34,6 +38,8 @@
   onMounted(async () => {
     const outputsRes = await hooks.api.get(`/ai/prompt-outputs/?email=${props.rec.email.pk}`);
     hooks.taskListStore.recOpened.value.email.prompt_outputs = outputsRes.data;
+    
+    handleTinyEditorLoadingBug();
   });
 
   const comp = {
@@ -44,10 +50,8 @@
     state.emailOpen.value = recNew.email;
     state.emailEditorKey.value = recNew.email.pk;
     state.emailContentHtml.value = recNew.email.content_html || (recNew.email.content_html_default ?? "");
-    state.emailSubject.value = recNew.email.subject || props.rec.email.template?.subject;
+    state.emailSubject.value = recNew.email.subject || hooks.taskListStore.taskOpened.value?.rec_set.rule?.email_template?.subject;
     state.emailCcList.value = recNew.email.cc_list;
-
-    handleTinyEditorLoadingBug();
   }, { immediate: true });
 
   const debouncedSave = debounce(saveEmailChanges, 1500);
@@ -98,9 +102,22 @@
     );
   }
 
-  async function sendTestEmail(email: Email) {
-    await hooks.api.post(`/emails/${email.pk}/send-test-email/`);
+  async function sendTestEmail() {
+    await hooks.api.post(`/emails/${state.emailOpen.value.pk}/send-test-email/`);
     hooks.notify.send(`Test emails sent to ${hooks.userStore.user.email}`);
+  }
+
+  async function sendEmail() {
+    state.isSendingEmail.value = true;
+    await hooks.api.post(`/emails/${state.emailOpen.value.pk}/send/`);
+    hooks.notify.send(`Email sent`);
+    state.emailOpen.value.status = "sent";
+    hooks.taskListStore.recOpened.value.state = "completed";
+    hooks.taskListStore.recOpened.value.action_description = state.emailContentHtml.value;
+    hooks.taskListStore.recOpened.value.action_type = "email";
+    state.isSendingEmail.value = false;
+    
+    hooks.nav.navigateToRecNext();
   }
 
   function getStatusStyle(email: Email) {
@@ -136,7 +153,7 @@
       if (tinyContainer) {
         break;
       }
-      await nextTick();
+      await new Promise(resolve => setTimeout(resolve, 60));
     }
 
     while (true) {
@@ -167,15 +184,31 @@
       <CFlex gap="3px" w="100%" direction="column">
         <CFormLabel font-size="sm" color="gray.500">Subject</CFormLabel>
         <CInput
+          v-if="!comp.isEmailSent.value"
           v-model="state.emailSubject.value"
-          :is-read-only="comp.isEmailSent.value"
           bg="white"
           name="subject"
           w="100%"
         />
+        <CBox
+          v-else
+          p="2"
+          px="4"
+          w="100%"
+          border="1px solid"
+          border-color="gray.200"
+          border-radius="lg"
+        >
+          {{ state.emailSubject.value }}
+        </CBox>
       </CFlex>
 
-      <CFlex gap="3px" w="100%" direction="column">
+      <CFlex
+        v-if="!comp.isEmailSent.value || state.emailCcList.value"
+        gap="3px"
+        w="100%"
+        direction="column"
+      >
         <CFormLabel font-size="sm" color="gray.500">CC</CFormLabel>
         <CInput
           v-model="state.emailCcList.value"
@@ -200,6 +233,7 @@
       />
 
       <CButton
+        v-if="!comp.isEmailSent.value"
         @click="state.emailContentHtml.value = state.emailOpen.value.content_html_default; saveEmailChanges()"
         v-tooltip="{
           content: 'Reset to the default template',
@@ -218,7 +252,14 @@
       </CButton>
     </CBox>
 
-    <CFlex gap="4" v-if="!comp.isEmailSent.value">
+    <CFlex gap="4" v-if="comp.isEmailSent.value">
+      <CAlert variant="left-accent" status="success" font-size="lg" pr="6" pl="5">
+        <CAlertIcon />
+        Email sent
+      </CAlert>
+    </CFlex>
+
+    <CFlex gap="4" v-else>
       <CButton
         :is-loading="state.isSavingChanges.value"
         z-index="toast"
@@ -230,18 +271,12 @@
         Saved
       </CButton>
 
-      <CButton
-        @click="sendTestEmail(state.emailOpen.value)"
-        variant="outline"
-        color-scheme="gray"
-      >
-        Skip
-      </CButton>
+      <RRecSkipBtn :rec="props.rec" />
 
       <VTooltip>
         <div>
           <CButton
-            @click="sendTestEmail(state.emailOpen.value)"
+            @click="sendTestEmail()"
             variant="outline"
             z-index="toast"
             left-icon="ri-mail-send-line"
@@ -258,7 +293,8 @@
       </VTooltip>
 
       <CButton
-        @click="sendTestEmail(state.emailOpen.value)"
+        @click="sendEmail()"
+        :is-loading="state.isSendingEmail.value"
         left-icon="ri-mail-send-line"
         fill="white"
       >
@@ -267,6 +303,7 @@
     </CFlex>
 
     <RRecActionEmailAi
+      v-if="!comp.isEmailSent.value"
       @email-prompt-output-created="(promptOutput) => updateEmailPromptOutputs(promptOutput)"
       @email-content-updated="(promptOutput) => updateEmailContentFromAI(promptOutput)"
       :email="state.emailOpen.value"

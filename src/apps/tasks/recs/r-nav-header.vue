@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import { Recommendation, Task } from "~/apps/tasks/interfaces";
+  import { useRecNav } from "~/apps/tasks/recs/useRecNav";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import { urls } from "~/urls";
 
@@ -10,16 +11,16 @@
 
   const hooks = {
     taskListStore: useTaskListStore(),
-  };
-
-  const comp = {
-    recNext: computed(() => props.task?.rec_set.recs[hooks.taskListStore.recOpenedIndex.value + 1]),
-    recPrev: computed(() => props.task?.rec_set.recs[hooks.taskListStore.recOpenedIndex.value - 1]),
+    nav: useRecNav(),
   };
 </script>
 
 <template>
-  <CFlex align="center" gap="3" v-if="comp.recPrev.value || comp.recNext.value">
+  <CFlex
+    v-if="hooks.nav.recPrev.value || hooks.nav.recNext.value"
+    align="center"
+    gap="3"
+  >
 <!--    <CButton-->
 <!--      key="2"-->
 <!--      px="3"-->
@@ -29,14 +30,14 @@
 <!--    </CButton>-->
 
     <NuxtLink
-      :to="comp.recPrev.value ? urls.tasks.detailRec(props.task?.slug, comp.recPrev.value?.pk, comp.recPrev.value?.slug) : ''"
+      :to="hooks.nav.recPrev.value ? hooks.nav.recPrevUrl.value : ''"
       :prefetch="true"
     >
       <CButton
         left-icon="bi-caret-left-fill"
         variant="outline"
         fill="blue.500"
-        :disabled="!comp.recPrev.value"
+        :disabled="!hooks.nav.recPrev.value"
         pl="3"
       >
         Previous
@@ -49,17 +50,14 @@
     </CFlex>
 
     <NuxtLink
-      :to="comp.recNext.value ?
-        urls.tasks.detailRec(props.task?.slug, comp.recNext.value?.pk, comp.recNext.value?.slug)
-        : ''
-      "
+      :to="hooks.nav.recNext.value ? hooks.nav.recNextUrl.value : ''"
       :prefetch="true"
     >
       <CButton
         right-icon="bi-caret-right-fill"
         variant="outline"
         fill="blue.500"
-        :disabled="!comp.recNext.value"
+        :disabled="!hooks.nav.recNext.value"
         pr="3"
       >
         Next

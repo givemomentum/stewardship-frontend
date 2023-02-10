@@ -40,7 +40,7 @@
       <chakra.span color="teal.500" font-weight="bold">
         {{ format.money(comp.taskRecExpectedValue.value) }}
       </chakra.span>
-      total potential gifts in this list<chakra.span v-if="comp.taskCompletionPercentage.value">, you're <chakra.span color="teal.500">{{ comp.taskCompletionPercentage.value }}%</chakra.span> done!</chakra.span>
+      total potential gifts in this list
     </CFlex>
 
     <CFlex v-if="comp.recExpectedValue.value" gap="1">

@@ -12,7 +12,6 @@
     userStore: useUserStore(),
     api: useApi(),
     toast: useToast(),
-    batchStore: useEmailBatchStore(),
   };
 
   const state = {
@@ -78,7 +77,7 @@
           p="3"
           px="4"
           bg="gray.50"
-          border-radius="l3"
+          border-radius="lg"
           gap="3"
         >
           <CFlex justify="space-between" align="center">

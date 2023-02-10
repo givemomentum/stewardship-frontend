@@ -1,9 +1,11 @@
 <script lang="ts" setup>
-  import { Recommendation } from "~/apps/tasks/interfaces";
+  import { Recommendation, Task } from "~/apps/tasks/interfaces";
   import { format } from "~/utils";
+  import RRecExpectedValue from "~/apps/tasks/recs/r-donor-expected-value.vue";
 
   const props = defineProps<{
     rec: Recommendation;
+    task: Task;
   }>();
 </script>
 
@@ -13,7 +15,16 @@
     <CHeading font-size="2xl" color="gray.500" font-weight="normal">
       Summary
     </CHeading>
-    <CHStack spacing="20" font-size="lg">
+    
+    <RRecExpectedValue :task="props.task" :rec="props.rec" />
+    
+    <CFlex
+      mt="-1"
+      :direction="{ base: 'column', 'lg': 'row' }"
+      :gap="{ base: 3, lg: 20 }"
+      font-size="lg"
+      flex-flow="wrap-reverse"
+    >
       <chakra.table>
 
         <chakra.tr>
@@ -27,6 +38,10 @@
         <chakra.tr>
           <chakra.td>Giving since</chakra.td>
           <chakra.td>{{ format.date(props.rec.donor.giving_since) }}</chakra.td>
+        </chakra.tr>
+        <chakra.tr v-if="props.rec.donor.birthday">
+          <chakra.td>Birthday</chakra.td>
+          <chakra.td>{{ format.date(props.rec.donor.birthday) }}</chakra.td>
         </chakra.tr>
 
         <chakra.tr
@@ -56,20 +71,23 @@
       </chakra.table>
 
       <CFlex direction="column" font-size="lg">
-        <CFlex py="1" align="center" gap="2" v-if="props.rec.donor.email">
+        <CFlex py="2" align="center" gap="2" v-if="props.rec.donor.email">
           <CIcon size="5" color="gray.500" name="email" />
           {{ props.rec.donor.email }}
+          <CTag v-if="props.rec.donor.do_not_email">Do not email</CTag>
         </CFlex>
-        <CFlex py="1" align="center" gap="2" v-if="props.rec.donor.phone">
+        <CFlex py="2" align="center" gap="2" v-if="props.rec.donor.phone">
           <CIcon size="5" fill="gray.500" name="io-call" />
           {{ props.rec.donor.phone }}
+          <CTag v-if="props.rec.donor.do_not_call">Do not call</CTag>
         </CFlex>
-        <CFlex py="1" align="center" gap="2" v-if="props.rec.donor.mailing_address.city">
+        <CFlex py="2" align="center" gap="2" v-if="props.rec.donor.mailing_address.city">
           <CIcon size="5" fill="gray.500" name="fa-map-marker-alt" />
           {{ props.rec.donor.mailing_address.city }}, {{ props.rec.donor.mailing_address.state }}
+          <CTag v-if="props.rec.donor.do_not_mail">Do not mail</CTag>
         </CFlex>
       </CFlex>
-    </CHStack>
+    </CFlex>
   </CFlex>
 
 </template>
@@ -79,8 +97,8 @@
     td {
       font-size: var(--chakra-fontSizes-lg);
       padding: var(--chakra-space-3);
-      padding-top: var(--chakra-space-1);
-      padding-bottom: var(--chakra-space-1);
+      padding-top: var(--chakra-space-2);
+      padding-bottom: var(--chakra-space-2);
       padding-left: 0;
       border-bottom: 0;
       vertical-align: top;

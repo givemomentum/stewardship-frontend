@@ -34,7 +34,7 @@
     config: ref({
       block_formats: "Paragraph=p; Header 1=h1; Header 2=h2; Header 3=h3; Header 4=h4",
       plugins: comp.plugins.value,
-      toolbar: "styles | bold italic underline strikethrough | link image mergetags align | numlist bullist indent outdent | removeformat",
+      toolbar: props.isReadOnly ? "" : "styles | bold italic underline strikethrough | link image mergetags align | numlist bullist indent outdent | removeformat",
       ...(props.variables ? { mergetags_list: composeMergeTags(props.variables) } : {}),
       font_size_formats: "8pt 9pt 10pt 11pt 12pt 14pt 16pt 18pt 24pt 36pt 48pt",
       font_family_formats: "Andale Mono=andale mono,times; Arial=arial, helvetica, sans-serif; Arial Black=arial black, avant garde; Calibri=Calibri; Book Antiqua=book antiqua,palatino; Courier New=courier new,courier; Georgia=georgia,palatino; Helvetica=helvetica; Impact=impact,chicago; Symbol=symbol; Tahoma=tahoma,arial,helvetica,sans-serif; Terminal=terminal,monaco; Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva; Webdings=webdings; Wingdings=wingdings,zapf dingbats",
@@ -131,5 +131,12 @@
   }
   .tox {
     z-index: var(--chakra-zIndices-popover) !important;
+
+    &.tox-tinymce.tox-tinymce--disabled {
+      border-width: 1px;
+      .tox-editor-header {
+        display: none;
+      }
+    }
   }
 </style>
