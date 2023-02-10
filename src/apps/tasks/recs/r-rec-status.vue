@@ -15,7 +15,7 @@
         return `Logged ${hooks.status.actionTypeLabel.value} to CRM`;
       }
       if (hooks.status.isSkippedToLater.value) {
-        return `Skipped to later`;
+        return `Skipped to handle later`;
       }
       if (hooks.status.isSkippedAsUnqualified.value) {
         return `Marked as unqualified`;
@@ -29,26 +29,23 @@
 
 <template>
   <CAlert
+    v-if="!hooks.status.isNew.value"
     variant="left-accent"
     :status="(hooks.status.isCompleted.value || hooks.status.isSkippedAsHandled.value) ? 'success' : 'info'"
     font-size="lg"
     pr="6"
+    pl="5"
     gap="2"
     :bg="hooks.status.isSkippedAsUnqualified.value ? 'gray.100' : 'var(--alert-bg)'"
     :border-color="hooks.status.isSkippedAsUnqualified.value ? 'gray.500' : 'var(--alert-fg)'"
   >
     <CIcon
-      v-if="hooks.status.isSkippedAsHandled.value"
-      name="check-circle-fill"
-      size="6"
-    />
-    <CIcon
-      v-if="hooks.status.isSkipped.value"
+      v-if="hooks.status.isSkippedToLater.value"
       name="bi-clock-fill"
       size="6"
       fill="blue.600"
     />
-    <CAlertIcon v-if="!hooks.status.isSkippedAsHandled.value && !hooks.status.isSkipped.value" />
+    <CAlertIcon v-if="!hooks.status.isSkipped.value || hooks.status.isSkippedAsHandled.value" />
     {{ comp.label.value }}
   </CAlert>
 </template>

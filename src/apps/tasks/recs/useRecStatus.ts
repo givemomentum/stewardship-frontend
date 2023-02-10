@@ -1,14 +1,13 @@
 import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
-import { useComp } from "~/structs";
-import { urls } from "~/urls";
 
 const hooks = {
   taskListStore: useTaskListStore(),
 };
 
-const comp = useComp(() => {
+export function useRecStatus() {
   const rec = hooks.taskListStore.recOpened;
   return {
+    isNew: computed(() => rec.value?.state === "new"),
     isHandled: computed(() => rec.value?.state !== "new"),
     isCompleted: computed(() => rec.value?.state === "completed"),
     isSkipped: computed(() => rec.value?.state === "dismissed" || rec.value?.state.startsWith("skipped")),
@@ -27,10 +26,4 @@ const comp = useComp(() => {
       return rec.value?.action_type;
     }),
   };
-});
-
-export function useRecStatus() {
-  return {
-    ...comp,
-  }
 }

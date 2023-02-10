@@ -30,8 +30,12 @@
   };
 
   const comp = {
-    currentTasksLink: computed(() => `${urls.tasks.list}${props.isPublishedOnly ? "" : "?include_unpublished=true"}`),
-    allTasksLink: computed(() => `${urls.tasks.listAll}${props.isPublishedOnly ? "" : "?include_unpublished=true"}`),
+    currentTasksLink: computed(
+      () => `${urls.tasks.list}${props.isPublishedOnly ? "" : "?include_unpublished=true"}`
+    ),
+    allTasksLink: computed(
+      () => `${urls.tasks.listAll}${props.isPublishedOnly ? "" : "?include_unpublished=true"}`
+    ),
   };
 
   onMounted(async () => {
@@ -48,7 +52,7 @@
         task => task.slug === props.taskOpenedSlug,
       );
     }
-    await hooks.taskListStore.loadTaskListAndRecs({
+    await hooks.taskListStore.loadTaskList({
       isPublishedOnly: props.isPublishedOnly ?? true,
       isShowAllTasks: props.isShowAllTasks,
     });
@@ -157,19 +161,22 @@
       </CBox>
 
       <CBox mt="2">
-        <NuxtLink v-if="!props.isShowAllTasks" :to="comp.allTasksLink">
+        <NuxtLink v-if="!props.isShowAllTasks" :to="comp.allTasksLink.value">
           <CButton
             size="sm"
             variant="outline"
             bg="white"
+            color-scheme="gray"
           >
             Show completed tasks
           </CButton>
         </NuxtLink>
-        <NuxtLink v-if="props.isShowAllTasks" :to="comp.currentTasksLink">
+        <NuxtLink v-if="props.isShowAllTasks" :to="comp.currentTasksLink.value">
           <CButton
             size="sm"
             variant="outline"
+            color-scheme="gray"
+            bg="white"
           >
             Hide completed tasks
           </CButton>

@@ -6,6 +6,7 @@
   import { Recommendation } from "~/apps/tasks/interfaces";
   import RRecSkipBtn from "~/apps/tasks/recs/r-btn-skip.vue";
   import { useRecNav } from "~/apps/tasks/recs/useRecNav";
+  import { useRecStatus } from "~/apps/tasks/recs/useRecStatus";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import { useNotify } from "~/composables/useNotify";
   import RRecActionEmailAi from "~/apps/tasks/recs/r-action-email-ai.vue";
@@ -20,6 +21,7 @@
     notify: useNotify(),
     taskListStore: useTaskListStore(),
     nav: useRecNav(),
+    status: useRecStatus(),
   };
 
   const state = {
@@ -109,15 +111,18 @@
 
   async function sendEmail() {
     state.isSendingEmail.value = true;
+    
     await hooks.api.post(`/emails/${state.emailOpen.value.pk}/send/`);
     hooks.notify.send(`Email sent`);
     state.emailOpen.value.status = "sent";
     hooks.taskListStore.recOpened.value.state = "completed";
     hooks.taskListStore.recOpened.value.action_description = state.emailContentHtml.value;
     hooks.taskListStore.recOpened.value.action_type = "email";
-    state.isSendingEmail.value = false;
     
     hooks.nav.navigateToRecNext();
+    await hooks.nav.returnToTaskIfHandledAll();
+    
+    state.isSendingEmail.value = false;
   }
 
   function getStatusStyle(email: Email) {
@@ -178,8 +183,15 @@
     w="100%"
     gap="7"
     flex="auto"
-    align="flex-end"
+    :align="hooks.status.isHandled.value ? '' : 'flex-end'"
   >
+    <CFlex gap="4" v-if="comp.isEmailSent.value">
+      <CAlert variant="left-accent" status="success" font-size="lg" pr="6" pl="5">
+        <CAlertIcon />
+        Email sent
+      </CAlert>
+    </CFlex>
+    
     <CHStack w="100%" gap="5">
       <CFlex gap="3px" w="100%" direction="column">
         <CFormLabel font-size="sm" color="gray.500">Subject</CFormLabel>
@@ -252,14 +264,7 @@
       </CButton>
     </CBox>
 
-    <CFlex gap="4" v-if="comp.isEmailSent.value">
-      <CAlert variant="left-accent" status="success" font-size="lg" pr="6" pl="5">
-        <CAlertIcon />
-        Email sent
-      </CAlert>
-    </CFlex>
-
-    <CFlex gap="4" v-else>
+    <CFlex gap="4" v-if="!comp.isEmailSent.value">
       <CButton
         :is-loading="state.isSavingChanges.value"
         z-index="toast"

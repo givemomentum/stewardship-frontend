@@ -34,7 +34,7 @@
   onBeforeMount(async () => {
     hooks.leftMenu.collapse();
     await loadTaskAndRecBySlug();
-    await hooks.taskListStore.fetchDonorAction(hooks.taskListStore.recOpened.value);
+    await hooks.taskListStore.fetchDonorActions(hooks.taskListStore.recOpened.value);
   });
   
   watch(hooks.taskListStore.recOpened, hooks.leftMenu.collapse);
@@ -68,7 +68,7 @@
 
   async function loadTaskAndRecBySlug() {
     if (!hooks.taskListStore.isRecsLoaded.value) {
-      await hooks.taskListStore.loadTaskListAndRecs();
+      await hooks.taskListStore.loadTaskList({ isShowAllTasks: true });
 
       hooks.taskListStore.taskOpened.value = hooks.taskListStore.tasks.value?.find(
         task => task.slug === props.taskSlug,
@@ -112,13 +112,13 @@
       </CFlex>
       <CIcon name="chevron-right" mt="1px" size="12" />
       <CIcon
-        v-if="hooks.status.isCompleted.value"
+        v-if="hooks.status.isCompleted.value || hooks.status.isSkippedAsHandled.value"
         name="check-circle"
         color="green.500"
         size="7"
         mr="2"
       />
-      <CFlex font-weight="bold" :color="hooks.status.isCompleted.value ? 'green.600' : ''">
+      <CFlex font-weight="bold" :color="hooks.status.isCompleted.value || hooks.status.isSkippedAsHandled.value ? 'green.600' : ''">
         {{ hooks.taskListStore.recOpened.value?.donor.name }}
       </CFlex>
 

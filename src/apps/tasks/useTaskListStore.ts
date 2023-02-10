@@ -43,7 +43,7 @@ export function useTaskListStore() {
     state.tasks.value = res.data ?? [];
   }
 
-  async function loadTaskListAndRecs(args?: { isShowAllTasks?: boolean; isPublishedOnly?: boolean }) {
+  async function loadTaskList(args?: { isShowAllTasks?: boolean; isPublishedOnly?: boolean }) {
     await loadTasks({ paramsInitial: ["expand=rec_set"], ...args });
     state.taskOpened.value = state.tasks.value.find(task => task.pk === state.taskOpened.value?.pk) ?? null;
     state.isRecsLoaded.value = true;
@@ -66,7 +66,7 @@ export function useTaskListStore() {
     await hooks.api.patch(`/recs/${rec.pk}/`, { state: rec.state });
   }
 
-  async function fetchDonorAction(rec: Recommendation) {
+  async function fetchDonorActions(rec: Recommendation) {
     const res = await hooks.api.get(`crms/actions/?donor=${rec.donor.pk}`);
     if (res.data) {
       rec.donor.actions = res.data;
@@ -108,10 +108,10 @@ export function useTaskListStore() {
     isGiftHistoryLoaded: state.isGiftHistoryLoaded,
     recOpenedIndex: comp.recOpenedIndex,
     loadTasks: loadTasks,
-    loadTaskListAndRecs: loadTaskListAndRecs,
+    loadTaskList: loadTaskList,
     loadTaskOpenedRecsAndGiftHistory: loadTaskOpenedRecsAndGiftHistory,
     updateRecState: updateRecState,
     setRecFollowUp: setRecFollowUp,
-    fetchDonorAction: fetchDonorAction,
+    fetchDonorActions: fetchDonorActions,
   };
 }

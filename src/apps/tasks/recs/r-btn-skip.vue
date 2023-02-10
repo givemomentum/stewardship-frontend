@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import { Recommendation, RecState } from "~/apps/tasks/interfaces";
+  import { useRecNav } from "~/apps/tasks/recs/useRecNav";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import { useNotify } from "~/composables/useNotify";
 
@@ -11,6 +12,7 @@
     api: useApi(),
     notify: useNotify(),
     taskListStore: useTaskListStore(),
+    nav: useRecNav(),
   };
 
   const state = {
@@ -22,7 +24,12 @@
     await hooks.api.patch(`recs/${props.rec.pk}/`, {
       state: recState
     });
+    // todo does this affect the recs list?
     hooks.taskListStore.recOpened.value.state = recState;
+    hooks.notify.send("Recommendation skipped");
+
+    await hooks.nav.returnToTaskIfHandledAll();
+
     state.isSubmitting.value = false;
   }
 </script>
@@ -35,6 +42,7 @@
       <CButton
         variant="outline"
         color-scheme="gray"
+        :is-loading="state.isSubmitting.value"
       >
         Skip
       </CButton>

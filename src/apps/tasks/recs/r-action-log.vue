@@ -87,16 +87,16 @@
       display="flex"
       flex-direction="column"
       gap="5"
-      align-items="flex-end"
+      :align-items="hooks.status.isHandled ? '' : 'flex-end'"
     >
+      <RRecStatus />
+
       <chakra.textarea
         v-if="!hooks.status.isSkipped.value"
         v-model="state.actionDescription.value"
         :value="state.actionDescription.value || props.rec.action_description"
         :disabled="props.rec.state === 'completed'"
         w="100%"
-        min-h="52"
-        h="52"
         p="3"
         border-width="1px"
         :_hover="{ borderColor: 'gray.400' }"
@@ -129,9 +129,6 @@
         >
           Log to CRM
         </CButton>
-
-        <RRecStatus />
-
       </CFlex>
     </chakra.form>
   </CFlex>
