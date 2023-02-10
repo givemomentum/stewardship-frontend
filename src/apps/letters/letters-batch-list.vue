@@ -57,7 +57,7 @@
       w="fit-content"
     >
       <CFlex justify="space-between" align="center" w="100%" pr="6">
-        <CHeading variant="page-header" font-size="2xl">This week's acknowledgment letters</CHeading>
+        <CHeading variant="page-header" font-size="2xl">Letters</CHeading>
       </CFlex>
 
       <ChakraTable>
