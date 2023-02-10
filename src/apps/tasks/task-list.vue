@@ -135,7 +135,9 @@
                   size="17px"
                   mb="px"
                 />
-                <CText>{{ task.rec_set.recs?.length }}</CText>
+                <CText>
+                  {{ task.rec_set.recs.filter(rec => rec.state === 'completed' || rec.state?.startsWith('skipped')).length }} / {{ task.rec_set.recs?.length }}
+                </CText>
               </CFlex>
             </CFlex>
 
