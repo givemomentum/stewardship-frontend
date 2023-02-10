@@ -1,17 +1,42 @@
 <script lang="ts" setup>
-  import { Task } from "~/apps/tasks/interfaces";
+  import { Recommendation, Task } from "~/apps/tasks/interfaces";
+  import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
+  import { urls } from "~/urls";
 
   const props = defineProps<{ task: Task; }>();
 
   useHead({
     title: props.task.title,
   });
+
+  const hooks = {
+    tasks: useTaskListStore(),
+  };
+
+  function openRec(rec: Recommendation) {
+    hooks.tasks.recOpened.value = rec;
+    navigateTo(urls.tasks.detailRec(props.task.slug, rec.pk, rec.slug));
+  }
 </script>
 
 <template>
-  <CFlex gap="1" direction="column">
-    <CBox p="6" pt="4" bg="white" border="1px solid" border-color="gray.100">
+  <CFlex gap="1" direction="column" bg="gray.75" h="100%">
+    <CBox
+      p="6"
+      pt="4"
+      bg="white"
+      border="1px solid"
+      border-color="gray.100"
+    >
       <TaskHead :task="props.task" size="xl" font-weight="bold" />
+
+      <CButton
+        v-if="props.task.rec_set?.recs?.filter(rec => rec.state === 'new')?.length"
+        @click="openRec(props.task.rec_set?.recs?.find(rec => rec.state === 'new'))"
+        mt="5"
+      >
+        Take action
+      </CButton>
     </CBox>
 
     <TaskDetailRecListGifts
