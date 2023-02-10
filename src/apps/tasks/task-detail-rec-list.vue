@@ -36,24 +36,6 @@
     return state.recOpen.value?.pk === rec.pk;
   }
 
-  async function toggleRecDismissed(rec: Recommendation) {
-    if (rec.state === "dismissed") {
-      rec.state = "new";
-    } else {
-      rec.state = "dismissed";
-    }
-    await hooks.tasks.updateRecState(rec);
-  }
-
-  async function toggleRecFollowUp(rec: Recommendation) {
-    if (rec.is_follow_up_needed) {
-      rec.is_follow_up_needed = false;
-    } else {
-      rec.is_follow_up_needed = true;
-    }
-    await hooks.tasks.setRecFollowUp(rec, rec.is_follow_up_needed);
-  }
-
   function openRec(rec: Recommendation) {
     hooks.tasks.recOpened.value = rec;
     navigateTo(urls.tasks.detailRec(props.task.slug, rec.pk, rec.slug));
@@ -109,10 +91,6 @@
         <chakra.th w="0" />
 
         <slot name="table-headers" />
-        <chakra.th
-          v-if="props.task.rec_set.rule.is_show_dismiss_button_on_task"
-          w="0"
-        />
       </chakra.thead>
 
       <chakra.tbody>
@@ -129,14 +107,28 @@
             :text-decoration="rec.state === 'dismissed' ? 'line-through' : ''"
           >
 
-            <chakra.td text-align="end !important">
+            <chakra.td text-align="center !important">
               <CIcon
-                @click.stop="toggleRecCompletedStatus(rec)"
-                :name="rec.state === 'completed' ? 'io-checkmark-circle' : 'io-checkmark-circle-outline'"
+                v-if="rec.state === 'completed' || rec.state === 'new' || rec.state === 'skipped_as_already_handled'"
+                :name="(rec.state === 'completed' || rec.state === 'skipped_as_already_handled') ? 'io-checkmark-circle' : 'io-checkmark-circle-outline'"
                 mb="px"
-                :_hover="{ color: 'teal.300', fill: 'teal.300' }"
-                transition="all 0.3s"
                 size="21px"
+                :color="(rec.state === 'completed' || rec.state === 'skipped_as_already_handled') ? 'teal.400' : 'gray.500'"
+                :fill="(rec.state === 'completed' || rec.state === 'skipped_as_already_handled') ? 'teal.400' : 'gray.500'"
+              />
+              <CIcon
+                v-if="rec.state?.startsWith('skipped_to')"
+                name="bi-clock"
+                mb="px"
+                size="18px"
+                :color="rec.state === 'completed' ? 'teal.400' : 'gray.500'"
+                :fill="rec.state === 'completed' ? 'teal.400' : 'gray.500'"
+              />
+              <CIcon
+                v-if="rec.state === 'skipped_as_unqualified'"
+                name="x"
+                mb="px"
+                size="18px"
                 :color="rec.state === 'completed' ? 'teal.400' : 'gray.500'"
                 :fill="rec.state === 'completed' ? 'teal.400' : 'gray.500'"
               />
@@ -167,26 +159,6 @@
 
             <slot name="table-columns" :rec="rec" />
 
-            <chakra.td
-              v-if="props.task.rec_set.rule.is_show_dismiss_button_on_task"
-              padding-left="0"
-            >
-              <VTooltip>
-                <div>
-                  <CIconButton
-                    @click.stop="toggleRecDismissed(rec)"
-                    variant="ghost"
-                    :icon="rec.state === 'dismissed' ? 'plus' : 'x'"
-                    size="sm"
-                    pl="0"
-                    aria-label="Dismiss"
-                  />
-                </div>
-                <template v-slot:popper>
-                  <CText font-size="xs">{{ rec.state === 'dismissed' ? 'Restore' : 'Dismiss' }}</CText>
-                </template>
-              </VTooltip>
-            </chakra.td>
           </chakra.tr>
 
           <chakra.tr

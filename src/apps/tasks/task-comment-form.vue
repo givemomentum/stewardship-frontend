@@ -95,11 +95,11 @@
         margin-right: auto;
         margin-left: 0;
         margin-bottom: 0;
-        background: none !important;
-        border: 1px solid var(--chakra-colors-blue-500);
-        color: var(--chakra-colors-blue-500) !important;
+        background: white !important;
+        border: 1px solid var(--chakra-colors-gray-500);
+        color: var(--chakra-colors-gray-500) !important;
         &:hover {
-          background: var(--chakra-colors-blue-50) !important;
+          background: var(--chakra-colors-gray-50) !important;
         }
       }
     }
