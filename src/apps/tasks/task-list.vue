@@ -47,14 +47,27 @@
       isPublishedOnly: props.isPublishedOnly ?? true,
       isShowAllTasks: props.isShowAllTasks,
     });
+    
+    let isNeedToTryLoadingAllTasks = props.isShowAllTasks ?? false;
     if (props.taskOpenedSlug) {
-      hooks.taskListStore.taskOpened.value = hooks.taskListStore.tasks.value.find(
+      let taskFromSlug = hooks.taskListStore.tasks.value.find(
         task => task.slug === props.taskOpenedSlug,
       );
+      isNeedToTryLoadingAllTasks = !taskFromSlug;
+      if (isNeedToTryLoadingAllTasks) {
+        await hooks.taskListStore.loadTasks({
+          isPublishedOnly: props.isPublishedOnly ?? true,
+          isShowAllTasks: true
+        });
+        taskFromSlug = hooks.taskListStore.tasks.value.find(
+          task => task.slug === props.taskOpenedSlug,
+        );
+      }
+      hooks.taskListStore.taskOpened.value = taskFromSlug;
     }
     await hooks.taskListStore.loadTaskList({
       isPublishedOnly: props.isPublishedOnly ?? true,
-      isShowAllTasks: props.isShowAllTasks,
+      isShowAllTasks: isNeedToTryLoadingAllTasks,
     });
   });
 
