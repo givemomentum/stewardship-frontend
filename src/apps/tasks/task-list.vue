@@ -39,10 +39,6 @@
   };
 
   onMounted(async () => {
-    if (hooks.taskListStore.isRecsLoaded.value) {
-      return;
-    }
-
     await hooks.taskListStore.loadTasks({
       isPublishedOnly: props.isPublishedOnly ?? true,
       isShowAllTasks: props.isShowAllTasks,
@@ -65,7 +61,7 @@
       }
       hooks.taskListStore.taskOpened.value = taskFromSlug;
     }
-    await hooks.taskListStore.loadTaskList({
+    await hooks.taskListStore.loadTasksRecSet({
       isPublishedOnly: props.isPublishedOnly ?? true,
       isShowAllTasks: isNeedToTryLoadingAllTasks,
     });
@@ -137,7 +133,7 @@
               </CFlex>
 
               <CFlex
-                v-if="task.rec_set?.recs?.length"
+                v-if="task.rec_set?.rec_progress"
                 align="center"
                 color="gray.500"
                 gap="1"
@@ -149,7 +145,7 @@
                   mb="px"
                 />
                 <CText>
-                  {{ task.rec_set.recs.filter(rec => rec.state === 'completed' || rec.state?.startsWith('skipped')).length }} / {{ task.rec_set.recs?.length }}
+                  {{ task.rec_set?.rec_progress }}
                 </CText>
               </CFlex>
             </CFlex>
@@ -186,7 +182,7 @@
             Show completed tasks
           </CButton>
         </NuxtLink>
-        <NuxtLink v-if="props.isShowAllTasks" :to="comp.currentTasksLink.value">
+        <NuxtLink v-else :to="comp.currentTasksLink.value">
           <CButton
             size="sm"
             variant="outline"

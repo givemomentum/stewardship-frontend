@@ -8,7 +8,7 @@
   }>();
 
   const comp = {
-    taskRecExpectedValue: computed(() => props.task?.rec_set?.recs.reduce(
+    taskRecExpectedValue: computed(() => props.task?.rec_set?.recs?.reduce(
       (accumulator, rec) => accumulator + calculateExpectedValue(rec),
       0,
     )),

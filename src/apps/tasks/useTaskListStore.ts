@@ -43,7 +43,7 @@ export function useTaskListStore() {
     state.tasks.value = res.data ?? [];
   }
 
-  async function loadTaskList(args?: { isShowAllTasks?: boolean; isPublishedOnly?: boolean }) {
+  async function loadTasksRecSet(args?: { isShowAllTasks?: boolean; isPublishedOnly?: boolean }) {
     await loadTasks({ paramsInitial: ["expand=rec_set"], ...args });
     state.taskOpened.value = state.tasks.value.find(task => task.pk === state.taskOpened.value?.pk) ?? null;
     state.isRecsLoaded.value = true;
@@ -108,7 +108,7 @@ export function useTaskListStore() {
     isGiftHistoryLoaded: state.isGiftHistoryLoaded,
     recOpenedIndex: comp.recOpenedIndex,
     loadTasks: loadTasks,
-    loadTaskList: loadTaskList,
+    loadTasksRecSet: loadTasksRecSet,
     loadTaskOpenedRecsAndGiftHistory: loadTaskOpenedRecsAndGiftHistory,
     updateRecState: updateRecState,
     setRecFollowUp: setRecFollowUp,

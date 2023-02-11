@@ -54,6 +54,7 @@ export interface RecommendationSet {
   type: "donors" | "gifts" | "letters" | "donor_emails";
   email_batch?: PrimaryKey;
   letter_batch?: PrimaryKey;
+  rec_progress: number;
   recs_datetime_filter_end?: string;
   recs_datetime_filter_start?: string;
 }

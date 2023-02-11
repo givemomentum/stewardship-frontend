@@ -68,7 +68,7 @@
 
   async function loadTaskAndRecBySlug() {
     if (!hooks.taskListStore.isRecsLoaded.value) {
-      await hooks.taskListStore.loadTaskList({ isShowAllTasks: true });
+      await hooks.taskListStore.loadTasksRecSet({ isShowAllTasks: true });
 
       hooks.taskListStore.taskOpened.value = hooks.taskListStore.tasks.value?.find(
         task => task.slug === props.taskSlug,
