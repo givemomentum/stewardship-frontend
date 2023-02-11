@@ -4,7 +4,7 @@
 
   const props = defineProps<{
     task: Task;
-    rec: Recommendation;
+    rec?: Recommendation;
   }>();
 
   const comp = {
@@ -20,7 +20,11 @@
     }),
   };
 
-  function calculateExpectedValue(rec: Recommendation) {
+  function calculateExpectedValue(rec?: Recommendation) {
+    if (!rec) {
+      return 0;
+    }
+    
     const lastGifts = rec?.donor?.gifts.slice(0, 3);
     const lastGiftsSum = lastGifts?.reduce((acc, gift) => acc + Number(gift.amount), 0);
     if (!lastGiftsSum) {

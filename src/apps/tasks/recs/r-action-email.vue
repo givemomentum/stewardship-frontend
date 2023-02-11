@@ -185,7 +185,7 @@
     flex="auto"
     :align="hooks.status.isHandled.value ? '' : 'flex-end'"
   >
-    <CFlex gap="4" v-if="comp.isEmailSent.value">
+    <CFlex gap="4" v-if="comp.isEmailSent.value" w="100%">
       <CAlert variant="left-accent" status="success" font-size="lg" pr="6" pl="5">
         <CAlertIcon />
         Email sent

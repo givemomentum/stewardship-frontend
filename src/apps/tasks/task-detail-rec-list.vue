@@ -206,18 +206,6 @@
                   <CFlex font-size="md">{{ data["value"] }}</CFlex>
                 </CFlex>
 
-                <CFlex
-                  direction="column"
-                  v-if="rec.donor?.gifts?.filter(g => Number(g.amount))?.length"
-                >
-                  <CFlex color="gray.400" font-size="xs">Giving history</CFlex>
-                  <RecDonorGiftChart
-                    v-if="isCurrentRec(rec)"
-                    :rec="rec"
-                    :key="rec.pk"
-                  />
-                </CFlex>
-
               </CFlex>
 
             </chakra.td>

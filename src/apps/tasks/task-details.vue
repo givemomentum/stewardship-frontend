@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import { Recommendation, Task } from "~/apps/tasks/interfaces";
+  import RDonorExpectedValue from "~/apps/tasks/recs/r-donor-expected-value.vue";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import { urls } from "~/urls";
 
@@ -29,6 +30,13 @@
       border-color="gray.100"
     >
       <TaskHead :task="props.task" size="xl" font-weight="bold" />
+      
+      <CFlex mt="4">
+        <RDonorExpectedValue
+          v-if="props.task?.rec_set?.type === 'donors'"
+          :task="props.task"
+        />
+      </CFlex>
 
       <CButton
         v-if="props.task.rec_set?.recs?.filter(rec => rec.state === 'new')?.length"

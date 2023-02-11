@@ -40,6 +40,7 @@
     </CHeading>
 
     <CFlex direction="column" w="100%" gap="6">
+
       <CFlex
         direction="column"
         v-for="(action, actionIndex) in (state.isAllActionsVisible.value ? props.actions : props.actions.slice(0, 3))"
@@ -88,6 +89,7 @@
           </CBox>
         </CFlex>
       </CFlex>
+
     </CFlex>
 
     <CButton
