@@ -9,9 +9,9 @@
     },
     middleware (to, from) {
       if (Number(to.params.rec_id) > Number(from.params.rec_id)) {
-        to.meta.pageTransition.name = 'slide-left';
-      } else {
         to.meta.pageTransition.name = 'slide-right';
+      } else {
+        to.meta.pageTransition.name = 'slide-left';
       }
     }
   });
@@ -29,7 +29,7 @@
   .slide-left-leave-active,
   .slide-right-enter-active,
   .slide-right-leave-active {
-    transition: all 0.15s;
+    transition: all 0.3s;
   }
   .slide-left-enter-from {
     opacity: 0;
