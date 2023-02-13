@@ -27,7 +27,7 @@
   };
   
   const comp = {
-    typesOther: ["call", "task", "other"],
+    typesOther: ["task", "other"],
   };
 
   watch(() => props.type, (newType) => {
@@ -87,7 +87,7 @@
       display="flex"
       flex-direction="column"
       gap="5"
-      :align-items="hooks.status.isHandled ? '' : 'flex-end'"
+      align-items="flex-end"
     >
       <RRecStatus />
 
