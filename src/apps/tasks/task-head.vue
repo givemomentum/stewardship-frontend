@@ -30,10 +30,10 @@
           {{ task.title }}
         </CText>
 
-        <CTag v-if="props.isRecSetLoaded && !comp.isOrgKesslerEdgeCase">
+        <CTag v-if="props.isRecSetLoaded && !comp.isOrgKesslerEdgeCase.value">
           {{ format.dateHumanShort(props.task.rec_set?.recs_datetime_filter_end ?? props.task.created_at) }}
         </CTag>
-        <CTag v-if="props.isRecSetLoaded && comp.isOrgKesslerEdgeCase">
+        <CTag v-if="props.isRecSetLoaded && comp.isOrgKesslerEdgeCase.value">
           {{ format.dateHumanShort(props.task.rec_set?.recs_datetime_filter_start ?? props.task.created_at) }}
         </CTag>
 
