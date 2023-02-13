@@ -10,20 +10,16 @@ const hooks = {
 
 const comp = {
   task: computed(() => hooks.taskListStore.taskOpened.value),
-  recNext: computed(
-    () => (
-      hooks.taskListStore.taskOpened.value
-      ?.rec_set
-      .recs[hooks.taskListStore.recOpenedIndex.value + 1]
-    )
-  ),
-  recPrev: computed(
-    () => (
-      hooks.taskListStore.taskOpened.value
-      ?.rec_set
-      .recs[hooks.taskListStore.recOpenedIndex.value - 1]
-    )
-  ),
+  recNext: computed(() => {
+    if (hooks.taskListStore.taskOpened.value?.rec_set.recs) {
+      return hooks.taskListStore.taskOpened.value.rec_set.recs[hooks.taskListStore.recOpenedIndex.value + 1]
+    }
+  }),
+  recPrev: computed(() => {
+    if (hooks.taskListStore.taskOpened.value?.rec_set.recs) {
+      return hooks.taskListStore.taskOpened.value.rec_set.recs[hooks.taskListStore.recOpenedIndex.value - 1]
+    }
+  }),
 };
 
 export function useRecNav() {
