@@ -50,7 +50,7 @@ export function useTaskListStore() {
   }
 
   async function loadTaskOpenedRecsAndGiftHistory() {
-    if (state.taskOpened.value.rec_set) {
+    if (state.taskOpened.value?.rec_set) {
       const res = await hooks.api.get(
         `/rec-sets/${state.taskOpened.value.rec_set.pk}/?expand=recs.email,recs.donor.gifts`,
       );
@@ -58,8 +58,8 @@ export function useTaskListStore() {
         sortRecs(res.data);
         state.taskOpened.value.rec_set = res.data;
       }
+      state.isGiftHistoryLoaded.value = true;
     }
-    state.isGiftHistoryLoaded.value = true;
   }
 
   async function updateRecState(rec: Recommendation) {
