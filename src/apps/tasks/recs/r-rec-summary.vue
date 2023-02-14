@@ -66,6 +66,11 @@
           <chakra.td>{{ data["value"] }}</chakra.td>
         </chakra.tr>
 
+        <chakra.tr v-if="props.rec.donor?.spouse_name">
+          <chakra.td>Spouse</chakra.td>
+          <chakra.td>{{ props.rec.donor.spouse_name }}</chakra.td>
+        </chakra.tr>
+
         <chakra.tr v-if="props.rec.explanation">
           <chakra.td>Reason</chakra.td>
           <chakra.td color="gray.500">{{ props.rec.explanation }}
