@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { onMounted, ref } from "vue";
-  import { Recommendation, Task } from "~/apps/tasks/interfaces";
+  import { Rec, Task } from "~/apps/tasks/interfaces";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import { urls } from "~/urls";
   import { useApi } from "~/composables/useApi";
@@ -14,7 +14,7 @@
   }>();
 
   const state = {
-    recOpen: ref<Recommendation | null>(null),
+    recOpen: ref<Rec | null>(null),
     emailBatch: ref(null as EmailBatch | null),
   };
 
@@ -32,11 +32,11 @@
     await hooks.tasks.loadTaskOpenedRecsAndGiftHistory();
   });
 
-  function isCurrentRec(rec: Recommendation): boolean {
+  function isCurrentRec(rec: Rec): boolean {
     return state.recOpen.value?.pk === rec.pk;
   }
 
-  function openRec(rec: Recommendation) {
+  function openRec(rec: Rec) {
     hooks.tasks.recOpened.value = rec;
     navigateTo(urls.tasks.detailRec(props.task.slug, rec.pk, rec.slug));
   }

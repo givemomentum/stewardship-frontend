@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-  import { Recommendation, Task } from "~/apps/tasks/interfaces";
+  import { Rec, Task } from "~/apps/tasks/interfaces";
   import { useRecNav } from "~/apps/tasks/recs/useRecNav";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import { urls } from "~/urls";
 
   const props = defineProps<{
     task?: Task;
-    rec?: Recommendation;
+    rec?: Rec;
   }>();
 
   const hooks = {

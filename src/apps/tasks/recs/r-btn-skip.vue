@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-  import { Recommendation, RecState } from "~/apps/tasks/interfaces";
+  import { Rec, RecState } from "~/apps/tasks/interfaces";
   import { useRecNav } from "~/apps/tasks/recs/useRecNav";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import { useNotify } from "~/composables/useNotify";
 
   const props = defineProps<{
-    rec: Recommendation;
+    rec: Rec;
   }>();
 
   const hooks = {
@@ -43,8 +43,9 @@
         variant="outline"
         color-scheme="gray"
         :is-loading="state.isSubmitting.value"
+        size="lg"
       >
-        Skip
+        Dismiss
       </CButton>
     </div>
 

@@ -1,12 +1,12 @@
 <script lang="ts" setup>
   import { ref, watch } from "vue";
   import { CrmDonor } from "~/apps/letters/interfaces";
-  import { Recommendation } from "~/apps/tasks/interfaces";
+  import { Rec } from "~/apps/tasks/interfaces";
   import { format } from "~/utils";
   import { parseISO } from "date-fns";
 
   const props = defineProps<{
-    rec: Recommendation;
+    rec: Rec;
   }>();
 
   interface GiftSeries {
@@ -27,7 +27,7 @@
     loadChartData(props.rec);
   });
 
-  watch(() => props.rec, (recNew?: Recommendation) => {
+  watch(() => props.rec, (recNew?: Rec) => {
     if (!recNew) {
       return;
     }
@@ -52,7 +52,7 @@
     };
   }
 
-  function loadChartData(rec: Recommendation) {
+  function loadChartData(rec: Rec) {
     if (!rec?.donor) {
       return;
     }

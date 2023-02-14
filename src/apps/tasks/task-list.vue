@@ -6,7 +6,7 @@
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import { useUserStore } from "~/apps/auth/useUserStore";
   import { formatDistance } from "date-fns";
-  import { useBackgroundColorControl } from "~/composables/useBackgroundColorControl";
+  import { useLayoutControl } from "~/composables/useLayoutControl";
   import { urls } from "~/urls";
   import { computed } from "vue";
 
@@ -19,7 +19,7 @@
   const hooks = {
     config: useRuntimeConfig(),
     api: useApi(),
-    bgColorControl: useBackgroundColorControl(),
+    layout: useLayoutControl(),
     userStore: useUserStore(),
     taskListStore: useTaskListStore(),
     userListStore: useUserListStore(),
@@ -67,8 +67,8 @@
     });
   });
 
-  onMounted(() => hooks.bgColorControl.color.value = "gray.75");
-  onBeforeUnmount(() => hooks.bgColorControl.color.value = "white");
+  onMounted(() => hooks.layout.bg.value = "gray.75");
+  onBeforeUnmount(() => hooks.layout.bg.value = "white");
 
   watch(hooks.taskListStore.taskOpened, (task?: Task) => {
     if (task) {
@@ -91,76 +91,74 @@
     </CFlex>
 
     <CFlex gap="6" direction="column">
-      <CLink
+      <NuxtLink
         v-for="task in hooks.taskListStore.tasks.value"
         :key="task.pk"
-        @click.prevent="hooks.taskListStore.taskOpened.value = task"
-        :href="urls.tasks.detail(task.slug)"
-        :_hover="{ cursor: 'pointer', borderColor: 'gray.200' }"
-        border-radius="lg"
-        border="1px solid white"
+        :to="urls.tasks.detail(task.slug)"
       >
-        <CFlex
-          direction="column"
-          gap="3"
-          p="4"
-          max-w="700px"
-          min-w="600px"
-          bg="white"
+        <CLink
+          :_hover="{ cursor: 'pointer', borderColor: 'gray.200' }"
           border-radius="lg"
+          border="1px solid white"
         >
-          <TaskHead
-            :task="task"
-            :is-preview="true"
-          />
-
           <CFlex
-            :justify="task.comments_count ? 'space-between' : 'flex-end'"
-            align="center"
-            font-size="xs"
-            color="gray.500"
+            direction="column"
+            gap="3"
+            p="4"
+            max-w="700px"
+            min-w="600px"
+            bg="white"
+            border-radius="lg"
           >
-
-            <CFlex gap="5">
-              <CFlex
-                v-if="task.comments_count"
-                align="center"
-                color="gray.500"
-                gap="1"
-              >
-                <CIcon name="message-square" />
-                <CText>{{ task.comments_count }}</CText>
+            <TaskHead
+              :task="task"
+              :is-preview="true"
+            />
+  
+            <CFlex
+              justify="space-between"
+              align="flex-end"
+              key="4"
+              font-size="xs"
+              color="gray.500"
+            >
+              <CFlex gap="5">
+                <CFlex
+                  v-if="task.comments_count"
+                  align="center"
+                  color="gray.500"
+                  gap="1"
+                >
+                  <CIcon name="message-square" />
+                  <CText>{{ task.comments_count }}</CText>
+                </CFlex>
+  
+                <CFlex
+                  v-if="task.rec_set?.rec_progress"
+                  align="center"
+                  color="gray.500"
+                  gap="1"
+                >
+                  <CIcon
+                    :name="task.rec_set.type === 'gifts' ? 'fa-donate' : 'bi-people-fill'"
+                    fill="gray.400"
+                    size="17px"
+                    mb="px"
+                  />
+                  <CText>
+                    {{ task.rec_set?.rec_progress }}
+                  </CText>
+                </CFlex>
               </CFlex>
-
-              <CFlex
-                v-if="task.rec_set?.rec_progress"
-                align="center"
-                color="gray.500"
-                gap="1"
-              >
-                <CIcon
-                  :name="task.rec_set.type === 'gifts' ? 'fa-donate' : 'bi-people-fill'"
-                  fill="gray.400"
-                  size="17px"
-                  mb="px"
-                />
-                <CText>
-                  {{ task.rec_set?.rec_progress }}
-                </CText>
-              </CFlex>
+  
+              <CButton>Handle</CButton>
+  
             </CFlex>
-
-            <CFlex ml="auto">
-              {{
-                formatDistance(new Date(task.created_at), new Date(), {
-                  addSuffix: true,
-                })
-              }}
-            </CFlex>
-
+            
+  
           </CFlex>
-        </CFlex>
-      </CLink>
+        </CLink>
+      </NuxtLink>
 
       <CBox v-if="!hooks.taskListStore.tasks.value.length && hooks.taskListStore.isRecsLoaded.value">
         <CHeading v-if="!props.isShowAllTasks" font-size="xl" font-weight="normal">

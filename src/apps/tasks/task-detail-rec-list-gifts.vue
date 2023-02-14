@@ -1,8 +1,8 @@
 <script lang="ts" setup>
   import { useRuntimeConfig } from "#app";
   import { ref } from "vue";
-  import { Recommendation, Task } from "~/apps/tasks/interfaces";
-  import { format, getCommunicationPreferences, getRecurringGiftDescription } from "~/utils";
+  import { Rec, Task } from "~/apps/tasks/interfaces";
+  import { format } from "~/utils";
 
   const props = defineProps<{ task: Task }>();
 
@@ -22,7 +22,7 @@
   };
 
   // todo doesn't appear to be used anywhere, even on YSGN for whom it was built
-  function copyDonorInfo(rec: Recommendation) {
+  function copyDonorInfo(rec: Rec) {
     state.donorCopyData.value = rec.donor.letter_label;
     hooks.clipboard.copy();
     state.copyTooltip.value = "Copied";

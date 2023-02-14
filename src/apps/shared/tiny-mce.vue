@@ -2,6 +2,7 @@
   import Editor from "@tinymce/tinymce-vue";
   import { computed, ref, watch } from "vue";
   import { LetterTemplateVariable } from "~/apps/letters/interfaces";
+  import { useStateVar } from "~/structs";
 
   const props = defineProps<{
     modelValue?: string;
@@ -113,7 +114,7 @@
 </script>
 
 <template>
-  <div v-if="state.isVisible.value">
+  <div v-if="state.isVisible.value" class="tiny-mce">
     <Editor
       api-key="sqzu7ujp1iezh799a6xjbryjl4xjzzcktw0kopn9yxl3mzkr"
       v-model="value"
@@ -124,18 +125,29 @@
 </template>
 
 <style lang="scss">
-  .tox-edit-area__iframe {
-    $toolbar-height: 88px;
-    $page-pt: 32px;
-    max-height: calc(100vh - $toolbar-height - $page-pt);
-  }
-  .tox {
-    z-index: var(--chakra-zIndices-popover) !important;
+  .tiny-mce {
+    .tox-edit-area__iframe {
+      $toolbar-height: 88px;
+      $page-pt: 32px;
+      max-height: calc(100vh - $toolbar-height - $page-pt);
+    }
+    .tox {
+      z-index: var(--chakra-zIndices-popover) !important;
 
-    &.tox-tinymce.tox-tinymce--disabled {
-      border-width: 1px;
-      .tox-editor-header {
-        display: none;
+      &.tox-tinymce {
+        border-width: 1px;
+        border-color: var(--chakra-colors-gray-200);
+      }
+      &.tox-tinymce.tox-tinymce--disabled {
+        border-width: 1px;
+        .tox-editor-header {
+          display: none;
+        }
+      }
+      &:not(.tox-tinymce-inline) .tox-editor-header {
+        box-shadow: none;
+        border-bottom: 1px solid;
+        border-color: var(--chakra-colors-gray-200);
       }
     }
   }

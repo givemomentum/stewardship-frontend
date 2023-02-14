@@ -49,7 +49,7 @@
       <TaskAssignee :task="props.task" />
     </CFlex>
 
-    <TaskStatus :task="props.task" />
+    <TaskStatus :task="props.task" v-if="props.task.status !== 'recommended'" />
 
     <CText
       class="task-desc"

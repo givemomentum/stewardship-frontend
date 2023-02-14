@@ -1,28 +1,32 @@
 <script lang="ts" setup>
-  import { Recommendation, Task } from "~/apps/tasks/interfaces";
+  import { Rec, Task } from "~/apps/tasks/interfaces";
   import { format } from "~/utils";
   import RRecExpectedValue from "~/apps/tasks/recs/r-donor-expected-value.vue";
 
   const props = defineProps<{
-    rec: Recommendation;
+    rec: Rec;
     task: Task;
   }>();
 </script>
 
 <template>
 
-  <CFlex gap="4" direction="column">
-    <CHeading font-size="2xl" color="gray.500" font-weight="normal">
-      Summary
+  <CFlex gap="4" direction="column" pt="8">
+    <CHeading font-size="2xl" color="gray.700" font-weight="normal">
+      {{ props.rec.donor.name }}
     </CHeading>
-    
-    <RRecExpectedValue :task="props.task" :rec="props.rec" />
-    
+
+    <RRecExpectedValue
+      :task="props.task"
+      :rec="props.rec"
+      :is-show-total="false"
+      key="3"
+    />
+
     <CFlex
       mt="-1"
       :direction="{ base: 'column', 'lg': 'row' }"
       :gap="{ base: 3, lg: 20 }"
-      font-size="lg"
       flex-flow="wrap-reverse"
     >
       <chakra.table>
@@ -70,7 +74,7 @@
 
       </chakra.table>
 
-      <CFlex direction="column" font-size="lg">
+      <CFlex direction="column">
         <CFlex py="2" align="center" gap="2" v-if="props.rec.donor.email">
           <CIcon size="5" color="gray.500" name="email" />
           {{ props.rec.donor.email }}
@@ -95,7 +99,7 @@
 <style lang="scss" scoped>
   table {
     td {
-      font-size: var(--chakra-fontSizes-lg);
+      font-size: var(--chakra-fontSizes-md);
       padding: var(--chakra-space-3);
       padding-top: var(--chakra-space-2);
       padding-bottom: var(--chakra-space-2);

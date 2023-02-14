@@ -1,5 +1,5 @@
 import { PrimaryKey } from "~/apps/auth/interfaces";
-import { Recommendation, RecommendationSet, Task } from "~/apps/tasks/interfaces";
+import { Rec, RecommendationSet, Task } from "~/apps/tasks/interfaces";
 
 export interface EmailTemplate {
   pk: PrimaryKey;
@@ -25,7 +25,7 @@ export interface EmailBatch {
 
 export interface Email {
   pk: PrimaryKey;
-  rec: Recommendation;
+  rec: Rec;
   template: EmailTemplate;
 
   subject: string;

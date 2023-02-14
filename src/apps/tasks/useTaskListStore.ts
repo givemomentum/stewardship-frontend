@@ -1,11 +1,11 @@
 import { ref } from "vue";
 import { useApi } from "~/composables/useApi";
-import { Recommendation, RecommendationSet, Task } from "~/apps/tasks/interfaces";
+import { Rec, RecommendationSet, Task } from "~/apps/tasks/interfaces";
 
 const state = {
   tasks: ref<Task[]>([]),
   taskOpened: ref<Task | null>(null),
-  recOpened: ref<Recommendation | null>(null),
+  recOpened: ref<Rec | null>(null),
   isRecsLoaded: ref<boolean>(false),
   isGiftHistoryLoaded: ref<boolean>(false),
 };
@@ -62,18 +62,18 @@ export function useTaskListStore() {
     }
   }
 
-  async function updateRecState(rec: Recommendation) {
+  async function updateRecState(rec: Rec) {
     await hooks.api.patch(`/recs/${rec.pk}/`, { state: rec.state });
   }
 
-  async function fetchDonorActions(rec: Recommendation) {
+  async function fetchDonorActions(rec: Rec) {
     const res = await hooks.api.get(`crms/actions/?donor=${rec.donor.pk}`);
     if (res.data) {
       rec.donor.actions = res.data;
     }
   }
 
-  async function setRecFollowUp(rec: Recommendation, isFollowUpNeeded: boolean) {
+  async function setRecFollowUp(rec: Rec, isFollowUpNeeded: boolean) {
     await hooks.api.patch(`/recs/${rec.pk}/`, { is_follow_up_needed: isFollowUpNeeded });
   }
 

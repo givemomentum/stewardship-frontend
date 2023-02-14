@@ -55,7 +55,7 @@
       v-model="state.isDrawerOpen.value"
       w="calc(850px + var(--chakra-spaces-6) * 2)"
     >
-      <CFlex gap="3" direction="column">
+      <CFlex gap="3" direction="column" >
         <CBox
           min-w="787"
           p="6"

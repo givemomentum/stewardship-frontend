@@ -1,10 +1,11 @@
 <script lang="ts" setup>
   import { format } from "~/utils";
-  import { Recommendation, Task } from "~/apps/tasks/interfaces";
+  import { Rec, Task } from "~/apps/tasks/interfaces";
 
   const props = defineProps<{
     task: Task;
-    rec?: Recommendation;
+    rec?: Rec;
+    isShowTotal?: boolean;
   }>();
 
   const comp = {
@@ -20,7 +21,7 @@
     }),
   };
 
-  function calculateExpectedValue(rec?: Recommendation) {
+  function calculateExpectedValue(rec?: Rec) {
     if (!rec) {
       return 0;
     }
@@ -36,9 +37,13 @@
 </script>
 
 <template>
-  <CFlex direction="column" font-size="xl" gap="2">
+  <CFlex direction="column" font-size="lg" gap="2">
     <CFlex
-      v-if="comp.taskRecExpectedValue.value && (comp.taskRecExpectedValue.value !== comp.recExpectedValue.value)"
+      v-if="(
+        (props.isShowTotal ?? true)
+        && comp.taskRecExpectedValue.value
+        && (comp.taskRecExpectedValue.value !== comp.recExpectedValue.value)
+      )"
       gap="1"
     >
       <chakra.span color="teal.500" font-weight="bold">
@@ -51,7 +56,7 @@
       <chakra.span color="teal.500" font-weight="bold">
         {{ format.money(comp.recExpectedValue.value) }}
       </chakra.span>
-      {{ props.rec?.donor?.first_name }}'s potential gift
+      potential gift
     </CFlex>
   </CFlex>
 </template>

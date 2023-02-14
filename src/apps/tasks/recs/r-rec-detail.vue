@@ -8,7 +8,7 @@
   import RRecEmailTemplateBtn from "~/apps/tasks/recs/r-btn-email-template.vue";
   import RRecLastActions from "~/apps/tasks/recs/r-last-actions.vue";
   import RRecSummary from "~/apps/tasks/recs/r-rec-summary.vue";
-  import { useRecStatus } from "~/apps/tasks/recs/useRecStatus";
+  import { useRecStatus, status } from "~/apps/tasks/recs/useRecStatus";
   import { useComp, useHooks } from "~/structs";
   import { format } from "~/utils";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
@@ -24,6 +24,7 @@
     return {
       taskListStore: taskListStore,
       leftMenu: useLeftMenu(),
+      layout: useLayoutControl(),
       status: useRecStatus(),
       head: useHead({
         title: taskListStore.recOpened.value?.donor.name,
@@ -32,13 +33,13 @@
   });
 
   onBeforeMount(async () => {
-    hooks.leftMenu.collapse();
+    hooks.layout.isPaddingEnabled.value = false;
     await loadTaskAndRecBySlug();
     await hooks.taskListStore.fetchDonorActions(hooks.taskListStore.recOpened.value);
   });
   
-  watch(hooks.taskListStore.recOpened, hooks.leftMenu.collapse);
-  onBeforeUnmount(hooks.leftMenu.unfold); // unMount fires every time we change recOpen
+  watch(hooks.taskListStore.recOpened, () => hooks.layout.isPaddingEnabled.value = false);
+  onBeforeUnmount(() => hooks.layout.isPaddingEnabled.value = true); // unMount fires every time we change recOpen
 
   const comp = useComp(() => {
     const recProxy = hooks.taskListStore.recOpened;
@@ -95,36 +96,40 @@
 </script>
 
 <template>
-  <CFlex direction="column" :gap="comp.spaceLg" w="100%" pb="24">
+  <CFlex direction="column" w="100%" h="100%">
 
-    <CFlex align="center" font-size="3xl">
-      <CFlex>
+    <CFlex
+      py="3"
+      pl="5"
+      font-size="2xl"
+      direction="column"
+      gap="0"
+      border-bottom="1px solid"
+      border-color="gray.100"
+      z-index="sticky"
+      bg="#2c3849"
+      color="white"
+    >
+      <CFlex align="center" gap="5">
+        <NuxtLink :to="urls.tasks.list">
+          <chakra.img src="/momentum-logo-only.svg" max-w="50px" />
+        </NuxtLink>
+
         <NuxtLink :to="urls.tasks.detail(props.taskSlug)">
           <CFlex gap="2">
             <CLink>
               {{ comp.task.value?.title }}
             </CLink>
-            <CTag h="fit-content" font-size="lg" p="6px">
+            <CTag h="fit-content" p="6px">
               {{ format.dateHumanShort(comp.task.value?.date) }}
             </CTag>
           </CFlex>
         </NuxtLink>
       </CFlex>
-      <CIcon name="chevron-right" mt="1px" size="12" />
-      <CIcon
-        v-if="hooks.status.isCompleted.value || hooks.status.isSkippedAsHandled.value"
-        name="check-circle"
-        color="green.500"
-        size="7"
-        mr="2"
-      />
-      <CFlex font-weight="bold" :color="hooks.status.isCompleted.value || hooks.status.isSkippedAsHandled.value ? 'green.600' : ''">
-        {{ hooks.taskListStore.recOpened.value?.donor.name }}
-      </CFlex>
 
-      <CFlex>
+      <CFlex align="center">
         <CLink
-          v-if="comp.rec.value?.donor.crm_url"
+          v-if="comp.rec.value?.donor.crm_url && false"
           :href="comp.rec.value?.donor.crm_url"
           is-external
           variant="none"
@@ -142,14 +147,81 @@
           </CButton>
         </CLink>
       </CFlex>
-
     </CFlex>
 
-    <CFlex :gap="{ base: 8, '2xl': 14 }" direction="row" key="2">
+    <CFlex>
+      <CFlex
+        direction="column"
+        pb="5"
+        pt="2"
+        bg="gray.50"
+        border-right="1px solid"
+        border-color="gray.100"
+        z-index="docked"
+      >
+        <NuxtLink
+          v-for="rec in comp.task.value?.rec_set.recs"
+          :key="rec?.pk"
+          :to="urls.tasks.detailRec(props.taskSlug, rec?.pk, rec?.slug)"
+        >
+          <CLink
+            display="flex"
+            align-items="center"
+            gap="2"
+            px="5"
+            py="2"
+            :bg="rec?.pk === comp.rec.value?.pk ? 'gray.100' : 'gray.50'"
+            :opacity="rec?.pk === comp.rec.value?.pk ? '1' : '0.75'"
+            :_hover="{
+              opacity: '1',
+            }"
+          >
+            <CIcon
+              v-if="status.isCompleted(rec) || status.isSkippedAsHandled(rec)"
+              name="io-checkmark-circle"
+              color="green.500"
+              fill="green.500"
+              size="5"
+            />
+            <CIcon
+              v-if="status.isSkippedToLater(rec)"
+              name="bi-clock"
+              color="green.500"
+            />
+            <CIcon
+              v-if="status.isNew(rec)"
+              name="io-checkmark-circle-outline"
+              color="gray.400"
+              size="5"
+            />
+            <CFlex
+              v-if="rec"
+              white-space="nowrap"
+              color="gray.700"
+              overflow="hidden"
+            >
+              {{rec.donor.name}}
+            </CFlex>
+          </CLink>
+        </NuxtLink>
+      </CFlex>
+      
 
-      <CFlex direction="column" :gap="comp.spaceLg" w="100%" max-w="900px">
+      <CFlex
+        direction="column"
+        :gap="comp.spaceLg"
+        w="100%"
+        max-w="900px"
+        pt="10"
+        px="8"
+        mt="-6"
+        bg="white"
+        border-right="1px solid"
+        border-color="gray.100"
+        box-shadow="xl"
+      >
 
-        <RRecDetailNavigation :task="comp.task.value" :rec="comp.rec.value" />
+        <RRecDetailNavigation v-if="false" :task="comp.task.value" :rec="comp.rec.value" />
 
         <CFlex pos="relative" w="100%">
           <ChakraTabs
@@ -187,7 +259,13 @@
 
       </CFlex>
 
-      <CFlex direction="column" gap="10" w="100%" max-w="800px">
+      <CFlex
+        direction="column"
+        gap="10"
+        pl="8"
+        w="100%"
+        max-w="750px"
+      >
         <RRecSummary
           v-if="comp.rec.value"
           :rec="comp.rec.value"

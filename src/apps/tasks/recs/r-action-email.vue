@@ -3,7 +3,7 @@
   import { debounce } from "vue-debounce";
   import { useUserStore } from "~/apps/auth/useUserStore";
   import { Email, PromptOutput } from "~/apps/emails/interfaces";
-  import { Recommendation } from "~/apps/tasks/interfaces";
+  import { Rec } from "~/apps/tasks/interfaces";
   import RRecSkipBtn from "~/apps/tasks/recs/r-btn-skip.vue";
   import { useRecNav } from "~/apps/tasks/recs/useRecNav";
   import { useRecStatus } from "~/apps/tasks/recs/useRecStatus";
@@ -12,7 +12,7 @@
   import RRecActionEmailAi from "~/apps/tasks/recs/r-action-email-ai.vue";
 
   const props = defineProps<{
-    rec: Recommendation;
+    rec: Rec;
   }>();
 
   const hooks = {
@@ -264,7 +264,7 @@
       </CButton>
     </CBox>
 
-    <CFlex gap="4" v-if="!comp.isEmailSent.value">
+    <CFlex gap="5" v-if="!comp.isEmailSent.value">
       <CButton
         :is-loading="state.isSavingChanges.value"
         z-index="toast"
@@ -285,6 +285,7 @@
             variant="outline"
             z-index="toast"
             left-icon="ri-mail-send-line"
+            size="lg"
             border-radius="lg"
             color-scheme="gray"
           >
@@ -300,10 +301,11 @@
       <CButton
         @click="sendEmail()"
         :is-loading="state.isSendingEmail.value"
+        size="lg"
         left-icon="ri-mail-send-line"
         fill="white"
       >
-        Send
+        Send email
       </CButton>
     </CFlex>
 

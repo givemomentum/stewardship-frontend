@@ -31,7 +31,7 @@ export type RecState = "new"
     | "skipped_to_next_month"
     | "skipped_to_next_quarter";
 
-export interface Recommendation {
+export interface Rec {
   pk: PrimaryKey;
   donor?: CrmDonor;
   gift?: CrmGift;
@@ -49,7 +49,7 @@ export interface Recommendation {
 
 export interface RecommendationSet {
   pk: PrimaryKey;
-  recs: Recommendation[];
+  recs: Rec[];
   rule: Rule;
   type: "donors" | "gifts" | "letters" | "donor_emails";
   email_batch?: PrimaryKey;

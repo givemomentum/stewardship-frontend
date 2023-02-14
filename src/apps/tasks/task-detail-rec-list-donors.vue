@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { Recommendation, Task } from "~/apps/tasks/interfaces";
+  import { Rec, Task } from "~/apps/tasks/interfaces";
   import { CrmDonor } from "~/apps/letters/interfaces";
   import { format } from "~/utils";
   import { ref } from "vue";
@@ -14,7 +14,7 @@
   };
 
   const state = {
-    loggingModalRec: ref(null as Recommendation | null),
+    loggingModalRec: ref(null as Rec | null),
     showLoggingModal: ref(false),
     alertMessage: ref<string | null>(null),
   };

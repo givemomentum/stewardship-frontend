@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { Recommendation } from "~/apps/tasks/interfaces";
+  import { Rec } from "~/apps/tasks/interfaces";
   import RRecStatus from "~/apps/tasks/recs/r-rec-status.vue";
   import { useRecNav } from "~/apps/tasks/recs/useRecNav";
   import { useRecStatus } from "~/apps/tasks/recs/useRecStatus";
@@ -8,8 +8,8 @@
   import RRecSkipBtn from "~/apps/tasks/recs/r-btn-skip.vue";
 
   const props = defineProps<{
-    rec: Recommendation;
-    type: Recommendation["action_type"];
+    rec: Rec;
+    type: Rec["action_type"];
   }>();
 
   const hooks = {
@@ -126,6 +126,7 @@
           v-if="!hooks.status.isHandled.value"
           @click="logToCRM"
           :is-loading="state.isSubmitting.value"
+          size="lg"
         >
           Log to CRM
         </CButton>

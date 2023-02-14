@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { Recommendation, Task } from "~/apps/tasks/interfaces";
+  import { Rec, Task } from "~/apps/tasks/interfaces";
   import RDonorExpectedValue from "~/apps/tasks/recs/r-donor-expected-value.vue";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import { urls } from "~/urls";
@@ -14,7 +14,7 @@
     tasks: useTaskListStore(),
   };
 
-  function openRec(rec: Recommendation) {
+  function openRec(rec: Rec) {
     hooks.tasks.recOpened.value = rec;
     navigateTo(urls.tasks.detailRec(props.task.slug, rec.pk, rec.slug));
   }
