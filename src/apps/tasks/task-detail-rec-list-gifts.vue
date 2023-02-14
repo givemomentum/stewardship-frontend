@@ -87,7 +87,6 @@
         <CFlex color="gray.400" font-size="xs">Phone</CFlex>
         <CFlex font-size="md">{{ slotProps.rec.donor?.phone?.number }}</CFlex>
       </CFlex>
-
       <CFlex direction="column">
         <CFlex color="gray.400" font-size="xs">Address</CFlex>
         <CFlex
@@ -98,7 +97,10 @@
         </CFlex>
         <CFlex v-else font-size="md">−</CFlex>
       </CFlex>
-
+      <CFlex direction="column" v-if="slotProps.rec.donor?.spouse_name">
+        <CFlex color="gray.400" font-size="xs">Spouse</CFlex>
+        <CFlex font-size="md">{{ slotProps.rec.donor.spouse_name }}</CFlex>
+      </CFlex>
       <CFlex v-if="slotProps.rec.gift?.notes" direction="column">
         <CFlex color="gray.400" font-size="xs">Notes</CFlex>
         <CFlex font-size="md">{{ slotProps.rec.gift.notes }}</CFlex>

@@ -99,6 +99,7 @@ export class CrmDonor {
   do_not_call: boolean;
   do_not_email: boolean;
   do_not_mail: boolean;
+  spouse_name: string;
 
   custom_data: { [field: string]: any };
 }

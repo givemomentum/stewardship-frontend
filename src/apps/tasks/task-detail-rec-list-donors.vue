@@ -46,7 +46,7 @@
     if (!donor) {
       return "";
     }
-    
+
     if (donor.source == "blackbaud") {
       return ""; // Blackbaud doesn't have trustworthy communication preferences at the moment.
     }
@@ -202,7 +202,10 @@
               {{ slotProps.rec.donor?.mailing_address?.one_line }}
             </CFlex>
           </CFlex>
-
+          <CFlex direction="column" v-if="slotProps.rec.donor?.spouse_name">
+            <CFlex color="gray.400" font-size="xs">Spouse</CFlex>
+            <CFlex font-size="md">{{ slotProps.rec.donor.spouse_name }}</CFlex>
+          </CFlex>
           <CFlex v-if="slotProps.rec.gift?.notes" direction="column">
             <CFlex color="gray.400" font-size="xs">Notes</CFlex>
             <CFlex font-size="md">{{ slotProps.rec.gift.notes }}</CFlex>

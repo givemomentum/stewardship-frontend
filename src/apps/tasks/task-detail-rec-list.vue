@@ -166,7 +166,7 @@
                 :fill="rec.state === 'completed' ? 'teal.400' : 'gray.500'"
               />
             </chakra.td>
-            
+
             <chakra.td
               v-if="props.task.rec_set.rule.is_show_follow_up_button_on_task"
               padding-left="0"
@@ -182,7 +182,10 @@
                   />
                 </div>
                 <template v-slot:popper>
-                  <CText font-size="xs">{{ rec.is_follow_up_needed ? 'Remove the follow up' : 'Follow up later' }}</CText>
+                  <CText font-size="xs">{{
+                      rec.is_follow_up_needed ? 'Remove the follow up' : 'Follow up later'
+                    }}
+                  </CText>
                 </template>
               </VTooltip>
             </chakra.td>
