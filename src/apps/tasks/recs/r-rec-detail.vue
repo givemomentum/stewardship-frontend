@@ -190,6 +190,12 @@
               color="gray.400"
               size="5"
             />
+            <CIcon
+              v-if="status.isSkippedAsUnqualified(rec)"
+              name="x"
+              color="gray.400"
+              size="5"
+            />
             <CFlex
               v-if="rec"
               white-space="nowrap"

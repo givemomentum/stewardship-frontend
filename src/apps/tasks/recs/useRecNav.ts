@@ -29,16 +29,20 @@ export function useRecNav() {
     recNextUrl: computed(() => urls.tasks.detailRec(comp.task.value?.slug, comp.recNext.value?.slug)),
     recPrevUrl: computed(() => urls.tasks.detailRec(comp.task.value?.slug, comp.recPrev.value?.slug)),
     navigateToRecNext: () => {
-      if (!comp.recNext.value) {
-        // todo success screen nav
-        return;
+      const isAllHandled = comp.task.value.rec_set.recs.filter(rec => rec.state === "new").length == 0;
+      if (isAllHandled) {
+        hooks.notify.send("Task completed!");
+        return navigateTo(urls.tasks.list);
+      } else if (comp.recNext.value) {
+        return navigateTo(
+          urls.tasks.detailRec(comp.task.value?.slug, comp.recNext.value?.slug),
+        );
+      } else {
+        const recNext = comp.task.value.rec_set.recs.filter(rec => rec.state === "new")[0];
+        return navigateTo(
+          urls.tasks.detailRec(comp.task.value?.slug, recNext.slug),
+        );
       }
-      navigateTo(
-        urls.tasks.detailRec(
-          comp.task.value?.slug,
-          comp.recNext.value?.slug,
-        ),
-      );
     },
     returnToTaskIfHandledAll: async () => {
       const task = hooks.tasks.taskOpened.value;
@@ -49,15 +53,14 @@ export function useRecNav() {
 
         if (isAllSkipped) {
           await hooks.api.patch(`/tasks/${task.slug}/`, { status: "declined" });
-          // todo does this affect the tasks list?
           hooks.tasks.taskOpened.value.status = "declined";
           hooks.notify.send("Task skipped");
-          navigateTo(urls.tasks.detail(task.slug));
+          navigateTo(urls.tasks.list);
         } else {
           await hooks.api.patch(`/tasks/${task.slug}/`, { status: "completed" });
           hooks.tasks.taskOpened.value.status = "completed";
           hooks.notify.send("Task completed!");
-          navigateTo(urls.tasks.detail(task.slug));
+          navigateTo(urls.tasks.list);
         }
       }
     },
