@@ -67,7 +67,7 @@
     <CFlex
       gap="4"
       w="100%"
-      v-if="props.type === 'other' && !hooks.status.isSkipped.value"
+      v-if="false && props.type === 'other' && !hooks.status.isSkipped.value"
       pl="2px"
     >
       <chakra.label v-for="type in comp.typesOther" :key="type">
