@@ -99,8 +99,8 @@
   <CFlex direction="column" w="100%" h="100%">
 
     <CFlex
-      py="3"
-      pl="5"
+      p="3"
+      px="5"
       font-size="2xl"
       direction="column"
       gap="0"
@@ -115,9 +115,9 @@
           <chakra.img src="/momentum-logo-only.svg" max-w="50px" />
         </NuxtLink>
 
-        <CFlex gap="2">
+        <CFlex gap="3" align="center">
           {{ comp.task.value?.title }}
-          <CTag h="fit-content" p="6px">
+          <CTag h="fit-content" p="6px" font-size="md">
             {{ format.dateHumanShort(comp.task.value?.date) }}
           </CTag>
         </CFlex>
@@ -148,8 +148,7 @@
     <CFlex>
       <CFlex
         direction="column"
-        pb="5"
-        pt="2"
+        py="5"
         bg="gray.50"
         border-right="1px solid"
         border-color="gray.100"
@@ -165,6 +164,7 @@
             align-items="center"
             gap="2"
             px="5"
+            pr="6"
             py="2"
             :bg="rec?.pk === comp.rec.value?.pk ? 'gray.100' : 'gray.50'"
             :opacity="rec?.pk === comp.rec.value?.pk ? '1' : '0.75'"
@@ -262,6 +262,7 @@
         direction="column"
         gap="10"
         pl="8"
+        pr="5"
         w="100%"
         max-w="750px"
       >

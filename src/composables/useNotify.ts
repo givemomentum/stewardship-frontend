@@ -11,7 +11,7 @@ export function useNotify() {
       {
         type: TYPE.DEFAULT,
         position: POSITION.BOTTOM_CENTER,
-        timeout: 1500,
+        timeout: 2100,
         pauseOnFocusLoss: false,
         hideProgressBar: true,
         showCloseButtonOnHover: true,

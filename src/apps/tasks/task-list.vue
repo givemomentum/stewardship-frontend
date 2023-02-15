@@ -25,7 +25,6 @@
   };
 
   const state = {
-    isOpenedTaskLoading: ref(false),
     isRecSetLoaded: ref(false),
   };
 
@@ -159,7 +158,8 @@
                 </CFlex>
               </CFlex>
 
-              <CButton :is-loading="state.isOpenedTaskLoading.value">Handle</CButton>
+              <CButton v-if="task.status === 'recommended'">Handle</CButton>
+              <CButton v-else variant="outline">Review</CButton>
 
             </CFlex>
 

@@ -50,9 +50,8 @@
     hooks.tasks.recOpened.value.action_type = props.type;
     hooks.notify.send("Action logged");
 
+    await hooks.nav.navigateToRecNext();
     state.isSubmitting.value = false;
-
-    hooks.nav.navigateToRecNext();
   }
 </script>
 
