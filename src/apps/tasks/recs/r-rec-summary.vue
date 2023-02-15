@@ -25,9 +25,8 @@
 
     <CFlex
       mt="-1"
-      :direction="{ base: 'column', lg: 'row' }"
-      :gap="{ base: 3, lg: 20 }"
-      flex-flow="wrap-reverse"
+      :direction="{ base: 'column', '2xl': 'row' }"
+      :gap="{ base: 3, '2xl': 16 }"
     >
       <chakra.table>
 
