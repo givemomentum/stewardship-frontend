@@ -97,6 +97,7 @@
         :to="urls.tasks.detail(task.slug)"
       >
         <CLink
+          display="flex"
           :_hover="{ cursor: 'pointer', borderColor: 'gray.200' }"
           border-radius="lg"
           border="1px solid white"

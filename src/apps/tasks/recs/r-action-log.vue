@@ -40,7 +40,7 @@
     }
     
     state.isSubmitting.value = true;
-    await hooks.api.post(`recs/${props.rec.pk}/log-action/`, {
+    await hooks.api.post(`recs/${props.rec.pk}/log_action/`, {
       action_type: state.type.value,
       action_description: state.actionDescription.value,
     });
