@@ -105,7 +105,7 @@
 <template>
 
   <CFlex h="100%" align="stretch">
-    <MenuLeft v-if="false" />
+    <MenuLeft v-if="hooks.layout.isLeftMenuVisible.value" />
     <CFlex
       w="100%"
       :p="hooks.layout.isPaddingEnabled.value ? 6 : 0"

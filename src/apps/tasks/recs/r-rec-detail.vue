@@ -33,13 +33,13 @@
   });
 
   onBeforeMount(async () => {
-    hooks.layout.isPaddingEnabled.value = false;
+    hooks.layout.activateLeanMode();
     await loadTaskAndRecBySlug();
     await hooks.taskListStore.fetchDonorActions(hooks.taskListStore.recOpened.value);
   });
   
-  watch(hooks.taskListStore.recOpened, () => hooks.layout.isPaddingEnabled.value = false);
-  onBeforeUnmount(() => hooks.layout.isPaddingEnabled.value = true); // unMount fires every time we change recOpen
+  watch(hooks.taskListStore.recOpened, hooks.layout.activateLeanMode);
+  onBeforeUnmount(hooks.layout.deactivateLeanMode); // unMount fires every time we change recOpen
 
   const comp = useComp(() => {
     const recProxy = hooks.taskListStore.recOpened;
