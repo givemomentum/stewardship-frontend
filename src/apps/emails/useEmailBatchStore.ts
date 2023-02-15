@@ -20,14 +20,14 @@ export function useEmailBatchStore() {
   });
 
   async function load() {
-    state.requestPromise.value = hooks.api.get(`/emails/batches/`);
+    state.requestPromise.value = hooks.api.get(`/emails-new/batches/`);
     const res = await state.requestPromise.value;
     state.list.value = res.data;
     state.requestPromise.value = null;
   }
 
   async function markAsDownloaded(batch: EmailBatch) {
-    await hooks.api.patch(`/emails/batches/${batch.pk}/`, {
+    await hooks.api.patch(`/emails-new/batches/${batch.pk}/`, {
       is_downloaded: true,
     });
     await load();

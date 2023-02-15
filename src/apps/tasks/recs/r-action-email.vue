@@ -80,7 +80,7 @@
   async function saveEmailChanges() {
     state.isSavingChanges.value = true;
     await hooks.api.patch(
-      `/emails/${state.emailOpen.value.pk}/`,
+      `/emails-new/${state.emailOpen.value.pk}/`,
       {
         content_html: state.emailContentHtml.value,
         subject: state.emailSubject.value,
@@ -105,14 +105,14 @@
   }
 
   async function sendTestEmail() {
-    await hooks.api.post(`/emails/${state.emailOpen.value.pk}/send-test-email/`);
+    await hooks.api.post(`/emails-new/${state.emailOpen.value.pk}/send-test-email/`);
     hooks.notify.send(`Test emails sent to ${hooks.userStore.user.email}`);
   }
 
   async function sendEmail() {
     state.isSendingEmail.value = true;
     
-    await hooks.api.post(`/emails/${state.emailOpen.value.pk}/send/`);
+    await hooks.api.post(`/emails-new/${state.emailOpen.value.pk}/send/`);
     hooks.notify.send(`Email sent`);
     state.emailOpen.value.status = "sent";
     hooks.taskListStore.recOpened.value.state = "completed";

@@ -26,7 +26,7 @@
 
   onMounted(async () => {
     if (props.task.rec_set?.email_batch) {
-      const res = await hooks.api.get(`/emails/batches/${props.task.rec_set.email_batch}/`);
+      const res = await hooks.api.get(`/emails-new/batches/${props.task.rec_set.email_batch}/`);
       state.emailBatch.value = res.data;
     }
     await hooks.tasks.loadTaskOpenedRecsAndGiftHistory();
