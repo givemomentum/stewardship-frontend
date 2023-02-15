@@ -2,7 +2,7 @@ const state = {
   bg: ref("white"),
   isPaddingEnabled: ref(true),
   isLeftMenuVisible: ref(true),
-}
+};
 
 export function useLayoutControl() {
   return {

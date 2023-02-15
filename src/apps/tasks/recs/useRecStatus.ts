@@ -2,11 +2,11 @@ import { Rec } from "~/apps/tasks/interfaces";
 import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
 
 const hooks = {
-  taskListStore: useTaskListStore(),
+  tasks: useTaskListStore(),
 };
 
 export function useRecStatus() {
-  const rec = hooks.taskListStore.recOpened;
+  const rec = hooks.tasks.recOpened;
   return {
     isNew: computed(() => status.isNew(rec.value)),
     isHandled: computed(() => status.isHandled(rec.value)),
@@ -16,12 +16,10 @@ export function useRecStatus() {
     isSkippedAsHandled: computed(() => status.isSkippedAsHandled(rec.value)),
     isSkippedToNextMonth: computed(() => rec.value?.state === "skipped_to_next_month"),
     isSkippedToNextQuarter: computed(() => rec.value?.state === "skipped_to_next_quarter"),
-    isSkippedAsUnqualified: computed(() => {
-      return rec.value?.state === "skipped_as_unqualified" || rec.value?.state === "dismissed";
-    }),
+    isSkippedAsUnqualified: computed(() => rec.value?.state === "skipped_as_unqualified" || rec.value?.state === "dismissed"),
 
     actionTypeLabel: computed(() => {
-      if (rec.value?.action_type === 'other' || rec.value?.action_type === 'none') {
+      if (rec.value?.action_type === "other" || rec.value?.action_type === "none") {
         return "";
       }
       return rec.value?.action_type;
@@ -30,10 +28,10 @@ export function useRecStatus() {
 }
 
 export namespace status {
-  export const isNew =  (rec?: Rec) => rec?.state === "new";
-  export const isHandled =  (rec) => !isNew(rec);
-  export const isCompleted =  (rec?: Rec) => rec?.state === "completed";
-  export const isSkippedAsHandled =  (rec?: Rec) => rec?.state === "skipped_as_already_handled";
-  export const isSkippedToLater =  (rec?: Rec) => rec?.state.startsWith("skipped_to");
-  export const isSkippedAsUnqualified =  (rec?: Rec) => rec?.state === "skipped_as_unqualified" || rec?.state === "dismissed";
+  export const isNew = (rec?: Rec) => rec?.state === "new";
+  export const isHandled = rec => !isNew(rec);
+  export const isCompleted = (rec?: Rec) => rec?.state === "completed";
+  export const isSkippedAsHandled = (rec?: Rec) => rec?.state === "skipped_as_already_handled";
+  export const isSkippedToLater = (rec?: Rec) => rec?.state.startsWith("skipped_to");
+  export const isSkippedAsUnqualified = (rec?: Rec) => rec?.state === "skipped_as_unqualified" || rec?.state === "dismissed";
 }

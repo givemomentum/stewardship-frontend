@@ -19,7 +19,7 @@
     userStore: useUserStore(),
     api: useApi(),
     notify: useNotify(),
-    taskListStore: useTaskListStore(),
+    tasks: useTaskListStore(),
     nav: useRecNav(),
     status: useRecStatus(),
   };
@@ -39,8 +39,8 @@
 
   onMounted(async () => {
     const outputsRes = await hooks.api.get(`/ai/prompt-outputs/?email=${props.rec.email.pk}`);
-    hooks.taskListStore.recOpened.value.email.prompt_outputs = outputsRes.data;
-    
+    hooks.tasks.recOpened.value.email.prompt_outputs = outputsRes.data;
+
     handleTinyEditorLoadingBug();
   });
 
@@ -52,7 +52,7 @@
     state.emailOpen.value = recNew.email;
     state.emailEditorKey.value = recNew.email.pk;
     state.emailContentHtml.value = recNew.email.content_html || (recNew.email.content_html_default ?? "");
-    state.emailSubject.value = recNew.email.subject || hooks.taskListStore.taskOpened.value?.rec_set.rule?.email_template?.subject;
+    state.emailSubject.value = recNew.email.subject || hooks.tasks.taskOpened.value?.rec_set.rule?.email_template?.subject;
     state.emailCcList.value = recNew.email.cc_list;
   }, { immediate: true });
 
@@ -64,7 +64,6 @@
       cc_list: state.emailCcList.value,
     }),
     async (email, _, onInvalidate) => {
-
       const stop = watchEffect(async () => {
         if (isEmailChanged()) {
           await debouncedSave();
@@ -111,17 +110,17 @@
 
   async function sendEmail() {
     state.isSendingEmail.value = true;
-    
+
     await hooks.api.post(`/emails-new/${state.emailOpen.value.pk}/send/`);
     hooks.notify.send(`Email sent`);
     state.emailOpen.value.status = "sent";
-    hooks.taskListStore.recOpened.value.state = "completed";
-    hooks.taskListStore.recOpened.value.action_description = state.emailContentHtml.value;
-    hooks.taskListStore.recOpened.value.action_type = "email";
-    
+    hooks.tasks.recOpened.value.state = "completed";
+    hooks.tasks.recOpened.value.action_description = state.emailContentHtml.value;
+    hooks.tasks.recOpened.value.action_type = "email";
+
     hooks.nav.navigateToRecNext();
     await hooks.nav.returnToTaskIfHandledAll();
-    
+
     state.isSendingEmail.value = false;
   }
 
@@ -191,7 +190,7 @@
         Email sent
       </CAlert>
     </CFlex>
-    
+
     <CHStack w="100%" gap="5">
       <CFlex gap="3px" w="100%" direction="column">
         <CFormLabel font-size="sm" color="gray.500">Subject</CFormLabel>
@@ -257,7 +256,7 @@
         bottom="5"
         right="18px"
         bg="white"
-        z-index="toast" 
+        z-index="toast"
         color-scheme="gray"
       >
         Revert

@@ -8,7 +8,7 @@
 
   const hooks = {
     api: useApi(),
-    taskListStore: useTaskListStore(),
+    tasks: useTaskListStore(),
   };
 
   const comp = {
@@ -32,8 +32,8 @@
       `/tasks/${props.task.slug}/`,
       { status: optionNew.value },
     );
-    if (hooks.taskListStore.taskOpened.value) {
-      hooks.taskListStore.taskOpened.value.status = res.data.status;
+    if (hooks.tasks.taskOpened.value) {
+      hooks.tasks.taskOpened.value.status = res.data.status;
     }
   }
 

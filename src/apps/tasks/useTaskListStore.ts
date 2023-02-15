@@ -44,7 +44,7 @@ export function useTaskListStore() {
   }
 
   async function loadTasksRecSet(args?: { isShowAllTasks?: boolean; isPublishedOnly?: boolean }) {
-    await loadTasks({ paramsInitial: ["expand=rec_set"], ...args });
+    await loadTasks({ paramsInitial: ["expand=rec_set.recs"], ...args });
     state.taskOpened.value = state.tasks.value.find(task => task.pk === state.taskOpened.value?.pk) ?? null;
     state.isRecsLoaded.value = true;
   }
@@ -109,9 +109,16 @@ export function useTaskListStore() {
     recOpenedIndex: comp.recOpenedIndex,
     loadTasks: loadTasks,
     loadTasksRecSet: loadTasksRecSet,
-    loadTaskOpenedRecsAndGiftHistory: loadTaskOpenedRecsAndGiftHistory,
+    loadRecsAndGiftHistory: loadTaskOpenedRecsAndGiftHistory,
     updateRecState: updateRecState,
     setRecFollowUp: setRecFollowUp,
     fetchDonorActions: fetchDonorActions,
+    resetTaskOpened: () => {
+      // to prevent stale data, especially taskOpened
+      state.taskOpened.value = null;
+      state.recOpened.value = null;
+      state.isRecsLoaded.value = false;
+      state.isGiftHistoryLoaded.value = false;
+    }
   };
 }

@@ -11,21 +11,21 @@
   const hooks = {
     api: useApi(),
     notify: useNotify(),
-    taskListStore: useTaskListStore(),
+    tasks: useTaskListStore(),
     nav: useRecNav(),
   };
 
   const state = {
     isSubmitting: ref(false),
   };
-  
+
   async function skipRec(recState: RecState) {
     state.isSubmitting.value = true;
     await hooks.api.patch(`recs/${props.rec.pk}/`, {
-      state: recState
+      state: recState,
     });
     // todo does this affect the recs list?
-    hooks.taskListStore.recOpened.value.state = recState;
+    hooks.tasks.recOpened.value.state = recState;
     hooks.notify.send("Recommendation skipped");
 
     await hooks.nav.returnToTaskIfHandledAll();
@@ -61,7 +61,7 @@
         >
           Already handled
         </CButton>
-        
+
         <CButton
           @click="skipRec('skipped_to_next_month')"
           variant="outline"

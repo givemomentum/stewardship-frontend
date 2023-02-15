@@ -10,7 +10,7 @@
 
   const hooks = {
     api: useApi(),
-    taskListStore: useTaskListStore(),
+    tasks: useTaskListStore(),
     userListStore: useUserListStore(),
   };
 
@@ -24,8 +24,8 @@
       // needs both fields because of how DRF works
       { assignee_pk: optionNew.value, assignee: { pk: optionNew.value } },
     );
-    if (hooks.taskListStore.taskOpened.value) {
-      hooks.taskListStore.taskOpened.value.assignee = res.data.assignee;
+    if (hooks.tasks.taskOpened.value) {
+      hooks.tasks.taskOpened.value.assignee = res.data.assignee;
     }
   }
 

@@ -5,7 +5,7 @@ export namespace urls {
     list: "/tasks",
     listAll: "/tasks/all",
     detail: (slug: string) => `/tasks/${slug}`,
-    detailRec: (taskSlug: string, recId: string | number, recSlug: string) => `/tasks/${taskSlug}/recs/${recId}/${recSlug}`,
+    detailRec: (taskSlug: string, recSlug: string) => `/tasks/${taskSlug}/recs/${recSlug}`,
   };
 
   export const fiscExport = {

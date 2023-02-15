@@ -4,7 +4,6 @@
   import RRecActionEmail from "~/apps/tasks/recs/r-action-email.vue";
   import RRecActionLog from "~/apps/tasks/recs/r-action-log.vue";
   import RDonorGiftChart from "~/apps/tasks/recs/r-donor-gift-chart.vue";
-  import RRecDetailNavigation from "~/apps/tasks/recs/r-nav-header.vue";
   import RRecEmailTemplateBtn from "~/apps/tasks/recs/r-btn-email-template.vue";
   import RRecLastActions from "~/apps/tasks/recs/r-last-actions.vue";
   import RRecSummary from "~/apps/tasks/recs/r-rec-summary.vue";
@@ -22,7 +21,7 @@
   const hooks = useHooks(() => {
     const taskListStore = useTaskListStore();
     return {
-      taskListStore: taskListStore,
+      tasks: taskListStore,
       leftMenu: useLeftMenu(),
       layout: useLayoutControl(),
       status: useRecStatus(),
@@ -35,17 +34,18 @@
   onBeforeMount(async () => {
     hooks.layout.activateLeanMode();
     await loadTaskAndRecBySlug();
-    await hooks.taskListStore.fetchDonorActions(hooks.taskListStore.recOpened.value);
+    await hooks.tasks.fetchDonorActions(hooks.tasks.recOpened.value);
   });
-  
-  watch(hooks.taskListStore.recOpened, hooks.layout.activateLeanMode);
-  onBeforeUnmount(hooks.layout.deactivateLeanMode); // unMount fires every time we change recOpen
+
+  watch(hooks.tasks.recOpened, hooks.layout.activateLeanMode);
+  // unMount fires every time we change recOpen
+  onBeforeUnmount(hooks.layout.deactivateLeanMode);
 
   const comp = useComp(() => {
-    const recProxy = hooks.taskListStore.recOpened;
-    const actionTypes = ["email", 'call', 'message', 'other'];
+    const recProxy = hooks.tasks.recOpened;
+    const actionTypes = ["email", "call", "message", "other"];
     return {
-      task: computed(() => hooks.taskListStore.taskOpened.value),
+      task: computed(() => hooks.tasks.taskOpened.value),
       rec: computed(() => recProxy.value),
       actionTypes: actionTypes,
 
@@ -60,35 +60,35 @@
       }),
       spaceLg: 7,
       taskCompletionPercentage: computed(() => {
-        const tasksCompleted = hooks.taskListStore.taskOpened.value?.rec_set?.recs.filter(rec => rec.state !== "new").length;
-        const tasksTotal = hooks.taskListStore.taskOpened.value?.rec_set?.recs.length;
+        const tasksCompleted = hooks.tasks.taskOpened.value?.rec_set?.recs.filter(rec => rec.state !== "new").length;
+        const tasksTotal = hooks.tasks.taskOpened.value?.rec_set?.recs.length;
         return Math.round((tasksCompleted / tasksTotal) * 100);
       }),
-    }
+    };
   });
 
   async function loadTaskAndRecBySlug() {
-    if (!hooks.taskListStore.isRecsLoaded.value) {
-      await hooks.taskListStore.loadTasksRecSet({ isShowAllTasks: true });
+    if (!hooks.tasks.isRecsLoaded.value) {
+      await hooks.tasks.loadTasksRecSet({ isShowAllTasks: true });
 
-      hooks.taskListStore.taskOpened.value = hooks.taskListStore.tasks.value?.find(
+      hooks.tasks.taskOpened.value = hooks.tasks.tasks.value?.find(
         task => task.slug === props.taskSlug,
       );
     }
 
-    if (!hooks.taskListStore.isGiftHistoryLoaded.value) {
-      await hooks.taskListStore.loadTaskOpenedRecsAndGiftHistory();
+    if (!hooks.tasks.isGiftHistoryLoaded.value) {
+      await hooks.tasks.loadRecsAndGiftHistory();
     }
 
-    if (!hooks.taskListStore.recOpened.value) {
-      hooks.taskListStore.recOpened.value = hooks.taskListStore.taskOpened.value.rec_set.recs.find(
+    if (!hooks.tasks.recOpened.value) {
+      hooks.tasks.recOpened.value = hooks.tasks.taskOpened.value.rec_set.recs.find(
         rec => rec.slug === props.recSlug,
       );
-      hooks.head.patch({ title: hooks.taskListStore.recOpened.value?.donor.name });
+      hooks.head.patch({ title: hooks.tasks.recOpened.value?.donor.name });
     }
 
-    if (hooks.taskListStore.recOpened.value && hooks.taskListStore.recOpened.value.slug !== props.recSlug) {
-      hooks.taskListStore.recOpened.value = hooks.taskListStore.taskOpened.value.rec_set.recs.find(
+    if (hooks.tasks.recOpened.value && hooks.tasks.recOpened.value.slug !== props.recSlug) {
+      hooks.tasks.recOpened.value = hooks.tasks.taskOpened.value.rec_set.recs.find(
         rec => rec.slug === props.recSlug,
       );
     }
@@ -115,16 +115,12 @@
           <chakra.img src="/momentum-logo-only.svg" max-w="50px" />
         </NuxtLink>
 
-        <NuxtLink :to="urls.tasks.detail(props.taskSlug)">
-          <CFlex gap="2">
-            <CLink>
-              {{ comp.task.value?.title }}
-            </CLink>
-            <CTag h="fit-content" p="6px">
-              {{ format.dateHumanShort(comp.task.value?.date) }}
-            </CTag>
-          </CFlex>
-        </NuxtLink>
+        <CFlex gap="2">
+          {{ comp.task.value?.title }}
+          <CTag h="fit-content" p="6px">
+            {{ format.dateHumanShort(comp.task.value?.date) }}
+          </CTag>
+        </CFlex>
       </CFlex>
 
       <CFlex align="center">
@@ -162,7 +158,7 @@
         <NuxtLink
           v-for="rec in comp.task.value?.rec_set.recs"
           :key="rec?.pk"
-          :to="urls.tasks.detailRec(props.taskSlug, rec?.pk, rec?.slug)"
+          :to="urls.tasks.detailRec(props.taskSlug, rec?.slug)"
         >
           <CLink
             display="flex"
@@ -205,7 +201,6 @@
           </CLink>
         </NuxtLink>
       </CFlex>
-      
 
       <CFlex
         direction="column"
@@ -221,8 +216,6 @@
         box-shadow="xl"
       >
 
-        <RRecDetailNavigation v-if="false" :task="comp.task.value" :rec="comp.rec.value" />
-
         <CFlex pos="relative" w="100%">
           <ChakraTabs
             :tabKeys="comp.actionTypes"
@@ -237,10 +230,10 @@
             </template>
             <template v-slot:email-header-side>
               <RRecEmailTemplateBtn
-                v-if="hooks.taskListStore.taskOpened.value?.rec_set.rule.email_template"
-                :template="hooks.taskListStore.taskOpened.value?.rec_set.rule.email_template"
+                v-if="hooks.tasks.taskOpened.value?.rec_set.rule.email_template"
+                :template="hooks.tasks.taskOpened.value?.rec_set.rule.email_template"
                 @update.template="(templateHtml) => {
-                  hooks.taskListStore.taskOpened.value.rec_set.rule.email_template.content_html = templateHtml
+                  hooks.tasks.taskOpened.value.rec_set.rule.email_template.content_html = templateHtml
                 }"
               />
             </template>

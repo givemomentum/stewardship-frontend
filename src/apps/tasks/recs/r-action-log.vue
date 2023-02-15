@@ -15,7 +15,7 @@
   const hooks = {
     api: useApi(),
     notify: useNotify(),
-    taskListStore: useTaskListStore(),
+    tasks: useTaskListStore(),
     nav: useRecNav(),
     status: useRecStatus(),
   };
@@ -25,12 +25,12 @@
     actionDescription: ref(props.rec.action_description ?? ""),
     isSubmitting: ref(false),
   };
-  
+
   const comp = {
     typesOther: ["task", "other"],
   };
 
-  watch(() => props.type, (newType) => {
+  watch(() => props.type, newType => {
     state.type.value = newType;
   });
 
@@ -38,20 +38,20 @@
     if (!state.actionDescription.value) {
       return;
     }
-    
+
     state.isSubmitting.value = true;
     await hooks.api.post(`recs/${props.rec.pk}/log_action/`, {
       action_type: state.type.value,
       action_description: state.actionDescription.value,
     });
 
-    hooks.taskListStore.recOpened.value.state = "completed";
-    hooks.taskListStore.recOpened.value.action_description = state.actionDescription.value;
-    hooks.taskListStore.recOpened.value.action_type = props.type;
+    hooks.tasks.recOpened.value.state = "completed";
+    hooks.tasks.recOpened.value.action_description = state.actionDescription.value;
+    hooks.tasks.recOpened.value.action_type = props.type;
     hooks.notify.send("Action logged");
 
     state.isSubmitting.value = false;
-    
+
     hooks.nav.navigateToRecNext();
   }
 </script>
@@ -105,7 +105,7 @@
           outline: '0',
         }"
         :placeholder="props.type === 'other' ? 'Write down notes to log to your CRM' : `Write down notes about your ${props.type} to CRM`"
-  
+
         border-radius="lg"
         border-color="gray.300"
         transition-property="common"
@@ -120,7 +120,7 @@
           v-if="!hooks.status.isHandled.value"
           :rec="props.rec"
         />
-  
+
         <CButton
           type="submit"
           v-if="!hooks.status.isHandled.value"

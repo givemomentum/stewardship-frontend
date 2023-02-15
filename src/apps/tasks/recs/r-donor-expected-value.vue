@@ -25,8 +25,8 @@
     if (!rec) {
       return 0;
     }
-    
-    const lastGifts = rec?.donor?.gifts.slice(0, 3);
+
+    const lastGifts = rec?.donor?.gifts?.slice(0, 3);
     const lastGiftsSum = lastGifts?.reduce((acc, gift) => acc + Number(gift.amount), 0);
     if (!lastGiftsSum) {
       return 0;

@@ -3,7 +3,6 @@
   import { useToast } from "vue-toastification";
   import { useUserStore } from "~/apps/auth/useUserStore";
   import { Email, PromptOutput } from "~/apps/emails/interfaces";
-  import { useEmailBatchStore } from "~/apps/emails/useEmailBatchStore";
   import { format } from "~/utils";
 
   const props = defineProps<{ email: Email; }>();

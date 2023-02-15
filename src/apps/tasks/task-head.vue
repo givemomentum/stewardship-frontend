@@ -14,12 +14,12 @@
 
   const hooks = {
     userStore: useUserStore(),
-    taskListStore: useTaskListStore(),
+    tasks: useTaskListStore(),
   };
-  
+
   const comp = {
-    isOrgKesslerEdgeCase: computed(() => hooks.userStore.user.membership.org.slug === 'kessler' && props.task.title === "Thank you emails"),
-  }
+    isOrgKesslerEdgeCase: computed(() => hooks.userStore.user.membership.org.slug === "kessler" && props.task.title === "Thank you emails"),
+  };
 </script>
 
 <template>

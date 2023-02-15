@@ -29,7 +29,7 @@
       const res = await hooks.api.get(`/emails-new/batches/${props.task.rec_set.email_batch}/`);
       state.emailBatch.value = res.data;
     }
-    await hooks.tasks.loadTaskOpenedRecsAndGiftHistory();
+    await hooks.tasks.loadRecsAndGiftHistory();
   });
 
   function isCurrentRec(rec: Rec): boolean {
@@ -38,7 +38,7 @@
 
   function openRec(rec: Rec) {
     hooks.tasks.recOpened.value = rec;
-    navigateTo(urls.tasks.detailRec(props.task.slug, rec.pk, rec.slug));
+    navigateTo(urls.tasks.detailRec(props.task.slug, rec.slug));
   }
 </script>
 
@@ -150,8 +150,8 @@
                 </div>
                 <template v-slot:popper>
                   <CText font-size="xs">{{
-                      rec.is_follow_up_needed ? 'Remove the follow up' : 'Follow up later'
-                    }}
+                    rec.is_follow_up_needed ? 'Remove the follow up' : 'Follow up later'
+                  }}
                   </CText>
                 </template>
               </VTooltip>

@@ -16,7 +16,7 @@
 
   function openRec(rec: Rec) {
     hooks.tasks.recOpened.value = rec;
-    navigateTo(urls.tasks.detailRec(props.task.slug, rec.pk, rec.slug));
+    navigateTo(urls.tasks.detailRec(props.task.slug, rec.slug));
   }
 </script>
 
@@ -30,7 +30,7 @@
       border-color="gray.100"
     >
       <TaskHead :task="props.task" size="xl" font-weight="bold" />
-      
+
       <CFlex mt="4">
         <RDonorExpectedValue
           v-if="props.task?.rec_set?.type === 'donors'"

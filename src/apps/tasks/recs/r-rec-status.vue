@@ -4,11 +4,11 @@
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
 
   const hooks = {
-    taskListStore: useTaskListStore(),
+    tasks: useTaskListStore(),
     nav: useRecNav(),
     status: useRecStatus(),
   };
-  
+
   const comp = {
     label: computed(() => {
       if (hooks.status.isCompleted.value) {
@@ -24,7 +24,7 @@
         return `Skipped as already handled`;
       }
     }),
-  }
+  };
 </script>
 
 <template>

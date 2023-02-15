@@ -5,7 +5,6 @@
   import { useApi } from "~/composables/useApi";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import { useUserStore } from "~/apps/auth/useUserStore";
-  import { formatDistance } from "date-fns";
   import { useLayoutControl } from "~/composables/useLayoutControl";
   import { urls } from "~/urls";
   import { computed } from "vue";
@@ -21,58 +20,66 @@
     api: useApi(),
     layout: useLayoutControl(),
     userStore: useUserStore(),
-    taskListStore: useTaskListStore(),
+    tasks: useTaskListStore(),
     userListStore: useUserListStore(),
   };
 
   const state = {
+    isOpenedTaskLoading: ref(false),
     isRecSetLoaded: ref(false),
   };
 
   const comp = {
     currentTasksLink: computed(
-      () => `${urls.tasks.list}${props.isPublishedOnly ? "" : "?include_unpublished=true"}`
+      () => `${urls.tasks.list}${props.isPublishedOnly ? "" : "?include_unpublished=true"}`,
     ),
     allTasksLink: computed(
-      () => `${urls.tasks.listAll}${props.isPublishedOnly ? "" : "?include_unpublished=true"}`
+      () => `${urls.tasks.listAll}${props.isPublishedOnly ? "" : "?include_unpublished=true"}`,
     ),
   };
 
   onMounted(async () => {
-    await hooks.taskListStore.loadTasks({
+    hooks.tasks.resetTaskOpened();
+
+    await hooks.tasks.loadTasksRecSet({
       isPublishedOnly: props.isPublishedOnly ?? true,
       isShowAllTasks: props.isShowAllTasks,
     });
-    
+
     let isNeedToTryLoadingAllTasks = props.isShowAllTasks ?? false;
     if (props.taskOpenedSlug) {
-      let taskFromSlug = hooks.taskListStore.tasks.value.find(
+      let taskFromSlug = hooks.tasks.tasks.value.find(
         task => task.slug === props.taskOpenedSlug,
       );
       isNeedToTryLoadingAllTasks = !taskFromSlug;
       if (isNeedToTryLoadingAllTasks) {
-        await hooks.taskListStore.loadTasks({
+        await hooks.tasks.loadTasksRecSet({
           isPublishedOnly: props.isPublishedOnly ?? true,
-          isShowAllTasks: true
+          isShowAllTasks: true,
         });
-        taskFromSlug = hooks.taskListStore.tasks.value.find(
+        taskFromSlug = hooks.tasks.tasks.value.find(
           task => task.slug === props.taskOpenedSlug,
         );
       }
-      hooks.taskListStore.taskOpened.value = taskFromSlug;
+      hooks.tasks.taskOpened.value = taskFromSlug;
     }
-    await hooks.taskListStore.loadTasksRecSet({
-      isPublishedOnly: props.isPublishedOnly ?? true,
-      isShowAllTasks: isNeedToTryLoadingAllTasks,
-    });
   });
 
   onMounted(() => hooks.layout.bg.value = "gray.75");
   onBeforeUnmount(() => hooks.layout.bg.value = "white");
 
-  watch(hooks.taskListStore.taskOpened, (task?: Task) => {
-    if (task) {
+  watch(hooks.tasks.taskOpened, async (task?: Task) => {
+    const isTaskHasDetails = task?.rec_set?.rule?.executor_class === "letter_template_executor";
+    if (isTaskHasDetails) {
       navigateTo(urls.tasks.detail(task.slug));
+    } else if (task) {
+      const firstRecUnhandled = task.rec_set?.recs?.find(rec => rec.state === "new");
+      if (firstRecUnhandled) {
+        navigateTo(urls.tasks.detailRec(task.slug, firstRecUnhandled.slug));
+      } else {
+        const firstRec = task.rec_set?.recs?.[0];
+        navigateTo(urls.tasks.detailRec(task.slug, firstRec.slug));
+      }
     } else if (props.isShowAllTasks) {
       navigateTo(urls.tasks.listAll);
     } else {
@@ -92,7 +99,7 @@
 
     <CFlex gap="6" direction="column">
       <NuxtLink
-        v-for="task in hooks.taskListStore.tasks.value"
+        v-for="task in hooks.tasks.tasks.value"
         :key="task.pk"
         :to="urls.tasks.detail(task.slug)"
       >
@@ -115,7 +122,7 @@
               :task="task"
               :is-preview="true"
             />
-  
+
             <CFlex
               justify="space-between"
               align="flex-end"
@@ -133,7 +140,7 @@
                   <CIcon name="message-square" />
                   <CText>{{ task.comments_count }}</CText>
                 </CFlex>
-  
+
                 <CFlex
                   v-if="task.rec_set?.rec_progress"
                   align="center"
@@ -151,17 +158,16 @@
                   </CText>
                 </CFlex>
               </CFlex>
-  
-              <CButton>Handle</CButton>
-  
+
+              <CButton :is-loading="state.isOpenedTaskLoading.value">Handle</CButton>
+
             </CFlex>
-            
-  
+
           </CFlex>
         </CLink>
       </NuxtLink>
 
-      <CBox v-if="!hooks.taskListStore.tasks.value.length && hooks.taskListStore.isRecsLoaded.value">
+      <CBox v-if="!hooks.tasks.tasks.value.length && hooks.tasks.isRecsLoaded.value">
         <CHeading v-if="!props.isShowAllTasks" font-size="xl" font-weight="normal">
           You're all done 🎉 !
         </CHeading>
@@ -195,8 +201,11 @@
 
     </CFlex>
 
-    <ChakraDrawer v-model="hooks.taskListStore.taskOpened.value">
-      <TaskDetails :task="hooks.taskListStore.taskOpened.value" />
+    <ChakraDrawer
+      v-if="!hooks.tasks.taskOpened.value?.rec_set?.rule?.email_template"
+      v-model="hooks.tasks.taskOpened.value"
+    >
+      <TaskDetails :task="hooks.tasks.taskOpened.value" />
     </ChakraDrawer>
   </CFlex>
 
