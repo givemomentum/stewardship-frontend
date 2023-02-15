@@ -33,8 +33,6 @@
           {{ props.task.title }}
         </CText>
 
-        <CTag>
-          {{ format.dateHumanShort(props.task.date) }}
         <CTag v-if="props.isRecSetLoaded && !comp.isOrgKesslerEdgeCase.value">
           {{ format.dateHumanShort(props.task.rec_set?.recs_datetime_filter_end ?? props.task.created_at) }}
         </CTag>
