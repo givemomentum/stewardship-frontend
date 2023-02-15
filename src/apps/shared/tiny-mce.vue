@@ -30,65 +30,73 @@
     }),
   };
 
-  const state = {
-    isVisible: ref(true),
-    config: ref({
-      block_formats: "Paragraph=p; Header 1=h1; Header 2=h2; Header 3=h3; Header 4=h4",
-      plugins: comp.plugins.value,
-      toolbar: props.isReadOnly ? "" : "styles | bold italic underline strikethrough | link image mergetags align | numlist bullist indent outdent | removeformat",
-      ...(props.variables ? { mergetags_list: composeMergeTags(props.variables) } : {}),
-      font_size_formats: "8pt 9pt 10pt 11pt 12pt 14pt 16pt 18pt 24pt 36pt 48pt",
-      font_family_formats: "Andale Mono=andale mono,times; Arial=arial, helvetica, sans-serif; Arial Black=arial black, avant garde; Calibri=Calibri; Book Antiqua=book antiqua,palatino; Courier New=courier new,courier; Georgia=georgia,palatino; Helvetica=helvetica; Impact=impact,chicago; Symbol=symbol; Tahoma=tahoma,arial,helvetica,sans-serif; Terminal=terminal,monaco; Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva; Webdings=webdings; Wingdings=wingdings,zapf dingbats",
-      content_css: "/styles/tiny-mce.css",
-      width: props.width ?? "100%",
-      height: props.minHeight ?? "570px",
-      resize: props.isResizable ?? false,
-      branding: false,
-      menubar: props.isShowMenuBar ?? true,
-      statusbar: false,
-      // can't use css vars in /styles/tiny-mce.css because the editor is an iframe, plus easy to keep those in one place
-      // language=CSS
-      content_style: `
-        :root {
-          --mce-padding: ${props.padding ?? "1in"};
-          --mce-min-height: ${props.minHeight};
-          --mce-editor-box-shadow: ${props.editorBoxShadow};
-          --mce-editor-background: ${props.editorBackground};
-        }
-
-        @media screen {
-          html {
-            background: #f4f4f4;
-            /* noinspection CssUnresolvedCustomProperty */
-            background: var(--mce-editor-background, none);
-            max-height: 100%;
+  const state = useStateVar(() => {
+    const isIncludeMergeTags = ref(false);
+    return {
+      isVisible: ref(true),
+      isIncludeMergeTags: isIncludeMergeTags,
+      config: ref({
+        block_formats: "Paragraph=p; Header 1=h1; Header 2=h2; Header 3=h3; Header 4=h4",
+        plugins: comp.plugins.value,
+        toolbar: props.isReadOnly ? "" : "styles | bold italic underline strikethrough | link image mergetags align | numlist bullist indent outdent | removeformat",
+        ...(isIncludeMergeTags.value ? { mergetags_list: composeMergeTags(props.variables) } : {}),
+        font_size_formats: "8pt 9pt 10pt 11pt 12pt 14pt 16pt 18pt 24pt 36pt 48pt",
+        font_family_formats: "Andale Mono=andale mono,times; Arial=arial, helvetica, sans-serif; Arial Black=arial black, avant garde; Calibri=Calibri; Book Antiqua=book antiqua,palatino; Courier New=courier new,courier; Georgia=georgia,palatino; Helvetica=helvetica; Impact=impact,chicago; Symbol=symbol; Tahoma=tahoma,arial,helvetica,sans-serif; Terminal=terminal,monaco; Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva; Webdings=webdings; Wingdings=wingdings,zapf dingbats",
+        content_css: "/styles/tiny-mce.css",
+        width: props.width ?? "100%",
+        height: props.minHeight ?? "570px",
+        resize: props.isResizable ?? false,
+        branding: false,
+        menubar: props.isShowMenuBar ?? true,
+        statusbar: false,
+        // can't use css vars in /styles/tiny-mce.css because the editor is an iframe, plus easy to keep those in one place
+        // language=CSS
+        content_style: `
+          :root {
+            --mce-padding: ${props.padding ?? "1in"};
+            --mce-min-height: ${props.minHeight};
+            --mce-editor-box-shadow: ${props.editorBoxShadow};
+            --mce-editor-background: ${props.editorBackground};
           }
-        }
-        
-        body {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-          margin: 0;
-          margin-bottom: 0.5rem;
-          min-height: var(--mce-min-height, 100%);
-          box-shadow: var(--mce-editor-box-shadow, none);
-          padding-left: var(--mce-padding) !important;
-          padding-right: var(--mce-padding) !important;
-        }
-
-        @media screen {
+  
+          @media screen {
+            html {
+              background: #f4f4f4;
+              /* noinspection CssUnresolvedCustomProperty */
+              background: var(--mce-editor-background, none);
+              max-height: 100%;
+            }
+          }
+          
           body {
-            background-color: #fff;
-            box-sizing: border-box;
-            padding: var(--mce-padding);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin: 0;
+            margin-bottom: 0.5rem;
+            min-height: var(--mce-min-height, 100%);
+            box-shadow: var(--mce-editor-box-shadow, none);
+            padding-left: var(--mce-padding) !important;
+            padding-right: var(--mce-padding) !important;
           }
-        }
-        
-        body {
-          ${props.contentCssDefault ?? ""}
-        }
-      `,
-    }),
-  };
+  
+          @media screen {
+            body {
+              background-color: #fff;
+              box-sizing: border-box;
+              padding: var(--mce-padding);
+            }
+          }
+          
+          body {
+            ${props.contentCssDefault ?? ""}
+          }
+        `,
+      }),
+    }
+  });
+
+  watch(() => props.variables, (variablesNew) => {
+    state.isIncludeMergeTags.value = variablesNew && variablesNew.length > 0;
+  }, { immediate: true });
 
   const emit = defineEmits(["update:modelValue"]);
 
