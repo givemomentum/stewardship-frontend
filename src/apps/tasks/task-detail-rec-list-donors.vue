@@ -1,11 +1,9 @@
 <script lang="ts" setup>
   import { Recommendation, Task } from "~/apps/tasks/interfaces";
-  import { CrmDonor } from "~/apps/letters/interfaces";
-  import { date, format } from "~/utils";
+  import { format, getCommunicationPreferences, getRecurringGiftDescription } from "~/utils";
   import { ref, computed } from "vue";
   import { useApi } from "~/composables/useApi";
   import { useRuntimeConfig } from "#app";
-  import * as datefns from "date-fns";
 
   const props = defineProps<{ task: Task }>();
 
@@ -41,44 +39,6 @@
       state.alertMessage.value = null;
     }, 5000);
     closeLoggingModal();
-  }
-
-  function getCommunicationPreferences(donor?: CrmDonor) {
-    if (!donor) {
-      return "";
-    }
-
-    if (donor.source == "blackbaud") {
-      return ""; // Blackbaud doesn't have trustworthy communication preferences at the moment.
-    }
-
-    const preferences = [];
-    if (donor.do_not_contact) {
-      preferences.push("Do Not Contact");
-    }
-    if (donor.do_not_call) {
-      preferences.push("Do Not Call");
-    }
-    if (donor.do_not_email) {
-      preferences.push("Do Not Email");
-    }
-    if (donor.do_not_mail) {
-      preferences.push("Do Not Mail");
-    }
-
-    return preferences.join(", ");
-  }
-
-  function getRecurringGiftDescription(donor?: CrmDonor) {
-    const last_recurring_gift_date = donor?.last_recurring_gift_date;
-    console.log(last_recurring_gift_date, datefns.sub(new Date(), { days: 35 }).toISOString());
-    if (!last_recurring_gift_date) {
-      return "They are not a recurring donor.";
-    } else if (last_recurring_gift_date < datefns.sub(new Date(), { days: 35 }).toISOString()) {
-      return "They were a recurring donor until " + format.date(last_recurring_gift_date);
-    } else {
-      return "They are an active recurring donor.";
-    }
   }
 </script>
 

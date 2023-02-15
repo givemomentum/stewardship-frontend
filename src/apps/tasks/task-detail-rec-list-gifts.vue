@@ -2,7 +2,7 @@
   import { useRuntimeConfig } from "#app";
   import { ref } from "vue";
   import { Recommendation, Task } from "~/apps/tasks/interfaces";
-  import { format } from "~/utils";
+  import { format, getCommunicationPreferences, getRecurringGiftDescription } from "~/utils";
 
   const props = defineProps<{ task: Task }>();
 
@@ -75,9 +75,21 @@
     </template>
 
     <template v-slot:rec-unfolded="slotProps">
-      <CFlex direction="column">
-        <CFlex color="gray.400" font-size="xs">Biggest gift</CFlex>
-        <CFlex font-size="md">{{ format.money(slotProps.rec.donor?.donation_biggest) }}</CFlex>
+      <CFlex direction="column" v-if="slotProps.rec.donor?.donation_biggest">
+        <CFlex color="gray.400" font-size="xs">Giving summary</CFlex>
+        <CFlex font-size="md">
+          Giving since {{ format.dateMonth(slotProps.rec.donor?.giving_since) }}. Largest gift was
+          {{ format.money(slotProps.rec.donor?.donation_biggest) }}, and most recent gift was
+          {{ format.money(slotProps.rec.donor?.last_gift_amount) }} in
+          {{ format.dateMonth(slotProps.rec.donor?.last_gift_date) }}.
+          {{ getRecurringGiftDescription(slotProps.rec.donor) }}
+        </CFlex>
+      </CFlex>
+      <CFlex direction="column" v-if="getCommunicationPreferences(slotProps.rec.donor)">
+        <CFlex color="gray.400" font-size="xs">Communication Preferences</CFlex>
+        <CFlex font-size="md">
+          {{ getCommunicationPreferences(slotProps.rec.donor) }}
+        </CFlex>
       </CFlex>
       <CFlex direction="column" v-if="slotProps.rec.donor?.email">
         <CFlex color="gray.400" font-size="xs">Email</CFlex>
