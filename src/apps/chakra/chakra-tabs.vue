@@ -8,7 +8,7 @@
   const state = {
     tabKeySelected: ref<string>(props.selected ?? props.tabKeys[0]),
   };
-  
+
   watch(() => props.selected, (selectedNew: string) => {
     state.tabKeySelected.value = selectedNew ?? state.tabKeySelected.value;
   });

@@ -91,10 +91,10 @@
           }
         `,
       }),
-    }
+    };
   });
 
-  watch(() => props.variables, (variablesNew) => {
+  watch(() => props.variables, variablesNew => {
     state.isIncludeMergeTags.value = variablesNew && variablesNew.length > 0;
   }, { immediate: true });
 
