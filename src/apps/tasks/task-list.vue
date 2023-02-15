@@ -103,8 +103,9 @@
         :to="urls.tasks.detail(task.slug)"
       >
         <CLink
-          display="flex"
+          display="block"
           :_hover="{ cursor: 'pointer', borderColor: 'gray.200' }"
+          w="100%"
           border-radius="lg"
           border="1px solid white"
         >
@@ -120,6 +121,7 @@
             <TaskHead
               :task="task"
               :is-preview="true"
+              :is-rec-set-loaded="hooks.tasks.isRecsLoaded.value"
             />
 
             <CFlex
