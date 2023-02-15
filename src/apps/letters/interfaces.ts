@@ -93,6 +93,7 @@ export class CrmDonor {
   last_contact?: string;
   last_gift_date?: string;
   last_gift_amount?: number;
+  last_recurring_gift_date?: string;
   donation_average: number;
   source_data: any;
   do_not_contact: boolean;
@@ -100,6 +101,5 @@ export class CrmDonor {
   do_not_email: boolean;
   do_not_mail: boolean;
   spouse_name: string;
-
   custom_data: { [field: string]: any };
 }

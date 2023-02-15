@@ -1,10 +1,11 @@
 <script lang="ts" setup>
   import { Recommendation, Task } from "~/apps/tasks/interfaces";
   import { CrmDonor } from "~/apps/letters/interfaces";
-  import { format } from "~/utils";
-  import { ref } from "vue";
+  import { date, format } from "~/utils";
+  import { ref, computed } from "vue";
   import { useApi } from "~/composables/useApi";
   import { useRuntimeConfig } from "#app";
+  import * as datefns from "date-fns";
 
   const props = defineProps<{ task: Task }>();
 
@@ -66,6 +67,18 @@
     }
 
     return preferences.join(", ");
+  }
+
+  function getRecurringGiftDescription(donor?: CrmDonor) {
+    const last_recurring_gift_date = donor?.last_recurring_gift_date;
+    console.log(last_recurring_gift_date, datefns.sub(new Date(), { days: 35 }).toISOString());
+    if (!last_recurring_gift_date) {
+      return "They are not a recurring donor.";
+    } else if (last_recurring_gift_date < datefns.sub(new Date(), { days: 35 }).toISOString()) {
+      return "They were a recurring donor until " + format.date(last_recurring_gift_date);
+    } else {
+      return "They are an active recurring donor.";
+    }
   }
 </script>
 
@@ -171,7 +184,8 @@
               Giving since {{ format.dateMonth(slotProps.rec.donor?.giving_since) }}. Largest gift was
               {{ format.money(slotProps.rec.donor?.donation_biggest) }}, and most recent gift was
               {{ format.money(slotProps.rec.donor?.last_gift_amount) }} in
-              {{ format.dateMonth(slotProps.rec.donor?.last_gift_date) }}
+              {{ format.dateMonth(slotProps.rec.donor?.last_gift_date) }}.
+              {{ getRecurringGiftDescription(slotProps.rec.donor) }}
             </CFlex>
           </CFlex>
           <CFlex direction="column" v-if="getCommunicationPreferences(slotProps.rec.donor)">
