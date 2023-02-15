@@ -393,7 +393,7 @@
                       <chakra.td>{{ email.rec.donor.email }}</chakra.td>
                     </chakra.tr>
 
-                    <chakra.tr v-if="email.rec.donor.mailing_address.address_line1">
+                    <chakra.tr v-if="email.rec.donor.mailing_address?.address_line1">
                       <chakra.td>Address</chakra.td>
                       <chakra.td white-space="break-spaces !important">
                         {{ email.rec.donor.mailing_address.address_line1.slice(0, 31) }},
