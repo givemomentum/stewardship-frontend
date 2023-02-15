@@ -79,17 +79,35 @@
       </chakra.table>
 
       <CFlex direction="column">
-        <CFlex py="2" align="center" gap="2" v-if="props.rec.donor.email">
+        <CFlex
+          v-if="props.rec.donor.email"
+          py="2"
+          align="center"
+          gap="2"
+          white-space="nowrap"
+        >
           <CIcon size="5" color="gray.500" name="email" />
           {{ props.rec.donor.email }}
           <CTag v-if="props.rec.donor.do_not_email">Do not email</CTag>
         </CFlex>
-        <CFlex py="2" align="center" gap="2" v-if="props.rec.donor.phone">
+        <CFlex
+          v-if="props.rec.donor.phone"
+          py="2"
+          align="center"
+          gap="2"
+          white-space="nowrap"
+        >
           <CIcon size="5" fill="gray.500" name="io-call" />
           {{ props.rec.donor.phone }}
           <CTag v-if="props.rec.donor.do_not_call">Do not call</CTag>
         </CFlex>
-        <CFlex py="2" align="center" gap="2" v-if="props.rec.donor.mailing_address.city">
+        <CFlex
+          v-if="props.rec.donor.mailing_address.city"
+          py="2"
+          align="center"
+          gap="2"
+          white-space="nowrap"
+        >
           <CIcon size="5" fill="gray.500" name="fa-map-marker-alt" />
           {{ props.rec.donor.mailing_address.city }}, {{ props.rec.donor.mailing_address.state }}
           <CTag v-if="props.rec.donor.do_not_mail">Do not mail</CTag>
