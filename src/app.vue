@@ -32,6 +32,21 @@
         src: hooks.config.public.env === "prod" ? "//js.hs-scripts.com/20795930.js" : "",
       },
       { children: `window._hsq = window._hsq ?? [];` },
+      // GA
+      {
+        src: hooks.config.public.env === "prod" ? "https://www.googletagmanager.com/gtag/js?id=G-W1HTKWB5F1" : "",
+        async: true,
+      },
+      {
+        children: hooks.config.public.env === "prod" ? `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+        
+          gtag('config', 'G-W1HTKWB5F1');
+        ` : "",
+      },
+
     ],
   });
 
