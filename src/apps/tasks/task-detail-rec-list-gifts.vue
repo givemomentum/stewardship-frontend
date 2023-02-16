@@ -82,7 +82,7 @@
           {{ format.money(slotProps.rec.donor?.donation_biggest) }}, and most recent gift was
           {{ format.money(slotProps.rec.donor?.last_gift_amount) }} in
           {{ format.dateMonth(slotProps.rec.donor?.last_gift_date) }}.
-          <!--          {{ getRecurringGiftDescription(slotProps.rec.donor) }}-->
+          {{ getRecurringGiftDescription(slotProps.rec.donor) }}.
         </CFlex>
       </CFlex>
       <CFlex direction="column" v-if="getCommunicationPreferences(slotProps.rec.donor)">
