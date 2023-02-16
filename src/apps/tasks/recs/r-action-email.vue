@@ -104,6 +104,10 @@
   }
 
   async function sendTestEmail() {
+    if (!state.emailContentHtml.value) {
+      hooks.notify.error("Email content is empty");
+      return;
+    }
     await hooks.api.post(`/emails-new/${state.emailOpen.value.pk}/send-test-email/`);
     hooks.notify.send(`Test emails sent to ${hooks.userStore.user.email}`);
   }
@@ -282,7 +286,6 @@
           <CButton
             @click="sendTestEmail()"
             variant="outline"
-            z-index="toast"
             left-icon="ri-mail-send-line"
             size="lg"
             border-radius="lg"
