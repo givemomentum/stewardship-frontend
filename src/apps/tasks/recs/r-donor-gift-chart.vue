@@ -79,7 +79,7 @@
     markers: {
       size: 3,
     },
-    colors: ["#3182ce"],
+    colors: ["#4299e1"],
     fill: {
       type: "gradient",
       gradient: {
