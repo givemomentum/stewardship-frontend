@@ -32,7 +32,9 @@
 
         <chakra.tr>
           <chakra.td>Last gift</chakra.td>
-          <chakra.td>{{ format.money(props.rec.donor.last_gift_amount) }}, {{ format.date(props.rec.donor.last_gift_date) }}</chakra.td>
+          <chakra.td>{{ format.money(props.rec.donor.last_gift_amount) }},
+            {{ format.date(props.rec.donor.last_gift_date) }}
+          </chakra.td>
         </chakra.tr>
         <chakra.tr>
           <chakra.td>Lifetime giving</chakra.td>
@@ -102,7 +104,7 @@
           <CTag v-if="props.rec.donor.do_not_call">Do not call</CTag>
         </CFlex>
         <CFlex
-          v-if="props.rec.donor.mailing_address.city"
+          v-if="props.rec.donor.mailing_address?.city"
           py="2"
           align="center"
           gap="2"
@@ -133,6 +135,7 @@
         font-weight: bold;
         white-space: nowrap;
       }
+
       &:last-of-type {
         padding-left: var(--chakra-space-3);
       }

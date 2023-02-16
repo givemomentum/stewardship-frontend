@@ -70,7 +70,9 @@
   async function loadTaskAndRecBySlug() {
     if (!hooks.tasks.isRecsLoaded.value) {
       await hooks.tasks.loadTasksRecSet({ isShowAllTasks: true });
+    }
 
+    if (!hooks.tasks.taskOpened.value) {
       hooks.tasks.taskOpened.value = hooks.tasks.tasks.value?.find(
         task => task.slug === props.taskSlug,
       );
@@ -202,7 +204,7 @@
               color="gray.700"
               overflow="hidden"
             >
-              {{rec.donor.name}}
+              {{ rec.donor.name }}
             </CFlex>
           </CLink>
         </NuxtLink>

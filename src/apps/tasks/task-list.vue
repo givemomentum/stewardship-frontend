@@ -37,6 +37,20 @@
     ),
   };
 
+  function getTaskDetailUrl(task: Task): string {
+    const isTaskHasDetails = task?.rec_set?.rule?.executor_class === "letter_template_executor";
+    if (isTaskHasDetails) {
+      return urls.tasks.detail(task.slug);
+    }
+    const firstRecUnhandled = task.rec_set?.recs?.find(rec => rec.state === "new");
+    if (firstRecUnhandled) {
+      return urls.tasks.detailRec(task.slug, firstRecUnhandled.slug);
+    } else {
+      const firstRec = task.rec_set?.recs?.[0];
+      return urls.tasks.detailRec(task.slug, firstRec.slug);
+    }
+  }
+
   onMounted(async () => {
     hooks.tasks.resetTaskOpened();
 
@@ -68,17 +82,8 @@
   onBeforeUnmount(() => hooks.layout.bg.value = "white");
 
   watch(hooks.tasks.taskOpened, async (task?: Task) => {
-    const isTaskHasDetails = task?.rec_set?.rule?.executor_class === "letter_template_executor";
-    if (isTaskHasDetails) {
-      navigateTo(urls.tasks.detail(task.slug));
-    } else if (task) {
-      const firstRecUnhandled = task.rec_set?.recs?.find(rec => rec.state === "new");
-      if (firstRecUnhandled) {
-        navigateTo(urls.tasks.detailRec(task.slug, firstRecUnhandled.slug));
-      } else {
-        const firstRec = task.rec_set?.recs?.[0];
-        navigateTo(urls.tasks.detailRec(task.slug, firstRec.slug));
-      }
+    if (task) {
+      navigateTo(getTaskDetailUrl(task));
     } else if (props.isShowAllTasks) {
       navigateTo(urls.tasks.listAll);
     } else {
@@ -100,7 +105,7 @@
       <NuxtLink
         v-for="task in hooks.tasks.tasks.value"
         :key="task.pk"
-        :to="urls.tasks.detail(task.slug)"
+        :to="getTaskDetailUrl(task)"
       >
         <CLink
           display="block"
@@ -204,7 +209,7 @@
     </CFlex>
 
     <ChakraDrawer
-      v-if="!hooks.tasks.taskOpened.value?.rec_set?.rule?.email_template"
+      v-if="hooks.tasks.taskOpened.value?.rec_set?.rule?.executor_class === 'letter_template_executor'"
       v-model="hooks.tasks.taskOpened.value"
     >
       <TaskDetails :task="hooks.tasks.taskOpened.value" />
