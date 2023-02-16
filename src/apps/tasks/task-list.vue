@@ -117,7 +117,23 @@
               </CFlex>
 
               <CFlex
-                v-if="task.rec_set?.recs?.length"
+                v-if="task.rec_set?.rec_progress"
+                align="center"
+                color="gray.500"
+                gap="1"
+              >
+                <CIcon
+                  :name="task.rec_set.type === 'gifts' ? 'fa-donate' : 'bi-people-fill'"
+                  fill="gray.400"
+                  size="17px"
+                  mb="px"
+                />
+                <CText>
+                  {{ task.rec_set?.rec_progress }}
+                </CText>
+              </CFlex>
+              <CFlex
+                v-else-if="task.rec_set?.recs?.length"
                 align="center"
                 color="gray.500"
                 gap="1"
@@ -145,7 +161,7 @@
       </CLink>
 
       <CBox v-if="!hooks.taskListStore.tasks.value.length && state.isRecSetLoaded.value">
-         <CHeading v-if="!props.isShowAllTasks" font-size="xl" font-weight="normal">
+        <CHeading v-if="!props.isShowAllTasks" font-size="xl" font-weight="normal">
           You're all done 🎉 !
         </CHeading>
         <CBox v-if="props.isShowAllTasks">

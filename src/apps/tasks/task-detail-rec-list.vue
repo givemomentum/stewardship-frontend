@@ -6,6 +6,7 @@
   import { useApi } from "~/composables/useApi";
   import { EmailBatch } from "~/apps/emails/interfaces";
   import { useRuntimeConfig } from "#app";
+  import { useUserStore } from "~/apps/auth/useUserStore";
 
   const props = defineProps<{
     task: Task;
@@ -22,6 +23,7 @@
     config: useRuntimeConfig(),
     tasks: useTaskListStore(),
     api: useApi(),
+    user: useUserStore(),
   };
 
   onMounted(async () => {
@@ -88,7 +90,7 @@
 
       <NuxtLink
         :to="urls.emails.batches.edit(props.task.rec_set.email_batch)"
-        v-if="props.task.rec_set?.email_batch">
+        v-if="props.task.rec_set?.email_batch && hooks.user.org.is_enable_app_emails">
         <CButton
           size="sm"
           left-icon="mail"
