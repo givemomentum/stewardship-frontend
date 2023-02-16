@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { parseISO } from "date-fns";
   import { ref } from "vue";
   import { EmailBatch, EmailTemplate } from "~/apps/emails/interfaces";
   import { LetterTemplate } from "~/apps/letters/interfaces";
@@ -18,7 +19,14 @@
 
   onMounted(async () => {
     const resBatches = await hooks.api.get("/emails/batches/");
-    state.batchList.value = resBatches.data;
+    state.batchList.value = resBatches.data.filter((batch: EmailBatch) => {
+      const batchDate = parseISO(batch.created_at);
+      const isFakeBatch = (
+        parseISO("2023-02-16 00:42:41.035223 +00:00") < batchDate
+        && batchDate < parseISO("2023-02-16 00:52:06.800638 +00:00")
+      );
+      return !isFakeBatch;
+    });
 
     const resTemplates = await hooks.api.get("/emails/templates/");
     state.templateList.value = resTemplates.data;
