@@ -22,8 +22,8 @@
     state.batchList.value = resBatches.data.filter((batch: EmailBatch) => {
       const batchDate = parseISO(batch.created_at);
       const isFakeBatch = (
-        parseISO("2023-02-16 00:42:41.035223 +00:00") < batchDate
-        && batchDate < parseISO("2023-02-16 00:52:06.800638 +00:00")
+        parseISO("2023-02-16T00:42:41.035223Z") < batchDate
+        && batchDate < parseISO("2023-02-16T00:52:06.800638Z")
       );
       return !isFakeBatch;
     });
@@ -35,8 +35,8 @@
     state.batchList.value = resBatchesWithRecSetes.data.filter((batch: EmailBatch) => {
       const batchDate = parseISO(batch.created_at);
       const isFakeBatch = (
-        parseISO("2023-02-16 00:42:41.035223 +00:00") < batchDate
-        && batchDate < parseISO("2023-02-16 00:52:06.800638 +00:00")
+        parseISO("2023-02-16T00:42:41.035223Z") < batchDate
+        && batchDate < parseISO("2023-02-16T00:52:06.800638Z")
       );
       return !isFakeBatch;
     });
