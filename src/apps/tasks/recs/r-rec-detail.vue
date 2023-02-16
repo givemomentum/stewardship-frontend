@@ -211,6 +211,7 @@
       <CFlex
         direction="column"
         :gap="comp.spaceLg"
+        min-h="100vh"
         w="100%"
         max-w="900px"
         pt="10"
