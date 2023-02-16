@@ -32,7 +32,14 @@
     state.templateList.value = resTemplates.data;
     
     const resBatchesWithRecSetes = await hooks.api.get("/emails/batches/?expand=rec_set");
-    state.batchList.value = resBatchesWithRecSetes.data;
+    state.batchList.value = resBatchesWithRecSetes.data.filter((batch: EmailBatch) => {
+      const batchDate = parseISO(batch.created_at);
+      const isFakeBatch = (
+        parseISO("2023-02-16 00:42:41.035223 +00:00") < batchDate
+        && batchDate < parseISO("2023-02-16 00:52:06.800638 +00:00")
+      );
+      return !isFakeBatch;
+    });
   });
 
   function getStatusStyle(batch: EmailBatch) {
