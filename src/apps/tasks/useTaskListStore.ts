@@ -51,14 +51,18 @@ export function useTaskListStore() {
 
   async function loadTaskOpenedRecsAndGiftHistory() {
     if (state.taskOpened.value?.rec_set) {
+      const taskOpenedId = state.taskOpened.value?.pk;
       const res = await hooks.api.get(
         `/rec-sets/${state.taskOpened.value.rec_set.pk}/?expand=recs.email,recs.donor.gifts`,
       );
       if (res.data) {
         sortRecs(res.data);
-        state.taskOpened.value.rec_set = res.data;
+
+        if (state.taskOpened.value?.pk === taskOpenedId) {
+          state.taskOpened.value.rec_set = res.data;
+          state.isGiftHistoryLoaded.value = true;
+        }
       }
-      state.isGiftHistoryLoaded.value = true;
     }
   }
 
