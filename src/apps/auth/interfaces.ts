@@ -11,6 +11,7 @@ export interface Org {
   support_email: string;
   is_enable_app_emails: boolean;
   is_enable_app_letters: boolean;
+  is_enable_beta_features: boolean;
 }
 
 export interface BlackbaudConnection {

@@ -57,7 +57,7 @@
       window.location.href = `${hooks.config.public.accountsBase}/login`;
       return;
     }
-    
+
     Sentry.setUser({
       email: hooks.userStore.user.email,
       id: hooks.userStore.user.pk.toString(),
@@ -69,12 +69,19 @@
       is_enable_app_letters: hooks.userStore.user.membership?.org?.is_enable_app_letters,
     });
 
+    if (hooks.userStore.org && hooks.userStore.org.is_enable_beta_features) {
+      if (window.location.origin !== hooks.config.public.betaUrl) {
+        window.location.href = hooks.config.public.betaUrl + window.location.pathname;
+        return;
+      }
+    }
+
     const isNeedToInitAnalytics = (
       hooks.config.public.env === "prod"
       && !hooks.userStore.user.email.endsWith("givemomentum.com")
     );
     if (isNeedToInitAnalytics) {
-      
+
       LogRocket.init("alcw3f/stewardship");
 
       const hubspot = window._hsq;
@@ -107,7 +114,7 @@
     <CFlex px="10" pt="6" pr="6">
       <NuxtPage v-if="hooks.userStore.isLoggedIn" />
     </CFlex>
-    
+
     <!--  for preloading & caching external mce js files, otherwise it takes a while  -->
     <CBox
       v-if="hooks.userStore.user?.membership?.org?.is_enable_app_emails"
