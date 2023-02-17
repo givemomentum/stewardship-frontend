@@ -10,7 +10,7 @@ export default defineNuxtPlugin(nuxtApp => {
       app: [nuxtApp.vueApp],
       dsn: "https://4c2d00b85972416ea396bc900e4a8b08@o359384.ingest.sentry.io/6763294",
       tracesSampleRate: 1.0,
-      replaysSessionSampleRate: 0.1,
+      replaysSessionSampleRate: 1.0,
       replaysOnErrorSampleRate: 1.0,
       integrations: [
         new Sentry.Replay({
