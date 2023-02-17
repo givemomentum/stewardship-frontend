@@ -2,7 +2,7 @@
   import { useRuntimeConfig } from "#app";
   import { ref } from "vue";
   import { Rec, Task } from "~/apps/tasks/interfaces";
-  import { format } from "~/utils";
+  import { format, getCommunicationPreferences, getRecurringGiftDescription } from "~/utils";
 
   const props = defineProps<{ task: Task }>();
 
