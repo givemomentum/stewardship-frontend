@@ -146,8 +146,8 @@
     }
   }
 
-  async function updateEmailPromptOutputs(promptOutput: PromptOutput) {
-    state.emailOpen.value.prompt_outputs.push(promptOutput);
+  async function updateEmailPromptOutputs(promptOutput: PromptOutput[]) {
+    state.emailOpen.value.prompt_outputs = promptOutput;
   }
 
   async function updateEmailContentFromAI(promptOutputString: string) {
@@ -317,6 +317,7 @@
       @email-prompt-output-created="(promptOutput) => updateEmailPromptOutputs(promptOutput)"
       @email-content-updated="(promptOutput) => updateEmailContentFromAI(promptOutput)"
       :email="state.emailOpen.value"
+      :email-content-html="state.emailContentHtml.value"
     />
 
     <!--  for preloading & caching external mce js files, otherwise it takes a while  -->

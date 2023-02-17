@@ -3,23 +3,30 @@
   import { useToast } from "vue-toastification";
   import { useUserStore } from "~/apps/auth/useUserStore";
   import { Email, PromptOutput } from "~/apps/emails/interfaces";
+  import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import { format } from "~/utils";
 
-  const props = defineProps<{ email: Email; }>();
+  const props = defineProps<{
+    email: Email;
+    emailContentHtml: string;
+  }>();
 
   const hooks = {
     userStore: useUserStore(),
     api: useApi(),
     toast: useToast(),
+    tasks: useTaskListStore(),
   };
 
   const state = {
     prompt: ref(""),
     isLoading: ref(false),
+    chatSocket: ref(null),
+    promptOutputs: ref([] as PromptOutput[]),
   };
 
   const emit = defineEmits<{
-    (event: "emailPromptOutputCreated", promptOutput: PromptOutput);
+    (event: "emailPromptOutputCreated", promptOutput: PromptOutput[]);
     (event: "emailContentUpdated", promptOutput: PromptOutput);
   }>();
 
@@ -30,6 +37,28 @@
       `Ask about meeting for a cup of coffee`,
     ],
   };
+  
+  onMounted(async () => {
+    const outputsRes = await hooks.api.get(`/ai/prompt-outputs/?email=${props.email.pk}`);
+    state.promptOutputs.value = outputsRes.data;
+    hooks.tasks.recOpened.value.email.prompt_outputs = outputsRes.data;
+
+    state.chatSocket.value = new WebSocket("wss://stewardship-prod-web-ai.onrender.com/ai-ws");
+    
+    state.chatSocket.value.addEventListener("message", function (event) {
+      const word = event.data;
+      const lastPromptOutput = state.promptOutputs.value[state.promptOutputs.value.length - 1];
+      if (word === "[[END]]") {
+        state.isLoading.value = false;
+        emit("emailPromptOutputCreated", state.promptOutputs.value);
+        hooks.api.patch(`/ai/prompt-outputs/${lastPromptOutput.pk}/`, {
+          output: lastPromptOutput.output,
+        });
+      } else {
+        lastPromptOutput.output += word;
+      }
+    });
+  });
 
   async function submitPrompt() {
     if (state.prompt.value === "") {
@@ -37,22 +66,19 @@
     }
 
     state.isLoading.value = true;
-    if (comp.promptExamples.find(eg => eg.valueOf() === state.prompt.value.valueOf())) {
-      state.prompt.value += ".";
-    }
-    const res = await hooks.api.post("/ai/prompt-outputs/", {
+
+    const res = await hooks.api.post(`/ai/prompt-outputs/`, {
       email: props.email.pk,
       prompt: state.prompt.value,
     });
+    state.promptOutputs.value = res.data.history;
+
+    state.chatSocket.value.send(res.data.history_raw);
     state.prompt.value = "";
-
-    emit("emailPromptOutputCreated", res.data);
-
-    state.isLoading.value = false;
   }
 
   function isPromptOutputSelected(po: PromptOutput): boolean {
-    return props.email.content_html.valueOf() === po.output.valueOf();
+    return props.email.content_html.length && props.email.content_html.valueOf() === po.output.valueOf();
   }
 </script>
 
@@ -64,10 +90,10 @@
       <chakra.span font-size="1.75rem" mt="0">AI Assistant</chakra.span>
     </CFlex>
 
-    <CVStack spacing="6" v-if="props.email.prompt_outputs?.length">
+    <CVStack spacing="6" v-if="state.promptOutputs.value?.length">
       <CVStack
-        v-for="promptOutput in props.email.prompt_outputs ?? []"
-        :key="promptOutput.pk + 1"
+        v-for="promptOutput in state.promptOutputs.value ?? []"
+        :key="promptOutput.pk"
         spacing="6"
       >
         <CFlex
@@ -133,7 +159,7 @@
       <CButton
         v-for="prompt in comp.promptExamples"
         :key="prompt"
-        @click="state.prompt.value = prompt; submitPrompt()"
+        @click="state.prompt.value = prompt + '.'; submitPrompt()"
         variant="outline"
         size="sm"
         bg="gray.100"

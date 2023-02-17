@@ -6,6 +6,7 @@ export interface Org {
   pk: PrimaryKey;
   slug: string | "kessler" | "hor" | "ysgn";
   name: string;
+  domain: string;
   contact_first_name: string;
   contact_last_name: string;
   support_email: string;
@@ -41,6 +42,7 @@ export interface User {
   avatar?: UrlString;
   first_name: string;
   last_name: string;
+  position: string;
   is_momentum_admin: boolean;
   membership?: OrgMembership;
 }
