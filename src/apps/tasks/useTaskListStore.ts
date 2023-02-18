@@ -53,7 +53,7 @@ export function useTaskListStore() {
     if (state.taskOpened.value?.rec_set) {
       const taskOpenedId = state.taskOpened.value?.pk;
       const res = await hooks.api.get(
-        `/rec-sets/${state.taskOpened.value.rec_set.pk}/?expand=recs.email,recs.donor.gifts`,
+        `/rec-sets/${state.taskOpened.value.rec_set.pk}/?expand=recs.email,recs.donor.gifts,recs.gift`,
       );
       if (res.data) {
         sortRecs(res.data);
