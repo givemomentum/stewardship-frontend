@@ -76,7 +76,6 @@
       && !hooks.userStore.user.email.endsWith("givemomentum.com")
     );
     if (isNeedToInitAnalytics) {
-
       LogRocket.init("alcw3f/stewardship");
 
       const hubspot = window._hsq;

@@ -56,15 +56,15 @@ export default defineNuxtPlugin(nuxtApp => {
   nuxtApp.vueApp.use(ChakraUIVuePlugin as any, {
     extendTheme: extendTheme({
       breakpoints: {
-        sm: '30em', // 480px
-        md: '48em',
-        tablet: '48em', // 768px
-        lg: '62em', // 992px
-        xl: '80em',
-        laptop: '80em', // 1280px
-        '2xl': '96em', // 1536px
-        '3xl': '1680px',
-        fullhd: '120em',
+        sm: "30em", // 480px
+        md: "48em",
+        tablet: "48em", // 768px
+        lg: "62em", // 992px
+        xl: "80em",
+        laptop: "80em", // 1280px
+        "2xl": "96em", // 1536px
+        "3xl": "1680px",
+        fullhd: "120em",
       },
       components: {
         Heading: {

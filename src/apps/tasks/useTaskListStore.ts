@@ -53,7 +53,7 @@ export function useTaskListStore() {
     if (state.taskOpened.value?.rec_set) {
       const taskOpenedId = state.taskOpened.value?.pk;
       const res = await hooks.api.get(
-        `/rec-sets/${state.taskOpened.value.rec_set.pk}/?expand=recs.email,recs.donor.gifts,recs.gift`,
+        `/rec-sets/${state.taskOpened.value.rec_set.pk}/?expand=recs.email,recs.donor.gifts,recs.gift,recs.donor.household`,
       );
       if (res.data) {
         sortRecs(res.data);
@@ -123,6 +123,6 @@ export function useTaskListStore() {
       state.recOpened.value = null;
       state.isRecsLoaded.value = false;
       state.isGiftHistoryLoaded.value = false;
-    }
+    },
   };
 }

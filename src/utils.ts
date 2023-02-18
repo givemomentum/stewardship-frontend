@@ -96,9 +96,8 @@ export function getRecurringGiftDescription(donor?: CrmDonor) {
   const last_recurring_gift_date = donor?.last_recurring_gift_date;
   if (!last_recurring_gift_date) {
     return "They are not a recurring donor";
-  } else if (last_recurring_gift_date < datefns.sub(new Date(), { days: 35 }).toISOString()) {
-    return "They were a recurring donor until " + format.date(last_recurring_gift_date);
-  } else {
-    return "They are an active recurring donor";
+  } if (last_recurring_gift_date < datefns.sub(new Date(), { days: 35 }).toISOString()) {
+    return `They were a recurring donor until ${format.date(last_recurring_gift_date)}`;
   }
+    return "They are an active recurring donor";
 }

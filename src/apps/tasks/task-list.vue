@@ -45,10 +45,9 @@
     const firstRecUnhandled = task.rec_set?.recs?.find(rec => rec.state === "new");
     if (firstRecUnhandled) {
       return urls.tasks.detailRec(task.slug, firstRecUnhandled.slug);
-    } else {
-      const firstRec = task.rec_set?.recs?.[0];
-      return urls.tasks.detailRec(task.slug, firstRec.slug);
     }
+    const firstRec = task.rec_set?.recs?.[0];
+    return urls.tasks.detailRec(task.slug, firstRec.slug);
   }
 
   onMounted(async () => {

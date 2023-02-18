@@ -129,7 +129,7 @@
       padding-bottom: var(--chakra-space-2);
       border-bottom: 0;
       vertical-align: top;
-      
+
       // reduces padding on screens smaller than --chakra-breakpoints-2xl
       @media (max-width: 1536px) {
         padding-top: var(--chakra-space-1);

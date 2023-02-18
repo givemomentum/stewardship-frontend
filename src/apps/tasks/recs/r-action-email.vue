@@ -174,7 +174,7 @@
       // force rerender the editor until it renders itself
       // otherwise fails. Most likely a bug on the tiny editor side
       state.emailEditorKey.value += Math.random();
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 60));
     }
   }
 </script>

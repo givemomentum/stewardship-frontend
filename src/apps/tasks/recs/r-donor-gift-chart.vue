@@ -79,7 +79,7 @@
     markers: {
       size: 3,
     },
-    colors: ["#4299e1"],
+    colors: ["#4299e1", "#48bb78", "#f6ad55", "#ed64a6"], // colors chosen by ChatGPT
     fill: {
       type: "gradient",
       gradient: {

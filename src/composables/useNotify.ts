@@ -11,7 +11,6 @@ export function useNotify() {
   };
 }
 
-
 function send(message: string, type: TYPE = TYPE.DEFAULT) {
   hooks.toast(
     message,
@@ -25,5 +24,5 @@ function send(message: string, type: TYPE = TYPE.DEFAULT) {
       icon: false,
       draggable: false,
     },
-  )
+  );
 }
