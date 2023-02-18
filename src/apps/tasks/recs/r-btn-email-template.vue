@@ -25,6 +25,9 @@
         hooks.notify.send("Template saved");
         emit("update:template", state.templateHtml.value);
         state.isDrawerOpen.value = false;
+        // todo replace with reloading email content_html_default
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        window.location.reload();
       },
     }),
   };
