@@ -124,7 +124,12 @@
       </CVStack>
     </CVStack>
 
-    <CFlex gap="4" v-if="!props.email.prompt_outputs?.length">
+    <CFlex
+      v-if="!props.email.prompt_outputs?.length"
+      gap="4"
+      wrap="wrap"
+      key="3"
+    >
       <CButton
         v-for="prompt in comp.promptExamples"
         :key="prompt"
@@ -136,6 +141,7 @@
         :_hover="{ bg: 'gray.200', border: 'gray.200' }"
         color-scheme="gray"
         border-radius="2xl"
+        :font-size="{ base: 'xs', fullhd: 'md' }"
       >
         {{ prompt }}
       </CButton>

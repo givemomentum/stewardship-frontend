@@ -58,7 +58,7 @@
         }
         return "other";
       }),
-      spaceLg: 7,
+      spaceLg: { base: 4, "2xl": 7 },
       taskCompletionPercentage: computed(() => {
         const tasksCompleted = hooks.tasks.taskOpened.value?.rec_set?.recs.filter(rec => rec.state !== "new").length;
         const tasksTotal = hooks.tasks.taskOpened.value?.rec_set?.recs.length;
@@ -155,6 +155,7 @@
         border-right="1px solid"
         border-color="gray.100"
         z-index="docked"
+        font-size="sm"
       >
         <NuxtLink
           v-for="rec in comp.task.value?.rec_set.recs"
@@ -165,8 +166,8 @@
             display="flex"
             align-items="center"
             gap="2"
-            px="5"
-            pr="6"
+            :px="{ base: 3, '2xl': 5 }"
+            :pr="{ base: 4, '2xl': 6 }"
             py="2"
             :bg="rec?.pk === comp.rec.value?.pk ? 'gray.100' : 'gray.50'"
             :opacity="rec?.pk === comp.rec.value?.pk ? '1' : '0.75'"
@@ -179,24 +180,25 @@
               name="io-checkmark-circle"
               color="green.500"
               fill="green.500"
-              size="5"
+              size="19px"
             />
             <CIcon
               v-if="status.isSkippedToLater(rec)"
               name="bi-clock"
+              size="19px"
               color="green.500"
             />
             <CIcon
               v-if="status.isNew(rec)"
               name="io-checkmark-circle-outline"
               color="gray.400"
-              size="5"
+              size="19px"
             />
             <CIcon
               v-if="status.isSkippedAsUnqualified(rec)"
               name="x"
               color="gray.400"
-              size="5"
+              size="19px"
             />
             <CFlex
               v-if="rec"
@@ -215,9 +217,9 @@
         :gap="comp.spaceLg"
         min-h="100vh"
         w="100%"
-        max-w="900px"
+        :max-w="{ base: '43%', '2xl': 900 }"
         pt="10"
-        px="8"
+        :px="{ base: 5, '2xl': 8 }"
         mt="-6"
         bg="white"
         border-right="1px solid"
@@ -235,6 +237,7 @@
               <RRecActionEmail
                 v-if="comp.rec.value?.email"
                 :rec="comp.rec.value"
+                :gap="comp.spaceLg"
               />
             </template>
             <template v-slot:email-header-side>
@@ -263,9 +266,9 @@
 
       <CFlex
         direction="column"
-        gap="10"
-        pl="8"
-        pr="5"
+        :gap="{ base: 7, '2xl': 10 }"
+        :pl="{ base: 5, '2xl': 8 }"
+        :pr="{ base: 3, '2xl': 5 }"
         w="100%"
         max-w="750px"
       >

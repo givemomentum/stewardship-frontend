@@ -13,6 +13,7 @@
 
   const props = defineProps<{
     rec: Rec;
+    gap: any;
   }>();
 
   const hooks = {
@@ -184,7 +185,7 @@
     pos="relative"
     direction="column"
     w="100%"
-    gap="7"
+    :gap="props.gap"
     flex="auto"
     align="flex-end"
   >
@@ -267,7 +268,7 @@
       </CButton>
     </CBox>
 
-    <CFlex gap="5" v-if="!comp.isEmailSent.value">
+    <CFlex :gap="{ base: 4, '2xl': 5 }" v-if="!comp.isEmailSent.value">
       <CButton
         :is-loading="state.isSavingChanges.value"
         z-index="toast"

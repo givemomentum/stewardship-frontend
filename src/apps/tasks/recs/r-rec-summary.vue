@@ -11,7 +11,7 @@
 
 <template>
 
-  <CFlex gap="4" direction="column" pt="8">
+  <CFlex gap="4" direction="column" pt="7">
     <CHeading font-size="2xl" color="gray.700" font-weight="normal">
       {{ props.rec.donor.name }}
     </CHeading>
@@ -83,7 +83,7 @@
       <CFlex direction="column">
         <CFlex
           v-if="props.rec.donor.email"
-          py="2"
+          :py="{ base: 1, '2xl': 2 }"
           align="center"
           gap="2"
           white-space="nowrap"
@@ -94,7 +94,7 @@
         </CFlex>
         <CFlex
           v-if="props.rec.donor.phone"
-          py="2"
+          :py="{ base: 1, '2xl': 2 }"
           align="center"
           gap="2"
           white-space="nowrap"
@@ -105,7 +105,7 @@
         </CFlex>
         <CFlex
           v-if="props.rec.donor.mailing_address?.city"
-          py="2"
+          :py="{ base: 1, '2xl': 2 }"
           align="center"
           gap="2"
           white-space="nowrap"
@@ -124,12 +124,17 @@
   table {
     td {
       font-size: var(--chakra-fontSizes-md);
-      padding: var(--chakra-space-3);
+      padding: 0;
       padding-top: var(--chakra-space-2);
       padding-bottom: var(--chakra-space-2);
-      padding-left: 0;
       border-bottom: 0;
       vertical-align: top;
+      
+      // reduces padding on screens smaller than --chakra-breakpoints-2xl
+      @media (max-width: 1536px) {
+        padding-top: var(--chakra-space-1);
+        padding-bottom: var(--chakra-space-1);
+      }
 
       &:first-of-type {
         font-weight: bold;
