@@ -38,6 +38,10 @@
   };
 
   function getTaskDetailUrl(task: Task): string {
+    // Return a dummy URL to avoid failing when task has no rec set.
+    if (!task.rec_set) {
+      return window.location.href;
+    }
     const isTaskHasDetails = task?.rec_set?.rule?.executor_class === "letter_template_executor";
     if (isTaskHasDetails) {
       return urls.tasks.detail(task.slug);
@@ -164,9 +168,11 @@
                 </CFlex>
               </CFlex>
 
-              <CButton v-if="task.status === 'recommended'">Handle</CButton>
-              <CButton v-else variant="outline">Review</CButton>
-
+              <template v-if="task.rec_set">
+                <CButton v-if="task.status === 'recommended' && task.rec_set.rec_progress.startsWith('0')">Start</CButton>
+                <CButton v-else-if="task.status === 'recommended'">Continue</CButton>
+                <CButton v-else variant="outline">Review</CButton>
+              </template>
             </CFlex>
 
           </CFlex>
