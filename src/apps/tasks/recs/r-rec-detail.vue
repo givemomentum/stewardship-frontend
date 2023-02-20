@@ -43,7 +43,7 @@
 
   const comp = useComp(() => {
     const recProxy = hooks.tasks.recOpened;
-    const actionTypes = ["email", "call", "message", "other"];
+    const actionTypes = ["email", "call", "other"];
     return {
       task: computed(() => hooks.tasks.taskOpened.value),
       rec: computed(() => recProxy.value),
@@ -252,9 +252,6 @@
 
             <template v-slot:call>
               <RRecActionLog v-if="comp.rec.value" :rec="comp.rec.value" type="call" />
-            </template>
-            <template v-slot:message>
-              <RRecActionLog v-if="comp.rec.value" :rec="comp.rec.value" type="message" />
             </template>
             <template v-slot:other>
               <RRecActionLog v-if="comp.rec.value" :rec="comp.rec.value" type="other" />

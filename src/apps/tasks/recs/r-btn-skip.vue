@@ -59,7 +59,7 @@
           bg="white"
           left-icon="check-circle"
         >
-          Already handled
+          Already contacted
         </CButton>
 
         <CButton
@@ -69,7 +69,7 @@
           bg="white"
           left-icon="bi-clock"
         >
-          Move to next month
+          Reach out next month
         </CButton>
         <CButton
           @click="skipRec('skipped_to_next_quarter')"
@@ -78,7 +78,7 @@
           bg="white"
           left-icon="bi-clock"
         >
-          Move to next quarter
+          Reach out next quarter
         </CButton>
         <CButton
           @click="skipRec('skipped_as_unqualified')"

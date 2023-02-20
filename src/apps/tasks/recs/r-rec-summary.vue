@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { Rec, Task } from "~/apps/tasks/interfaces";
-  import { format } from "~/utils";
+  import { format, getShortRecurringGiftDescription } from "~/utils";
   import RRecExpectedValue from "~/apps/tasks/recs/r-donor-expected-value.vue";
 
   const props = defineProps<{
@@ -29,10 +29,9 @@
       :gap="{ base: 3, '2xl': 16 }"
     >
       <chakra.table>
-
         <chakra.tr>
           <chakra.td>Last gift</chakra.td>
-          <chakra.td>{{ format.money(props.rec.donor.last_gift_amount) }},
+          <chakra.td>{{ format.money(props.rec.donor.last_gift_amount) }} on
             {{ format.date(props.rec.donor.last_gift_date) }}
           </chakra.td>
         </chakra.tr>
@@ -43,6 +42,10 @@
         <chakra.tr>
           <chakra.td>Giving since</chakra.td>
           <chakra.td>{{ format.date(props.rec.donor.giving_since) }}</chakra.td>
+        </chakra.tr>
+        <chakra.tr>
+          <chakra.td>Recurring giving</chakra.td>
+          <chakra.td>{{ getShortRecurringGiftDescription(props.rec.donor) }}</chakra.td>
         </chakra.tr>
         <chakra.tr v-if="props.rec.donor.birthday">
           <chakra.td>Birthday</chakra.td>
@@ -71,13 +74,6 @@
           <chakra.td>Spouse</chakra.td>
           <chakra.td>{{ props.rec.donor.spouse_name }}</chakra.td>
         </chakra.tr>
-
-        <chakra.tr v-if="props.rec.explanation">
-          <chakra.td>Reason</chakra.td>
-          <chakra.td color="gray.500">{{ props.rec.explanation }}
-          </chakra.td>
-        </chakra.tr>
-
       </chakra.table>
 
       <CFlex direction="column">
