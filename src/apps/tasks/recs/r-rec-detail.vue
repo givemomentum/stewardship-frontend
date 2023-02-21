@@ -1,6 +1,7 @@
 <script lang="ts" setup>
   import { ActiveHeadEntry } from "@vueuse/head";
   import { useLeftMenu } from "~/apps/menu/useLeftMenu";
+  import { Rec } from "~/apps/tasks/interfaces";
   import RRecActionEmail from "~/apps/tasks/recs/r-action-email.vue";
   import RRecActionLog from "~/apps/tasks/recs/r-action-log.vue";
   import RDonorGiftChart from "~/apps/tasks/recs/r-donor-gift-chart.vue";
@@ -37,7 +38,10 @@
     await hooks.tasks.fetchDonorActions(hooks.tasks.recOpened.value);
   });
 
-  watch(hooks.tasks.recOpened, hooks.layout.activateLeanMode);
+  watch(hooks.tasks.recOpened, (recNew: Rec) => {
+    hooks.tasks.recOpened, hooks.layout.activateLeanMode();
+    hooks.head.patch({ title: recNew?.donor.name });
+  });
   // unMount fires every time we change recOpen
   onBeforeUnmount(hooks.layout.deactivateLeanMode);
 
