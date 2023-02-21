@@ -76,6 +76,14 @@
       && !hooks.userStore.user.email.endsWith("givemomentum.com")
     );
     if (isNeedToInitAnalytics) {
+      if (window["gtag"]) {
+        window["gtag"]("set", {
+          email: hooks.userStore.user.email,
+          name: `${hooks.userStore.user.first_name} ${hooks.userStore.user.last_name}`,
+          org: hooks.userStore.user.membership?.org.name,
+        });
+      }
+
       LogRocket.init("alcw3f/stewardship");
 
       const hubspot = window._hsq;
