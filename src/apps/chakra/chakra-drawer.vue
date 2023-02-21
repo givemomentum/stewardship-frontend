@@ -44,6 +44,7 @@
       box-shadow="lg"
       bg="white"
       z-index="modal"
+      overflow="overlay"
     >
       <slot />
     </CBox>
