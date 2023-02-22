@@ -39,9 +39,6 @@
   };
 
   onMounted(async () => {
-    const outputsRes = await hooks.api.get(`/ai/prompt-outputs/?email=${props.rec.email.pk}`);
-    hooks.tasks.recOpened.value.email.prompt_outputs = outputsRes.data;
-
     handleTinyEditorLoadingBug();
   });
 
@@ -55,6 +52,9 @@
     state.emailContentHtml.value = recNew.email.content_html || (recNew.email.content_html_default ?? "");
     state.emailSubject.value = recNew.email.subject || hooks.tasks.taskOpened.value?.rec_set.rule?.email_template?.subject;
     state.emailCcList.value = recNew.email.cc_list;
+
+    const outputsRes = await hooks.api.get(`/ai/prompt-outputs/?email=${props.rec.email.pk}`);
+    hooks.tasks.recOpened.value.email.prompt_outputs = outputsRes.data;
   }, { immediate: true });
 
   const debouncedSave = debounce(saveEmailChanges, 1500);
