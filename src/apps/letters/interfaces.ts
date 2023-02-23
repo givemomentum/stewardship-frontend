@@ -103,6 +103,7 @@ export class CrmDonor {
   do_not_mail: boolean;
   spouse_name: string;
   custom_data: { [field: string]: any };
+  communication_preferences: string;
 
   actions?: CrmAction[];
 }
