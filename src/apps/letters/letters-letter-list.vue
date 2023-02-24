@@ -143,7 +143,7 @@
   }
 
   async function loadBatch(args?: { isIncludeHtmlDefault?: boolean }) {
-    const res = await hooks.api.get(`/letters/batches/${props.batchPk}/?expand=letters${args?.isIncludeHtmlDefault ? ".html_default" : ""}`);
+    const res = await hooks.api.get(`/letters/batches/${props.batchPk}/?expand=letters.rec.donor,letters.rec.gift,letters${args?.isIncludeHtmlDefault ? ".html_default" : ""}`);
     state.batch.value = res.data;
   }
 
