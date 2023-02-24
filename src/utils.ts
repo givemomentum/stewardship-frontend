@@ -114,3 +114,7 @@ export function getShortRecurringGiftDescription(donor?: CrmDonor) {
   }
   return "Active recurring donor";
 }
+
+export function supportsRecurringGiving(donor?: CrmDonor) {
+  return ['blackbaud', 'donor_perfect', 'salesforce'].includes(donor?.source)
+}

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { Rec, Task } from "~/apps/tasks/interfaces";
-  import { format, getShortRecurringGiftDescription } from "~/utils";
+  import { format, getShortRecurringGiftDescription, supportsRecurringGiving } from "~/utils";
   import RRecExpectedValue from "~/apps/tasks/recs/r-donor-expected-value.vue";
 
   const props = defineProps<{
@@ -14,6 +14,7 @@
   <CFlex gap="4" direction="column" pt="7">
     <CHeading font-size="2xl" color="gray.700" font-weight="normal">
       {{ props.rec.donor.name }}
+
     </CHeading>
 
     <RRecExpectedValue
@@ -43,7 +44,7 @@
           <chakra.td>Giving since</chakra.td>
           <chakra.td>{{ format.date(props.rec.donor.giving_since) }}</chakra.td>
         </chakra.tr>
-        <chakra.tr>
+        <chakra.tr v-if="supportsRecurringGiving(props.rec.donor)">
           <chakra.td>Recurring giving</chakra.td>
           <chakra.td>{{ getShortRecurringGiftDescription(props.rec.donor) }}</chakra.td>
         </chakra.tr>
@@ -79,6 +80,26 @@
           <chakra.td>Communication preferences</chakra.td>
           <chakra.td>{{ props.rec.donor.communication_preferences }}</chakra.td>
         </chakra.tr>
+
+        <chakra.tr v-if="props.rec.donor?.crm_url">
+          <chakra.td>CRM Profile</chakra.td>
+          <chakra.td>
+            <CLink
+              :href="props.rec.donor?.crm_url"
+              h="0"
+              is-external
+              @click.stop=""
+            >
+              <CButton right-icon="external-link" variant="link">
+                <!-- Workaround for Donor Perfect link issue: Show Donor Id, so she can copy it.-->
+                {{
+                  props.rec.donor?.source == "donor_perfect" ? props.rec.donor?.source_id : "View"
+                }}
+              </CButton>
+            </CLink>
+          </chakra.td>
+        </chakra.tr>
+
       </chakra.table>
 
       <CFlex direction="column">
