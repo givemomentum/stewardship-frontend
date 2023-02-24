@@ -114,14 +114,14 @@
           {{ props.rec.donor.email }}
         </CFlex>
         <CFlex
-          v-if="props.rec.donor.phone"
+          v-if="props.rec.donor.phone_number"
           :py="{ base: 1, '2xl': 2 }"
           align="center"
           gap="2"
           white-space="nowrap"
         >
           <CIcon size="5" fill="gray.500" name="io-call" />
-          {{ props.rec.donor.phone }}
+          {{ props.rec.donor.phone_number }}
         </CFlex>
         <CFlex
           v-if="props.rec.donor.mailing_address?.city"

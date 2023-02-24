@@ -95,9 +95,9 @@
         <CFlex color="gray.400" font-size="xs">Email</CFlex>
         <CFlex font-size="md">{{ slotProps.rec.donor?.email }}</CFlex>
       </CFlex>
-      <CFlex direction="column" v-if="slotProps.rec.donor?.phone?.number">
+      <CFlex direction="column" v-if="slotProps.rec.donor?.phone_number">
         <CFlex color="gray.400" font-size="xs">Phone</CFlex>
-        <CFlex font-size="md">{{ slotProps.rec.donor?.phone?.number }}</CFlex>
+        <CFlex font-size="md">{{ slotProps.rec.donor?.phone_number }}</CFlex>
       </CFlex>
       <CFlex direction="column">
         <CFlex color="gray.400" font-size="xs">Address</CFlex>

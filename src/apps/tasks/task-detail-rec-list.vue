@@ -56,19 +56,7 @@
         {{ props.title }}
       </CHeading>
 
-      <NuxtLink
-        :to="urls.letters.batchLettersList(props.task.rec_set.letter_batch)"
-        v-if="props.task.rec_set?.letter_batch"
-      >
-        <CButton
-          size="sm"
-          left-icon="mail"
-        >
-          Review letters
-        </CButton>
-      </NuxtLink>
-
-      <CFlex gap="7" v-else>
+      <CFlex gap="7">
         <VTooltip>
           <div>
             <CLink
@@ -150,8 +138,8 @@
                 </div>
                 <template v-slot:popper>
                   <CText font-size="xs">{{
-                    rec.is_follow_up_needed ? 'Remove the follow up' : 'Follow up later'
-                  }}
+                      rec.is_follow_up_needed ? 'Remove the follow up' : 'Follow up later'
+                    }}
                   </CText>
                 </template>
               </VTooltip>

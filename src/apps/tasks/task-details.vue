@@ -38,13 +38,16 @@
         />
       </CFlex>
 
-      <CButton
-        v-if="props.task.rec_set?.recs?.filter(rec => rec.state === 'new')?.length"
-        @click="openRec(props.task.rec_set?.recs?.find(rec => rec.state === 'new'))"
-        mt="5"
+      <NuxtLink
+        :to="urls.letters.batchLettersList(props.task.rec_set.letter_batch)"
+        v-if="props.task?.rec_set?.letter_batch"
       >
-        Take action
-      </CButton>
+        <CButton
+          left-icon="mail"
+        >
+          Review letters
+        </CButton>
+      </NuxtLink>
     </CBox>
 
     <TaskDetailRecListGifts
