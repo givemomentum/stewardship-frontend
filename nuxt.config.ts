@@ -1,7 +1,9 @@
 import { sentryVitePlugin } from "@sentry/vite-plugin";
+import { chakraConfig } from "./src/chakra-config";
 
 export default defineNuxtConfig({
   modules: [
+    "@chakra-ui/nuxt-next",
     "@nuxt/ui",
     "@nuxtjs/emotion", // supposed to be added by @chakra-ui/nuxt-next, but it's broken so I add it manually
     "@formkit/nuxt",
@@ -50,4 +52,5 @@ export default defineNuxtConfig({
       }),
     ],
   },
+  chakra: chakraConfig as any,
 });
