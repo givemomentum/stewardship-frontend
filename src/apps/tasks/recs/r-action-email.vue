@@ -240,7 +240,7 @@
     <CBox class="tiny-container" w="100%" z-index="0" pos="relative">
       <TinyMce
         :key="state.emailEditorKey.value"
-        :spellcheckIgnore="state.emailOpen.value?.rec?.donor.name.split(' ')"
+        :spellcheckIgnore="props.rec?.donor.name.split(' ')"
         v-model="state.emailContentHtml.value"
         padding="1rem"
         :is-show-menu-bar="false"
