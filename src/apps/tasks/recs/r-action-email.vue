@@ -44,6 +44,7 @@
 
   const comp = {
     isEmailSent: computed(() => props.rec.email.status === "sent"),
+    isEmailLogged: computed(() => ["logged_by_user", "stored_to_crm"].includes(props.rec.action_state) && props.rec.email.status !== "sent"),
   };
 
   watch(() => props.rec, async recNew => {
@@ -131,18 +132,18 @@
 
   function getStatusStyle(email: Email) {
     switch (email.status) {
-    case "pending":
-      return { color: "gray.800", bg: "gray.100" };
-    case "sent":
-      return { color: "teal.800", bg: "teal.100" };
-    case "excluded":
-      return { color: "orange.800", bg: "orange.100" };
-    case "opened":
-      return { color: "green.800", bg: "green.100" };
-    case "bounced":
-      return { color: "red.800", bg: "red.100" };
-    case "failed":
-      return { color: "red.800", bg: "red.100" };
+      case "pending":
+        return { color: "gray.800", bg: "gray.100" };
+      case "sent":
+        return { color: "teal.800", bg: "teal.100" };
+      case "excluded":
+        return { color: "orange.800", bg: "orange.100" };
+      case "opened":
+        return { color: "green.800", bg: "green.100" };
+      case "bounced":
+        return { color: "red.800", bg: "red.100" };
+      case "failed":
+        return { color: "red.800", bg: "red.100" };
     }
   }
 
@@ -189,138 +190,171 @@
     flex="auto"
     align="flex-end"
   >
-    <CFlex gap="4" v-if="comp.isEmailSent.value" w="100%">
-      <CAlert variant="left-accent" status="success" font-size="lg" pr="6" pl="5">
-        <CAlertIcon />
-        Email sent
-      </CAlert>
-    </CFlex>
-
-    <CHStack w="100%" gap="5">
-      <CFlex gap="3px" w="100%" direction="column">
-        <CFormLabel font-size="sm" color="gray.500">Subject</CFormLabel>
-        <CInput
-          v-if="!comp.isEmailSent.value"
-          v-model="state.emailSubject.value"
-          bg="white"
-          name="subject"
-          w="100%"
-        />
-        <CBox
-          v-else
-          p="2"
-          px="4"
-          w="100%"
-          border="1px solid"
-          border-color="gray.200"
-          border-radius="lg"
-        >
-          {{ state.emailSubject.value }}
-        </CBox>
+    <template v-if="comp.isEmailLogged.value">
+      <CFlex gap="4" w="100%">
+        <CAlert variant="left-accent" status="success" font-size="lg" pr="6" pl="5">
+          <CAlertIcon />
+          Email logged
+        </CAlert>
       </CFlex>
-
-      <CFlex
-        v-if="!comp.isEmailSent.value || state.emailCcList.value"
-        gap="3px"
+      <chakra.textarea
+        :value="props.rec.action_description"
+        disabled
         w="100%"
-        direction="column"
-      >
-        <CFormLabel font-size="sm" color="gray.500">CC</CFormLabel>
-        <CInput
-          v-model="state.emailCcList.value"
-          :is-read-only="comp.isEmailSent.value"
-          bg="white"
-          name="cc_list"
-          :placeholder="comp.isEmailSent.value ? '' : 'john@mail.com, max@mail.com'"
-          w="100%"
-        />
-      </CFlex>
-    </CHStack>
+        p="3"
+        border-width="1px"
+        :_hover="{ borderColor: 'gray.400' }"
+        :_focus="{ borderColor: 'blue.500 !important' }"
+        :_focus-visible="{
+          outline: '0',
+        }"
+        :placeholder="props.type === 'other' ? 'Write down notes to log to your CRM' : `Write down notes about your ${props.type} to CRM`"
 
-    <CBox class="tiny-container" w="100%" z-index="0" pos="relative">
-      <TinyMce
-        :key="state.emailEditorKey.value"
-        :spellcheckIgnore="props.rec?.donor.name.split(' ')"
-        v-model="state.emailContentHtml.value"
-        padding="1rem"
-        :is-show-menu-bar="false"
-        :is-read-only="comp.isEmailSent.value"
-        :is-show-toolbar="comp.isEmailSent.value"
-        min-height="200"
+        border-radius="lg"
+        border-color="gray.300"
+        transition-property="common"
+        transition-duration="normal"
+        :_disabled="{
+          bg: 'white',
+        }"
+        required
       />
+    </template>
+    <template v-else>
 
-      <CButton
-        v-if="!comp.isEmailSent.value"
-        @click="state.emailContentHtml.value = state.emailOpen.value.content_html_default; saveEmailChanges()"
-        v-tooltip="{
+      <CFlex gap="4" v-if="comp.isEmailSent.value" w="100%">
+        <CAlert variant="left-accent" status="success" font-size="lg" pr="6" pl="5">
+          <CAlertIcon />
+          Email sent
+        </CAlert>
+      </CFlex>
+
+      <CHStack w="100%" gap="5">
+        <CFlex gap="3px" w="100%" direction="column">
+          <CFormLabel font-size="sm" color="gray.500">Subject</CFormLabel>
+          <CInput
+            v-if="!comp.isEmailSent.value"
+            v-model="state.emailSubject.value"
+            bg="white"
+            name="subject"
+            w="100%"
+          />
+          <CBox
+            v-else
+            p="2"
+            px="4"
+            w="100%"
+            border="1px solid"
+            border-color="gray.200"
+            border-radius="lg"
+          >
+            {{ state.emailSubject.value }}
+          </CBox>
+        </CFlex>
+
+        <CFlex
+          v-if="!comp.isEmailSent.value || state.emailCcList.value"
+          gap="3px"
+          w="100%"
+          direction="column"
+        >
+          <CFormLabel font-size="sm" color="gray.500">CC</CFormLabel>
+          <CInput
+            v-model="state.emailCcList.value"
+            :is-read-only="comp.isEmailSent.value"
+            bg="white"
+            name="cc_list"
+            :placeholder="comp.isEmailSent.value ? '' : 'john@mail.com, max@mail.com'"
+            w="100%"
+          />
+        </CFlex>
+      </CHStack>
+
+      <CBox class="tiny-container" w="100%" z-index="0" pos="relative">
+        <TinyMce
+          :key="state.emailEditorKey.value"
+          :spellcheckIgnore="props.rec?.donor.name.split(' ')"
+          v-model="state.emailContentHtml.value"
+          padding="1rem"
+          :is-show-menu-bar="false"
+          :is-read-only="comp.isEmailSent.value"
+          :is-show-toolbar="comp.isEmailSent.value"
+          min-height="200"
+        />
+
+        <CButton
+          v-if="!comp.isEmailSent.value && !comp.isEmailLogged.value"
+          @click="state.emailContentHtml.value = state.emailOpen.value.content_html_default; saveEmailChanges()"
+          v-tooltip="{
           content: 'Reset to the default template',
           placement: 'top',
         }"
-        size="sm"
-        variant="outline"
-        pos="absolute"
-        bottom="5"
-        right="18px"
-        bg="white"
-        z-index="toast"
-        color-scheme="gray"
-      >
-        Revert
-      </CButton>
-    </CBox>
+          size="sm"
+          variant="outline"
+          pos="absolute"
+          bottom="5"
+          right="18px"
+          bg="white"
+          z-index="toast"
+          color-scheme="gray"
+        >
+          Revert
+        </CButton>
+      </CBox>
 
-    <CFlex :gap="{ base: 4, '2xl': 5 }" v-if="!comp.isEmailSent.value">
-      <CButton
-        :is-loading="state.isSavingChanges.value"
-        z-index="toast"
-        border-radius="lg"
-        :opacity="state.isSavingChanges.value ? 1 : 0"
-        transition="opacity 0.1s"
-        variant="outline"
-      >
-        Saved
-      </CButton>
+      <CFlex :gap="{ base: 4, '2xl': 5 }" v-if="!comp.isEmailSent.value">
+        <CButton
+          :is-loading="state.isSavingChanges.value"
+          z-index="toast"
+          border-radius="lg"
+          :opacity="state.isSavingChanges.value ? 1 : 0"
+          transition="opacity 0.1s"
+          variant="outline"
+        >
+          Saved
+        </CButton>
 
-      <RRecSkipBtn :rec="props.rec" />
+        <RRecSkipBtn :rec="props.rec" />
 
-      <VTooltip>
-        <div>
-          <CButton
-            @click="sendTestEmail()"
-            variant="outline"
-            left-icon="ri-mail-send-line"
-            size="lg"
-            border-radius="lg"
-            color-scheme="gray"
-          >
-            Test
-          </CButton>
-        </div>
+        <VTooltip>
+          <div>
+            <CButton
+              @click="sendTestEmail()"
+              variant="outline"
+              left-icon="ri-mail-send-line"
+              size="lg"
+              border-radius="lg"
+              color-scheme="gray"
+            >
+              Test
+            </CButton>
+          </div>
 
-        <template v-slot:popper>
-          <CText font-size="xs">Send a test email with this content to {{ hooks.userStore.user.email }}</CText>
-        </template>
-      </VTooltip>
+          <template v-slot:popper>
+            <CText font-size="xs">Send a test email with this content to {{ hooks.userStore.user.email }}</CText>
+          </template>
+        </VTooltip>
 
-      <CButton
-        @click="sendEmail()"
-        :is-loading="state.isSendingEmail.value"
-        size="lg"
-        left-icon="ri-mail-send-line"
-        fill="white"
-      >
-        Send email
-      </CButton>
-    </CFlex>
+        <CButton
+          @click="sendEmail()"
+          :is-loading="state.isSendingEmail.value"
+          size="lg"
+          left-icon="ri-mail-send-line"
+          fill="white"
+        >
+          Send email
+        </CButton>
+      </CFlex>
 
-    <RRecActionEmailAi
-      v-if="!comp.isEmailSent.value"
-      @email-prompt-output-created="(promptOutput) => updateEmailPromptOutputs(promptOutput)"
-      @email-content-updated="(promptOutput) => updateEmailContentFromAI(promptOutput)"
-      :email="state.emailOpen.value"
-      :email-content-html="state.emailContentHtml.value"
-    />
+      <RRecActionEmailAi
+        v-if="!comp.isEmailSent.value"
+        @email-prompt-output-created="(promptOutput) => updateEmailPromptOutputs(promptOutput)"
+        @email-content-updated="(promptOutput) => updateEmailContentFromAI(promptOutput)"
+        :email="state.emailOpen.value"
+        :email-content-html="state.emailContentHtml.value"
+      />
 
+    </template>
     <!--  for preloading & caching external mce js files, otherwise it takes a while  -->
     <CBox visibility="hidden" style="display: none">
       <TinyMce padding="1rem" />
