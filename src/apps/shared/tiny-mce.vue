@@ -25,7 +25,7 @@
     vars: ref(composeMergeTags(props.variables)),
     config: ref({
       block_formats: "Paragraph=p; Header 1=h1; Header 2=h2; Header 3=h3; Header 4=h4",
-      plugins: "mergetags anchor autolink charmap code codesample emoticons image link lists media searchreplace table visualblocks wordcount pagebreak checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker permanentpen powerpaste advtable advcode editimage tableofcontents footnotes mergetags autocorrect",
+      plugins: "mergetags anchor autolink charmap code codesample emoticons image link lists media searchreplace table visualblocks wordcount pagebreak checklist mediaembed casechange export formatpainter pageembed a11ychecker permanentpen powerpaste advtable advcode editimage tableofcontents footnotes mergetags autocorrect",
       spellchecker_active: true,
       spellchecker_ignore_list: props.spellcheckIgnore ?? [],
       toolbar: "styles | bold italic underline strikethrough | link image align | numlist bullist indent outdent | removeformat",
@@ -86,7 +86,7 @@
   watch(() => props.variables, variablesNew => {
     const isIncludeMergeTags = variablesNew && variablesNew.length > 0;
 
-    let plugins = "tinymcespellchecker anchor autolink charmap code codesample emoticons image link lists media searchreplace table visualblocks wordcount pagebreak checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker powerpaste advtable advcode editimage tableofcontents footnotes autocorrect autoresize";
+    let plugins = "tinymcespellchecker anchor autolink charmap code codesample emoticons image link lists media searchreplace table visualblocks wordcount pagebreak checklist mediaembed casechange export formatpainter pageembed a11ychecker powerpaste advtable advcode editimage tableofcontents footnotes autocorrect autoresize";
     if (isIncludeMergeTags) {
       plugins += " mergetags";
     }
