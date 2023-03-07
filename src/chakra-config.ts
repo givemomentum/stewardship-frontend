@@ -75,17 +75,9 @@ export const chakraConfig = {
         defaultProps: {
           colorScheme: "blue",
         },
-        variants: {
-          solid: {
-            fontWeight: "normal",
-          },
-          outline: {
-            fontWeight: "normal",
-          },
-          link: {
-            fontWeight: "normal",
-          },
-        },
+        baseStyle: {
+          fontWeight: "normal",
+        }
       },
       Link: {
         colorScheme: "blue",
