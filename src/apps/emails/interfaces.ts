@@ -1,5 +1,5 @@
 import { PrimaryKey } from "~/apps/auth/interfaces";
-import { Rec, RecommendationSet, Task } from "~/apps/tasks/interfaces";
+import { Rec, Task } from "~/apps/tasks/interfaces";
 
 export interface EmailTemplate {
   pk: PrimaryKey;
@@ -14,11 +14,11 @@ export interface EmailBatch {
   pk: PrimaryKey;
   template: EmailTemplate;
   task: Task;
-  rec_set: RecommendationSet;
   status: "prepopulated" | "pending" | "sent";
   emails_unviewed_count: number;
   emails_count: number;
   open_count: number;
+  sent_count: number;
   bounce_count: number;
   created_at: string;
 }

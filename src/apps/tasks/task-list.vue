@@ -7,6 +7,7 @@
   import { useUserStore } from "~/apps/auth/useUserStore";
   import { useLayoutControl } from "~/composables/useLayoutControl";
   import { urls } from "~/urls";
+  import { format } from "~/utils";
   import { computed } from "vue";
 
   const props = defineProps<{
@@ -168,8 +169,45 @@
                 </CFlex>
               </CFlex>
 
+              <CFlex
+                v-if="task.rec_set?.email_batch?.sent_count"
+                align="center"
+                color="gray.500"
+                gap="1"
+              >
+                <CText>
+                  {{ task.rec_set?.email_batch?.sent_count }}
+                  {{ task.rec_set?.email_batch?.sent_count > 1 ? "emails" : "email" }} sent
+                </CText>
+              </CFlex>
+              <CFlex
+                v-if="task.rec_set?.email_batch?.sent_count"
+                align="center"
+                color="gray.500"
+                gap="1"
+              >
+                <CText>
+                  {{
+                    format.percentage((task.rec_set.email_batch.open_count / task.rec_set.email_batch.sent_count) * 100) || "0%"
+                  }} open rate
+                </CText>
+              </CFlex>
+              <CFlex
+                v-if="task.rec_set?.email_batch?.sent_count"
+                align="center"
+                color="gray.500"
+                gap="1"
+              >
+                <CText>
+                  {{
+                    format.percentage((task.rec_set.email_batch.bounce_count / task.rec_set.email_batch.sent_count) * 100) || "0%"
+                  }} bounce rate
+                </CText>
+              </CFlex>
+
               <template v-if="task.rec_set">
-                <CButton v-if="task.status === 'recommended' && task.rec_set.rec_progress.startsWith('0')">Start</CButton>
+                <CButton v-if="task.status === 'recommended' && task.rec_set.rec_progress.startsWith('0')">Start
+                </CButton>
                 <CButton v-else-if="task.status === 'recommended'">Continue</CButton>
                 <CButton v-else variant="outline">Review</CButton>
               </template>

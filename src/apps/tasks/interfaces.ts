@@ -1,5 +1,5 @@
 import { PrimaryKey, User } from "~/apps/auth/interfaces";
-import { Email, EmailTemplate } from "~/apps/emails/interfaces";
+import { Email, EmailBatch, EmailTemplate } from "~/apps/emails/interfaces";
 import { CrmDonor, CrmGift } from "~/apps/letters/interfaces";
 
 export interface Task {
@@ -52,7 +52,7 @@ export interface RecommendationSet {
   recs: Rec[];
   rule: Rule;
   type: "donors" | "gifts" | "letters" | "donor_emails";
-  email_batch?: PrimaryKey;
+  email_batch?: EmailBatch;
   letter_batch?: PrimaryKey;
   rec_progress: number;
   recs_datetime_filter_end?: string;
