@@ -99,6 +99,12 @@
       );
     }
   }
+
+  function navigateRec(rec: Rec) {
+    hooks.tasks.recOpened.value = rec;
+    hooks.tasks.fetchDonorActions(hooks.tasks.recOpened.value);
+    window.history.pushState(null, "", urls.tasks.detailRec(props.taskSlug, rec?.slug))
+  }
 </script>
 
 <template>
@@ -161,59 +167,62 @@
         z-index="docked"
         font-size="sm"
       >
-        <NuxtLink
-          v-for="rec in comp.task.value?.rec_set.recs"
-          :key="rec?.pk"
-          :to="urls.tasks.detailRec(props.taskSlug, rec?.slug)"
-        >
-          <CLink
-            display="flex"
-            align-items="center"
-            gap="2"
-            :px="{ base: 3, '2xl': 5 }"
-            :pr="{ base: 4, '2xl': 6 }"
-            py="2"
-            :bg="rec?.pk === comp.rec.value?.pk ? 'gray.100' : 'gray.50'"
-            :opacity="rec?.pk === comp.rec.value?.pk ? '1' : '0.75'"
-            :_hover="{
+        <!--        <NuxtLink-->
+        <!--          v-for="rec in comp.task.value?.rec_set.recs"-->
+        <!--          :key="rec?.pk"-->
+        <!--          :to="urls.tasks.detailRec(props.taskSlug, rec?.slug)"-->
+        <!--        >-->
+        <CLink
+          display="flex"
+          align-items="center"
+          gap="2"
+          :px="{ base: 3, '2xl': 5 }"
+          :pr="{ base: 4, '2xl': 6 }"
+          py="2"
+          :bg="rec?.pk === comp.rec.value?.pk ? 'gray.100' : 'gray.50'"
+          :opacity="rec?.pk === comp.rec.value?.pk ? '1' : '0.75'"
+          :_hover="{
               opacity: '1',
             }"
+          v-for="rec in comp.task.value?.rec_set.recs"
+          :key="rec?.pk"
+          @click="navigateRec(rec)"
+        >
+          <CIcon
+            v-if="status.isCompleted(rec) || status.isSkippedAsHandled(rec)"
+            name="io-checkmark-circle"
+            color="green.500"
+            fill="green.500"
+            size="19px"
+          />
+          <CIcon
+            v-if="status.isSkippedToLater(rec)"
+            name="bi-clock"
+            size="19px"
+            color="green.500"
+          />
+          <CIcon
+            v-if="status.isNew(rec)"
+            name="io-checkmark-circle-outline"
+            color="gray.400"
+            size="19px"
+          />
+          <CIcon
+            v-if="status.isSkippedAsUnqualified(rec)"
+            name="x"
+            color="gray.400"
+            size="19px"
+          />
+          <CFlex
+            v-if="rec"
+            white-space="nowrap"
+            color="gray.700"
+            overflow="hidden"
           >
-            <CIcon
-              v-if="status.isCompleted(rec) || status.isSkippedAsHandled(rec)"
-              name="io-checkmark-circle"
-              color="green.500"
-              fill="green.500"
-              size="19px"
-            />
-            <CIcon
-              v-if="status.isSkippedToLater(rec)"
-              name="bi-clock"
-              size="19px"
-              color="green.500"
-            />
-            <CIcon
-              v-if="status.isNew(rec)"
-              name="io-checkmark-circle-outline"
-              color="gray.400"
-              size="19px"
-            />
-            <CIcon
-              v-if="status.isSkippedAsUnqualified(rec)"
-              name="x"
-              color="gray.400"
-              size="19px"
-            />
-            <CFlex
-              v-if="rec"
-              white-space="nowrap"
-              color="gray.700"
-              overflow="hidden"
-            >
-              {{ rec.donor.name }}
-            </CFlex>
-          </CLink>
-        </NuxtLink>
+            {{ rec.donor.name }}
+          </CFlex>
+        </CLink>
+        <!--        </NuxtLink>-->
       </CFlex>
 
       <CFlex
