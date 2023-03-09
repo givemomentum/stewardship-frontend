@@ -3,13 +3,14 @@
     tabKeys: string[];
     selected?: string;
     isTabsVisible?: boolean;
+    recSlug?: string;
   }>();
 
   const state = {
     tabKeySelected: ref<string>(props.selected ?? props.tabKeys[0]),
   };
 
-  watch(() => props.selected, (selectedNew: string) => {
+  watch(() => [props.selected, props.recSlug], ([selectedNew, _]) => {
     state.tabKeySelected.value = selectedNew ?? state.tabKeySelected.value;
   });
 
@@ -20,7 +21,6 @@
 
 <template>
   <CVStack class="c-tabs" w="100%">
-
     <CFlex class="c-tabs-select" v-if="isTabsVisible ?? true">
 
       <CFlex

@@ -245,6 +245,7 @@
             :tabKeys="comp.actionTypes"
             :selected="comp.recType.value"
             :is-tabs-visible="!(hooks.status.isHandled.value)"
+            :recSlug="comp.rec.value?.slug"
           >
             <template v-slot:email>
               <RRecActionEmail

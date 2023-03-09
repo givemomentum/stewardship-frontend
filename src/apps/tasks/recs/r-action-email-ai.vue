@@ -37,14 +37,14 @@
       `Ask about meeting for a cup of coffee`,
     ],
   };
-  
-  onMounted(async () => {
+
+  watch(() => props.email, async () => {
     const outputsRes = await hooks.api.get(`/ai/prompt-outputs/?email=${props.email.pk}`);
     state.promptOutputs.value = outputsRes.data;
     hooks.tasks.recOpened.value.email.prompt_outputs = outputsRes.data;
 
     state.chatSocket.value = new WebSocket("wss://stewardship-prod-web-ai.onrender.com/ai-ws");
-    
+
     state.chatSocket.value.addEventListener("message", function (event) {
       const word = event.data;
       const lastPromptOutput = state.promptOutputs.value[state.promptOutputs.value.length - 1];
@@ -58,7 +58,7 @@
         lastPromptOutput.output += word;
       }
     });
-  });
+  }, { immediate: true });
 
   async function submitPrompt() {
     if (state.prompt.value === "") {
