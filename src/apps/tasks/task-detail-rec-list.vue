@@ -25,11 +25,8 @@
   };
 
   onMounted(async () => {
-    if (props.task.rec_set?.email_batch && typeof (props.task.rec_set?.email_batch) === "object") {
+    if (props.task.rec_set?.email_batch) {
       state.emailBatch.value = props.task.rec_set.email_batch;
-    } else if (props.task.rec_set?.email_batch) {
-      const res = await hooks.api.get(`/emails-new/batches/${props.task.rec_set.email_batch}/`);
-      state.emailBatch.value = res.data;
     }
     await hooks.tasks.loadRecsAndGiftHistory();
   });
