@@ -182,8 +182,8 @@
           :bg="rec?.pk === comp.rec.value?.pk ? 'gray.100' : 'gray.50'"
           :opacity="rec?.pk === comp.rec.value?.pk ? '1' : '0.75'"
           :_hover="{
-              opacity: '1',
-            }"
+            opacity: '1',
+          }"
           v-for="rec in comp.task.value?.rec_set.recs"
           :key="rec?.pk"
           @click="navigateRec(rec)"
