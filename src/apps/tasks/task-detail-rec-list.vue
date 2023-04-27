@@ -4,7 +4,7 @@
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import { urls } from "~/urls";
   import { useApi } from "~/composables/useApi";
-  import { EmailBatch } from "~/apps/emails/interfaces";
+  import { EmailBatch } from "~/apps/tasks/recs/interfaces";
   import { useRuntimeConfig } from "#app";
 
   const props = defineProps<{

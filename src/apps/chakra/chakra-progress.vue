@@ -12,6 +12,7 @@
     overflow="hidden"
     pos="relative"
     bg="gray.100"
+    border-radius="sm"
   >
     <CBox
       :w="`${props.value}%`"

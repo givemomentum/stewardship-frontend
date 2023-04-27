@@ -33,19 +33,30 @@
         <NuxtLink v-else :to="urls.tasks.list" pt="3">
           <chakra.img src="/momentum-logo-only.svg" max-w="50px" />
         </NuxtLink>
-        <CBox
-          v-if="hooks.menu.isFullWidth.value"
-          mt="6px"
-          px="10px"
-          pt="1px"
-          pb="2px"
-          bg="blue.100"
-          color="blue.900"
-          border-radius="lg"
-          font-size="xs"
-        >
-          BETA
-        </CBox>
+
+        <VTooltip>
+          <div>
+            <CBox
+              v-if="hooks.menu.isFullWidth.value"
+              mt="6px"
+              px="10px"
+              pt="1px"
+              pb="2px"
+              bg="blue.100"
+              color="blue.900"
+              border-radius="lg"
+              font-size="xs"
+              :_hover="{cursor: 'help'}"
+            >
+              EAP
+            </CBox>
+          </div>
+
+          <template v-slot:popper>
+            <CText font-size="xs">Early Access Preview</CText>
+          </template>
+        </VTooltip>
+
       </CFlex>
 
       <CFlex direction="column" mt="6" gap="1" :w="hooks.menu.isFullWidth.value ? '100%' : 'fit-content'">

@@ -2,7 +2,7 @@
   import { ref, watch } from "vue";
   import { debounce } from "vue-debounce";
   import { useUserStore } from "~/apps/auth/useUserStore";
-  import { Email, PromptOutput } from "~/apps/emails/interfaces";
+  import { Email, PromptOutput } from "~/apps/tasks/recs/interfaces";
   import { Rec } from "~/apps/tasks/interfaces";
   import RRecSkipBtn from "~/apps/tasks/recs/r-btn-skip.vue";
   import { useRecNav } from "~/apps/tasks/recs/useRecNav";

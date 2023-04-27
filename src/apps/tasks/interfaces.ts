@@ -1,5 +1,5 @@
 import { PrimaryKey, User } from "~/apps/auth/interfaces";
-import { Email, EmailBatch, EmailTemplate } from "~/apps/emails/interfaces";
+import { Email, EmailBatch, EmailTemplate } from "~/apps/tasks/recs/interfaces";
 import { CrmDonor, CrmGift } from "~/apps/letters/interfaces";
 
 export interface Task {

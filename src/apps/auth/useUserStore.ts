@@ -57,7 +57,8 @@ export const useUserStore = defineStore("user", {
       this.isLoading = false;
 
       const config = useRuntimeConfig();
-      window.location.href = `${config.public.accountsBase}/login`;
+      // todo redirect to nylas
+      window.location.href = `${config.public.backendUrl}/accounts/login`;
     },
   },
 });

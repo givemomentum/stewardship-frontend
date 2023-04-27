@@ -5,9 +5,11 @@
   import LogRocket from "logrocket";
   import { configureScope } from "@sentry/vue";
   import * as Sentry from "@sentry/vue";
+  import { useApi } from "~/composables/useApi";
   import { useLayoutControl } from "~/composables/useLayoutControl";
 
   const hooks = {
+    api: useApi(),
     config: useRuntimeConfig(),
     userStore: useUserStore(),
     layout: useLayoutControl(),
@@ -56,7 +58,8 @@
     await hooks.userStore.loadUser();
 
     if (!hooks.userStore.isLoggedIn) {
-      window.location.href = `${hooks.config.public.accountsBase}/login`;
+      const res = await hooks.api.get("/nylas/auth-url/");
+      window.location.href = res.data;
       return;
     }
 

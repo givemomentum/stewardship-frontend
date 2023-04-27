@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { ref, watch } from "vue";
-  import { EmailTemplate } from "~/apps/emails/interfaces";
+  import { EmailTemplate } from "~/apps/tasks/recs/interfaces";
   import { useForm } from "~/composables/useForm";
   import { useNotify } from "~/composables/useNotify";
 

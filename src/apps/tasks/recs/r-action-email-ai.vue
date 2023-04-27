@@ -2,7 +2,7 @@
   import { ref } from "vue";
   import { useToast } from "vue-toastification";
   import { useUserStore } from "~/apps/auth/useUserStore";
-  import { Email, PromptOutput } from "~/apps/emails/interfaces";
+  import { Email, PromptOutput } from "~/apps/tasks/recs/interfaces";
   import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
   import { format } from "~/utils";
 

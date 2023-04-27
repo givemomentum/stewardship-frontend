@@ -49,7 +49,7 @@
     </div>
     <div class="admin-link-container">
       <CLink
-        :href="`${hooks.config.public.accountsBase}/../admin`"
+        :href="`${hooks.config.public.backendUrl}/admin`"
         is-external
       >
         Django Admin Panel

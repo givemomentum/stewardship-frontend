@@ -1,3 +1,4 @@
+import { fromUnixTime } from "date-fns";
 import * as datefns from "date-fns";
 import { CrmDonor } from "~/apps/letters/interfaces";
 
@@ -39,6 +40,13 @@ export namespace format {
 
   export function dateFromUnix(date: number): string {
     return datefns.format(new Date(date), "MMM d, y");
+  }
+
+  export function dateFromUnixV2(date: number, isIncludeYear = true): string {
+    if (isIncludeYear) {
+      return datefns.format(fromUnixTime(Number(date)), "MMM d, y");
+    }
+    return datefns.format(fromUnixTime(Number(date)), "MMM d");
   }
 
   export function dateAgo(date?: string): string {
