@@ -81,7 +81,7 @@
   async function saveEmailChanges() {
     state.isSavingChanges.value = true;
     await hooks.api.patch(
-      `/emails-new/${state.emailOpen.value.pk}/`,
+      `/emails/${state.emailOpen.value.pk}/`,
       {
         content_html: state.emailContentHtml.value,
         subject: state.emailSubject.value,
@@ -110,14 +110,14 @@
       hooks.notify.error("Email content is empty");
       return;
     }
-    await hooks.api.post(`/emails-new/${state.emailOpen.value.pk}/send-test-email/`);
+    await hooks.api.post(`/emails/${state.emailOpen.value.pk}/send-test-email/`);
     hooks.notify.send(`Test emails sent to ${hooks.userStore.user.email}`);
   }
 
   async function sendEmail() {
     state.isSendingEmail.value = true;
 
-    await hooks.api.post(`/emails-new/${state.emailOpen.value.pk}/send/`);
+    await hooks.api.post(`/emails/${state.emailOpen.value.pk}/send/`);
     hooks.notify.send(`Email sent`);
     state.emailOpen.value.status = "sent";
     hooks.tasks.recOpened.value.state = "completed";
