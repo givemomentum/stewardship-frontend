@@ -126,7 +126,7 @@
           gap="3"
         >
           <CFlex justify="space-between" align="center">
-            <CText color="gray.500">Momentum AI</CText>
+            <CText color="gray.500">Ask Stewart</CText>
             <CFlex gap="2">
               <CButton
                 @click="emit('emailContentUpdated', promptOutput.output)"
