@@ -32,7 +32,7 @@ const props = defineProps<{
         }"
       >
         <CInput
-          v-if="props.searchable"
+          v-if="false"
           placeholder="Filter..."
           size="sm"
           @input="searchForItems($event.currentTarget.value)"
@@ -43,17 +43,19 @@ const props = defineProps<{
         <chakra.ul mt="1px">
           <li v-if="isFromSearch && !items.length">No results.</li>
             <li v-for="item in items" :key="item.value">
-              <CCheckbox
-                @update:model-value="() => refine(item.value)"
-              >
-                <CText font-size="0.95rem" :_hover="{ color: 'blue.500' }">
-                  <ais-highlight v-if="props.searchable" attribute="item" :hit="item" />
-                  <CText v-else>{{ item.value.replace('_', ' ') }}</CText>
-                  <CBadge ml="1" mt="0" font-weight="normal" font-size="0.6rem">
-                    {{ item.count.toLocaleString() }}
-                  </CBadge>
-                </CText>
-              </CCheckbox>
+              <CBox v-if="item.value">
+                <CCheckbox
+                  @update:model-value="() => refine(item.value)"
+                >
+                  <CText font-size="0.95rem" :_hover="{ color: 'blue.500' }">
+                    <ais-highlight v-if="props.searchable" attribute="item" :hit="item" />
+                    <CText v-else>{{ item.value.replace('_', ' ') }}</CText>
+                    <CBadge ml="1" mt="0" font-weight="normal" font-size="0.6rem">
+                      {{ item.count.toLocaleString() }}
+                    </CBadge>
+                  </CText>
+                </CCheckbox>
+              </CBox>
             </li>
         </chakra.ul>
 

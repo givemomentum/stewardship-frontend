@@ -129,7 +129,7 @@
             </template>
           </VDropdown>
 
-          <ais-clear-refinements>
+          <ais-clear-refinements v-if="false">
             <template v-slot="{
               canRefine,
               refine,
