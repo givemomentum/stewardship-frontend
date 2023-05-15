@@ -43,19 +43,18 @@ const props = defineProps<{
         <chakra.ul mt="1px">
           <li v-if="isFromSearch && !items.length">No results.</li>
             <li v-for="item in items" :key="item.value">
-              <CBox v-if="item.value">
-                <CCheckbox
-                  @update:model-value="() => refine(item.value)"
-                >
-                  <CText font-size="0.95rem" :_hover="{ color: 'blue.500' }">
-                    <ais-highlight v-if="props.searchable" attribute="item" :hit="item" />
-                    <CText v-else>{{ item.value.replace('_', ' ') }}</CText>
-                    <CBadge ml="1" mt="0" font-weight="normal" font-size="0.6rem">
-                      {{ item.count.toLocaleString() }}
-                    </CBadge>
-                  </CText>
-                </CCheckbox>
-              </CBox>
+              <CCheckbox
+                v-if="item.value.length > 1"
+                @update:model-value="() => refine(item.value)"
+              >
+                <CText font-size="0.95rem" :_hover="{ color: 'blue.500' }">
+                  <ais-highlight v-if="props.searchable" attribute="item" :hit="item" />
+                  <CText v-else>{{ item.value.replace('_', ' ') }}</CText>
+                  <CBadge ml="1" mt="0" font-weight="normal" font-size="0.6rem">
+                    {{ item.count.toLocaleString() }}
+                  </CBadge>
+                </CText>
+              </CCheckbox>
             </li>
         </chakra.ul>
 
