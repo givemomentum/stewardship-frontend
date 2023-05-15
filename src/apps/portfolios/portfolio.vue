@@ -171,6 +171,7 @@
                       <CTh>Last touch</CTh>
                       <CTh>Upcoming</CTh>
                       <CTh></CTh>
+<!--                      <CTh></CTh>-->
                     </CTr>
                   </CThead>
 
@@ -227,6 +228,14 @@
                         </CButton>
                       </CLink>
                     </CTd>
+<!--                    <CTd>-->
+<!--                      <CButton-->
+<!--                        size="xs"-->
+<!--                        color-scheme="gray"-->
+<!--                      >-->
+<!--                        Schedule touch-->
+<!--                      </CButton>-->
+<!--                    </CTd>-->
                     <CBox
                       v-if="item._highlightResult.action_list_searchable?.matchedWords.length"
                       pos="absolute"

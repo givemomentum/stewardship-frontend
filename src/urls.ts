@@ -8,6 +8,11 @@ export namespace urls {
     detailRec: (taskSlug: string, recSlug: string) => `/tasks/${taskSlug}/recs/${recSlug}`,
   };
 
+  export const portfolios = {
+    portfolio: "/portfolios/portfolio",
+    skipRec: (id: string) => `/portfolios/skip/${id}/`,
+  };
+
   export const fiscExport = {
     list: "/fisc-exports",
     detail: (id: number | string) => `/fisc-exports/${id}/`,
