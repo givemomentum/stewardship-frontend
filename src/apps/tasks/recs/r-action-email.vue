@@ -286,9 +286,9 @@
           v-if="!comp.isEmailSent.value && !comp.isEmailLogged.value"
           @click="state.emailContentHtml.value = state.emailOpen.value.content_html_default; saveEmailChanges()"
           v-tooltip="{
-          content: 'Reset to the default template',
-          placement: 'top',
-        }"
+            content: 'Reset to the default template',
+            placement: 'top',
+          }"
           size="sm"
           variant="outline"
           pos="absolute"

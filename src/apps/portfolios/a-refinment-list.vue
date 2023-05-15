@@ -47,8 +47,8 @@ const props = defineProps<{
                 @update:model-value="() => refine(item.value)"
               >
                 <CText font-size="0.95rem" :_hover="{ color: 'blue.500' }">
-<!--                  <ais-highlight v-if="props.searchable" attribute="item" :hit="item" />-->
-                  {{ item.value.replace('_', ' ') }}
+                  <ais-highlight v-if="props.searchable" attribute="item" :hit="item" />
+                  <CText v-else>{{ item.value.replace('_', ' ') }}</CText>
                   <CBadge ml="1" mt="0" font-weight="normal" font-size="0.6rem">
                     {{ item.count.toLocaleString() }}
                   </CBadge>
