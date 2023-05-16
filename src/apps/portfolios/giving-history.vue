@@ -32,9 +32,11 @@
 </script>
 
 <template>
-  <CText fontSize="1.2rem">
-    Giving History
-  </CText>
+  <CBox my="6">
+    <CHeading font-size="2xl" color="gray.500" font-weight="normal">
+      Giving History
+    </CHeading>
 
-  <AreaChart :series="state.giftSeries.value" />
+    <AreaChart :series="state.giftSeries.value" />
+  </CBox>
 </template>
