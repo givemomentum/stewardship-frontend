@@ -11,12 +11,17 @@
     portfolioName: ref(""),
     searchClient: ref(null),
     searchIndexName: ref(""),
+    selectedDonor: ref(null),
   };
 
   const hooks = {
     api: useApi(),
     layout: useLayoutControl(),
   };
+
+  function selectDonor(donor) {
+    state.selectedDonor.value = toRaw(donor);
+  }
 
   onBeforeMount(async () => {
     hooks.layout.activateLeanMode();
@@ -62,7 +67,7 @@
           gap="6"
         >
 
-          <ais-search-box show-loading-indicator/>
+          <ais-search-box show-loading-indicator />
 
           <VDropdown :distance="6">
             <CButton
@@ -101,10 +106,12 @@
           </VDropdown>
 
           <ais-clear-refinements v-if="false">
-            <template v-slot="{
-              canRefine,
-              refine,
-            }">
+            <template
+              v-slot="{
+                canRefine,
+                refine,
+              }"
+            >
               <CButton
                 v-if="canRefine"
                 variant="ghost"
@@ -121,16 +128,15 @@
         <CTableContainer mt="6">
           <CTable>
 
-
             <CTbody>
               <ais-infinite-hits>
 
                 <template
                   v-slot="{
-                  items,
-                  refineNext,
-                  isLastPage,
-                }"
+                    items,
+                    refineNext,
+                    isLastPage,
+                  }"
                 >
                   <CThead>
                     <CTr>
@@ -141,8 +147,8 @@
                       <CTh>Touches progress</CTh>
                       <CTh>Last touch</CTh>
                       <CTh>Upcoming</CTh>
-                      <CTh></CTh>
-<!--                      <CTh></CTh>-->
+                      <CTh />
+                      <!--                      <CTh></CTh>-->
                     </CTr>
                   </CThead>
 
@@ -151,7 +157,7 @@
                     :key="item.objectID"
                     pos="relative"
                     :height="item._highlightResult.action_list_searchable?.matchedWords.length ? '90px' : 'auto'"
-                    :_hover="{bg: 'gray.50'}"
+                    :_hover="{ bg: 'gray.50' }"
                   >
                     <CTd>
                       <ais-highlight attribute="name" :hit="item" />
@@ -181,7 +187,7 @@
                           content: `In ${item.upcoming_events_countdown.find((ev) => ev.label === event).days} days`,
                           placement: 'top',
                         }"
-                        :_hover="{cursor: 'context-menu', bg: 'gray.200'}"
+                        :_hover="{ cursor: 'context-menu', bg: 'gray.200' }"
                         mr="2"
                       >
                         {{event.replace('_', ' ')}}
@@ -198,6 +204,18 @@
                           CRM
                         </CButton>
                       </CLink>
+                    </CTd>
+                    <CTd>
+                      <CButton
+                        right-icon="arrow-forward"
+                        size="xs"
+                        variant="ghost"
+                        color-scheme="gray"
+                        @click="selectDonor(item)"
+                      >
+                        See details
+                      </CButton>
+
                     </CTd>
 <!--                    <CTd>-->
 <!--                      <CButton-->
@@ -230,6 +248,10 @@
 
       </AisInstantSearch>
     </CFlex>
+
+    <ChakraDrawer v-model="state.selectedDonor.value">
+      <DonorDetails :donor="state.selectedDonor.value" />
+    </ChakraDrawer>
   </CBox>
 </template>
 
