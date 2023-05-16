@@ -127,8 +127,10 @@ export function supportsRecurringGiving(donor?: CrmDonor) {
   return ['blackbaud', 'donor_perfect', 'salesforce'].includes(donor?.source)
 }
 
-export function transformGiftsToChartData(gifts: CrmGift[]) {
-  return gifts
+export function giftsToSeries(donorName: string, gifts: CrmGift[]) {
+  return {
+    name: donorName,
+    data: gifts
     // TODO: It would be better to filter gifts on the backend, but this is technically much easier to do.
     .filter(gift => Number(gift.amount) && ["one_time", "recurring_payment"].includes(gift.gift_type))
     .map(gift => (
@@ -136,5 +138,6 @@ export function transformGiftsToChartData(gifts: CrmGift[]) {
         x: datefns.parseISO(gift.date).getTime(),
         y: Number(gift.amount),
       }
-    ));
+    )),
+  };
 }

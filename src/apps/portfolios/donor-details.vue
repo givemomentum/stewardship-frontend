@@ -92,6 +92,6 @@
         Address: {{ $props.donor.address }}
     </div>
 
-    <GivingHistory :gifts="gifts" />
+    <GivingHistory :donorName="$props.donor.name" :gifts="gifts" />
     </CBox>
 </template>

@@ -3,7 +3,7 @@
   import { CrmDonor } from "~/apps/letters/interfaces";
   import { ChartSeries, ChartSeriesItem } from "~/apps/shared/interfaces";
   import { Rec } from "~/apps/tasks/interfaces";
-  import { transformGiftsToChartData } from "~/utils";
+  import { giftsToSeries } from "~/utils";
 
   const props = defineProps<{
     rec: Rec;
@@ -33,10 +33,8 @@
     if (!donor?.gifts?.length) {
       return;
     }
-    return {
-      name: donor.name || "Donor",
-      data: transformGiftsToChartData(donor.gifts),
-    };
+
+    return giftsToSeries(donor.name || "Donor", donor.gifts);
   }
 
   function loadChartData(rec: Rec) {

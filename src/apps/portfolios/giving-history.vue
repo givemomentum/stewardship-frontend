@@ -2,9 +2,10 @@
   import { ref, watch } from "vue";
   import { CrmGift } from "~/apps/letters/interfaces";
   import { ChartSeries } from "~/apps/shared/interfaces";
-  import { transformGiftsToChartData } from "~/utils";
+  import { giftsToSeries } from "~/utils";
 
   const props = defineProps<{
+    donorName: string;
     gifts: CrmGift[];
   }>();
 
@@ -18,18 +19,15 @@
   };
 
   onBeforeMount(() => {
-    transformSeries(props.gifts);
+    transformSeries(props.donorName, props.gifts);
   });
 
   watch(() => props.gifts, (newGifts?: CrmGift[]) => {
-    transformSeries(newGifts || []);
+    transformSeries(props.donorName, newGifts || []);
   });
 
-  function transformSeries(gifts: CrmGift[]) {
-    state.giftSeries.value = [{
-      name: "Donor",
-      data: transformGiftsToChartData(gifts),
-    }];
+  function transformSeries(donorName: string, gifts: CrmGift[]) {
+    state.giftSeries.value = [giftsToSeries(donorName, gifts)];
   }
 </script>
 
