@@ -44,7 +44,7 @@
 <template>
   <CBox p="6">
     <CHeading font-size="2xl" font-weight="normal">
-      {{ $props.donor.name }}
+      {{ props.donor.name }}
     </CHeading>
 
     <CText my="1rem">
@@ -69,7 +69,7 @@
         </CTd>
 
         <CTd>
-          {{ format.money($props.donor.donated_total) }}
+          {{ format.money(props.donor.donated_total) }}
         </CTd>
       </CTr>
 
@@ -79,7 +79,7 @@
         </CTd>
 
         <CTd>
-          {{ format.dateFromUnixV2($props.donor.giving_since) }}
+          {{ format.dateFromUnixV2(props.donor.giving_since) }}
         </CTd>
       </CTr>
 
@@ -89,7 +89,7 @@
         </CTd>
 
         <CTd>
-          {{ getShortRecurringGiftDescription($props.donor) }}
+          {{ getShortRecurringGiftDescription(props.donor) }}
         </CTd>
       </CTr>
 
@@ -99,7 +99,19 @@
         </CTd>
 
         <CTd>
-          {{ $props.donor.crm_url }}
+          <CLink
+            :href="props.donor?.crm_url"
+            h="0"
+            is-external
+            @click.stop=""
+          >
+            <CButton right-icon="external-link" variant="link">
+              <!-- Workaround for Donor Perfect link issue: Show Donor Id, so she can copy it.-->
+              {{
+                props.donor?.source == "donor_perfect" ? props.donor?.source_id : "View"
+              }}
+            </CButton>
+          </CLink>
         </CTd>
       </CTr>
     </CTable>
@@ -141,7 +153,7 @@
       </CFlex>
     </CBox>
 
-    <GivingHistory v-if="gifts?.length" :donorName="$props.donor.name" :gifts="gifts" />
+    <GivingHistory v-if="gifts?.length" :donorName="props.donor.name" :gifts="gifts" />
 
     <RecsRLastActions v-if="donorActions?.length" :actions="donorActions" />
   </CBox>
