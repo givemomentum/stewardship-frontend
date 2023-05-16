@@ -84,5 +84,7 @@
     </div>
 
     <GivingHistory v-if="gifts?.length" :donorName="$props.donor.name" :gifts="gifts" />
+
+    <RecsRLastActions v-if="donorActions?.length" :actions="donorActions" />
   </CBox>
 </template>
