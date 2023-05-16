@@ -1,14 +1,10 @@
 <script lang="ts" setup>
   import { format } from "~/utils";
+  import { ChartSeries } from "~/apps/shared/interfaces";
 
   const props = defineProps<{
-    series: Series[];
+    series: ChartSeries;
   }>();
-
-  interface Series {
-    name: string,
-    data: ({ x: number, y: number })[]
-  }
 
   const chartOptions = {
     chart: {

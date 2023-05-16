@@ -1,16 +1,12 @@
 <script lang="ts" setup>
   import { ref, watch } from "vue";
   import { CrmGift } from "~/apps/letters/interfaces";
+  import { ChartSeries } from "~/apps/shared/interfaces";
   import { parseISO } from "date-fns";
 
   const props = defineProps<{
     gifts: CrmGift[];
   }>();
-
-  interface GiftSeries {
-    name: string,
-    data: ({ x: number, y: number })[]
-  }
 
   const defaultGiftSerieses = [{
     name: "Amount",
@@ -18,7 +14,7 @@
   }];
 
   const state = {
-    giftSerieses: ref<GiftSeries[]>(defaultGiftSerieses),
+    giftSerieses: ref<ChartSeries>(defaultGiftSerieses),
   };
 
   onBeforeMount(() => {
