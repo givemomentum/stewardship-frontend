@@ -1,17 +1,19 @@
 <script lang="ts" setup>
   import { format } from "~/utils";
+  import { CrmAction, CrmGift, CrmDonor } from "~/apps/letters/interfaces";
 
   const props = defineProps<{
-    donor: any;
+    donor: any; // TODO: add Algolia Donor type
   }>();
 
   const hooks = {
     api: useApi(),
   };
 
-  const donorDetails = ref(null);
-  const donorActions = ref([]);
-  const gifts = ref([]);
+  // TODO: wrap these in a single object ?
+  const donorDetails = ref<CrmDonor>(null);
+  const donorActions = ref<CrmAction[]>([]);
+  const gifts = ref<CrmGift[]>([]);
 
   async function getDetails() {
     // TODO: catch errors
