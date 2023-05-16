@@ -1,46 +1,6 @@
 <script lang="ts" setup>
   import { format } from "~/utils";
 
-//   {
-//     "pk": 1066451,
-//     "source_id": "0038c00003GIRhfAAH",
-//     "source": "salesforce",
-//     "salutation": "",
-//     "name": "Emma Johnson",
-//     "first_name": "Emma",
-//     "last_name": "Johnson",
-//     "spouse_name": "",
-//     "mailing_address": {
-//         "pk": 1156308,
-//         "address_line1": "123 Main St",
-//         "address_line2": "",
-//         "city": "New York",
-//         "state": "NY",
-//         "zip": "10006",
-//         "country": "United States",
-//         "one_line": "123 Main St, New York, NY 10006"
-//     },
-//     "email": "victor+emma@givemomentum.com",
-//     "phone_number": "",
-//     "birthday": "1980-01-15",
-//     "crm_url": "https://momentum57-dev-ed.my.salesforce.com/lightning/r/Contact/0038c00003GIRhfAAH/view",
-//     "donated_total": 550000,
-//     "donation_biggest": 300000,
-//     "do_not_email": false,
-//     "do_not_call": false,
-//     "do_not_mail": false,
-//     "do_not_contact": false,
-//     "giving_since": "2019-12-18T00:00:00",
-//     "letter_label": "Emma Johnson\n123 Main St \nNew York, NY, 10006",
-//     "last_contact": "2023-04-30T23:11:56Z",
-//     "donation_average": 275000,
-//     "last_gift_date": "2021-12-22T00:00:00",
-//     "last_gift_amount": 300000,
-//     "last_recurring_gift_date": null,
-//     "custom_data": {},
-//     "communication_preferences": ""
-// }
-
   const props = defineProps<{
     donor: any;
   }>();
@@ -49,17 +9,33 @@
     api: useApi(),
   };
 
-  const donorDetails = ref(null)
+  const donorDetails = ref(null);
+  const donorActions = ref([]);
+  const gifts = ref([]);
 
-  async function fetchDetails() {
+  async function getDetails() {
+    // TODO: catch errors
     const res = await hooks.api.get(`/crms/donors/${props.donor.objectID}`);
     donorDetails.value = res.data;
+  }
+
+  async function getActions() {
+    // TODO: catch errors
+    const res = await hooks.api.get(`/crms/actions/?donor=${props.donor.objectID}`);
+    donorActions.value = res.data;
+  }
+
+  async function getGifts() {
+    const res = await hooks.api.get(`/crms/gifts/?donor=${props.donor.objectID}`);
+    gifts.value = res.data;
   }
 
   onMounted(async () => {
     console.log("MOUNTED");
 
-    fetchDetails();
+    getDetails();
+    getActions();
+    getGifts();
 
     // const res1 = await hooks.api.get(`/crms/donors/${props.donor.objectID}`);
     // const res2 = await hooks.api.get(`crms/actions/?donor=${props.donor.objectID}`);
@@ -115,5 +91,7 @@
     <div>
         Address: {{ $props.donor.address }}
     </div>
+
+    <GivingHistory :gifts="gifts" />
     </CBox>
 </template>
