@@ -56,8 +56,6 @@
     donorDetails.value = res.data;
   }
 
-  async function 
-
   onMounted(async () => {
     console.log("MOUNTED");
 
