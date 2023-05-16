@@ -26,26 +26,15 @@
   }
 
   async function getGifts() {
+    // TODO: catch errors
     const res = await hooks.api.get(`/crms/gifts/?donor=${props.donor.objectID}`);
     gifts.value = res.data;
   }
 
   onMounted(async () => {
-    console.log("MOUNTED");
-
     getDetails();
     getActions();
     getGifts();
-
-    // const res1 = await hooks.api.get(`/crms/donors/${props.donor.objectID}`);
-    // const res2 = await hooks.api.get(`crms/actions/?donor=${props.donor.objectID}`);
-    // console.log(res2.data);
-
-    // state.searchIndexName.value = res.data.index_name;
-    // state.searchClient.value = algoliasearch(
-    //   res.data.app_id,
-    //   res.data.api_key,
-    // );
   });
 
 </script>
