@@ -8,10 +8,16 @@
     searchIndexName: ref(""),
   };
 
+  const selectedDonor = ref(null);
+
   const hooks = {
     api: useApi(),
     layout: useLayoutControl(),
   };
+
+  function selectDonor(donor) {
+    selectedDonor.value = toRaw(donor);
+  }
 
   onBeforeMount(async () => {
     hooks.layout.activateLeanMode();
@@ -181,6 +187,7 @@
                     pos="relative"
                     :height="item._highlightResult.action_list_searchable?.matchedWords.length ? '90px' : 'auto'"
                     :_hover="{bg: 'gray.50'}"
+                    @click="selectDonor(item)"
                   >
                     <CTd>
                       <ais-highlight attribute="name" :hit="item" />
@@ -259,6 +266,10 @@
 
       </AisInstantSearch>
     </CFlex>
+
+    <ChakraDrawer v-model="selectedDonor">
+      <DonorDetails :donor="selectedDonor" />
+    </ChakraDrawer>
   </CBox>
 </template>
 
