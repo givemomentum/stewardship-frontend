@@ -1,26 +1,21 @@
 <script lang="ts" setup>
   import { ref, watch } from "vue";
   import { CrmDonor } from "~/apps/letters/interfaces";
+  import { ChartSeries, ChartSeriesItem } from "~/apps/shared/interfaces";
   import { Rec } from "~/apps/tasks/interfaces";
-  import { format } from "~/utils";
-  import { parseISO } from "date-fns";
+  import { transformGiftsToChartData } from "~/utils";
 
   const props = defineProps<{
     rec: Rec;
   }>();
 
-  interface GiftSeries {
-    name: string,
-    data: ({ x: number, y: number })[]
-  }
-
-  const defaultGiftSerieses = [{
+  const defaultGiftSeries = [{
     name: "Amount",
     data: [{ x: 5, y: 5 }],
   }];
 
   const state = {
-    giftSerieses: ref<GiftSeries[]>(defaultGiftSerieses),
+    giftSeries: ref<ChartSeries>(defaultGiftSeries),
   };
 
   onBeforeMount(() => {
@@ -34,21 +29,13 @@
     loadChartData(recNew);
   });
 
-  function createChartSeries(donor: CrmDonor): GiftSeries {
+  function createChartSeries(donor: CrmDonor): ChartSeriesItem {
     if (!donor?.gifts?.length) {
       return;
     }
     return {
       name: donor.name || "Donor",
-      data: donor.gifts
-        // TODO: It would be better to filter gifts on the backend, but this is technically much easier to do.
-        .filter(gift => Number(gift.amount) && ["one_time", "recurring_payment"].includes(gift.gift_type))
-        .map(gift => (
-          {
-            x: parseISO(gift.date).getTime(),
-            y: Number(gift.amount),
-          }
-        )),
+      data: transformGiftsToChartData(donor.gifts),
     };
   }
 
@@ -58,69 +45,10 @@
     }
     const householdDonors = rec.donor.household?.donors;
     const donorsToChart = householdDonors?.length ? householdDonors : [rec.donor];
-    state.giftSerieses.value = donorsToChart.map((donor: CrmDonor) => createChartSeries(donor)).filter(val => val);
+    state.giftSeries.value = donorsToChart.map((donor: CrmDonor) => createChartSeries(donor)).filter(val => val);
   }
-
-  const chartOptions = {
-    chart: {
-      type: "area",
-      stacked: false,
-      height: 280,
-      animations: {
-        enabled: false,
-      },
-      toolbar: {
-        show: false,
-      },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    markers: {
-      size: 3,
-    },
-    colors: ["#4299e1", "#48bb78", "#f6ad55", "#ed64a6"], // colors chosen by ChatGPT
-    fill: {
-      type: "gradient",
-      gradient: {
-        shadeIntensity: 1,
-        inverseColors: false,
-        opacityFrom: 0.5,
-        opacityTo: 0,
-        stops: [0, 90, 100],
-      },
-    },
-    yaxis: {
-      labels: {
-        formatter: amount => format.money(amount),
-      },
-    },
-    xaxis: {
-      type: "datetime",
-      tooltip: {
-        enabled: false,
-      },
-    },
-    tooltip: {
-      shared: false,
-      y: {
-        formatter: amount => format.money(amount),
-      },
-      x: {
-        formatter: (date: number) => format.dateFromUnix(date),
-      },
-    },
-  };
 </script>
 
 <template>
-  <div>
-    <apexchart
-      width="100%"
-      height="250"
-      type="area"
-      :options="chartOptions"
-      :series="state.giftSerieses.value"
-    />
-  </div>
+  <AreaChart :series="state.giftSeries.value" />
 </template>
