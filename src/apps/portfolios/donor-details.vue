@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { format } from "~/utils";
+  import { format, getShortRecurringGiftDescription } from "~/utils";
   import { CrmAction, CrmGift, CrmDonor } from "~/apps/letters/interfaces";
 
   const props = defineProps<{
@@ -51,37 +51,95 @@
       ??? potential gift
     </CText>
 
-    <div>
-      Last time gift: {{ format.money(donorDetails?.last_gift_amount) }}
-    </div>
+    <CTable variant="unstyled" size="sm">
+      <CTr>
+        <CTd p="0" fontWeight="bold">
+          Last gift
+        </CTd>
 
-    <div>
-      Lifetime giving: {{ format.money($props.donor.donated_total) }}
-    </div>
+        <CTd>
+          {{ format.money(donorDetails?.last_gift_amount) }} on
+          {{ format.date(donorDetails?.last_gift_date) }}
+        </CTd>
+      </CTr>
 
-    <div>
-      Giving since: {{ format.dateFromUnixV2($props.donor.giving_since) }}
-    </div>
+      <CTr>
+        <CTd p="0" fontWeight="bold">
+          Lifetime giving
+        </CTd>
 
-    <div>
-      Recurring giving: ?
-    </div>
+        <CTd>
+          {{ format.money($props.donor.donated_total) }}
+        </CTd>
+      </CTr>
 
-    <div>
-      CRM Profile: {{ $props.donor.crm_url }}
-    </div>
+      <CTr>
+        <CTd p="0" fontWeight="bold">
+          Giving since
+        </CTd>
 
-    <div>
-      Email: {{ $props.donor.email }}
-    </div>
+        <CTd>
+          {{ format.dateFromUnixV2($props.donor.giving_since) }}
+        </CTd>
+      </CTr>
 
-    <div>
-      Phone: {{ $props.donor.phone_number || "N/A" }}
-    </div>
+      <CTr>
+        <CTd p="0" fontWeight="bold">
+          Recurring giving
+        </CTd>
 
-    <div>
-      Address: {{ $props.donor.address }}
-    </div>
+        <CTd>
+          {{ getShortRecurringGiftDescription($props.donor) }}
+        </CTd>
+      </CTr>
+
+      <CTr>
+        <CTd p="0" fontWeight="bold">
+          CRM Profile
+        </CTd>
+
+        <CTd>
+          {{ $props.donor.crm_url }}
+        </CTd>
+      </CTr>
+    </CTable>
+
+    <CBox>
+      <CFlex direction="column">
+        <CFlex
+          v-if="props.donor.email"
+          :py="{ base: 1, '2xl': 2 }"
+          align="center"
+          gap="2"
+          white-space="nowrap"
+        >
+          <CIcon size="5" color="gray.500" name="email" />
+          {{ props.donor.email }}
+        </CFlex>
+
+        <CFlex
+          v-if="props.donor.phone_number"
+          :py="{ base: 1, '2xl': 2 }"
+          align="center"
+          gap="2"
+          white-space="nowrap"
+        >
+          <CIcon size="5" fill="gray.500" name="io-call" />
+          {{ props.donor.phone_number }}
+        </CFlex>
+
+        <CFlex
+          v-if="donorDetails?.mailing_address?.city"
+          :py="{ base: 1, '2xl': 2 }"
+          align="center"
+          gap="2"
+          white-space="nowrap"
+        >
+          <CIcon size="5" fill="gray.500" name="fa-map-marker-alt" />
+          {{ donorDetails?.mailing_address.city }}, {{ donorDetails?.mailing_address.state }}
+        </CFlex>
+      </CFlex>
+    </CBox>
 
     <GivingHistory v-if="gifts?.length" :donorName="$props.donor.name" :gifts="gifts" />
 
