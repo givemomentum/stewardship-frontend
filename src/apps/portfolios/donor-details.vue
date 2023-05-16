@@ -43,9 +43,9 @@
 
 <template>
   <CBox p="6">
-    <CText fontSize="1.2rem">
+    <CHeading font-size="2xl" font-weight="normal">
       {{ $props.donor.name }}
-    </CText>
+    </CHeading>
 
     <CText my="1rem">
       ??? potential gift
