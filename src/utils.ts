@@ -136,5 +136,5 @@ export function transformGiftsToChartData(gifts: CrmGift[]) {
         x: datefns.parseISO(gift.date).getTime(),
         y: Number(gift.amount),
       }
-    )),
+    ));
 }
