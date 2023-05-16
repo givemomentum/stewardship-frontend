@@ -42,47 +42,47 @@
 </script>
 
 <template>
-    <CBox p="6">
-      <CText fontSize="1.2rem">
-        {{ $props.donor.name }}
-      </CText>
+  <CBox p="6">
+    <CText fontSize="1.2rem">
+      {{ $props.donor.name }}
+    </CText>
 
     <CText my="1rem">
-        ??? potential gift
+      ??? potential gift
     </CText>
 
     <div>
-        Last time gift: {{ format.money(donorDetails?.last_gift_amount) }}
+      Last time gift: {{ format.money(donorDetails?.last_gift_amount) }}
     </div>
 
     <div>
-        Lifetime giving: {{ format.money($props.donor.donated_total) }}
+      Lifetime giving: {{ format.money($props.donor.donated_total) }}
     </div>
 
     <div>
-        Giving since: {{ format.dateFromUnixV2($props.donor.giving_since) }}
+      Giving since: {{ format.dateFromUnixV2($props.donor.giving_since) }}
     </div>
 
     <div>
-        Recurring giving: ?
+      Recurring giving: ?
     </div>
 
     <div>
-        CRM Profile: {{ $props.donor.crm_url }}
+      CRM Profile: {{ $props.donor.crm_url }}
     </div>
 
     <div>
-        Email: {{ $props.donor.email }}
+      Email: {{ $props.donor.email }}
     </div>
 
     <div>
-        Phone: {{ $props.donor.phone_number || "N/A" }}
+      Phone: {{ $props.donor.phone_number || "N/A" }}
     </div>
 
     <div>
-        Address: {{ $props.donor.address }}
+      Address: {{ $props.donor.address }}
     </div>
 
     <GivingHistory v-if="gifts?.length" :donorName="$props.donor.name" :gifts="gifts" />
-    </CBox>
+  </CBox>
 </template>
