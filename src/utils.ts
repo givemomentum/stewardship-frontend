@@ -1,6 +1,6 @@
 import { fromUnixTime } from "date-fns";
 import * as datefns from "date-fns";
-import { CrmDonor } from "~/apps/letters/interfaces";
+import { CrmDonor, CrmGift } from "~/apps/letters/interfaces";
 
 export function toLocaleDateString(date?: string) {
   if (date) {
@@ -125,4 +125,16 @@ export function getShortRecurringGiftDescription(donor?: CrmDonor) {
 
 export function supportsRecurringGiving(donor?: CrmDonor) {
   return ['blackbaud', 'donor_perfect', 'salesforce'].includes(donor?.source)
+}
+
+export function transformGiftsToChartData(gifts: CrmGift[]) {
+  return gifts
+    // TODO: It would be better to filter gifts on the backend, but this is technically much easier to do.
+    .filter(gift => Number(gift.amount) && ["one_time", "recurring_payment"].includes(gift.gift_type))
+    .map(gift => (
+      {
+        x: datefns.parseISO(gift.date).getTime(),
+        y: Number(gift.amount),
+      }
+    )),
 }

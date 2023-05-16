@@ -2,19 +2,19 @@
   import { ref, watch } from "vue";
   import { CrmGift } from "~/apps/letters/interfaces";
   import { ChartSeries } from "~/apps/shared/interfaces";
-  import { parseISO } from "date-fns";
+  import { transformGiftsToChartData } from "~/utils";
 
   const props = defineProps<{
     gifts: CrmGift[];
   }>();
 
-  const defaultGiftSerieses = [{
+  const defaultGiftSeries = [{
     name: "Amount",
     data: [{ x: 5, y: 5 }],
   }];
 
   const state = {
-    giftSerieses: ref<ChartSeries>(defaultGiftSerieses),
+    giftSeries: ref<ChartSeries>(defaultGiftSeries),
   };
 
   onBeforeMount(() => {
@@ -26,17 +26,9 @@
   });
 
   function transformSeries(gifts: CrmGift[]) {
-    state.giftSerieses.value = [{
+    state.giftSeries.value = [{
       name: "Donor",
-      data: gifts
-        // TODO: It would be better to filter gifts on the backend, but this is technically much easier to do.
-        .filter(gift => Number(gift.amount) && ["one_time", "recurring_payment"].includes(gift.gift_type))
-        .map(gift => (
-          {
-            x: parseISO(gift.date).getTime(),
-            y: Number(gift.amount),
-          }
-        )),
+      data: transformGiftsToChartData(gifts),
     }];
   }
 </script>
@@ -46,5 +38,5 @@
     Giving History
   </CText>
 
-  <AreaChart :series="state.giftSerieses.value" />
+  <AreaChart :series="state.giftSeries.value" />
 </template>
