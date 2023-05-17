@@ -24,7 +24,6 @@
   });
   onBeforeUnmount(hooks.layout.deactivateLeanMode);
 
-
   onMounted(async () => {
     const res = await hooks.api.get("/orgs/algolia");
     state.searchIndexName.value = res.data.index_name;
@@ -62,7 +61,7 @@
               color="blue.900"
               border-radius="lg"
               font-size="xs"
-              :_hover="{cursor: 'help'}"
+              :_hover="{ cursor: 'help' }"
             >
               EAP
             </CBox>
@@ -97,7 +96,7 @@
           gap="6"
         >
 
-          <ais-search-box show-loading-indicator/>
+          <ais-search-box show-loading-indicator />
 
           <VDropdown :distance="6">
             <CButton
@@ -136,10 +135,11 @@
           </VDropdown>
 
           <ais-clear-refinements v-if="false">
-            <template v-slot="{
-              canRefine,
-              refine,
-            }">
+            <template
+              v-slot="{
+                canRefine,
+                refine,
+              }">
               <CButton
                 v-if="canRefine"
                 variant="ghost"
@@ -156,16 +156,15 @@
         <CTableContainer mt="6">
           <CTable>
 
-
             <CTbody>
               <ais-infinite-hits>
 
                 <template
                   v-slot="{
-                  items,
-                  refineNext,
-                  isLastPage,
-                }"
+                    items,
+                    refineNext,
+                    isLastPage,
+                  }"
                 >
                   <CThead>
                     <CTr>
@@ -176,8 +175,8 @@
                       <CTh>Touches progress</CTh>
                       <CTh>Last touch</CTh>
                       <CTh>Upcoming</CTh>
-                      <CTh></CTh>
-<!--                      <CTh></CTh>-->
+                      <CTh />
+                      <!--                      <CTh></CTh>-->
                     </CTr>
                   </CThead>
 
@@ -186,8 +185,7 @@
                     :key="item.objectID"
                     pos="relative"
                     :height="item._highlightResult.action_list_searchable?.matchedWords.length ? '90px' : 'auto'"
-                    :_hover="{bg: 'gray.50'}"
-                    @click="selectDonor(item)"
+                    :_hover="{ bg: 'gray.50' }"
                   >
                     <CTd>
                       <ais-highlight attribute="name" :hit="item" />
@@ -217,7 +215,7 @@
                           content: `In ${item.upcoming_events_countdown.find((ev) => ev.label === event).days} days`,
                           placement: 'top',
                         }"
-                        :_hover="{cursor: 'context-menu', bg: 'gray.200'}"
+                        :_hover="{ cursor: 'context-menu', bg: 'gray.200' }"
                         mr="2"
                       >
                         {{event.replace('_', ' ')}}
@@ -235,14 +233,26 @@
                         </CButton>
                       </CLink>
                     </CTd>
-<!--                    <CTd>-->
-<!--                      <CButton-->
-<!--                        size="xs"-->
-<!--                        color-scheme="gray"-->
-<!--                      >-->
-<!--                        Schedule touch-->
-<!--                      </CButton>-->
-<!--                    </CTd>-->
+                    <CTd>
+                      <CButton
+                        right-icon="arrow-forward"
+                        size="xs"
+                        variant="ghost"
+                        color-scheme="gray"
+                        @click="selectDonor(item)"
+                      >
+                        See details
+                      </CButton>
+
+                    </CTd>
+                    <!--                    <CTd>-->
+                    <!--                      <CButton-->
+                    <!--                        size="xs"-->
+                    <!--                        color-scheme="gray"-->
+                    <!--                      >-->
+                    <!--                        Schedule touch-->
+                    <!--                      </CButton>-->
+                    <!--                    </CTd>-->
                     <CBox
                       v-if="item._highlightResult.action_list_searchable?.matchedWords.length"
                       pos="absolute"
