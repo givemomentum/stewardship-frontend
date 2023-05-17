@@ -10,27 +10,28 @@
     api: useApi(),
   };
 
-  // TODO: wrap these in a single object ?
-  const donorDetails = ref<CrmDonor>(null);
-  const donorActions = ref<CrmAction[]>([]);
-  const gifts = ref<CrmGift[]>([]);
+  const state = {
+    donorDetails: ref<CrmDonor>(null),
+    donorActions: ref<CrmAction[]>([]),
+    gifts: ref<CrmGift[]>([]),
+  };
 
   async function getDetails() {
     // TODO: catch errors
     const res = await hooks.api.get(`/crms/donors/${props.donor.objectID}`);
-    donorDetails.value = res.data;
+    state.donorDetails.value = res.data;
   }
 
   async function getActions() {
     // TODO: catch errors
     const res = await hooks.api.get(`/crms/actions/?donor=${props.donor.objectID}`);
-    donorActions.value = res.data;
+    state.donorActions.value = res.data;
   }
 
   async function getGifts() {
     // TODO: catch errors
     const res = await hooks.api.get(`/crms/gifts/?donor=${props.donor.objectID}`);
-    gifts.value = res.data;
+    state.gifts.value = res.data;
   }
 
   onMounted(async () => {
@@ -58,8 +59,8 @@
         </CTd>
 
         <CTd>
-          {{ format.money(donorDetails?.last_gift_amount) }} on
-          {{ format.date(donorDetails?.last_gift_date) }}
+          {{ format.money(state.donorDetails.value?.last_gift_amount) }} on
+          {{ format.date(state.donorDetails.value?.last_gift_date) }}
         </CTd>
       </CTr>
 
@@ -141,20 +142,20 @@
         </CFlex>
 
         <CFlex
-          v-if="donorDetails?.mailing_address?.city"
+          v-if="state.donorDetails.value?.mailing_address?.city"
           :py="{ base: 1, '2xl': 2 }"
           align="center"
           gap="2"
           white-space="nowrap"
         >
           <CIcon size="5" fill="gray.500" name="fa-map-marker-alt" />
-          {{ donorDetails?.mailing_address.city }}, {{ donorDetails?.mailing_address.state }}
+          {{ state.donorDetails.value?.mailing_address.city }}, {{ state.donorDetails.value?.mailing_address.state }}
         </CFlex>
       </CFlex>
     </CBox>
 
-    <GivingHistory v-if="gifts?.length" :donorName="props.donor.name" :gifts="gifts" />
+    <GivingHistory v-if="state.gifts.value?.length" :donorName="props.donor.name" :gifts="state.gifts.value" />
 
-    <RecsRLastActions v-if="donorActions?.length" :actions="donorActions" />
+    <RecsRLastActions v-if="state.donorActions.value?.length" :actions="state.donorActions.value" />
   </CBox>
 </template>
