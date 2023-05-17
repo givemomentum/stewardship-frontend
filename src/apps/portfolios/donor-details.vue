@@ -49,7 +49,7 @@
     </CHeading>
 
     <CTable variant="unstyled" size="sm">
-      <CTr>
+      <CTr v-if="state.donorDetails.value?.last_gift_amount">
         <CTd p="0" fontWeight="bold">
           Last gift
         </CTd>
@@ -60,7 +60,7 @@
         </CTd>
       </CTr>
 
-      <CTr>
+      <CTr v-if="props.donor?.donated_total">
         <CTd p="0" fontWeight="bold">
           Lifetime giving
         </CTd>
@@ -70,7 +70,7 @@
         </CTd>
       </CTr>
 
-      <CTr>
+      <CTr v-if="props.donor?.giving_since">
         <CTd p="0" fontWeight="bold">
           Giving since
         </CTd>
@@ -90,7 +90,7 @@
         </CTd>
       </CTr>
 
-      <CTr>
+      <CTr v-if="props.donor?.crm_url">
         <CTd p="0" fontWeight="bold">
           CRM Profile
         </CTd>
