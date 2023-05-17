@@ -105,7 +105,7 @@
             <CButton right-icon="external-link" variant="link">
               <!-- Workaround for Donor Perfect link issue: Show Donor Id, so she can copy it.-->
               {{
-                props.donor?.source == "donor_perfect" ? props.donor?.source_id : "View"
+                props.donor?.source == "donor_perfect" ? props.donor?.source_id : "CRM"
               }}
             </CButton>
           </CLink>
