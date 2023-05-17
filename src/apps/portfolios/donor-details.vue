@@ -48,10 +48,6 @@
       {{ props.donor.name }}
     </CHeading>
 
-    <CText my="1rem">
-      ??? potential gift
-    </CText>
-
     <CTable variant="unstyled" size="sm">
       <CTr>
         <CTd p="0" fontWeight="bold">
