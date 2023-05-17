@@ -150,7 +150,7 @@
       </CFlex>
     </CBox>
 
-    <GivingHistory v-if="state.gifts.value?.length" :donorName="props.donor.name" :gifts="state.gifts.value" />
+    <GivingHistory :donorName="props.donor.name" :gifts="state.gifts.value" />
 
     <RecsRLastActions v-if="state.donorActions.value?.length" :actions="state.donorActions.value" />
   </CBox>
