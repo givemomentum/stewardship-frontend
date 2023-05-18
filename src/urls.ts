@@ -9,7 +9,8 @@ export namespace urls {
   };
 
   export const portfolios = {
-    portfolio: "/portfolios/portfolio",
+    portfolios: "/portfolios/",
+    portfolio: (id: string) => `/portfolios/${id}/portfolio`,
     skipRec: (id: string) => `/portfolios/skip/${id}/`,
   };
 
