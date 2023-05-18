@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+  import { marked } from "marked";
   import { CrmAction } from "~/apps/letters/interfaces";
   import { format } from "~/utils";
 
@@ -66,8 +67,9 @@
         >
           <CFlex
             direction="column"
+            class="desc-full"
             v-if="state.actionDescFullIndexes.value.includes(actionIndex)"
-            v-html="comp.actionDescFullList.value[actionIndex]"
+            v-html="marked.parse(comp.actionDescFullList.value[actionIndex])"
             bg="gray.50"
             p="2"
             border-radius="lg"
@@ -114,6 +116,20 @@
     }
     br {
       display: none;
+    }
+  }
+  .desc-full {
+    blockquote {
+      border-left: 4px solid #e2e8f0;
+      padding-left: 1rem;
+      margin-left: 0;
+      margin-right: 0;
+    }
+    p {
+      padding-bottom: 1rem;
+    }
+    hr {
+      padding-bottom: 1rem;
     }
   }
 </style>

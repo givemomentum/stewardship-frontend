@@ -32,7 +32,7 @@
     });
     hooks.notify.send(`Recommendation for ${state.rec.value.donor.name} skipped`);
     state.isSubmitting.value = false;
-    navigateTo(urls.portfolios.portfolio);
+    navigateTo(urls.portfolios.portfolios);
   }
 </script>
 

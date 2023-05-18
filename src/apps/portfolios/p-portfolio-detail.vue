@@ -148,16 +148,17 @@
                       <CTh>Last touch</CTh>
                       <CTh>Upcoming</CTh>
                       <CTh />
-                      <!--                      <CTh></CTh>-->
+                      <CTh />
                     </CTr>
                   </CThead>
 
                   <CTr
                     v-for="item in items"
+                    @click="selectDonor(item)"
                     :key="item.objectID"
                     pos="relative"
                     :height="item._highlightResult.action_list_searchable?.matchedWords.length ? '90px' : 'auto'"
-                    :_hover="{ bg: 'gray.50' }"
+                    :_hover="{ bg: 'gray.50', cursor: 'pointer' }"
                   >
                     <CTd>
                       <ais-highlight attribute="name" :hit="item" />
@@ -208,12 +209,11 @@
                     <CTd>
                       <CButton
                         right-icon="arrow-forward"
-                        size="xs"
-                        variant="ghost"
+                        size="sm"
                         color-scheme="gray"
                         @click="selectDonor(item)"
                       >
-                        See details
+                        View
                       </CButton>
 
                     </CTd>
@@ -250,7 +250,7 @@
     </CFlex>
 
     <ChakraDrawer v-model="state.selectedDonor.value">
-      <DonorDetails :donor="state.selectedDonor.value" />
+      <PDonorDetails :donor="state.selectedDonor.value" />
     </ChakraDrawer>
   </CBox>
 </template>

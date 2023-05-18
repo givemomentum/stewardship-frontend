@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { format, getShortRecurringGiftDescription } from "~/utils";
+  import { format } from "~/utils";
   import { CrmAction, CrmGift, CrmDonor } from "~/apps/letters/interfaces";
 
   const props = defineProps<{
@@ -43,8 +43,8 @@
 </script>
 
 <template>
-  <CBox p="6">
-    <CHeading font-size="2xl" font-weight="normal">
+  <CFlex p="6" direction="column" gap="5">
+    <CHeading size="lg">
       {{ props.donor.name }}
     </CHeading>
 
@@ -77,16 +77,6 @@
 
         <CTd>
           {{ format.dateFromUnixV2(props.donor.giving_since) }}
-        </CTd>
-      </CTr>
-
-      <CTr>
-        <CTd p="0" fontWeight="bold">
-          Recurring giving
-        </CTd>
-
-        <CTd>
-          {{ getShortRecurringGiftDescription(props.donor) }}
         </CTd>
       </CTr>
 
@@ -150,8 +140,8 @@
       </CFlex>
     </CBox>
 
-    <GivingHistory :donorName="props.donor.name" :gifts="state.gifts.value" />
+    <PGivingHistory :donorName="props.donor.name" :gifts="state.gifts.value" />
 
     <RecsRLastActions v-if="state.donorActions.value?.length" :actions="state.donorActions.value" />
-  </CBox>
+  </CFlex>
 </template>
