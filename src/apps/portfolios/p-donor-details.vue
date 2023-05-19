@@ -8,28 +8,29 @@
 
   const hooks = {
     api: useApi(),
+    notify: useNotify(),
   };
 
   const state = {
     donorDetails: ref<CrmDonor>(null),
     donorActions: ref<CrmAction[]>([]),
     gifts: ref<CrmGift[]>([]),
+    expectedGiftDate: ref(new Date()),
+    isGiftDateEditMode: ref(false),
+    isGiftDateSaving: ref(false),
   };
 
   async function getDetails() {
-    // TODO: catch errors
-    const res = await hooks.api.get(`/crms/donors/${props.donor.objectID}`);
+    const res = await hooks.api.get(`/crms/donors/${props.donor.objectID}/`);
     state.donorDetails.value = res.data;
   }
 
   async function getActions() {
-    // TODO: catch errors
     const res = await hooks.api.get(`/crms/actions/?donor=${props.donor.objectID}`);
     state.donorActions.value = res.data;
   }
 
   async function getGifts() {
-    // TODO: catch errors
     const res = await hooks.api.get(`/crms/gifts/?donor=${props.donor.objectID}`);
     state.gifts.value = res.data;
   }
@@ -40,17 +41,87 @@
     getGifts();
   });
 
+  async function updateGiftDate() {
+    state.isGiftDateSaving.value = true;
+    const res = await hooks.api.patch(`/crms/donors/${props.donor.objectID}/`, {
+      expected_gift_date: state.expectedGiftDate.value,
+      is_expected_gift_date_user_set: true,
+    });
+    state.isGiftDateSaving.value = false;
+    hooks.notify.send("Next gift date updated");
+    state.donorDetails.value = res.data;
+    state.isGiftDateEditMode.value = false;
+  }
 </script>
 
 <template>
-  <CFlex p="6" direction="column" gap="5">
-    <CHeading size="lg">
-      {{ props.donor.name }}
-    </CHeading>
+  <CFlex
+    p="6"
+    pr="10"
+    direction="column"
+    gap="5"
+  >
+    <CFlex align="center" justify="space-between" key="2">
+      <CHeading size="lg">
+        {{ props.donor.name }}
+      </CHeading>
+      <CLink
+        :href="props.donor?.crm_url"
+        is-external
+      >
+        <CButton
+          right-icon="external-link"
+          variant="outline"
+          color-scheme="gray"
+        >
+          <!-- Workaround for Donor Perfect link issue: Show Donor Id, so she can copy it.-->
+          {{
+            props.donor?.source == "donor_perfect" ? props.donor?.source_id : "CRM Profile"
+          }}
+        </CButton>
+      </CLink>
+    </CFlex>
 
-    <CTable variant="unstyled" size="sm">
+    <CTable variant="unstyled" class="p-donor-detail-table" w="fit-content">
       <CTr v-if="state.donorDetails.value?.last_gift_amount">
-        <CTd p="0" fontWeight="bold">
+        <CTd fontWeight="bold">
+          Next gift
+        </CTd>
+
+        <CTd>
+          <CFlex align="center" gap="4">
+            <span v-if="!state.isGiftDateEditMode.value">{{ format.date(state.donorDetails.value?.expected_gift_date) }}</span>
+            <CInput
+              v-else
+              type="date"
+              size="xs"
+              w="fit-content"
+              v-model="state.expectedGiftDate.value"
+            />
+            <CButton
+              v-if="!state.isGiftDateEditMode.value"
+              @click="state.isGiftDateEditMode.value = !state.isGiftDateEditMode.value"
+              size="xs"
+              left-icon="edit"
+              variant="outline"
+            >
+              Edit
+            </CButton>
+            <CButton
+              v-else
+              @click="updateGiftDate()"
+              size="xs"
+              variant="solid"
+              :is-loading="state.isGiftDateSaving.value"
+            >
+              Save
+            </CButton>
+          </CFlex>
+        </CTd>
+      </CTr>
+
+      <CTr v-if="state.donorDetails.value?.last_gift_amount">
+        <CTd fontWeight="bold">
           Last gift
         </CTd>
 
@@ -61,7 +132,7 @@
       </CTr>
 
       <CTr v-if="props.donor?.donated_total">
-        <CTd p="0" fontWeight="bold">
+        <CTd fontWeight="bold">
           Lifetime giving
         </CTd>
 
@@ -71,34 +142,12 @@
       </CTr>
 
       <CTr v-if="props.donor?.giving_since">
-        <CTd p="0" fontWeight="bold">
+        <CTd fontWeight="bold">
           Giving since
         </CTd>
 
         <CTd>
           {{ format.dateFromUnixV2(props.donor.giving_since) }}
-        </CTd>
-      </CTr>
-
-      <CTr v-if="props.donor?.crm_url">
-        <CTd p="0" fontWeight="bold">
-          CRM Profile
-        </CTd>
-
-        <CTd>
-          <CLink
-            :href="props.donor?.crm_url"
-            h="0"
-            is-external
-            @click.stop=""
-          >
-            <CButton right-icon="external-link" variant="link">
-              <!-- Workaround for Donor Perfect link issue: Show Donor Id, so she can copy it.-->
-              {{
-                props.donor?.source == "donor_perfect" ? props.donor?.source_id : "CRM"
-              }}
-            </CButton>
-          </CLink>
         </CTd>
       </CTr>
     </CTable>
@@ -145,3 +194,16 @@
     <RecsRLastActions v-if="state.donorActions.value?.length" :actions="state.donorActions.value" />
   </CFlex>
 </template>
+
+<style lang="scss">
+  .p-donor-detail-table {
+    td {
+      padding: 0.5rem;
+      padding-right: 2rem;
+
+      &:first-child {
+        padding-left: 0;
+      }
+    }
+  }
+</style>

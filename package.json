@@ -53,7 +53,7 @@
     "logrocket": "^3.0.1",
     "papaparse": "^5.3.2",
     "vue3-apexcharts": "^1.4.1",
-      "apexcharts": "^3.37.1",
+      "apexcharts": "^3.40.0",
     "marked": "^5.0.2"
   },
   "devDependencies": {
