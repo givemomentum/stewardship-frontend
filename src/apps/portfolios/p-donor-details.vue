@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+  import PDonorGiftDateInput from "~/apps/portfolios/p-donor-gift-date-input.vue";
   import { format } from "~/utils";
   import { CrmAction, CrmGift, CrmDonor } from "~/apps/letters/interfaces";
 
@@ -15,43 +16,19 @@
     donorDetails: ref<CrmDonor>(null),
     donorActions: ref<CrmAction[]>([]),
     gifts: ref<CrmGift[]>([]),
-    expectedGiftDate: ref(new Date()),
-    isGiftDateEditMode: ref(false),
-    isGiftDateSaving: ref(false),
   };
 
-  async function getDetails() {
-    const res = await hooks.api.get(`/crms/donors/${props.donor.objectID}/`);
-    state.donorDetails.value = res.data;
-  }
-
-  async function getActions() {
-    const res = await hooks.api.get(`/crms/actions/?donor=${props.donor.objectID}`);
-    state.donorActions.value = res.data;
-  }
-
-  async function getGifts() {
-    const res = await hooks.api.get(`/crms/gifts/?donor=${props.donor.objectID}`);
-    state.gifts.value = res.data;
-  }
-
   onMounted(async () => {
-    getDetails();
-    getActions();
-    getGifts();
-  });
-
-  async function updateGiftDate() {
-    state.isGiftDateSaving.value = true;
-    const res = await hooks.api.patch(`/crms/donors/${props.donor.objectID}/`, {
-      expected_gift_date: state.expectedGiftDate.value,
-      is_expected_gift_date_user_set: true,
+    hooks.api.get(`/crms/donors/${props.donor.objectID}/`).then((res) => {
+      state.donorDetails.value = res.data;
     });
-    state.isGiftDateSaving.value = false;
-    hooks.notify.send("Next gift date updated");
-    state.donorDetails.value = res.data;
-    state.isGiftDateEditMode.value = false;
-  }
+    hooks.api.get(`/crms/actions/?donor=${props.donor.objectID}`).then((res) => {
+      state.donorActions.value = res.data;
+    });
+    hooks.api.get(`/crms/gifts/?donor=${props.donor.objectID}`).then((res) => {
+      state.gifts.value = res.data;
+    });
+  });
 </script>
 
 <template>
@@ -83,42 +60,10 @@
     </CFlex>
 
     <CTable variant="unstyled" class="p-donor-detail-table" w="fit-content">
-      <CTr v-if="state.donorDetails.value?.last_gift_amount">
-        <CTd fontWeight="bold">
-          Next gift
-        </CTd>
-
-        <CTd>
-          <CFlex align="center" gap="4">
-            <span v-if="!state.isGiftDateEditMode.value">{{ format.date(state.donorDetails.value?.expected_gift_date) }}</span>
-            <CInput
-              v-else
-              type="date"
-              size="xs"
-              w="fit-content"
-              v-model="state.expectedGiftDate.value"
-            />
-            <CButton
-              v-if="!state.isGiftDateEditMode.value"
-              @click="state.isGiftDateEditMode.value = !state.isGiftDateEditMode.value"
-              size="xs"
-              left-icon="edit"
-              variant="outline"
-            >
-              Edit
-            </CButton>
-            <CButton
-              v-else
-              @click="updateGiftDate()"
-              size="xs"
-              variant="solid"
-              :is-loading="state.isGiftDateSaving.value"
-            >
-              Save
-            </CButton>
-          </CFlex>
-        </CTd>
-      </CTr>
+      <PDonorGiftDateInput
+        :donor="state.donorDetails.value"
+        @donorUpdated="state.donorDetails.value = $event"
+      />
 
       <CTr v-if="state.donorDetails.value?.last_gift_amount">
         <CTd fontWeight="bold">

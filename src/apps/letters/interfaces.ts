@@ -105,6 +105,9 @@ export class CrmDonor {
   custom_data: { [field: string]: any };
   communication_preferences: string;
 
+  expected_gift_date: string;
+  is_expected_gift_date_user_set: boolean;
+
   actions?: CrmAction[];
 }
 
