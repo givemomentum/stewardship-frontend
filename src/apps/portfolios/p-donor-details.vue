@@ -67,8 +67,8 @@
       </CLink>
     </CFlex>
 
-    <CFlex justify="space-between" key="2">
-      <CTable variant="unstyled" class="p-donor-detail-table" w="fit-content">
+    <CFlex justify="space-between" key="3" h="fit-content">
+      <CTable variant="unstyled" class="p-donor-detail-table" w="fit-content" h="fit-content">
         <CTr v-if="state.nextRec.value">
           <CTd>Next touch</CTd>
           <CTd>
@@ -178,7 +178,7 @@
       </CBox>
     </CFlex>
 
-    <PGivingHistory :donorName="props.donor.name" :gifts="state.gifts.value" />
+    <PGivingHistory :donorName="props.donor.name" :gifts="state.gifts.value" v-if="state.gifts.value?.length" />
 
     <RecsRLastActions v-if="state.donorActions.value?.length" :actions="state.donorActions.value" />
   </CFlex>
