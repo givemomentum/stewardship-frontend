@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-  import PDonorGiftDateInput from "~/apps/portfolios/p-donor-gift-date-input.vue";
   import { format } from "~/utils";
   import { CrmAction, CrmGift, CrmDonor } from "~/apps/letters/interfaces";
 
@@ -13,6 +12,7 @@
   };
 
   const state = {
+    nextRec: ref<{ scheduled_for: string; id?: Number } | null>(null),
     donorDetails: ref<CrmDonor>(null),
     donorActions: ref<CrmAction[]>([]),
     gifts: ref<CrmGift[]>([]),
@@ -21,6 +21,9 @@
   onMounted(async () => {
     hooks.api.get(`/crms/donors/${props.donor.objectID}/`).then((res) => {
       state.donorDetails.value = res.data;
+    });
+    hooks.api.get(`/portfolios/${props.donor.portfolio_plan_id}/${props.donor.objectID}/next-rec`).then((res) => {
+      state.nextRec.value = res.data;
     });
     hooks.api.get(`/crms/actions/?donor=${props.donor.objectID}`).then((res) => {
       state.donorActions.value = res.data;
@@ -59,80 +62,112 @@
       </CLink>
     </CFlex>
 
-    <CTable variant="unstyled" class="p-donor-detail-table" w="fit-content">
-      <PDonorGiftDateInput
-        :donor="state.donorDetails.value"
-        @donorUpdated="state.donorDetails.value = $event"
-      />
+    <CFlex justify="space-between" key="2">
+      <CTable variant="unstyled" class="p-donor-detail-table" w="fit-content">
+        <CTr v-if="state.nextRec.value">
+          <CTd>Next touch</CTd>
+          <CTd>
+            <PDateInput
+              :date-initial="state.nextRec.value.scheduled_for"
+              :api-path="`/portfolios/${props.donor.portfolio_plan_id}/${props.donor.objectID}/schedule-for`"
+              :serializer="(date: string) => ({
+                date: date,
+              })"
+              :label="format.date(state.nextRec.value.scheduled_for)"
+              @model-updated="state.nextRec.value.scheduled_for = $event"
+              :success-message="(date: string) => `We won't recommend this donor until ${date}`"
+              cta="Schedule"
+            />
+          </CTd>
+        </CTr>
 
-      <CTr v-if="state.donorDetails.value?.last_gift_amount">
-        <CTd fontWeight="bold">
-          Last gift
-        </CTd>
+        <CTr>
+          <CTd>Next gift</CTd>
+          <CTd>
+            <PDateInput
+              v-if="state.donorDetails.value"
+              :date-initial="state.donorDetails.value.expected_gift_date"
+              :api-path="`/crms/donors/${state.donorDetails.value.pk}/`"
+              :serializer="(date: string) => ({
+                is_expected_gift_date_user_set: true,
+                expected_gift_date: date,
+              })"
+              :label="format.date(state.donorDetails.value.expected_gift_date)"
+              @model-updated="state.donorDetails.value.expected_gift_date = $event"
+              :success-message="(date) => `Next gift date updated`"
+            />
+          </CTd>
+        </CTr>
 
-        <CTd>
-          {{ format.money(state.donorDetails.value?.last_gift_amount) }} on
-          {{ format.date(state.donorDetails.value?.last_gift_date) }}
-        </CTd>
-      </CTr>
+        <CTr v-if="state.donorDetails.value?.last_gift_amount">
+          <CTd>
+            Last gift
+          </CTd>
 
-      <CTr v-if="props.donor?.donated_total">
-        <CTd fontWeight="bold">
-          Lifetime giving
-        </CTd>
+          <CTd>
+            {{ format.money(state.donorDetails.value?.last_gift_amount) }} on
+            {{ format.date(state.donorDetails.value?.last_gift_date) }}
+          </CTd>
+        </CTr>
 
-        <CTd>
-          {{ format.money(props.donor.donated_total) }}
-        </CTd>
-      </CTr>
+        <CTr v-if="props.donor?.donated_total">
+          <CTd>
+            Lifetime
+          </CTd>
 
-      <CTr v-if="props.donor?.giving_since">
-        <CTd fontWeight="bold">
-          Giving since
-        </CTd>
+          <CTd>
+            {{ format.money(props.donor.donated_total) }}
+          </CTd>
+        </CTr>
 
-        <CTd>
-          {{ format.dateFromUnixV2(props.donor.giving_since) }}
-        </CTd>
-      </CTr>
-    </CTable>
+        <CTr v-if="props.donor?.giving_since">
+          <CTd>
+            Giving since
+          </CTd>
 
-    <CBox>
-      <CFlex direction="column">
-        <CFlex
-          v-if="props.donor.email"
-          :py="{ base: 1, '2xl': 2 }"
-          align="center"
-          gap="2"
-          white-space="nowrap"
-        >
-          <CIcon size="5" color="gray.500" name="email" />
-          {{ props.donor.email }}
+          <CTd>
+            {{ format.dateFromUnixV2(props.donor.giving_since) }}
+          </CTd>
+        </CTr>
+      </CTable>
+
+      <CBox>
+        <CFlex direction="column">
+          <CFlex
+            v-if="props.donor.email"
+            :py="{ base: 1, '2xl': 2 }"
+            align="center"
+            gap="2"
+            white-space="nowrap"
+          >
+            <CIcon size="5" color="gray.500" name="email" />
+            {{ props.donor.email }}
+          </CFlex>
+
+          <CFlex
+            v-if="props.donor.phone_number"
+            :py="{ base: 1, '2xl': 2 }"
+            align="center"
+            gap="2"
+            white-space="nowrap"
+          >
+            <CIcon size="5" fill="gray.500" name="io-call" />
+            {{ props.donor.phone_number }}
+          </CFlex>
+
+          <CFlex
+            v-if="state.donorDetails.value?.mailing_address?.city"
+            :py="{ base: 1, '2xl': 2 }"
+            align="center"
+            gap="2"
+            white-space="nowrap"
+          >
+            <CIcon size="5" fill="gray.500" name="fa-map-marker-alt" />
+            {{ state.donorDetails.value?.mailing_address.city }}, {{ state.donorDetails.value?.mailing_address.state }}
+          </CFlex>
         </CFlex>
-
-        <CFlex
-          v-if="props.donor.phone_number"
-          :py="{ base: 1, '2xl': 2 }"
-          align="center"
-          gap="2"
-          white-space="nowrap"
-        >
-          <CIcon size="5" fill="gray.500" name="io-call" />
-          {{ props.donor.phone_number }}
-        </CFlex>
-
-        <CFlex
-          v-if="state.donorDetails.value?.mailing_address?.city"
-          :py="{ base: 1, '2xl': 2 }"
-          align="center"
-          gap="2"
-          white-space="nowrap"
-        >
-          <CIcon size="5" fill="gray.500" name="fa-map-marker-alt" />
-          {{ state.donorDetails.value?.mailing_address.city }}, {{ state.donorDetails.value?.mailing_address.state }}
-        </CFlex>
-      </CFlex>
-    </CBox>
+      </CBox>
+    </CFlex>
 
     <PGivingHistory :donorName="props.donor.name" :gifts="state.gifts.value" />
 
@@ -144,10 +179,11 @@
   .p-donor-detail-table {
     td {
       padding: 0.5rem;
-      padding-right: 2rem;
+      padding-right: 1.2rem;
 
       &:first-child {
         padding-left: 0;
+        font-weight: bold;
       }
     }
   }

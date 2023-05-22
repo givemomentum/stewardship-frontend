@@ -19,7 +19,7 @@
 
   onBeforeMount(async () => {
     hooks.layout.activateLeanMode();
-    const res = await hooks.api.get(`portfolios/recs/${props.recId}/`);
+    const res = await hooks.api.get(`/portfolios/recs/${props.recId}/`);
     if (res.data) {
       state.rec.value = res.data;
     }
@@ -27,7 +27,7 @@
 
   async function skipRec(status: string) {
     state.isSubmitting.value = true;
-    await hooks.api.patch(`portfolios/recs/${props.recId}/`, {
+    await hooks.api.patch(`/portfolios/recs/${props.recId}/`, {
       status: status,
     });
     hooks.notify.send(`Recommendation for ${state.rec.value.donor.name} skipped`);
