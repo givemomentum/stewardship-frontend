@@ -32,6 +32,11 @@
       state.gifts.value = res.data;
     });
   });
+
+  async function getNextRec() {
+    const res = await hooks.api.get(`/portfolios/${props.donor.portfolio_plan_id}/${props.donor.objectID}/next-rec`)
+    state.nextRec.value = res.data;
+  }
 </script>
 
 <template>
@@ -74,7 +79,10 @@
                 date: date,
               })"
               :label="format.date(state.nextRec.value.scheduled_for)"
-              @model-updated="state.nextRec.value.scheduled_for = $event"
+              @model-updated="() => {
+                state.nextRec.value.scheduled_for = $event;
+                getNextRec();
+              }"
               :success-message="(date: string) => `We won't recommend this donor until ${date}`"
               cta="Schedule"
               :is-auto-tag="!state.nextRec.value.id"
