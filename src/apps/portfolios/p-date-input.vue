@@ -9,6 +9,7 @@ a<script lang="ts" setup>
     serializer: (date: string) => any;
     dateInitial?: string;
     successMessage: (date: string) => string;
+    isAutoTag?: boolean;
   }>();
 
   const emit = defineEmits<{
@@ -41,9 +42,17 @@ a<script lang="ts" setup>
 
 <template>
   <CFlex align="center" gap="4">
-    <chakra.span v-if="!state.isEditMode.value" color="blue.600">
-      {{ props.label }}
-    </chakra.span>
+    <CFlex
+      v-if="!state.isEditMode.value"
+      color="blue.600"
+      align="center"
+      gap="2"
+    >
+      <chakra.span>{{ props.label }}</chakra.span>
+
+      <CTag v-if="props.isAutoTag">Auto</CTag>
+    </CFlex>
+
 
     <CInput
       v-else

@@ -77,6 +77,7 @@
               @model-updated="state.nextRec.value.scheduled_for = $event"
               :success-message="(date: string) => `We won't recommend this donor until ${date}`"
               cta="Schedule"
+              :is-auto-tag="!state.nextRec.value.id"
             />
           </CTd>
         </CTr>
