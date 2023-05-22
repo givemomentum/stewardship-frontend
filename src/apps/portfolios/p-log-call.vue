@@ -57,6 +57,8 @@
           />
           <CCheckbox
             @click="state.commPref.value = $event.target.checked ? 'call' : 'default'"
+            :disabled="state.isSubmitting.value"
+            :checked="state.commPref.value.valueOf() === 'call'"
           >
             Prefers to be called
           </CCheckbox>
