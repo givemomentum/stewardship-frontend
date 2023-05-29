@@ -36,8 +36,8 @@
     >
       <CHeading size="lg">Portfolios</CHeading>
 
-      <CTableContainer max-w="800px">
-        <CTable>
+      <CTableContainer>
+        <CTable max-w="800px">
           <CThead>
             <CTd>Name</CTd>
             <CTd>Assignee</CTd>
