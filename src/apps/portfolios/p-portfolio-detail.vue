@@ -5,13 +5,15 @@
 
   const props = defineProps<{
     portfolioId: string;
+    donorId?: string;
+    isSkipAction?: boolean;
   }>();
 
   const state = {
     portfolioName: ref(""),
     searchClient: ref(null),
     searchIndexName: ref(""),
-    selectedDonor: ref(null),
+    donorIdOpened: ref(null),
   };
 
   const hooks = {
@@ -19,15 +21,28 @@
     layout: useLayoutControl(),
   };
 
-  function selectDonor(donor) {
-    state.selectedDonor.value = toRaw(donor);
-  }
-
   onBeforeMount(async () => {
     hooks.layout.activateLeanMode();
+    await initAlgolia();
   });
 
-  onMounted(async () => {
+  watch(() => props.donorId, () => {
+    if (props.donorId) {
+      state.donorIdOpened.value = props.donorId;
+    }
+  }, { immediate: true });
+
+  watch(state.donorIdOpened, (donorId) => {
+    let urlNew: string;
+    if (donorId) {
+      urlNew = urls.portfolios.donor(props.portfolioId, donorId);
+    } else {
+      urlNew = urls.portfolios.portfolio(props.portfolioId);
+    }
+    history.pushState({}, null, urlNew);
+  });
+
+  async function initAlgolia() {
     const res = await hooks.api.get(`/portfolios/portfolios/${props.portfolioId}/`);
     state.searchIndexName.value = res.data.algolia_creds.index_name;
     state.searchClient.value = algoliasearch(
@@ -35,7 +50,7 @@
       res.data.algolia_creds.api_key,
     );
     state.portfolioName.value = res.data.name;
-  });
+  }
 </script>
 
 <template>
@@ -154,7 +169,7 @@
 
                   <CTr
                     v-for="item in items"
-                    @click="selectDonor(item)"
+                    @click="state.donorIdOpened.value = item.objectID"
                     :key="item.objectID"
                     pos="relative"
                     :height="item._highlightResult.action_list_searchable?.matchedWords.length ? '90px' : 'auto'"
@@ -211,7 +226,6 @@
                         right-icon="arrow-forward"
                         size="sm"
                         color-scheme="gray"
-                        @click="selectDonor(item)"
                       >
                         View
                       </CButton>
@@ -249,8 +263,11 @@
       </AisInstantSearch>
     </CFlex>
 
-    <ChakraDrawer v-model="state.selectedDonor.value">
-      <PDonorDetails :donor="state.selectedDonor.value" />
+    <ChakraDrawer v-model="state.donorIdOpened.value">
+      <PDonorDetail
+        :donor-id="state.donorIdOpened.value"
+        :is-skip-action="props.isSkipAction"
+      />
     </ChakraDrawer>
   </CBox>
 </template>

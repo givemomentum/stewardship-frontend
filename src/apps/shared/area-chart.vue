@@ -62,7 +62,7 @@
   <div>
     <apexchart
       width="100%"
-      height="250"
+      height="190"
       type="area"
       :options="chartOptions"
       :series="$props.series"

@@ -48,6 +48,8 @@ import {
 } from "oh-vue-icons/icons";
 import { IconType } from "oh-vue-icons/types/icons";
 
+// todo move to /apps/chakra
+
 export const chakraConfig = {
   extendTheme: extendTheme({
     breakpoints: {

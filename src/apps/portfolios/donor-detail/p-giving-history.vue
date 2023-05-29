@@ -5,7 +5,7 @@
   import { giftsToSeries } from "~/utils";
 
   const props = defineProps<{
-    donorName: string;
+    donorName?: string;
     gifts: CrmGift[];
   }>();
 
@@ -32,11 +32,5 @@
 </script>
 
 <template>
-  <CBox my="6">
-    <CHeading font-size="2xl" color="gray.500" font-weight="normal">
-      Giving History
-    </CHeading>
-
-    <AreaChart :series="state.giftSeries.value" />
-  </CBox>
+  <AreaChart :series="state.giftSeries.value" />
 </template>

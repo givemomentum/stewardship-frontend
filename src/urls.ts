@@ -10,7 +10,8 @@ export namespace urls {
 
   export const portfolios = {
     portfolios: "/portfolios/",
-    portfolio: (id: string) => `/portfolios/${id}/portfolio`,
+    portfolio: (id: string) => `/portfolios/portfolio/${id}`,
+    donor: (portfolioId: string, donorId: string) => `/portfolios/portfolio/${portfolioId}/donor/${donorId}`,
     skipRec: (id: string) => `/portfolios/skip/${id}/`,
   };
 

@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   modules: [
     "@chakra-ui/nuxt-next",
     "@nuxt/ui",
-    "@nuxtjs/emotion", // supposed to be added by @chakra-ui/nuxt-next, but it's broken so I add it manually
+    "@nuxtjs/emotion", // supposed to be added by @chakra-ui/nuxt-next, but it's broken so we add it manually
     "@formkit/nuxt",
     "@pinia/nuxt",
   ],
@@ -18,14 +18,19 @@ export default defineNuxtConfig({
   },
   components: {
     dirs: [
+      /*
+       * To allow Nuxt to register the components in subdirectories
+       * you must specify the subdirectory before its parent, eg see portfolios.
+       */
       "~/components",
       "~/apps/letters",
-      "~/apps/tasks", // todo nuxt resolver is broken, will have to move this to tasks/task
       "~/apps/tasks/recs",
+      "~/apps/tasks",
       "~/apps/fisc",
       "~/apps/partners/hor",
       "~/apps/chakra",
       "~/apps/menu",
+      "~/apps/portfolios/donor-detail",
       "~/apps/portfolios",
       "~/apps/shared",
     ],

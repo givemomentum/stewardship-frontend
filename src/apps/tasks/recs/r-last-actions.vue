@@ -36,10 +36,6 @@
 
   <CFlex v-if="props.actions.length" gap="6" direction="column">
 
-    <CHeading font-size="2xl" color="gray.500" font-weight="normal">
-      Last actions
-    </CHeading>
-
     <CFlex direction="column" w="100%" gap="6">
 
       <CFlex

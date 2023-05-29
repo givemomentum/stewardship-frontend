@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { useHead, useRuntimeConfig } from "#app";
   import { onMounted } from "vue";
+  import { ModalsContainer } from "vue-final-modal";
   import { useUserStore } from "~/apps/auth/useUserStore";
   import LogRocket from "logrocket";
   import { configureScope } from "@sentry/vue";
@@ -135,6 +136,8 @@
     </CBox>
 
   </CFlex>
+
+  <ModalsContainer />
 
 </template>
 
