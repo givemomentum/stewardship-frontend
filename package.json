@@ -12,14 +12,14 @@
     "lint": "yarn run eslint --fix src/"
   },
   "dependencies": {
-    "nuxt": "~3.3.3", "//": "3.4 is broken atm",
-      "@nuxt/vite-builder": "~3.3.3",
+    "nuxt": "^3.5.1",
+      "@nuxt/vite-builder": "^3.5.1",
       "@unhead/vue": "~1.1.23", "//": "used to be in nuxt, still used for now",
-    "@pinia/nuxt": "^0.4.5",
+    "@pinia/nuxt": "^0.4.11",
     "@formkit/nuxt": "^1.0.0-beta.15",
       "@formkit/themes": "^1.0.0-beta.15",
 
-    "vue": "^3.2.47",
+    "vue": "^3.3.4",
     "oh-vue-icons": "^1.0.0-rc3",
     "vue-axios": "^3.4.1",
       "axios": "^0.24",
@@ -57,10 +57,10 @@
     "marked": "^5.0.2"
   },
   "devDependencies": {
-    "vue-router": "^4.1.6", "//": "abscence generates a Nuxt warning of some kind, not sure",
-    "@nuxt/kit": "~3.3.3",
+    "vue-router": "^4.2.1", "//": "abscence generates a Nuxt warning of some kind, not sure",
+    "@nuxt/kit": "^3.5.1",
     "@nuxt/ui": "^0.4.1",
-      "vite": "^3.0.0", "//": "stub peer dep for @nuxt/ui",
+      "vite": "^4.3.9", "//": "stub peer dep for @nuxt/ui",
     "eslint": "^8.6.0",
       "@vue/compiler-sfc": "^3.0.0-0",
       "@vue/eslint-config-airbnb": "^7.0.0",
