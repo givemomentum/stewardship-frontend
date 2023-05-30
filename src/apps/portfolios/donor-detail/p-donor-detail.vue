@@ -21,6 +21,7 @@
     donor: ref<CrmDonor | null>(null),
     actions: ref<CrmAction[]>([]),
     giftSeries: ref<ChartDataItem[] | null>(null),
+    giftSeriesAll: ref<ChartDataItem[] | null>(null),
     householdMembers: ref<CrmDonor[] | null>(null),
   };
 
@@ -40,14 +41,13 @@
           }))
         );
         giftSeries = giftSeries.sort((a, b) => a.x - b.x);
-        giftSeries = giftSeries.slice(-16);
       }
-      state.giftSeries.value = giftSeries;
+      state.giftSeries.value = giftSeries.slice(-25);
+      state.giftSeriesAll.value = giftSeries;
 
       if (res.data.household.donors.length > 1) {
         state.householdMembers.value = res.data.household.donors
-          .filter(donor => donor.pk != res.data.pk)
-          .filter(donor => donor.portfolio_plan_id);
+          .filter(donor => donor.pk != res.data.pk);
       }
     });
     hooks.api.get(`/portfolios/${props.donorId}/next-rec`).then((res) => {
@@ -254,9 +254,17 @@
 
           <CTd>
             <CFlex align="center" gap="2">
-              {{ member.email }}
-              <CLink :href="urls.portfolios.donor(member.portfolio_plan_id, member.id)">
+              {{ member.email || member.phone_number }}
+
+              <CLink
+                v-if="member.portfolio_plan_id"
+                :href="urls.portfolios.donor(member.portfolio_plan_id, member.id)"
+              >
                 <CButton size="xs" variant="outline" color-scheme="gray">View</CButton>
+              </CLink>
+
+              <CLink v-else :href="member.crm_url">              >
+                <CButton size="xs" variant="outline" color-scheme="gray">CRM</CButton>
               </CLink>
             </CFlex>
           </CTd>
@@ -264,16 +272,24 @@
       </CTable>
     </CFlex>
 
-    <CBox>
+    <CFlex gap="3" direction="column">
       <CHeading font-size="2xl" color="gray.500">
         Giving History
       </CHeading>
+
+      <CText
+        v-if="state.giftSeriesAll.value?.length > state.giftSeries.value?.length"
+        color="gray.500"
+        font-size="sm"
+      >
+        Showing last 25 gifts
+      </CText>
 
       <AreaChart
         v-if="state.giftSeries.value"
         :series="[{ data: state.giftSeries.value, name: '' }]"
       />
-    </CBox>
+    </CFlex>
 
     <CFlex gap="5" direction="column">
       <CHeading font-size="2xl" color="gray.500">
