@@ -1,5 +1,9 @@
 <script lang="ts" setup>
-  import { format } from "~/utils";
+  import { parseISO } from "date-fns";
+  import { marked } from "marked";
+  import { ChartDataItem, ChartSeries } from "~/apps/shared/interfaces";
+  import { urls } from "~/urls";
+  import { format, giftsToSeries } from "~/utils";
   import { CrmAction, CrmGift, CrmDonor } from "~/apps/letters/interfaces";
 
   const props = defineProps<{
@@ -16,12 +20,33 @@
     nextRec: ref<{ scheduled_for: string; id?: Number } | null>(null),
     donor: ref<CrmDonor | null>(null),
     actions: ref<CrmAction[]>([]),
-    gifts: ref<CrmGift[]>([]),
+    giftSeries: ref<ChartDataItem[] | null>(null),
+    householdMembers: ref<CrmDonor[] | null>(null),
   };
 
   onMounted(async () => {
-    hooks.api.get(`/crms/donors/${props.donorId}/`).then((res) => {
+    hooks.api.get(`/crms/donors/${props.donorId}/?expand=household`).then((res) => {
       state.donor.value = res.data;
+
+      let giftSeries: ChartDataItem[] = [];
+      for (const donor of res.data.household.donors) {
+        giftSeries = giftSeries.concat(
+          donor.gifts.map(gift => ({
+            x: parseISO(gift.date).getTime(),
+            y: Number(gift.amount),
+            fillColor: getDonorColor(donor.name, ["#4299e1", "#ed64a6", "#48bb78", "#f6ad55", "#ed64a6"]),
+            label: donor.name,
+          }))
+        );
+        giftSeries = giftSeries.sort((a, b) => a.x - b.x)
+      }
+      state.giftSeries.value = giftSeries;
+
+      if (res.data.household.donors.length > 1) {
+        state.householdMembers.value = res.data.household.donors
+          .filter(donor => donor.pk != res.data.pk)
+          .filter(donor => donor.portfolio_plan_id);
+      }
     });
     hooks.api.get(`/portfolios/${props.donorId}/next-rec`).then((res) => {
       state.nextRec.value = res.data;
@@ -29,10 +54,17 @@
     hooks.api.get(`/crms/actions/?donor=${props.donorId}`).then((res) => {
       state.actions.value = res.data;
     });
-    hooks.api.get(`/crms/gifts/?donor=${props.donorId}`).then((res) => {
-      state.gifts.value = res.data;
-    });
   });
+
+  function getDonorColor(donorName: string, colors: string[]): string {
+      let hash = 0;
+      for (let i = 0; i < donorName.length; i++) {
+          hash = donorName.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      // Convert hash into a positive index value and use it to get a color
+      const index = Math.abs(hash) % colors.length;
+      return colors[index];
+  }
 
   async function getNextRec() {
     const res = await hooks.api.get(`/portfolios/${props.donorId}/next-rec`)
@@ -180,15 +212,64 @@
       </CBox>
     </CFlex>
 
+    <CFlex
+      v-if="state.donor.value?.household?.description"
+      direction="column"
+      gap="2"
+    >
+      <CHeading font-size="2xl" color="gray.500">
+        Description
+      </CHeading>
+
+      <CText
+        class="desc-full"
+        v-html="marked.parse(state.donor.value?.household?.description)"
+      />
+    </CFlex>
+
+    <CFlex
+      v-if="state.householdMembers.value"
+      direction="column"
+      gap="2"
+    >
+      <CHeading font-size="2xl" color="gray.500">
+        Household
+      </CHeading>
+
+      <CTable
+        variant="unstyled"
+        class="p-donor-detail-table"
+        w="fit-content"
+        h="fit-content"
+      >
+        <CTr
+          v-for="member in state.householdMembers.value"
+          :key="member?.id"
+        >
+          <CTd>
+            {{ member.name }}
+          </CTd>
+
+          <CTd>
+            <CFlex align="center" gap="2">
+              {{ member.email }}
+              <CLink :href="urls.portfolios.donor(member.portfolio_plan_id, member.id)">
+                <CButton size="xs" variant="outline" color-scheme="gray">View</CButton>
+              </CLink>
+            </CFlex>
+          </CTd>
+        </CTr>
+      </CTable>
+    </CFlex>
+
     <CBox>
       <CHeading font-size="2xl" color="gray.500">
         Giving History
       </CHeading>
 
-      <PGivingHistory
-        v-if="state.gifts.value?.length"
-        :donor-name="state.donor.value?.name"
-        :gifts="state.gifts.value"
+      <AreaChart
+        v-if="state.giftSeries.value"
+        :series="[{ data: state.giftSeries.value, name: '' }]"
       />
     </CBox>
 
@@ -213,6 +294,23 @@
         font-weight: bold;
         color: var(--chakra-colors-gray-500);
       }
+    }
+  }
+  .desc-full {
+    blockquote {
+      border-left: 4px solid #e2e8f0;
+      padding-left: 1rem;
+      margin-left: 0;
+      margin-right: 0;
+    }
+    p {
+      padding-bottom: 1rem;
+      &:last-of-type {
+        padding-bottom: 0;
+      }
+    }
+    hr {
+      padding-bottom: 1rem;
     }
   }
 </style>

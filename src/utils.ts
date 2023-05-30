@@ -130,14 +130,23 @@ export function supportsRecurringGiving(donor?: CrmDonor) {
 export function giftsToSeries(donorName: string, gifts: CrmGift[]) {
   return {
     name: donorName,
-    data: gifts
-    // TODO: It would be better to filter gifts on the backend, but this is technically much easier to do.
-    .filter(gift => Number(gift.amount) && ["one_time", "recurring_payment"].includes(gift.gift_type))
-    .map(gift => (
-      {
-        x: datefns.parseISO(gift.date).getTime(),
-        y: Number(gift.amount),
-      }
-    )),
+    data: gifts.filter(gift => Number(gift.amount) && ["one_time", "recurring_payment"].includes(gift.gift_type))
+      .map(gift => (
+        {
+          x: datefns.parseISO(gift.date).getTime(),
+          y: Number(gift.amount),
+          fillColor: getDonorColor(donorName, ["#4299e1", "#48bb78", "#f6ad55", "#ed64a6", "#ed64a6"]),
+        }
+      )),
   };
+}
+
+function getDonorColor(donorName: string, colors: string[]): string {
+    let hash = 0;
+    for (let i = 0; i < donorName.length; i++) {
+        hash = donorName.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    // Convert hash into a positive index value and use it to get a color
+    const index = Math.abs(hash) % colors.length;
+    return colors[index];
 }

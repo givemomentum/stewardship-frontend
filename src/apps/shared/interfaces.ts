@@ -1,11 +1,13 @@
-export interface ChartDataItem {
-    x: number,
-    y: number
-}
+export type ChartSeries = ChartSeriesItem[];
 
 export interface ChartSeriesItem {
-    name: string,
-    data: ChartDataItem[]
+    name: string;
+    data: ChartDataItem[];
 }
 
-export type ChartSeries = ChartSeriesItem[];
+export interface ChartDataItem {
+    x: number;
+    y: number;
+    fillColor?: string;
+    label?: string;
+}

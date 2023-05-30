@@ -29,14 +29,6 @@
     loadChartData(recNew);
   });
 
-  function createChartSeries(donor: CrmDonor): ChartSeriesItem {
-    if (!donor?.gifts?.length) {
-      return;
-    }
-
-    return giftsToSeries(donor.name || "Donor", donor.gifts);
-  }
-
   function loadChartData(rec: Rec) {
     if (!rec?.donor) {
       return;
@@ -44,6 +36,14 @@
     const householdDonors = rec.donor.household?.donors;
     const donorsToChart = householdDonors?.length ? householdDonors : [rec.donor];
     state.giftSeries.value = donorsToChart.map((donor: CrmDonor) => createChartSeries(donor)).filter(val => val);
+  }
+
+  function createChartSeries(donor: CrmDonor): ChartSeriesItem {
+    if (!donor?.gifts?.length) {
+      return;
+    }
+
+    return giftsToSeries(donor.name || "Donor", donor.gifts);
   }
 </script>
 

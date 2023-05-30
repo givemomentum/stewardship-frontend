@@ -108,6 +108,11 @@ export class CrmDonor {
   expected_gift_date: string;
   is_expected_gift_date_user_set: boolean;
 
+  household?: {
+    description: string;
+    donors: CrmDonor[];
+  }
+
   actions?: CrmAction[];
 }
 

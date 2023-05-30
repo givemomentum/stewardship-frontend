@@ -22,7 +22,7 @@
       enabled: false,
     },
     markers: {
-      size: 3,
+      size: 6,
     },
     colors: ["#4299e1", "#48bb78", "#f6ad55", "#ed64a6"], // colors chosen by ChatGPT
     fill: {
@@ -49,7 +49,16 @@
     tooltip: {
       shared: false,
       y: {
-        formatter: amount => format.money(amount),
+        title: {
+          formatter: (seriesName, opts) => {
+            const pointIndex = opts.dataPointIndex;
+            const pointData = props.series[opts.seriesIndex].data[pointIndex];
+            if (pointData && pointData.label) {
+              return `<span style="color: ${pointData.fillColor}">${pointData.label}</span>`;
+            }
+            return seriesName;
+          }
+        }
       },
       x: {
         formatter: (date: number) => format.dateFromUnix(date),
@@ -65,7 +74,13 @@
       height="190"
       type="area"
       :options="chartOptions"
-      :series="$props.series"
+      :series="props.series"
     />
   </div>
 </template>
+
+<style>
+.apexcharts-tooltip-marker {
+    display: none !important;
+}
+</style>
