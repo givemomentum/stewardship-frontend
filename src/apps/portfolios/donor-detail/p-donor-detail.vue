@@ -23,7 +23,7 @@
     giftSeries: ref<ChartDataItem[] | null>(null),
     giftSeriesAll: ref<ChartDataItem[] | null>(null),
     householdMembers: ref<CrmDonor[] | null>(null),
-    colorsTaken: ref<string[]>([]),
+    donorColorMap: ref<{ [key: string]: string }>({}),
   };
 
   onMounted(async () => {
@@ -37,7 +37,7 @@
           donor.gifts.map(gift => ({
             x: parseISO(gift.date).getTime(),
             y: Number(gift.amount),
-            fillColor: isHousehold ? "#4299e1" : getDonorColor(donor.name),
+            fillColor: isHousehold ? getDonorColor(donor.name) : "#4299e1",
             label: donor.name,
           }))
         );
@@ -61,25 +61,27 @@
 
   function getDonorColor(donorName: string): string {
     // gpt code
+    const colors = ["#ed64a6", "#48bb78", "#f6ad55", "#ed64a6"]
 
-    const colors = ["#4299e1", "#ed64a6", "#48bb78", "#f6ad55", "#ed64a6"]
+    if (donorName === state.donor.value.name) {
+        state.donorColorMap.value[donorName] = "#4299e1";
+        return "#4299e1";
+    }
+
+    if (state.donorColorMap.value[donorName]) {
+        return state.donorColorMap.value[donorName];
+    }
+
     let hash = 0;
     for (let i = 0; i < donorName.length; i++) {
         hash = donorName.charCodeAt(i) + ((hash << 5) - hash);
     }
+
     // Convert hash into a positive index value and use it to get a color
-    let index = Math.abs(hash) % colors.length;
-    let color = colors[index];
+    const index = Math.abs(hash) % colors.length;
+    const color = colors[index];
 
-    // Ensure the color is unique
-    while (state.colorsTaken.value.includes(color)) {
-        // Get a different color
-        index = (index + 1) % colors.length;
-        color = colors[index];
-    }
-
-    // Add the color to the list of taken colors
-    state.colorsTaken.value.push(color);
+    state.donorColorMap.value[donorName] = color;
 
     return color;
   }
@@ -276,11 +278,19 @@
                 v-if="member.portfolio_plan_id"
                 :href="urls.portfolios.donor(member.portfolio_plan_id, member.id)"
               >
-                <CButton size="xs" variant="outline" color-scheme="gray">View</CButton>
+                <CButton size="xs" variant="outline" color-scheme="gray" pt="1px">View</CButton>
               </CLink>
 
-              <CLink v-else :href="member.crm_url">              >
-                <CButton size="xs" variant="outline" color-scheme="gray">CRM</CButton>
+              <CLink :href="member.crm_url">
+                <CButton
+                  size="xs"
+                  variant="outline"
+                  color-scheme="gray"
+                  right-icon="external-link"
+                  pt="1px"
+                >
+                  CRM
+                </CButton>
               </CLink>
             </CFlex>
           </CTd>
