@@ -39,7 +39,8 @@
             label: donor.name,
           }))
         );
-        giftSeries = giftSeries.sort((a, b) => a.x - b.x)
+        giftSeries = giftSeries.sort((a, b) => a.x - b.x);
+        giftSeries = giftSeries.slice(-16);
       }
       state.giftSeries.value = giftSeries;
 
