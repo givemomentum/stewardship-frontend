@@ -29,12 +29,13 @@
       state.donor.value = res.data;
 
       let giftSeries: ChartDataItem[] = [];
+      const isHousehold = res.data.household.donors.length > 1;
       for (const donor of res.data.household.donors) {
         giftSeries = giftSeries.concat(
           donor.gifts.map(gift => ({
             x: parseISO(gift.date).getTime(),
             y: Number(gift.amount),
-            fillColor: getDonorColor(donor.name, ["#4299e1", "#ed64a6", "#48bb78", "#f6ad55", "#ed64a6"]),
+            fillColor: isHousehold ? "#4299e1" : getDonorColor(donor.name, ["#4299e1", "#ed64a6", "#48bb78", "#f6ad55", "#ed64a6"]),
             label: donor.name,
           }))
         );
