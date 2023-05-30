@@ -281,7 +281,7 @@
                 <CButton size="xs" variant="outline" color-scheme="gray" pt="1px">View</CButton>
               </CLink>
 
-              <CLink :href="member.crm_url">
+              <CLink v-else :href="member.crm_url">
                 <CButton
                   size="xs"
                   variant="outline"
