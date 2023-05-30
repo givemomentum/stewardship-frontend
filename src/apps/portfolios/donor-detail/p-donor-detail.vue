@@ -23,6 +23,7 @@
     giftSeries: ref<ChartDataItem[] | null>(null),
     giftSeriesAll: ref<ChartDataItem[] | null>(null),
     householdMembers: ref<CrmDonor[] | null>(null),
+    colorsTaken: ref<string[]>([]),
   };
 
   onMounted(async () => {
@@ -36,7 +37,7 @@
           donor.gifts.map(gift => ({
             x: parseISO(gift.date).getTime(),
             y: Number(gift.amount),
-            fillColor: isHousehold ? "#4299e1" : getDonorColor(donor.name, ["#4299e1", "#ed64a6", "#48bb78", "#f6ad55", "#ed64a6"]),
+            fillColor: isHousehold ? "#4299e1" : getDonorColor(donor.name),
             label: donor.name,
           }))
         );
@@ -58,14 +59,29 @@
     });
   });
 
-  function getDonorColor(donorName: string, colors: string[]): string {
-      let hash = 0;
-      for (let i = 0; i < donorName.length; i++) {
-          hash = donorName.charCodeAt(i) + ((hash << 5) - hash);
-      }
-      // Convert hash into a positive index value and use it to get a color
-      const index = Math.abs(hash) % colors.length;
-      return colors[index];
+  function getDonorColor(donorName: string): string {
+    // gpt code
+
+    const colors = ["#4299e1", "#ed64a6", "#48bb78", "#f6ad55", "#ed64a6"]
+    let hash = 0;
+    for (let i = 0; i < donorName.length; i++) {
+        hash = donorName.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    // Convert hash into a positive index value and use it to get a color
+    let index = Math.abs(hash) % colors.length;
+    let color = colors[index];
+
+    // Ensure the color is unique
+    while (state.colorsTaken.value.includes(color)) {
+        // Get a different color
+        index = (index + 1) % colors.length;
+        color = colors[index];
+    }
+
+    // Add the color to the list of taken colors
+    state.colorsTaken.value.push(color);
+
+    return color;
   }
 
   async function getNextRec() {
