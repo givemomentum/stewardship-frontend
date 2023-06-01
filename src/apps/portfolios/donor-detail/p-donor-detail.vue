@@ -1,10 +1,10 @@
 <script lang="ts" setup>
   import { parseISO } from "date-fns";
   import { marked } from "marked";
-  import { ChartDataItem, ChartSeries } from "~/apps/shared/interfaces";
+  import { ChartDataItem } from "~/apps/shared/interfaces";
   import { urls } from "~/urls";
-  import { format, giftsToSeries } from "~/utils";
-  import { CrmAction, CrmGift, CrmDonor } from "~/apps/letters/interfaces";
+  import { format } from "~/utils";
+  import { CrmAction, CrmDonor } from "~/apps/letters/interfaces";
 
   const props = defineProps<{
     donorId: string | number;
@@ -27,7 +27,7 @@
   };
 
   onMounted(async () => {
-    hooks.api.get(`/crms/donors/${props.donorId}/?expand=household`).then((res) => {
+    hooks.api.get(`/crms/donors/${props.donorId}/?expand=household`).then(res => {
       state.donor.value = res.data;
 
       let giftSeries: ChartDataItem[] = [];
@@ -39,7 +39,7 @@
             y: Number(gift.amount),
             fillColor: isHousehold ? getDonorColor(donor.name) : "#4299e1",
             label: donor.name,
-          }))
+          })),
         );
         giftSeries = giftSeries.sort((a, b) => a.x - b.x);
       }
@@ -51,30 +51,30 @@
           .filter(donor => donor.pk != res.data.pk);
       }
     });
-    hooks.api.get(`/portfolios/${props.donorId}/next-rec`).then((res) => {
+    hooks.api.get(`/portfolios/${props.donorId}/next-rec`).then(res => {
       state.nextRec.value = res.data;
     });
-    hooks.api.get(`/crms/actions/?donor=${props.donorId}`).then((res) => {
+    hooks.api.get(`/crms/actions/?donor=${props.donorId}`).then(res => {
       state.actions.value = res.data;
     });
   });
 
   function getDonorColor(donorName: string): string {
     // gpt code
-    const colors = ["#ed64a6", "#48bb78", "#f6ad55", "#ed64a6"]
+    const colors = ["#ed64a6", "#48bb78", "#f6ad55", "#ed64a6"];
 
     if (donorName === state.donor.value.name) {
-        state.donorColorMap.value[donorName] = "#4299e1";
-        return "#4299e1";
+      state.donorColorMap.value[donorName] = "#4299e1";
+      return "#4299e1";
     }
 
     if (state.donorColorMap.value[donorName]) {
-        return state.donorColorMap.value[donorName];
+      return state.donorColorMap.value[donorName];
     }
 
     let hash = 0;
     for (let i = 0; i < donorName.length; i++) {
-        hash = donorName.charCodeAt(i) + ((hash << 5) - hash);
+      hash = donorName.charCodeAt(i) + ((hash << 5) - hash);
     }
 
     // Convert hash into a positive index value and use it to get a color
@@ -87,7 +87,7 @@
   }
 
   async function getNextRec() {
-    const res = await hooks.api.get(`/portfolios/${props.donorId}/next-rec`)
+    const res = await hooks.api.get(`/portfolios/${props.donorId}/next-rec`);
     state.nextRec.value = res.data;
   }
 </script>
