@@ -32,7 +32,11 @@
     });
     hooks.notify.send(`Recommendation for ${state.rec.value.donor.name} skipped`);
     state.isSubmitting.value = false;
-    navigateTo(urls.portfolios.portfolios);
+
+    // Redirect to donor detail view after skip action.
+    const portfolioId = state.rec.value.plan.id;
+    const donorId = state.rec.value.donor.pk;
+    navigateTo(urls.portfolios.donor(portfolioId, donorId));
   }
 </script>
 
