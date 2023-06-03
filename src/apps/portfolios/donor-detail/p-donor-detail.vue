@@ -1,7 +1,5 @@
 <script lang="ts" setup>
-  import { parseISO } from "date-fns";
   import { marked } from "marked";
-  import { ChartDataItem } from "~/apps/shared/interfaces";
   import { urls } from "~/urls";
   import { format } from "~/utils";
   import { CrmAction, CrmDonor } from "~/apps/letters/interfaces";
@@ -20,35 +18,18 @@
     nextRec: ref<{ scheduled_for: string; id?: Number } | null>(null),
     donor: ref<CrmDonor | null>(null),
     actions: ref<CrmAction[]>([]),
-    giftSeries: ref<ChartDataItem[] | null>(null),
-    giftSeriesAll: ref<ChartDataItem[] | null>(null),
     householdMembers: ref<CrmDonor[] | null>(null),
-    donorColorMap: ref<{ [key: string]: string }>({}),
   };
 
   onMounted(async () => {
     hooks.api.get(`/crms/donors/${props.donorId}/?expand=household`).then(res => {
       state.donor.value = res.data;
 
-      let giftSeries: ChartDataItem[] = [];
       const isHousehold = res.data.household.donors.length > 1;
-      for (const donor of res.data.household.donors) {
-        giftSeries = giftSeries.concat(
-          donor.gifts.map(gift => ({
-            x: parseISO(gift.date).getTime(),
-            y: Number(gift.amount),
-            fillColor: isHousehold ? getDonorColor(donor.name) : "#4299e1",
-            label: donor.name,
-          })),
+      if (isHousehold > 1) {
+        state.householdMembers.value = res.data.household.donors.filter(
+          donor => donor.pk != res.data.pk
         );
-        giftSeries = giftSeries.sort((a, b) => a.x - b.x);
-      }
-      state.giftSeries.value = giftSeries.slice(-25);
-      state.giftSeriesAll.value = giftSeries;
-
-      if (res.data.household.donors.length > 1) {
-        state.householdMembers.value = res.data.household.donors
-          .filter(donor => donor.pk != res.data.pk);
       }
     });
     hooks.api.get(`/portfolios/${props.donorId}/next-rec`).then(res => {
@@ -58,33 +39,6 @@
       state.actions.value = res.data;
     });
   });
-
-  function getDonorColor(donorName: string): string {
-    // gpt code
-    const colors = ["#ed64a6", "#48bb78", "#f6ad55", "#ed64a6"];
-
-    if (donorName === state.donor.value.name) {
-      state.donorColorMap.value[donorName] = "#4299e1";
-      return "#4299e1";
-    }
-
-    if (state.donorColorMap.value[donorName]) {
-      return state.donorColorMap.value[donorName];
-    }
-
-    let hash = 0;
-    for (let i = 0; i < donorName.length; i++) {
-      hash = donorName.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    // Convert hash into a positive index value and use it to get a color
-    const index = Math.abs(hash) % colors.length;
-    const color = colors[index];
-
-    state.donorColorMap.value[donorName] = color;
-
-    return color;
-  }
 
   async function getNextRec() {
     const res = await hooks.api.get(`/portfolios/${props.donorId}/next-rec`);
@@ -298,24 +252,7 @@
       </CTable>
     </CFlex>
 
-    <CFlex gap="3" direction="column">
-      <CHeading font-size="2xl" color="gray.500">
-        Giving History
-      </CHeading>
-
-      <CText
-        v-if="state.giftSeriesAll.value?.length > state.giftSeries.value?.length"
-        color="gray.500"
-        font-size="sm"
-      >
-        Showing last 25 gifts
-      </CText>
-
-      <AreaChart
-        v-if="state.giftSeries.value"
-        :series="[{ data: state.giftSeries.value, name: '' }]"
-      />
-    </CFlex>
+    <PDonorGifts v-if="state.donor.value" :donor="state.donor.value" />
 
     <CFlex gap="5" direction="column">
       <CHeading font-size="2xl" color="gray.500">
