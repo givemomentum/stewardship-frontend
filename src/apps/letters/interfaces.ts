@@ -106,6 +106,7 @@ export class CrmDonor {
   communication_preferences: string;
 
   expected_gift_date: string;
+  touches_before_gift: number | null;
   is_expected_gift_date_user_set: boolean;
 
   household?: {

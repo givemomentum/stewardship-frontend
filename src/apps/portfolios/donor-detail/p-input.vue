@@ -1,15 +1,13 @@
 a<script lang="ts" setup>
-  import { format } from "~/utils";
-  import { CrmAction, CrmGift, CrmDonor } from "~/apps/letters/interfaces";
-
   const props = defineProps<{
-    label: string;
+    label: string | number;
     cta?: string;
     apiPath: string;
     serializer: (date: string) => any;
-    dateInitial?: string;
+    initial?: string | number;
     successMessage: (date: string) => string;
     isAutoTag?: boolean;
+    type?: "date" | "number";
   }>();
 
   const emit = defineEmits<{
@@ -22,20 +20,24 @@ a<script lang="ts" setup>
   };
 
   const state = {
-    date: ref(props.dateInitial ?? ""),
+    date: ref(props.initial ?? ""),
     isEditMode: ref(false),
     isSaving: ref(false),
   };
 
   async function updateDate() {
     state.isSaving.value = true;
-    const res = await hooks.api.patch(
+    let value = state.date.value;
+    if (props.type === "number") {
+      value = Number(state.date.value);
+    }
+    await hooks.api.patch(
       props.apiPath,
-      props.serializer(state.date.value),
+      props.serializer(value),
     );
     state.isSaving.value = false;
     hooks.notify.send(props.successMessage(state.date.value));
-    emit("modelUpdated", state.date.value);
+    emit("modelUpdated", value);
     state.isEditMode.value = false;
   }
 </script>
@@ -50,17 +52,26 @@ a<script lang="ts" setup>
     >
       <chakra.span>{{ props.label }}</chakra.span>
 
-      <CTag v-if="props.isAutoTag">Auto</CTag>
-    </CFlex>
+      <VTooltip v-if="props.isAutoTag">
+        <div>
+          <CTag>Default</CTag>
+        </div>
 
+        <template v-slot:popper>
+          The default, unset by the user
+        </template>
+      </VTooltip>
+    </CFlex>
 
     <CInput
       v-else
-      type="date"
+      :type="props.type ?? 'date'"
+      :min="props.type === 'number' ? '1' : ''"
       size="xs"
-      w="fit-content"
+      :w="props.type === 'number' ? '40px' : 'fit-content'"
       v-model="state.date.value"
     />
+
     <CButton
       v-if="!state.isEditMode.value"
       @click="state.isEditMode.value = !state.isEditMode.value"

@@ -265,6 +265,7 @@
 
     <ChakraDrawer v-model="state.donorIdOpened.value">
       <PDonorDetail
+        :plan-id="props.portfolioId"
         :donor-id="state.donorIdOpened.value"
         :is-skip-action="props.isSkipAction"
       />

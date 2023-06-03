@@ -5,6 +5,7 @@
   import { CrmAction, CrmDonor } from "~/apps/letters/interfaces";
 
   const props = defineProps<{
+    planId: string | number;
     donorId: string | number;
     isSkipAction?: boolean;
   }>();
@@ -19,6 +20,7 @@
     donor: ref<CrmDonor | null>(null),
     actions: ref<CrmAction[]>([]),
     householdMembers: ref<CrmDonor[] | null>(null),
+    plan: ref<{ touches_before_the_gift: number } | null>(null),
   };
 
   onMounted(async () => {
@@ -32,11 +34,14 @@
         );
       }
     });
-    hooks.api.get(`/portfolios/${props.donorId}/next-rec`).then(res => {
-      state.nextRec.value = res.data;
+    hooks.api.get(`/portfolios/portfolios/${props.planId}/`).then(res => {
+      state.plan.value = res.data;
     });
     hooks.api.get(`/crms/actions/?donor=${props.donorId}`).then(res => {
       state.actions.value = res.data;
+    });
+    hooks.api.get(`/portfolios/${props.donorId}/next-rec`).then(res => {
+      state.nextRec.value = res.data;
     });
   });
 
@@ -79,8 +84,8 @@
         <CTr v-if="state.nextRec.value">
           <CTd>Next touch</CTd>
           <CTd>
-            <PDateInput
-              :date-initial="state.nextRec.value.scheduled_for"
+            <PInput
+              :initial="state.nextRec.value.scheduled_for"
               :api-path="`/portfolios/${props.donorId}/schedule-for`"
               :serializer="(date: string) => ({
                 date: date,
@@ -100,9 +105,9 @@
         <CTr>
           <CTd>Next gift</CTd>
           <CTd>
-            <PDateInput
+            <PInput
               v-if="state.donor.value"
-              :date-initial="state.donor.value.expected_gift_date"
+              :initial="state.donor.value.expected_gift_date"
               :api-path="`/crms/donors/${state.donor.value.pk}/`"
               :serializer="(date: string) => ({
                 is_expected_gift_date_user_set: true,
@@ -111,6 +116,22 @@
               :label="format.date(state.donor.value.expected_gift_date)"
               @model-updated="state.donor.value.expected_gift_date = $event"
               :success-message="(date) => `Next gift date updated`"
+            />
+          </CTd>
+        </CTr>
+
+        <CTr>
+          <CTd>Touches</CTd>
+          <CTd>
+            <PInput
+              v-if="state.donor.value && state.plan.value"
+              type="number"
+              :initial="state.donor.value.touches_before_gift || state.plan.value.touches_before_the_gift"
+              :api-path="`/crms/donors/${state.donor.value.pk}/`"
+              :serializer="value => ({ touches_before_gift: value })"
+              :label="state.donor.value.touches_before_gift || state.plan.value.touches_before_the_gift"
+              @model-updated="state.donor.value.touches_before_gift = $event"
+              :success-message="(value) => `Touches plan updated`"
             />
           </CTd>
         </CTr>
