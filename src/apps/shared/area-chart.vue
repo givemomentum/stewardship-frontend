@@ -6,6 +6,14 @@
     series: ChartSeries;
   }>();
 
+  onBeforeMount(() => {
+    // appears sometimes, the issue isn't resolved as of June 2023
+    // github.com/apexcharts/vue3-apexcharts/issues/3
+    nextTick(() => {
+      window.dispatchEvent(new Event('resize'));
+    });
+  });
+
   const chartOptions = {
     chart: {
       type: "area",
@@ -81,6 +89,6 @@
 
 <style>
 .apexcharts-tooltip-marker {
-    display: none !important;
+  display: none !important;
 }
 </style>
