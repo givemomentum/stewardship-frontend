@@ -6,7 +6,7 @@
     series: ChartSeries;
   }>();
 
-  onBeforeMount(() => {
+  onMounted(() => {
     // appears sometimes, the issue isn't resolved as of June 2023
     // github.com/apexcharts/vue3-apexcharts/issues/3
     nextTick(() => {
