@@ -27,7 +27,7 @@
     hooks.api.get(`/crms/donors/${props.donorId}/?expand=household`).then(res => {
       state.donor.value = res.data;
 
-      const isHousehold = res.data.household.donors.length > 1;
+      const isHousehold = res.data.household?.donors?.length ?? 0 > 1;
       if (isHousehold > 1) {
         state.householdMembers.value = res.data.household.donors.filter(
           donor => donor.pk != res.data.pk

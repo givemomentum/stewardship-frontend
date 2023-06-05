@@ -8,24 +8,33 @@
   }>();
 
   const state = {
-    giftSeries: ref<ChartDataItem[] | null>(null),
-    giftSeriesAll: ref<ChartDataItem[] | null>(null),
+    giftSeries: ref(null as ChartDataItem[] | null),
+    giftSeriesAll: ref(null as ChartDataItem[] | null),
     donorColorMap: ref<{ [key: string]: string }>({}),
   };
 
   onMounted(async () => {
     let giftSeries: ChartDataItem[] = [];
-    const isHousehold = props.donor.household.donors.length > 1;
-    for (const donor of props.donor.household.donors) {
-      giftSeries = giftSeries.concat(
-        donor.gifts.map(gift => ({
-          x: parseISO(gift.date).getTime(),
-          y: Number(gift.amount),
-          fillColor: isHousehold ? getDonorColor(donor.name) : "#4299e1",
-          label: donor.name,
-        })),
-      );
-      giftSeries = giftSeries.sort((a, b) => a.x - b.x);
+    const isHousehold = props.donor.household?.donors?.length > 1;
+    if (isHousehold) {
+      for (const donor of props.donor.household?.donors) {
+        giftSeries = giftSeries.concat(
+          donor.gifts.map(gift => ({
+            x: parseISO(gift.date).getTime(),
+            y: Number(gift.amount),
+            fillColor: isHousehold ? getDonorColor(donor.name) : "#4299e1",
+            label: donor.name,
+          })),
+        );
+        giftSeries = giftSeries.sort((a, b) => a.x - b.x);
+      }
+    } else if (props.donor.gifts?.length) {
+      giftSeries = props.donor.gifts.map(gift => ({
+        x: parseISO(gift.date).getTime(),
+        y: Number(gift.amount),
+        fillColor: "#4299e1",
+        label: props.donor.name,
+      }));
     }
     state.giftSeries.value = giftSeries.slice(-25);
     state.giftSeriesAll.value = giftSeries;
