@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-  import algoliasearch from "algoliasearch";
+  import algoliasearch, { SearchClient } from "algoliasearch";
+  import { PortfolioPlan } from "~/apps/portfolios/interfaces";
   import { urls } from "~/urls";
   import { format } from "~/utils";
 
@@ -10,10 +11,11 @@
   }>();
 
   const state = {
-    portfolioName: ref(""),
-    searchClient: ref(null),
-    searchIndexName: ref(""),
+    portfolio: ref(null as PortfolioPlan | null),
+    searchClient: ref(null as SearchClient | null),
     donorIdOpened: ref(null),
+    refreshKey: ref(0),
+    algoliaFilter: ref(`portfolio_plan_id:${props.portfolioId}`),
   };
 
   const hooks = {
@@ -42,14 +44,22 @@
     history.pushState({}, null, urlNew);
   });
 
+  async function refreshAlgolia() {
+  }
+
   async function initAlgolia() {
-    const res = await hooks.api.get(`/portfolios/portfolios/${props.portfolioId}/`);
-    state.searchIndexName.value = res.data.algolia_creds.index_name;
+    await loadPortfolio();
+
     state.searchClient.value = algoliasearch(
-      res.data.algolia_creds.app_id,
-      res.data.algolia_creds.api_key,
+      state.portfolio.value.algolia_creds.app_id,
+      state.portfolio.value.algolia_creds.api_key,
     );
-    state.portfolioName.value = res.data.name;
+  }
+
+  async function loadPortfolio() {
+    const res = await hooks.api.get(`/portfolios/portfolios/${props.portfolioId}/`);
+    state.portfolio.value = res.data;
+
   }
 </script>
 
@@ -62,82 +72,93 @@
       p="6"
       bg="white"
       gap="6"
+      w="fit-content"
     >
-      <CHeading size="lg">Portfolio {{state.portfolioName.value}}</CHeading>
+      <CHeading size="lg">Portfolio {{state.portfolio.value?.name}}</CHeading>
 
       <AisInstantSearch
         v-if="state.searchClient.value"
-        show-loading-indicator
+        :key="state.refreshKey.value"
         :search-client="state.searchClient.value"
-        :index-name="state.searchIndexName.value"
+        :index-name="state.portfolio.value.algolia_creds.index_name"
+        show-loading-indicator
       >
         <AisConfigure
-          :filters="`portfolio_plan_id:${props.portfolioId}`"
+          :filters="state.algoliaFilter.value"
         />
 
         <CFlex
-          justify-space="space-between"
+          justify="space-between"
           w="100%"
-          direction="row"
           gap="6"
         >
+          <CFlex gap="6">
+            <ais-search-box show-loading-indicator />
 
-          <ais-search-box show-loading-indicator />
-
-          <VDropdown :distance="6">
-            <CButton
-              right-icon="chevron-down"
-              variant="outline"
-              color-scheme="gray"
-            >
-              City
-            </CButton>
-            <template #popper>
-              <ARefinmentList
-                attribute="city"
-                searchable
-                :limit="10"
-                :showMoreLimit="10"
-              />
-            </template>
-          </VDropdown>
-
-          <VDropdown :distance="6">
-            <CButton
-              right-icon="chevron-down"
-              variant="outline"
-              color-scheme="gray"
-            >
-              Upcoming events
-            </CButton>
-            <template #popper>
-              <ARefinmentList
-                attribute="upcoming_events"
-                searchable
-                :limit="10"
-                :showMoreLimit="10"
-              />
-            </template>
-          </VDropdown>
-
-          <ais-clear-refinements v-if="false">
-            <template
-              v-slot="{
-                canRefine,
-                refine,
-              }"
-            >
+            <VDropdown :distance="6">
               <CButton
-                v-if="canRefine"
-                variant="ghost"
-                @click.prevent="refine"
-                left-icon="x"
+                right-icon="chevron-down"
+                variant="outline"
+                color-scheme="gray"
               >
-                Clear filters
+                City
               </CButton>
-              <span v-else />
-            </template>
-          </ais-clear-refinements>
+              <template #popper>
+                <ARefinmentList
+                  attribute="city"
+                  searchable
+                  :limit="10"
+                  :showMoreLimit="10"
+                />
+              </template>
+            </VDropdown>
+
+            <VDropdown :distance="6">
+              <CButton
+                right-icon="chevron-down"
+                variant="outline"
+                color-scheme="gray"
+              >
+                Upcoming events
+              </CButton>
+              <template #popper>
+                <ARefinmentList
+                  attribute="upcoming_events"
+                  searchable
+                  :limit="10"
+                  :showMoreLimit="10"
+                />
+              </template>
+            </VDropdown>
+
+            <ais-clear-refinements v-if="false">
+              <template
+                v-slot="{
+                  canRefine,
+                  refine,
+                }"
+              >
+                <CButton
+                  v-if="canRefine"
+                  variant="ghost"
+                  @click.prevent="refine"
+                  left-icon="x"
+                >
+                  Clear filters
+                </CButton>
+                <span v-else />
+              </template>
+            </ais-clear-refinements>
+
+          </CFlex>
+
+          <CFlex>
+            <PPortfolioAdd
+              v-if="state.portfolio.value"
+              :plan="state.portfolio.value"
+              @portfolio-updated="refreshAlgolia()"
+            />
+          </CFlex>
         </CFlex>
 
         <CTableContainer mt="6">

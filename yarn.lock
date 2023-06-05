@@ -14291,6 +14291,11 @@ vue-instantsearch@^4.9.0:
     instantsearch.js "4.55.0"
     mitt "^2.1.0"
 
+vue-multiselect@^3.0.0-beta.2:
+  version "3.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/vue-multiselect/-/vue-multiselect-3.0.0-beta.2.tgz#dcfc1f8bc5bff78d85d516bfd71339fce49be97a"
+  integrity sha512-TFVHtI/KdWoD3Opzbkso8OIqkZlZEqFF7f2jlYx1ttgC4Jv/48IGlU5zn6cBR4p2bFDFGCHF5SkLCaadLhnBPQ==
+
 vue-property-decorator@^8.4.2:
   version "8.5.1"
   resolved "https://registry.yarnpkg.com/vue-property-decorator/-/vue-property-decorator-8.5.1.tgz#571a91cf8d2b507f537d79bf8275af3184572fff"
@@ -14309,11 +14314,6 @@ vue-router@^4.2.1:
   integrity sha512-nW28EeifEp8Abc5AfmAShy5ZKGsGzjcnZ3L1yc2DYUo+MqbBClrRP9yda3dIekM4I50/KnEwo1wkBLf7kHH5Cw==
   dependencies:
     "@vue/devtools-api" "^6.5.0"
-
-vue-select@^4.0.0-beta.6:
-  version "4.0.0-beta.6"
-  resolved "https://registry.yarnpkg.com/vue-select/-/vue-select-4.0.0-beta.6.tgz#7c250cb7c01280b54a311cb446629801b3c8df98"
-  integrity sha512-K+zrNBSpwMPhAxYLTCl56gaMrWZGgayoWCLqe5rWwkB8aUbAUh7u6sXjIR7v4ckp2WKC7zEEUY27g6h1MRsIHw==
 
 vue-toastification@^2.0.0-rc.5:
   version "2.0.0-rc.5"

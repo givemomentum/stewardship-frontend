@@ -65,6 +65,7 @@ export class CrmGift {
 }
 
 export class CrmDonor {
+  id: PrimaryKey;
   pk: PrimaryKey;
   source_id: PrimaryKey;
   source: "blackbaud" | "donor_perfect" | "salesforce" | "every_action" | "other";
