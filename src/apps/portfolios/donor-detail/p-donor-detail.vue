@@ -30,7 +30,7 @@
       const isHousehold = res.data.household?.donors?.length ?? 0 > 1;
       if (isHousehold > 1) {
         state.householdMembers.value = res.data.household.donors.filter(
-          donor => donor.pk != res.data.pk
+          donor => donor.pk != res.data.pk,
         );
       }
     });
@@ -62,21 +62,24 @@
       <CHeading size="lg">
         {{ state.donor.value?.name }}
       </CHeading>
-      <CLink
-        :href="state.donor.value?.crm_url"
-        is-external
-      >
-        <CButton
-          right-icon="external-link"
-          variant="outline"
-          color-scheme="gray"
+      <CFlex>
+        <CLink
+          :href="state.donor.value?.crm_url"
+          is-external
         >
-          <!-- Workaround for Donor Perfect link issue: Show Donor Id, so she can copy it.-->
-          {{
-            state.donor.value?.source == "donor_perfect" ? state.donor.value?.source_id : "CRM Profile"
-          }}
-        </CButton>
-      </CLink>
+          <CButton
+            right-icon="external-link"
+            variant="outline"
+            color-scheme="gray"
+          >
+            <!-- Workaround for Donor Perfect link issue: Show Donor Id, so she can copy it.-->
+            {{
+              state.donor.value?.source == "donor_perfect" ? state.donor.value?.source_id : "CRM Profile"
+            }}
+          </CButton>
+        </CLink>
+        <PDonorChangePortfolio :donor="state.donor.value" :currentPlan="state.plan.value" />
+      </CFlex>
     </CFlex>
 
     <CFlex justify="space-between" h="fit-content">
