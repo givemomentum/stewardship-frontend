@@ -25,7 +25,7 @@
   };
 
   onMounted(async () => {
-    hooks.api.get(`/crms/donors/${props.donorId}/?expand=household,donor_insights`).then(res => {
+    hooks.api.get(`/crms/donors/${props.donorId}/?expand=household,donor_intel`).then(res => {
       state.donor.value = res.data;
 
       const isHousehold = res.data.household?.donors?.length ?? 0 > 1;
@@ -53,7 +53,7 @@
 
   async function removeFromPortfolio() {
     state.isActionLoading.value = true;
-    await hooks.api.del(`/portfolios/${props.planId}/donors/${props.donorId}/`)
+    await hooks.api.delete(`/portfolios/${props.planId}/donors/${props.donorId}/`);
     hooks.notify.send("Donor removed from portfolio");
     state.isActionLoading.value = false;
   }
@@ -286,6 +286,20 @@
     </CFlex>
 
     <PDonorGifts v-if="state.donor.value" :donor="state.donor.value" />
+
+    <CFlex v-if="state.donor.value?.donor_insights" gap="5" direction="column">
+      <CFlex>
+        <chakra.img
+          src="/donor-search-logo.svg"
+          color="white"
+          max-w="230px"
+          filter="grayscale(1)"
+          :_hover="{ filter: 'grayscale(0)'}"
+          transition="filter 0.2s"
+        />
+      </CFlex>
+      <PDonorIntel :donor="state.donor.value" />
+    </CFlex>
 
     <CFlex gap="5" direction="column">
       <CHeading font-size="2xl" color="gray.500">

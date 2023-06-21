@@ -79,7 +79,7 @@
       color="gray.500"
       font-size="sm"
     >
-      Showing last 25 gifts
+      Showing the last 25 gifts
     </CText>
 
     <AreaChart
