@@ -87,45 +87,6 @@
             }}
           </CButton>
         </CLink>
-
-        <VDropdown
-          :showTriggers="['click']"
-        >
-          <div>
-            <CButton
-              variant="outline"
-              color-scheme="gray"
-            >
-              ...
-            </CButton>
-          </div>
-
-          <template #popper="popperProps">
-            <CFlex p="3" direction="column" gap="3" bg="gray.50">
-              <CLink :href="urls.portfolios.skipRec()">
-                <CButton
-                  variant="outline"
-                  color-scheme="gray"
-                  bg="white"
-                  :is-loading="state.isActionLoading.value"
-                >
-                  Log a call
-                </CButton>
-              </CLink>
-
-              <CButton
-                @click="removeFromPortfolio()"
-                variant="outline"
-                color-scheme="gray"
-                bg="white"
-                :is-loading="state.isActionLoading.value"
-              >
-                Remove from portfolio
-              </CButton>
-            </CFlex>
-          </template>
-        </VDropdown>
-
       </CFlex>
 
     </CFlex>
