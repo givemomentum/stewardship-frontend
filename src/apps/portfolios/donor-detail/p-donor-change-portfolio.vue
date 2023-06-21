@@ -1,7 +1,7 @@
 <!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
 <!-- eslint-disable vue/max-len -->
 <script lang="ts" setup>
-  import { ref, onMounted } from "vue";
+  import { ref, watch } from "vue";
   import { useApi } from "~/composables/useApi";
   import { CrmDonor } from "~/apps/letters/interfaces";
   import { PortfolioPlan } from "../interfaces";
@@ -37,7 +37,7 @@
     allPortfolios: ref<PortfolioPlan[]>([]),
   };
 
-  onMounted(async () => {
+  watch(() => props.currentPlan, () => {
     hooks.api.get(`/portfolios/portfolios/`).then(res => {
       state.allPortfolios = res.data.filter(
         (plan: PortfolioPlan) => Number(plan.id) !== Number(props.currentPlan.id)
