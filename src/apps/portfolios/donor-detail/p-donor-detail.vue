@@ -16,15 +16,16 @@
   };
 
   const state = {
-    nextRec: ref<{ scheduled_for: string; id?: Number } | null>(null),
-    donor: ref<CrmDonor | null>(null),
+    nextRec: ref(null as { scheduled_for: string; id?: Number } | null),
+    donor: ref(null as CrmDonor | null),
     actions: ref<CrmAction[]>([]),
-    householdMembers: ref<CrmDonor[] | null>(null),
-    plan: ref<{ touches_before_the_gift: number } | null>(null),
+    householdMembers: ref(null as CrmDonor[] | null),
+    plan: ref(null as { touches_before_the_gift: number } | null),
+    isActionLoading: ref(false),
   };
 
   onMounted(async () => {
-    hooks.api.get(`/crms/donors/${props.donorId}/?expand=household`).then(res => {
+    hooks.api.get(`/crms/donors/${props.donorId}/?expand=household,donor_insights`).then(res => {
       state.donor.value = res.data;
 
       const isHousehold = res.data.household?.donors?.length ?? 0 > 1;
@@ -49,6 +50,13 @@
     const res = await hooks.api.get(`/portfolios/${props.donorId}/next-rec`);
     state.nextRec.value = res.data;
   }
+
+  async function removeFromPortfolio() {
+    state.isActionLoading.value = true;
+    await hooks.api.del(`/portfolios/${props.planId}/donors/${props.donorId}/`)
+    hooks.notify.send("Donor removed from portfolio");
+    state.isActionLoading.value = false;
+  }
 </script>
 
 <template>
@@ -62,21 +70,64 @@
       <CHeading size="lg">
         {{ state.donor.value?.name }}
       </CHeading>
-      <CLink
-        :href="state.donor.value?.crm_url"
-        is-external
-      >
-        <CButton
-          right-icon="external-link"
-          variant="outline"
-          color-scheme="gray"
+
+      <CFlex gap="3">
+        <CLink
+          :href="state.donor.value?.crm_url"
+          is-external
         >
-          <!-- Workaround for Donor Perfect link issue: Show Donor Id, so she can copy it.-->
-          {{
-            state.donor.value?.source == "donor_perfect" ? state.donor.value?.source_id : "CRM Profile"
-          }}
-        </CButton>
-      </CLink>
+          <CButton
+            right-icon="external-link"
+            variant="outline"
+            color-scheme="gray"
+          >
+            <!-- Workaround for Donor Perfect link issue: Show Donor Id, so she can copy it.-->
+            {{
+              state.donor.value?.source == "donor_perfect" ? state.donor.value?.source_id : "CRM Profile"
+            }}
+          </CButton>
+        </CLink>
+
+        <VDropdown
+          :showTriggers="['click']"
+        >
+          <div>
+            <CButton
+              variant="outline"
+              color-scheme="gray"
+            >
+              ...
+            </CButton>
+          </div>
+
+          <template #popper="popperProps">
+            <CFlex p="3" direction="column" gap="3" bg="gray.50">
+              <CLink :href="urls.portfolios.skipRec()">
+                <CButton
+                  variant="outline"
+                  color-scheme="gray"
+                  bg="white"
+                  :is-loading="state.isActionLoading.value"
+                >
+                  Log a call
+                </CButton>
+              </CLink>
+
+              <CButton
+                @click="removeFromPortfolio()"
+                variant="outline"
+                color-scheme="gray"
+                bg="white"
+                :is-loading="state.isActionLoading.value"
+              >
+                Remove from portfolio
+              </CButton>
+            </CFlex>
+          </template>
+        </VDropdown>
+
+      </CFlex>
+
     </CFlex>
 
     <CFlex justify="space-between" h="fit-content">
