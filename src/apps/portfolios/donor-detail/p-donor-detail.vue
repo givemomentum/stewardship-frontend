@@ -16,15 +16,16 @@
   };
 
   const state = {
-    nextRec: ref<{ scheduled_for: string; id?: Number } | null>(null),
-    donor: ref<CrmDonor | null>(null),
+    nextRec: ref(null as { scheduled_for: string; id?: Number } | null),
+    donor: ref(null as CrmDonor | null),
     actions: ref<CrmAction[]>([]),
-    householdMembers: ref<CrmDonor[] | null>(null),
-    plan: ref<{ touches_before_the_gift: number } | null>(null),
+    householdMembers: ref(null as CrmDonor[] | null),
+    plan: ref(null as { touches_before_the_gift: number } | null),
+    isActionLoading: ref(false),
   };
 
   onMounted(async () => {
-    hooks.api.get(`/crms/donors/${props.donorId}/?expand=household`).then(res => {
+    hooks.api.get(`/crms/donors/${props.donorId}/?expand=household,donor_intels`).then(res => {
       state.donor.value = res.data;
 
       const isHousehold = res.data.household?.donors?.length ?? 0 > 1;
@@ -49,6 +50,13 @@
     const res = await hooks.api.get(`/portfolios/${props.donorId}/next-rec`);
     state.nextRec.value = res.data;
   }
+
+  async function removeFromPortfolio() {
+    state.isActionLoading.value = true;
+    await hooks.api.delete(`/portfolios/${props.planId}/donors/${props.donorId}/`);
+    hooks.notify.send("Donor removed from portfolio");
+    state.isActionLoading.value = false;
+  }
 </script>
 
 <template>
@@ -62,7 +70,8 @@
       <CHeading size="lg">
         {{ state.donor.value?.name }}
       </CHeading>
-      <CFlex>
+
+      <CFlex gap="3">
         <CLink
           :href="state.donor.value?.crm_url"
           is-external
@@ -277,6 +286,20 @@
     </CFlex>
 
     <PDonorGifts v-if="state.donor.value" :donor="state.donor.value" />
+
+    <CFlex v-if="state.donor.value?.donor_intels?.length" gap="5" direction="column">
+      <CFlex>
+        <chakra.img
+          src="/donor-search-logo.svg"
+          color="white"
+          max-w="230px"
+          filter="grayscale(1)"
+          :_hover="{ filter: 'grayscale(0)' }"
+          transition="filter 0.2s"
+        />
+      </CFlex>
+      <PDonorIntel :donor="state.donor.value" />
+    </CFlex>
 
     <CFlex gap="5" direction="column">
       <CHeading font-size="2xl" color="gray.500">

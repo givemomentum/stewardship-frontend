@@ -116,6 +116,20 @@ export class CrmDonor {
   }
 
   actions?: CrmAction[];
+
+  donor_intels?: Array<{
+    source: string;
+    source_data: any;
+    gifts_total: number;
+    gifts_count: number;
+    capacity_range: string;
+    capacity_estimate: number;
+    largest_gift_min: number;
+    largest_gift_max: number;
+    largest_gift_org: string;
+    real_estate_estimate: number;
+    sec_stock_value: number;
+  }>
 }
 
 export class CrmAction {

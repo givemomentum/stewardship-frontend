@@ -21,7 +21,7 @@ export function useApi() {
     return axiosInstance.get(path, config);
   }
 
-  async function $delete(path: string, config?: any) {
+  async function del(path: string, config?: any) {
     return axiosInstance.delete(path, config);
   }
 
@@ -42,6 +42,6 @@ export function useApi() {
   }
 
   return {
-    get: get, post: post, put: put, patch: patch, url: url,
+    get: get, post: post, delete: del, put: put, patch: patch, url: url,
   };
 }

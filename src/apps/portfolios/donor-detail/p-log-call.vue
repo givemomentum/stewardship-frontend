@@ -3,7 +3,8 @@
   import { urls } from "~/urls";
 
   const props = defineProps<{
-    recId: string | number;
+    recId?: string | number;
+    donorId?: string | number;
   }>();
 
   const hooks = {
@@ -28,6 +29,7 @@
 
   async function logCall() {
     state.isSubmitting.value = true;
+
     await hooks.api.post(`/portfolios/recs/${props.recId}/log-call`, {
       description: state.description.value,
       comm_pref: state.commPref.value,
@@ -45,7 +47,7 @@
     <CFlex
       w="100%"
       p="6"
-      bg="gray.50"
+      bg="white"
     >
       <CFlex key="3" gap="3" direction="column">
         <CHeading size="md">Log call for {{state.rec.value?.donor?.name}}</CHeading>
