@@ -25,7 +25,7 @@
   };
 
   onMounted(async () => {
-    hooks.api.get(`/crms/donors/${props.donorId}/?expand=household,donor_intel`).then(res => {
+    hooks.api.get(`/crms/donors/${props.donorId}/?expand=household,donor_intels`).then(res => {
       state.donor.value = res.data;
 
       const isHousehold = res.data.household?.donors?.length ?? 0 > 1;
