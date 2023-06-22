@@ -16,8 +16,9 @@
       to_id: targetPortfolioID,
     };
     try {
-      await hooks.api.patch(`/crms/donors/change-portfolio`, args);
+      await hooks.api.post(`/crms/donors/change-portfolio`, args);
     } catch (e) {
+      // Todo: write to log
       console.log(e);
     }
     const newURL = `/portfolios/portfolio/${targetPortfolioID}/donor/${donorID}`;
