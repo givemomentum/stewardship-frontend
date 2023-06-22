@@ -287,7 +287,7 @@
 
     <PDonorGifts v-if="state.donor.value" :donor="state.donor.value" />
 
-    <CFlex v-if="state.donor.value?.donor_insights" gap="5" direction="column">
+    <CFlex v-if="state.donor.value?.donor_intels?.length" gap="5" direction="column">
       <CFlex>
         <chakra.img
           src="/donor-search-logo.svg"

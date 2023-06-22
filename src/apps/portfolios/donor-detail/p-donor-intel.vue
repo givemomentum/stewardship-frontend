@@ -14,53 +14,53 @@
     w="fit-content"
     h="fit-content"
   >
-    <CTr v-if="props.donor.donor_insights.capacity_range">
+    <CTr v-if="props.donor.donor_intels[0].capacity_range">
       <CTd>
         Estimated capacity
       </CTd>
 
       <CTd>
-        {{ props.donor.donor_insights.capacity_range }}
+        {{ props.donor.donor_intels[0].capacity_range }}
       </CTd>
     </CTr>
 
-    <CTr v-if="props.donor.donor_insights.gifts_total">
+    <CTr v-if="props.donor.donor_intels[0].gifts_total">
       <CTd>
         Historical gifts
       </CTd>
 
       <CTd>
-        {{ format.money(props.donor.donor_insights.gifts_total) }}, over {{ props.donor.donor_insights.gifts_count }} gifts
+        {{ format.money(props.donor.donor_intels[0].gifts_total) }}, over {{ props.donor.donor_intels[0].gifts_count }} gifts
       </CTd>
     </CTr>
 
-    <CTr v-if="props.donor.donor_insights.largest_gift_org">
+    <CTr v-if="props.donor.donor_intels[0].largest_gift_org">
       <CTd>
         Largest gift
       </CTd>
 
       <CTd>
-        {{ format.money(props.donor.donor_insights.largest_gift_max) }} to {{ props.donor.donor_insights.largest_gift_org }}
+        {{ format.money(props.donor.donor_intels[0].largest_gift_max) }} to {{ props.donor.donor_intels[0].largest_gift_org }}
       </CTd>
     </CTr>
 
-    <CTr v-if="props.donor.donor_insights.real_estate_estimate">
+    <CTr v-if="props.donor.donor_intels[0].real_estate_estimate">
       <CTd>
         Real estate holdings
       </CTd>
 
       <CTd>
-        {{ format.money(props.donor.donor_insights.real_estate_estimate) }} across properties
+        {{ format.money(props.donor.donor_intels[0].real_estate_estimate) }} across properties
       </CTd>
     </CTr>
 
-    <CTr v-if="props.donor.donor_insights.sec_stock_value">
+    <CTr v-if="props.donor.donor_intels[0].sec_stock_value">
       <CTd>
         SEC holdings
       </CTd>
 
       <CTd>
-        {{ format.money(props.donor.donor_insights.sec_stock_value) }}
+        {{ format.money(props.donor.donor_intels[0].sec_stock_value) }}
       </CTd>
     </CTr>
   </CTable>

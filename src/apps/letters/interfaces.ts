@@ -117,7 +117,7 @@ export class CrmDonor {
 
   actions?: CrmAction[];
 
-  donor_insights?: {
+  donor_intels?: Array<{
     source: string;
     source_data: any;
     gifts_total: number;
@@ -129,7 +129,7 @@ export class CrmDonor {
     largest_gift_org: string;
     real_estate_estimate: number;
     sec_stock_value: number;
-  }
+  }>
 }
 
 export class CrmAction {
