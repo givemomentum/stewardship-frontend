@@ -1,4 +1,4 @@
-a<script lang="ts" setup>
+<script lang="ts" setup>
   const props = defineProps<{
     label: string | number;
     cta?: string;
