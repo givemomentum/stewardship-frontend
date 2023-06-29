@@ -5,10 +5,13 @@ export default defineNuxtConfig({
   modules: [
     "@chakra-ui/nuxt-next",
     "@nuxt/ui",
+    "@nuxt/devtools",
+    "nuxt-icon",
     "@nuxtjs/emotion", // supposed to be added by @chakra-ui/nuxt-next, but it's broken so we add it manually
     "@formkit/nuxt",
     "@pinia/nuxt",
   ],
+
   runtimeConfig: {
     public: {
       apiBase: "https://backend.app.givemomentum.com/api",
@@ -16,6 +19,7 @@ export default defineNuxtConfig({
       env: "prod",
     },
   },
+
   components: {
     dirs: [
       /*
@@ -31,16 +35,20 @@ export default defineNuxtConfig({
       "~/apps/chakra",
       "~/apps/menu",
       "~/apps/portfolios/donor-detail",
+      "~/apps/portfolios/contact-donor",
       "~/apps/portfolios",
       "~/apps/shared",
     ],
   },
+
   sourcemap: true,
   ssr: false,
   srcDir: "src/",
+
   typescript: {
     shim: false, // intellij handles it natively
   },
+
   vite: {
     build: {
       sourcemap: true,
@@ -56,5 +64,10 @@ export default defineNuxtConfig({
       }),
     ],
   },
+
   chakra: chakraConfig as any,
+
+  devtools: {
+    enabled: true,
+  },
 });
