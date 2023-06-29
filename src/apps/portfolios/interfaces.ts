@@ -2,6 +2,8 @@ import { PrimaryKey, User } from "~/apps/auth/interfaces";
 
 export interface PortfolioPlan {
   id: string;
+  org_id: number;
+  org: number;
   name: string;
   donors: PrimaryKey[];
   touches_before_the_gift: number;

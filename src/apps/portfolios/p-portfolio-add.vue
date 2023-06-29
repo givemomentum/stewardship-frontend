@@ -8,7 +8,7 @@
   const props = defineProps<{ plan: PortfolioPlan; }>();
 
   const emit = defineEmits<{
-    portfolioUpdated: () => void;
+    (event: "portfolioUpdated"): void;
   }>();
 
   const hooks = {
@@ -23,12 +23,6 @@
     donors: ref<CrmDonor[]>([]),
     donorsSelected: ref<CrmDonor[]>([]),
   };
-
-
-  onMounted(async () => {
-    const res = await hooks.api.get(`/crms/donors/?limit=30`);
-    state.donors.value = res.data.filter(donor => !props.plan.donors.includes(donor.id));
-  });
 
   async function addDonors() {
     state.isAddingDonors.value = true;
@@ -56,7 +50,7 @@
 
   async function searchDonors(search: string) {
     state.isLoadingDonors.value = true;
-    const res = await hooks.api.get(`/crms/donors/?name=${encodeURIComponent(search)}&limit=30`);
+    const res = await hooks.api.get(`/crms/donors/?name=${encodeURIComponent(search)}&limit=30&org_id=${props.plan.org_id}`);
     state.donors.value = res.data.filter(donor => !props.plan.donors.includes(donor.id));
     state.isLoadingDonors.value = false;
   }
