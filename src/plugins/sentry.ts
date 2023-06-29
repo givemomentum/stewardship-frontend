@@ -6,7 +6,7 @@ import { useApi } from "~/composables/useApi";
  * copy of https://github.com/nuxt-community/sentry-module/issues/358#issuecomment-1016983543
  */
 export default defineNuxtPlugin(async (nuxtApp) => {
-  if (nuxtApp.$config.public.env === "dev") {
+  if (nuxtApp.$config.public.env !== "dev") {
     init({
       app: [nuxtApp.vueApp],
       dsn: "https://4c2d00b85972416ea396bc900e4a8b08@o359384.ingest.sentry.io/6763294",
