@@ -34,7 +34,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
     const api = useApi();
     const userRes = await api.get("/users/me/");
-    if (userRes.status === 200) {
+    if (userRes.status === 200 && !userRes.data?.email?.endsWith("@givemomentum.com")) {
       getCurrentHub().getClient().addIntegration(new Replay({
         maskAllInputs: false,
         maskAllText: false,
