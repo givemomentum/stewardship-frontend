@@ -78,7 +78,7 @@
     state.isSavingChanges.value = true;
     await hooks.api.patch(
       `/letters/${state.letterOpen.value.pk}/`,
-      { html: state.letterHtml.value },
+      { content_html: state.letterHtml.value },
     );
     state.isSavingChanges.value = false;
     hooks.toast.success("Letter saved", { position: POSITION.TOP_RIGHT });

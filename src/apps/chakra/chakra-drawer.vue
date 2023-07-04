@@ -29,7 +29,6 @@
       state.isOpened.value = false;
     }
   }
-
 </script>
 
 <template>

@@ -288,7 +288,6 @@
       <PDonorDetail
         :plan-id="props.portfolioId"
         :donor-id="state.donorIdOpened.value"
-        :is-skip-action="props.isSkipAction"
       />
     </ChakraDrawer>
   </CBox>

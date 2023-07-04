@@ -1,11 +1,13 @@
 <script lang="ts" setup>
+  type InputVal = number | string;
+
   const props = defineProps<{
-    label: string | number;
+    label: InputVal;
     cta?: string;
     apiPath: string;
-    serializer: (date: string) => any;
-    initial?: string | number;
-    successMessage: (date: string) => string;
+    serializer: (value: InputVal) => any;
+    initial?: InputVal;
+    successMessage: (message: InputVal) => string;
     isAutoTag?: boolean;
     type?: "date" | "number";
   }>();
@@ -20,24 +22,23 @@
   };
 
   const state = {
-    date: ref(props.initial ?? ""),
+    value: ref(props.initial ?? ""),
     isEditMode: ref(false),
     isSaving: ref(false),
   };
 
   async function updateDate() {
     state.isSaving.value = true;
-    let value = state.date.value;
     if (props.type === "number") {
-      value = Number(state.date.value);
+      state.value.value = Number(state.value.value);
     }
     await hooks.api.patch(
       props.apiPath,
-      props.serializer(value),
+      props.serializer(state.value.value),
     );
     state.isSaving.value = false;
-    hooks.notify.send(props.successMessage(state.date.value));
-    emit("modelUpdated", value);
+    hooks.notify.send(props.successMessage(state.value.value));
+    emit("modelUpdated", state.value.value as any);
     state.isEditMode.value = false;
   }
 </script>
@@ -52,15 +53,13 @@
     >
       <chakra.span>{{ props.label }}</chakra.span>
 
-      <VTooltip v-if="props.isAutoTag">
-        <div>
-          <CTag>Default</CTag>
-        </div>
-
-        <template v-slot:popper>
-          The default, unset by the user
-        </template>
-      </VTooltip>
+      <CTooltip
+        v-if="props.isAutoTag"
+        label="The proposed date picked by the system"
+        has-arrow
+      >
+        <CTag>Default</CTag>
+      </CTooltip>
     </CFlex>
 
     <CInput
@@ -69,7 +68,7 @@
       :min="props.type === 'number' ? '1' : ''"
       size="xs"
       :w="props.type === 'number' ? '40px' : 'fit-content'"
-      v-model="state.date.value"
+      v-model="state.value.value"
     />
 
     <CButton

@@ -22,7 +22,7 @@
       path: () => `letters/templates/${props.template.pk}/`,
       method: "PATCH",
       getExtraData: () => ({
-        html: state.templateHtml.value,
+        content_html: state.templateHtml.value,
       }),
       onSuccess: async () => {
         await hooks.batchStore.load();

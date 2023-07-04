@@ -1,5 +1,6 @@
 import { useRuntimeConfig } from "#app";
 import axios from "axios";
+import { PrimaryKey } from "~/apps/auth/interfaces";
 import { security } from "~/constants";
 
 export function useApi() {
@@ -13,7 +14,7 @@ export function useApi() {
     xsrfHeaderName: security.xsrfHeader,
     xsrfCookieName: security.xsrfCookie,
     validateStatus: function (status: number) {
-      return status < 400 || status !== 403;
+      return status < 400 || status === 403;
     },
   });
 
