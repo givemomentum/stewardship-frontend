@@ -22,7 +22,7 @@ Todo:
 
 ### Caveats
 
-- a number of chakra-ui components don't work in practice on vue-next, eg `CModal` and `CDrawer`.
+- a number of chakra-ui components don't work in practice on vue-next, eg `CDrawer` and `CMenu`.
   That's why most of components in `src/apps/chakra/` are simple replacements.
   - A number of components have been fixed since I started this project so don't use apps/chakra for them anymore, specifically
     - `CTable`
