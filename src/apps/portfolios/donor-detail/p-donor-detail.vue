@@ -1,5 +1,7 @@
 <script lang="ts" setup>
   import { marked } from "marked";
+  import PDonorCrmLink from "~/apps/portfolios/donor-detail/p-donor-crm-link.vue";
+  import { usePlanDonorLoader } from "~/apps/portfolios/usePlanDonorLoader";
   import { urls } from "~/urls";
   import { format } from "~/utils";
   import { CrmAction, CrmDonor } from "~/apps/letters/interfaces";
@@ -7,12 +9,14 @@
   const props = defineProps<{
     planId: string | number;
     donorId: string | number;
-    isSkipAction?: boolean;
+    isShowHeader?: any;
+    p?: any;
   }>();
 
   const hooks = {
     api: useApi(),
     notify: useNotify(),
+    loader: usePlanDonorLoader(props.donorId, props.planId),
   };
 
   const state = {
@@ -20,7 +24,6 @@
     donor: ref(null as CrmDonor | null),
     actions: ref<CrmAction[]>([]),
     householdMembers: ref(null as CrmDonor[] | null),
-    plan: ref(null as { touches_before_the_gift: number } | null),
     isActionLoading: ref(false),
   };
 
@@ -34,9 +37,6 @@
           donor => donor.pk != res.data.pk
         );
       }
-    });
-    hooks.api.get(`/portfolios/portfolios/${props.planId}/`).then(res => {
-      state.plan.value = res.data;
     });
     hooks.api.get(`/crms/actions/?donor=${props.donorId}`).then(res => {
       state.actions.value = res.data;
@@ -61,37 +61,27 @@
 
 <template>
   <CFlex
-    p="6"
+    :p="props.p ?? 6"
     pr="10"
     direction="column"
     gap="9"
+    w="100%"
   >
-    <CFlex align="center" justify="space-between">
+    <CFlex
+      v-if="props.isShowHeader ?? true"
+      align="center"
+      justify="space-between"
+    >
       <CHeading size="lg">
         {{ state.donor.value?.name }}
       </CHeading>
 
       <CFlex gap="3">
-        <CLink
-          :href="state.donor.value?.crm_url"
-          is-external
-        >
-          <CButton
-            right-icon="external-link"
-            variant="outline"
-            color-scheme="gray"
-          >
-            <!-- Workaround for Donor Perfect link issue: Show Donor Id, so she can copy it.-->
-            {{
-              state.donor.value?.source == "donor_perfect" ? state.donor.value?.source_id : "CRM Profile"
-            }}
-          </CButton>
-        </CLink>
+        <PDonorCrmLink :donor="state.donor.value" />
       </CFlex>
-
     </CFlex>
 
-    <CFlex justify="space-between" h="fit-content">
+    <CFlex justify="space-between" h="fit-content" align="flex-start">
       <CTable variant="unstyled" class="p-donor-detail-table" w="fit-content" h="fit-content">
         <CTr v-if="state.nextRec.value">
           <CTd>Next touch</CTd>
@@ -104,7 +94,7 @@
               })"
               :label="format.date(state.nextRec.value.scheduled_for)"
               @model-updated="() => {
-                state.nextRec.value.scheduled_for = $event;
+                state.nextRec.value.scheduled_for = $event as string;
                 getNextRec();
               }"
               :success-message="(date: string) => `We won't recommend this donor until ${date}`"
@@ -126,7 +116,7 @@
                 expected_gift_date: date,
               })"
               :label="format.date(state.donor.value.expected_gift_date)"
-              @model-updated="state.donor.value.expected_gift_date = $event"
+              @model-updated="state.donor.value.expected_gift_date = $event as string"
               :success-message="(date) => `Next gift date updated`"
             />
           </CTd>
@@ -136,12 +126,12 @@
           <CTd>Touches</CTd>
           <CTd>
             <PInput
-              v-if="state.donor.value && state.plan.value"
+              v-if="state.donor.value && hooks.loader.plan.value"
               type="number"
-              :initial="state.donor.value.touches_before_gift || state.plan.value.touches_before_the_gift"
+              :initial="state.donor.value.touches_before_gift || hooks.loader.plan.value.touches_before_the_gift"
               :api-path="`/crms/donors/${state.donor.value.pk}/`"
               :serializer="value => ({ touches_before_gift: value })"
-              :label="state.donor.value.touches_before_gift || state.plan.value.touches_before_the_gift"
+              :label="state.donor.value.touches_before_gift || hooks.loader.plan.value.touches_before_the_gift"
               @model-updated="state.donor.value.touches_before_gift = $event"
               :success-message="(value) => `Touches plan updated`"
             />
@@ -285,7 +275,7 @@
       </CTable>
     </CFlex>
 
-    <PDonorGifts v-if="state.donor.value" :donor="state.donor.value" />
+    <PDonorGifts v-if="state.donor.value?.gifts" :donor="state.donor.value" />
 
     <CFlex v-if="state.donor.value?.donor_intels?.length" gap="5" direction="column">
       <CFlex>

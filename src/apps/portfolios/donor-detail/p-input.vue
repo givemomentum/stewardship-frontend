@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   const props = defineProps<{
-    label: string | number;
+    label: number | string;
     cta?: string;
     apiPath: string;
     serializer: (date: string) => any;
@@ -52,15 +52,13 @@
     >
       <chakra.span>{{ props.label }}</chakra.span>
 
-      <VTooltip v-if="props.isAutoTag">
-        <div>
-          <CTag>Default</CTag>
-        </div>
-
-        <template v-slot:popper>
-          The default, unset by the user
-        </template>
-      </VTooltip>
+      <CTooltip
+        v-if="props.isAutoTag"
+        label="The proposed date picked by the system"
+        has-arrow
+      >
+        <CTag>Default</CTag>
+      </CTooltip>
     </CFlex>
 
     <CInput

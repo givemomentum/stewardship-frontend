@@ -125,7 +125,8 @@ export const chakraConfig = {
       },
       FormLabel: {
         baseStyle: {
-          fontWeight: "normal",
+          color: "gray.500",
+          fontSize: "sm",
         },
       },
     },

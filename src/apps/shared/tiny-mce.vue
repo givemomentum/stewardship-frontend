@@ -106,7 +106,7 @@
 
   function composeMergeTags(vars?: LetterTemplateVariable[]): Array<{ value: string; title: string; }> {
     return vars?.map(variable => ({
-      value: variable.key,
+      content_html: variable.key,
       title: variable.label ?? variable.key,
     })) ?? [];
   }

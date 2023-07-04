@@ -39,7 +39,7 @@
       { children: `window._hsq = window._hsq ?? [];` },
       // GA
       {
-        src: hooks.config.public.env === "prod" ? "https://www.googletagmanager.com/gtag/js?id=G-W1HTKWB5F1" : "",
+        src: hooks.config.public.env === "prod" ? "https://www.googletagmanager.com/gtag/js?id=G-LXS4PT6K2F" : "",
         async: true,
       },
       {
@@ -47,8 +47,8 @@
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-        
-          gtag('config', 'G-W1HTKWB5F1');
+
+          gtag('config', 'G-LXS4PT6K2F');
         ` : "",
       },
 

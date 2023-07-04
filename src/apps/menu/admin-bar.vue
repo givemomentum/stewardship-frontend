@@ -31,7 +31,7 @@
   const comp = {
     orgOptions: computed(() => state.orgs.value.map(org => ({
       label: org.name,
-      value: org.pk,
+      content_html: org.pk,
     }))),
     defaults: computed(() => ({
       org_id: hooks.userStore.org?.pk,

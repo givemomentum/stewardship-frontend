@@ -1,4 +1,4 @@
-export type PrimaryKey = number;
+export type PrimaryKey = number | string;
 
 export type UrlString = string;
 

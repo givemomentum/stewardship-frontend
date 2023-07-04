@@ -1,3 +1,5 @@
+import { PrimaryKey } from "~/apps/auth/interfaces";
+
 export namespace urls {
   export const isCurrentPage = (url: string) => window.location.pathname === url;
 
@@ -10,9 +12,9 @@ export namespace urls {
 
   export const portfolios = {
     portfolios: "/portfolios/",
-    portfolio: (id: string) => `/portfolios/portfolio/${id}`,
-    donor: (portfolioId: string, donorId: string) => `/portfolios/portfolio/${portfolioId}/donor/${donorId}`,
-    skipRec: (id: string) => `/portfolios/skip/${id}/`,
+    portfolio: (id: PrimaryKey) => `/portfolios/portfolio/${id}`,
+    donor: (portfolioId: PrimaryKey, donorId: PrimaryKey) => `/portfolios/portfolio/${portfolioId}/donor/${donorId}`,
+    skipRec: (id: PrimaryKey) => `/portfolios/skip/${id}/`,
   };
 
   export const fiscExport = {

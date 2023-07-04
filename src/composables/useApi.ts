@@ -1,5 +1,6 @@
 import { useRuntimeConfig } from "#app";
 import axios from "axios";
+import { PrimaryKey } from "~/apps/auth/interfaces";
 import { security } from "~/constants";
 
 export function useApi() {
