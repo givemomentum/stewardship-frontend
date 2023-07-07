@@ -32,18 +32,23 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       hooks: ["activate", "mount", "update"],
     });
 
+    // todo call /users/me only in one place of the code
     const api = useApi();
-    const userRes = await api.get("/users/me/");
-    if (userRes.status === 200) {
-      getCurrentHub().getClient().addIntegration(new Replay({
-        maskAllInputs: false,
-        maskAllText: false,
-        blockAllMedia: false,
-        networkDetailAllowUrls: [
-          "backend.app.givemomentum.com",
-          "localhost:8000",
-        ],
-      }));
+    try {
+      const userRes = await api.get("/users/me/");
+      if (userRes.status === 200) {
+        getCurrentHub().getClient().addIntegration(new Replay({
+          maskAllInputs: false,
+          maskAllText: false,
+          blockAllMedia: false,
+          networkDetailAllowUrls: [
+            "backend.app.givemomentum.com",
+            "localhost:8000",
+          ],
+        }));
+      }
+    } catch {
+      // ignore
     }
   }
 });

@@ -60,14 +60,12 @@
             </CButton>
           </CLink>
 
-          <CText max-w="280px" color="gray.500" font-size="sm" text-align="center">
+          <CBox max-w="280px" color="gray.500" font-size="sm" text-align="center">
             By continuing, you're agreeing with our
-            <CLink text-decoration="underline" href="/privacy-policy">
-              Privacy Policy
-            </CLink>
+            <CLink text-decoration="underline" href="/privacy-policy">Privacy Policy</CLink>
             and
             <CLink text-decoration="underline" href="/terms-of-use">Terms of Use</CLink>
-          </CText>
+          </CBox>
         </CVStack>
       </CVStack>
     </CCenter>

@@ -1,14 +1,12 @@
 <script setup lang="ts">
   import { useHead, useRuntimeConfig } from "#app";
   import { onMounted } from "vue";
-  import { ModalsContainer } from "vue-final-modal";
   import { useUserStore } from "~/apps/auth/useUserStore";
   import LogRocket from "logrocket";
   import { configureScope } from "@sentry/vue";
   import * as Sentry from "@sentry/vue";
   import { useApi } from "~/composables/useApi";
   import { useLayoutControl } from "~/composables/useLayoutControl";
-  import { urls } from "~/urls";
 
   const hooks = {
     api: useApi(),
@@ -16,10 +14,6 @@
     userStore: useUserStore(),
     layout: useLayoutControl(),
     route: useRoute(),
-  };
-
-  const state = {
-    isAuthRequiredUrl: ref(true),
   };
 
   useHead({
@@ -62,18 +56,7 @@
   });
 
   onMounted(async () => {
-    state.isAuthRequiredUrl.value = (
-      !hooks.route.fullPath.includes("/login")
-      && !hooks.route.fullPath.includes("/privacy-policy")
-      && !hooks.route.fullPath.includes("/terms-of-use")
-    );
-
-    if (state.isAuthRequiredUrl.value) {
-      await hooks.userStore.loadUser();
-      if (!hooks.userStore.isLoggedIn && state.isAuthRequiredUrl.value) {
-        return navigateTo("/login");
-      }
-    } else {
+    if (!hooks.userStore.isLoggedIn) {
       return;
     }
 
@@ -136,11 +119,9 @@
       pb="0"
       :bg="hooks.layout.bg.value"
     >
-      <NuxtPage v-if="hooks.userStore.isLoggedIn || !state.isAuthRequiredUrl.value" />
+      <NuxtPage />
     </CFlex>
   </CFlex>
-
-  <ModalsContainer />
 
 </template>
 
