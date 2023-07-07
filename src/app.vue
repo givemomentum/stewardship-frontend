@@ -8,12 +8,18 @@
   import * as Sentry from "@sentry/vue";
   import { useApi } from "~/composables/useApi";
   import { useLayoutControl } from "~/composables/useLayoutControl";
+  import { urls } from "~/urls";
 
   const hooks = {
     api: useApi(),
     config: useRuntimeConfig(),
     userStore: useUserStore(),
     layout: useLayoutControl(),
+    route: useRoute(),
+  };
+
+  const state = {
+    isAuthRequiredUrl: ref(true),
   };
 
   useHead({
@@ -56,11 +62,18 @@
   });
 
   onMounted(async () => {
-    await hooks.userStore.loadUser();
+    state.isAuthRequiredUrl.value = (
+      !hooks.route.fullPath.includes("/login")
+      && !hooks.route.fullPath.includes("/privacy-policy")
+      && !hooks.route.fullPath.includes("/terms-of-use")
+    );
 
-    if (!hooks.userStore.isLoggedIn) {
-      const res = await hooks.api.get("/nylas/auth-url/");
-      window.location.href = res.data;
+    if (state.isAuthRequiredUrl.value) {
+      await hooks.userStore.loadUser();
+      if (!hooks.userStore.isLoggedIn && state.isAuthRequiredUrl.value) {
+        return navigateTo("/login");
+      }
+    } else {
       return;
     }
 
@@ -123,18 +136,8 @@
       pb="0"
       :bg="hooks.layout.bg.value"
     >
-      <NuxtPage v-if="hooks.userStore.isLoggedIn" />
+      <NuxtPage v-if="hooks.userStore.isLoggedIn || !state.isAuthRequiredUrl.value" />
     </CFlex>
-
-    <!--  for preloading & caching external mce js files, otherwise it takes a while  -->
-    <CBox
-      v-if="hooks.userStore.user?.membership?.org?.is_enable_app_emails"
-      visibility="hidden"
-      style="display: none"
-    >
-      <TinyMce padding="1rem" />
-    </CBox>
-
   </CFlex>
 
   <ModalsContainer />

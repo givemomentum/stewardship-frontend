@@ -70,4 +70,10 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true,
   },
+
+  // didn't work
+  // watch: [
+  //   "~/chakra-config.ts",
+  //   "~/**.ts",
+  // ],
 });

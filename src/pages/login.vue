@@ -1,15 +1,75 @@
 <script setup lang="ts">
-  import { useForm } from "~/composables/useForm";
-
   const hooks = {
-    form: useForm({
-      path: "/account/login",
-    }),
+    api: useApi(),
+    layout: useLayoutControl(),
   };
+
+  const state = {
+    url: ref(""),
+  };
+
+  onMounted(async () => {
+    hooks.layout.activateLeanMode();
+    state.url.value = await hooks.api.getJson("/nylas/auth-url/");
+  });
 </script>
 
 <template>
-  <CFlex direction="column">
-    hello world
-  </CFlex>
+  <CVStack w="100%" min-h="100vh" bg="gray.50">
+    <PNavbar />
+
+    <CCenter h="100%" pb="40">
+      <CVStack direction="column" justify="flex-start" key="2" w="fit-content" gap="8">
+        <CVStack align="center" gap="4" pt="8">
+          <chakra.img display="flex" src="/momentum-logo-only.svg" max-w="50px" />
+          <CHeading font-size="2xl">Sign in to you account</CHeading>
+        </CVStack>
+        <CVStack
+          gap="4"
+          bg="white"
+          p="12"
+          box-shadow="md"
+          border-radius="md"
+        >
+          <CLink :href="state.url.value">
+            <CButton
+              variant="outline"
+              size="lg"
+              color-scheme="gray"
+              color="gray.600"
+              p="10px"
+              min-w="300px"
+              h="fit-content"
+            >
+              <CIcon name="fc-google" size="8" mr="2" ml="2px" />
+              Sign in with Google
+            </CButton>
+          </CLink>
+          <CLink :href="state.url.value">
+            <CButton
+              variant="outline"
+              size="lg"
+              color-scheme="gray"
+              color="gray.600"
+              p="10px"
+              min-w="300px"
+              h="fit-content"
+            >
+              <CIcon name="vi-file-type-outlook" size="8" mr="2" ml="2px" />
+              Sign in with Outlook
+            </CButton>
+          </CLink>
+
+          <CText max-w="280px" color="gray.500" font-size="sm" text-align="center">
+            By continuing, you're agreeing with our
+            <CLink text-decoration="underline" href="/privacy-policy">
+              Privacy Policy
+            </CLink>
+            and
+            <CLink text-decoration="underline" href="/terms-of-use">Terms of Use</CLink>
+          </CText>
+        </CVStack>
+      </CVStack>
+    </CCenter>
+  </CVStack>
 </template>
