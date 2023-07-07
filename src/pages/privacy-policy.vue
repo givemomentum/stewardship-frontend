@@ -163,6 +163,21 @@
         information as Personal Data in accordance with this Policy.
       </p>
 
+      <h3>2.6 Google OAuth Data Access</h3>
+      <p>
+        Our service uses Google OAuth to access your Gmail account with
+        `gmail.readonly` and `gmail.compose` scopes. This allows us to read and
+        send new emails from your address. We only use this access to track
+        emails related to the donors in your portfolio and log these emails to
+        your CRM automatically. We do not track or store any other emails that
+        are not related to this function.
+      </p>
+      <p>
+        Your email data accessed through Google OAuth is used exclusively for
+        the purpose of improving your user experience and the functionality of
+        our service.
+      </p>
+
       <h2>3. How We Use the Information We Collect</h2>
 
       <p>
