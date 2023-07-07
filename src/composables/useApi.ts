@@ -1,5 +1,6 @@
 import { useRuntimeConfig } from "#app";
 import axios from "axios";
+import { PrimaryKey } from "~/apps/auth/interfaces";
 import { security } from "~/constants";
 
 export function useApi() {
@@ -19,6 +20,10 @@ export function useApi() {
 
   async function get(path: string, config?: any) {
     return axiosInstance.get(path, config);
+  }
+
+  async function getJson<Json = any>(path: string, config?: any): Promise<Json> {
+    return axiosInstance.get(path, config).then(res => res.data);
   }
 
   async function del(path: string, config?: any) {
@@ -42,6 +47,6 @@ export function useApi() {
   }
 
   return {
-    get: get, post: post, delete: del, put: put, patch: patch, url: url,
+    get: get, post: post, delete: del, put: put, patch: patch, url: url, getJson: getJson,
   };
 }
