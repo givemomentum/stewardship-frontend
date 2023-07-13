@@ -81,7 +81,7 @@
       const recNext: TouchRec = res.data;
       navigateTo(urls.portfolios.contactDonor(
         hooks.loader.plan.value.id,
-        props.donor.id,
+        recNext.donor.id,
         recNext.id,
       ));
     } else {
