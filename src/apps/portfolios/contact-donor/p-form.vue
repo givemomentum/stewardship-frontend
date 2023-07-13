@@ -73,7 +73,7 @@
               </CAlertDescription>
             </CAlert>
 
-            <CFlex v-if="!state.rec.value?.scheduled_for_reason" w="100%" direction="column" mb="4">
+            <CFlex v-if="state.rec.value?.scheduled_for_reason" w="100%" direction="column" mb="4">
               <CFormLabel
                 font-size="sm"
                 color="gray.500"
