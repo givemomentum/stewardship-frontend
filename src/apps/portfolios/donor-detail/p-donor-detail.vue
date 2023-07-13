@@ -81,11 +81,13 @@
 
       <CFlex gap="3">
         <VMenu>
-          <CButton variant="outline" color-scheme="gray">
-            <CIcon name="bi-three-dots" fill="gray.600" size="7" />
-          </CButton>
+          <div>
+            <CButton variant="outline" color-scheme="gray">
+              <CIcon name="bi-three-dots" fill="gray.600" size="7" />
+            </CButton>
+          </div>
 
-          <template #popper>
+          <template #popper="popperProps">
             <CFlex direction="column" gap="3" p="3">
               <CLink
                 v-if="state.recPending.value"
