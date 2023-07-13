@@ -80,43 +80,28 @@
       </CHeading>
 
       <CFlex gap="3">
-        <VMenu>
-          <div>
-            <CButton variant="outline" color-scheme="gray">
-              <CIcon name="bi-three-dots" fill="gray.600" size="7" />
-            </CButton>
-          </div>
+        <CLink
+          v-if="state.recPending.value"
+          :as="NuxtLink"
+          :href="urls.portfolios.contactDonor(props.planId, props.donorId, state.recPending.value?.id)"
+        >
+          <CButton>
+            Handle rec
+          </CButton>
+        </CLink>
 
-          <template #popper="popperProps">
-            <CFlex direction="column" gap="3" p="3">
-              <CLink
-                v-if="state.recPending.value"
-                :as="NuxtLink"
-                :href="urls.portfolios.contactDonor(props.planId, props.donorId, state.recPending.value?.id)"
-                w="100%"
-              >
-                <CButton w="100%">
-                  Handle rec
-                </CButton>
-              </CLink>
-
-              <CLink
-                :as="NuxtLink as any"
-                :href="urls.portfolios.contactDonor(props.planId, props.donorId)"
-                w="100%"
-              >
-                <CButton
-                  w="100%"
-                  :variant="state.recPending.value ? 'outline' : 'solid'"
-                  :color-scheme="state.recPending.value ? 'gray' : 'blue'"
-                >
-                  Contact
-                </CButton>
-              </CLink>
-              <PDonorCrmLink :donor="state.donor.value" />
-            </CFlex>
-          </template>
-        </VMenu>
+        <CLink
+          :as="NuxtLink as any"
+          :href="urls.portfolios.contactDonor(props.planId, props.donorId)"
+        >
+          <CButton
+            :variant="state.recPending.value ? 'outline' : 'solid'"
+            :color-scheme="state.recPending.value ? 'gray' : 'blue'"
+          >
+            Contact
+          </CButton>
+        </CLink>
+        <PDonorCrmLink :donor="state.donor.value" />
       </CFlex>
     </CFlex>
 
