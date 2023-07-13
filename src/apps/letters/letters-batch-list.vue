@@ -163,7 +163,7 @@
 
             <chakra.td>
               <CButton
-                @click="state.templateOpen.html = template"
+                @click="state.templateOpen.value = template"
                 size="sm"
                 variant="link"
                 gap="px"
