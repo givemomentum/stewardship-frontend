@@ -207,7 +207,7 @@
               v-for="(scan, scanIndex) in state.scans.value"
               ref="tableRefs"
               :key="scan.pk"
-              @click="state.scanOpen.html = scan; state.scanOpenIndex.html = scanIndex;"
+              @click="state.scanOpen.value = scan; state.scanOpenIndex.html = scanIndex;"
               :data-is-selected="scan.pk === state.scanOpen.value?.pk"
               :data-is-viewed="scan.is_viewed"
               class="table-row"
