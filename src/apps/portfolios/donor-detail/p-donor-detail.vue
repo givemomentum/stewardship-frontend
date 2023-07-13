@@ -1,6 +1,7 @@
 <script lang="ts" setup>
+  import { NuxtLink } from "#components";
   import { marked } from "marked";
-  import PDonorCrmLink from "~/apps/portfolios/donor-detail/p-donor-crm-link.vue";
+  import { TouchRec } from "~/apps/portfolios/interfaces";
   import { usePlanDonorLoader } from "~/apps/portfolios/usePlanDonorLoader";
   import { urls } from "~/urls";
   import { format } from "~/utils";
@@ -9,7 +10,7 @@
   const props = defineProps<{
     planId: string | number;
     donorId: string | number;
-    isShowHeader?: any;
+    isEnableDonorContactMode?: any;
     p?: any;
   }>();
 
@@ -20,8 +21,9 @@
   };
 
   const state = {
-    nextRec: ref(null as { scheduled_for: string; id?: Number } | null),
     donor: ref(null as CrmDonor | null),
+    recPending: ref(null as TouchRec | null),
+    nextRecScheduled: ref(null as { scheduled_for: string; id?: Number } | null),
     actions: ref<CrmAction[]>([]),
     householdMembers: ref(null as CrmDonor[] | null),
     isActionLoading: ref(false),
@@ -41,14 +43,15 @@
     hooks.api.get(`/crms/actions/?donor=${props.donorId}`).then(res => {
       state.actions.value = res.data;
     });
-    hooks.api.get(`/portfolios/${props.donorId}/next-rec`).then(res => {
-      state.nextRec.value = res.data;
+    getNextRecScheduled();
+    hooks.api.getJson(`/portfolios/${props.planId}/donors/${props.donorId}/rec-pending`).then(data => {
+      state.recPending.value = data;
     });
   });
 
-  async function getNextRec() {
-    const res = await hooks.api.get(`/portfolios/${props.donorId}/next-rec`);
-    state.nextRec.value = res.data;
+  async function getNextRecScheduled() {
+    const res = await hooks.api.get(`/portfolios/${props.donorId}/next-rec-scheduled`);
+    state.nextRecScheduled.value = res.data;
   }
 
   async function removeFromPortfolio() {
@@ -68,7 +71,7 @@
     w="100%"
   >
     <CFlex
-      v-if="props.isShowHeader ?? true"
+      v-if="!props.isEnableDonorContactMode"
       align="center"
       justify="space-between"
     >
@@ -77,29 +80,63 @@
       </CHeading>
 
       <CFlex gap="3">
-        <PDonorCrmLink :donor="state.donor.value" />
+        <VMenu>
+          <CButton variant="outline" color-scheme="gray">
+            <CIcon name="bi-three-dots" fill="gray.600" size="7" />
+          </CButton>
+
+          <template #popper>
+            <CFlex direction="column" gap="3" p="3">
+              <CLink
+                v-if="state.recPending.value"
+                :as="NuxtLink"
+                :href="urls.portfolios.contactDonor(props.planId, props.donorId, state.recPending.value?.id)"
+                w="100%"
+              >
+                <CButton w="100%">
+                  Handle rec
+                </CButton>
+              </CLink>
+
+              <CLink
+                :as="NuxtLink as any"
+                :href="urls.portfolios.contactDonor(props.planId, props.donorId)"
+                w="100%"
+              >
+                <CButton
+                  w="100%"
+                  :variant="state.recPending.value ? 'outline' : 'solid'"
+                  :color-scheme="state.recPending.value ? 'gray' : 'blue'"
+                >
+                  Contact
+                </CButton>
+              </CLink>
+              <PDonorCrmLink :donor="state.donor.value" />
+            </CFlex>
+          </template>
+        </VMenu>
       </CFlex>
     </CFlex>
 
     <CFlex justify="space-between" h="fit-content" align="flex-start">
       <CTable variant="unstyled" class="p-donor-detail-table" w="fit-content" h="fit-content">
-        <CTr v-if="state.nextRec.value">
+        <CTr v-if="state.nextRecScheduled.value">
           <CTd>Next touch</CTd>
           <CTd>
             <PInput
-              :initial="state.nextRec.value.scheduled_for"
+              :initial="state.nextRecScheduled.value.scheduled_for"
               :api-path="`/portfolios/${props.donorId}/schedule-for`"
               :serializer="(date: string) => ({
-                date: date,
+                value: date,
               })"
-              :label="format.date(state.nextRec.value.scheduled_for)"
+              :label="format.date(state.nextRecScheduled.value.scheduled_for)"
               @model-updated="() => {
-                state.nextRec.value.scheduled_for = $event as string;
-                getNextRec();
+                state.nextRecScheduled.value.scheduled_for = $event as string;
+                getNextRecScheduled();
               }"
               :success-message="(date: string) => `We won't recommend this donor until ${date}`"
               cta="Schedule"
-              :is-auto-tag="!state.nextRec.value.id"
+              :is-auto-tag="!state.nextRecScheduled.value.id"
             />
           </CTd>
         </CTr>

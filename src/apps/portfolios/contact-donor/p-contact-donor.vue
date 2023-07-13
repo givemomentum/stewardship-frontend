@@ -22,7 +22,7 @@
 </script>
 
 <template>
-  <CBox w="100%">
+  <CFlex w="100%" direction="column">
     <PNavbar />
 
     <CFlex
@@ -48,7 +48,17 @@
               {{ hooks.loader.plan.value?.name }}
             </CBreadcrumbLink>
           </CBreadcrumbItem>
-          <CBreadcrumbItem font-weight="bold">{{ hooks.loader.donor.value?.name }}</CBreadcrumbItem>
+
+          <CBreadcrumbItem>
+            <CBreadcrumbLink
+              :as="NuxtLink"
+              :href="urls.portfolios.donor(props.planId, props.donorId)"
+            >
+              {{ hooks.loader.donor.value?.name }}
+            </CBreadcrumbLink>
+          </CBreadcrumbItem>
+
+          <CBreadcrumbItem color="gray.400">Contact</CBreadcrumbItem>
 
           <template v-slot:separator>
             <CIcon name="chevron-right" color="gray.400" h="5" w="5" />
@@ -61,9 +71,9 @@
       <CFlex gap="8" w="100%">
         <CFlex
           flex="1"
-
           direction="column"
           w="100%"
+          min-h="100vh"
           :max-w="{ base: '43%', '2xl': 900 }"
           :gap="6"
           pt="6"
@@ -77,6 +87,7 @@
           <PForm
             :plan-id="props.planId"
             :donor-id="props.donorId"
+            :rec-id="props.recId"
           />
         </CFlex>
 
@@ -85,10 +96,10 @@
             :plan-id="props.planId"
             :donor-id="props.donorId"
             p="0"
-            :is-show-header="false"
+            :is-enable-donor-contact-mode="true"
           />
         </CFlex>
       </CFlex>
     </CFlex>
-  </CBox>
+  </CFlex>
 </template>

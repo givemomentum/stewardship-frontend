@@ -27,6 +27,7 @@ export interface TouchRec {
   month: number;
   year: number;
   scheduled_for?: string;
+  scheduled_for_reason?: string;
   type: string;
   is_priority_urgent: boolean;
   is_stop_other_recs_until_reached: boolean;

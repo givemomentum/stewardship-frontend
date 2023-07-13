@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-  import RRecStatus from "~/apps/tasks/recs/r-rec-status.vue";
+  import { CrmDonor } from "~/apps/letters/interfaces";
+  import { TouchRec } from "~/apps/portfolios/interfaces";
   import { useRecNav } from "~/apps/tasks/recs/useRecNav";
   import { useNotify } from "~/composables/useNotify";
+  import { urls } from "~/urls";
 
   const props = defineProps<{
-    planId: string | number;
-    donorId: string | number;
-    recId?: string;
+    donor: CrmDonor;
+    rec?: TouchRec;
   }>();
 
   const hooks = {
@@ -16,117 +17,59 @@
   };
 
   const state = {
-    type: ref(""),
-    actionDescription: ref(),
     isSubmitting: ref(false),
+    description: ref(""),
+    commPref: ref("default"),
   };
 
-  const comp = {
-    typesOther: ["task", "other"],
-  };
-
-  watch(() => props.type, newType => {
-    state.type.value = newType;
-  });
-
-  async function logToCRM() {
-    if (!state.actionDescription.value) {
-      return;
-    }
-
+  async function logCall() {
     state.isSubmitting.value = true;
-    await hooks.api.post(`recs/${props.rec.pk}/log_action/`, {
-      action_type: state.type.value,
-      action_description: state.actionDescription.value,
+
+    await hooks.api.post(`/portfolios/recs/${props.rec.id}/log-call`, {
+      description: state.description.value,
+      comm_pref: state.commPref.value,
     });
-
-    hooks.notify.send("Action logged");
-
-    await hooks.nav.navigateToRecNext();
+    hooks.notify.send(`Call logged for ${props.rec.donor.name}`);
     state.isSubmitting.value = false;
+    // todo next rec redirect, ie the same flow as in p-form-email
+    navigateTo(urls.portfolios.portfolios);
   }
 </script>
 
 <template>
-  <CFlex
-    direction="column"
-    mt="3"
-    w="100%"
-    gap="5"
-    align="flex-end"
-  >
-    <CFlex
-      gap="4"
-      w="100%"
-      pl="2px"
+  <CFlex gap="3" direction="column" min-w="500px">
+
+    <CBox>
+      <CFormLabel font-size="sm" color="gray.500">Notes</CFormLabel>
+      <CTextarea
+        placeholder="Call notes"
+        :disabled="state.isSubmitting.value"
+        v-model="state.description.value"
+      />
+    </CBox>
+    <CCheckbox
+      @click="state.commPref.value = $event.target.checked ? 'call' : 'default'"
+      :disabled="state.isSubmitting.value"
+      :checked="state.commPref.value.valueOf() === 'call'"
     >
-      <chakra.label v-for="type in comp.typesOther" :key="type">
-        <chakra.input
-          type="radio"
-          name="action_type"
-          :checked="state.type.value === type"
-        />
-        <chakra.span text-transform="capitalize">
-          {{ type }}
-        </chakra.span>
-      </chakra.label>
+      Prefers to be called
+    </CCheckbox>
+
+    <CFlex gap="4">
+      <CButton
+        @click="logCall()"
+        :is-loading="state.isSubmitting.value"
+        w="fit-content"
+        size="lg"
+      >
+        Log
+      </CButton>
+
+      <PFormSkip
+        v-if="props.rec"
+        :rec="props.rec"
+      />
     </CFlex>
 
-    <chakra.form
-      w="100%"
-      display="flex"
-      flex-direction="column"
-      gap="5"
-      align-items="flex-end"
-    >
-      <RRecStatus />
-
-      <chakra.textarea
-        v-if="!hooks.status.isSkipped.value"
-        v-model="state.actionDescription.value"
-        :value="state.actionDescription.value || props.rec.action_description"
-        :disabled="props.rec.state === 'completed'"
-        w="100%"
-        p="3"
-        border-width="1px"
-        :_hover="{ borderColor: 'gray.400' }"
-        :_focus="{ borderColor: 'blue.500 !important' }"
-        :_focus-visible="{
-          outline: '0',
-        }"
-        :placeholder="props.type === 'other' ? 'Write down notes to log to your CRM' : `Write down notes about your ${props.type} to CRM`"
-
-        border-radius="lg"
-        border-color="gray.300"
-        transition-property="common"
-        transition-duration="normal"
-        :_disabled="{
-          bg: 'white',
-        }"
-        required
-      />
-      <CFlex gap="5">
-        <PFormSkip
-          v-if="false"
-        />
-
-        <CButton
-          type="submit"
-          v-if="!hooks.status.isHandled.value"
-          @click="logToCRM"
-          :is-loading="state.isSubmitting.value"
-          size="lg"
-        >
-          Log to CRM
-        </CButton>
-      </CFlex>
-    </chakra.form>
   </CFlex>
 </template>
-
-<style scoped lang="scss">
-  label {
-    display: flex;
-    gap: var(--chakra-space-1);
-  }
-</style>

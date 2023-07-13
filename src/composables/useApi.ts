@@ -14,7 +14,7 @@ export function useApi() {
     xsrfHeaderName: security.xsrfHeader,
     xsrfCookieName: security.xsrfCookie,
     validateStatus: function (status: number) {
-      return status < 400 || status !== 403;
+      return status < 400 || status === 403;
     },
   });
 

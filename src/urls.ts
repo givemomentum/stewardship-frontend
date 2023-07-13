@@ -15,6 +15,10 @@ export namespace urls {
     portfolio: (id: PrimaryKey) => `/portfolios/portfolio/${id}`,
     donor: (portfolioId: PrimaryKey, donorId: PrimaryKey) => `/portfolios/portfolio/${portfolioId}/donor/${donorId}`,
     skipRec: (id: PrimaryKey) => `/portfolios/skip/${id}/`,
+    contactDonor: function (id: PrimaryKey, donorId: PrimaryKey, recId?: PrimaryKey) {
+      const reqQueryParam = recId ? `?rec_id=${recId}` : "";
+      return `/portfolios/portfolio/${id}/donor/${donorId}/contact${reqQueryParam}`;
+    },
   };
 
   export const fiscExport = {

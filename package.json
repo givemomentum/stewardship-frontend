@@ -27,7 +27,7 @@
       "axios": "^0.24",
     "vue-debounce": "^4.0.0",
     "@ivanv/vue-collapse-transition": "^1.0.2",
-    "floating-vue": "^2.0.0-beta.20",
+    "floating-vue": "^2.0.0-beta.24",
     "@ckeditor/ckeditor5-vue": "^4.0.1",
       "@ckeditor/ckeditor5-build-balloon-block": "^35.1.0",
     "@tinymce/tinymce-vue": "^5.0.0",
