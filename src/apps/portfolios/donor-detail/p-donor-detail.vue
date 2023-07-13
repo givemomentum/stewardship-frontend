@@ -105,7 +105,13 @@
       </CFlex>
     </CFlex>
 
-    <CFlex justify="space-between" h="fit-content" align="flex-start">
+    <CFlex
+      justify="space-between"
+      h="fit-content"
+      align="flex-start"
+      :direction="{base: 'column', '2xl': 'row'}"
+      :gap="{base: '6', '2xl': '0'}"
+    >
       <CTable variant="unstyled" class="p-donor-detail-table" w="fit-content" h="fit-content">
         <CTr v-if="state.nextRecScheduled.value">
           <CTd>Next touch</CTd>
