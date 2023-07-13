@@ -57,7 +57,23 @@
             :py="state.rec.value ? 4 : 0"
             px="0"
           >
-            <CFlex v-if="state.rec.value?.scheduled_for_reason" w="100%" direction="column" mb="4">
+
+            <CAlert
+              v-if="state.rec.value?.donor.do_not_contact || state.rec.value?.donor.do_not_email || state.rec.value?.donor.do_not_call"
+              status="info"
+              variant="subtle"
+              align-items="flex-start"
+              mb="4"
+            >
+              <CAlertIcon />
+              <CAlertDescription>
+                <CText v-if="state.rec.value?.donor.do_not_contact">Prefers not to be contacted</CText>
+                <CText v-if="state.rec.value?.donor.do_not_email">Prefers not to be emailed</CText>
+                <CText v-if="state.rec.value?.donor.do_not_call">Prefers not to be called</CText>
+              </CAlertDescription>
+            </CAlert>
+
+            <CFlex v-if="!state.rec.value?.scheduled_for_reason" w="100%" direction="column" mb="4">
               <CFormLabel
                 font-size="sm"
                 color="gray.500"
