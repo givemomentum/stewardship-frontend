@@ -15,8 +15,8 @@ const hooks = {
 };
 
 export function usePlanDonorLoader(donorId: PrimaryKey, planId?: PrimaryKey): {
-  donor: Ref<CrmDonor>,
-  plan: Ref<PortfolioPlan>,
+  donor: Ref<CrmDonor | null>,
+  plan: Ref<PortfolioPlan | null>,
 } {
   watch(() => donorId, async () => {
     const isNewDonor = !state.donorPromises.value[donorId];
@@ -29,8 +29,9 @@ export function usePlanDonorLoader(donorId: PrimaryKey, planId?: PrimaryKey): {
     }
 
     state.donor.value = await state.donorPromises.value[donorId];
-    state.plan.value = await state.planPromises.value[planId ?? state.plan.value.id];
-
+    if (planId ?? state.plan.value.id) {
+      state.plan.value = await state.planPromises.value[planId ?? state.plan.value.id];
+    }
   }, { immediate: true });
 
   return {
