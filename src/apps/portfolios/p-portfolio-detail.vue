@@ -64,7 +64,7 @@
       <CHeading size="lg">Portfolio {{state.portfolio.value?.name}}</CHeading>
 
       <AisInstantSearch
-        v-if="hooks.algolia.searchClient.value"
+        v-if="hooks.algolia.searchClient.value && state.portfolio.value"
         :key="hooks.algolia.refreshKey.value"
         :search-client="hooks.algolia.searchClient.value"
         :index-name="state.portfolio.value.algolia_creds.index_name"
