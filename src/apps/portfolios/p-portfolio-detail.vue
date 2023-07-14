@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+  import { differenceInDays } from "date-fns";
   import { PortfolioPlan } from "~/apps/portfolios/interfaces";
   import { useAlgolia } from "~/apps/portfolios/useAlgolia";
   import { urls } from "~/urls";
@@ -47,6 +48,25 @@
   async function loadPortfolio() {
     const res = await hooks.api.get(`/portfolios/portfolios/${props.portfolioId}/`);
     state.portfolio.value = res.data;
+  }
+
+  function getEventDateLabel(algoliaItem: any, event: string) {
+    const eventObj = algoliaItem.upcoming_events_dates.find((ev) => ev.label === event);
+    const diffInDays = differenceInDays(new Date(eventObj.date), new Date()) + 1;
+    console.log(diffInDays, event, algoliaItem.upcoming_events_dates);
+    if (diffInDays === 0) {
+      return `Today`;
+    }
+    if (diffInDays === 1) {
+      return `Tomorrow`;
+    }
+    if (diffInDays === -1) {
+      return `Yesterday`;
+    }
+    if (diffInDays < -1) {
+      return `Passed`;
+    }
+    return `${diffInDays} days until`;
   }
 </script>
 
@@ -205,17 +225,15 @@
                     </CTd>
                     <CTd>{{ format.dateFromUnixV2(item.last_contact_date, false) }}</CTd>
                     <CTd>
-                      <CTag
+                      <CTooltip
                         v-for="event in item.upcoming_events"
-                        v-tooltip="{
-                          content: `In ${item.upcoming_events_countdown.find((ev) => ev.label === event).days} days`,
-                          placement: 'top',
-                        }"
-                        :_hover="{ cursor: 'context-menu', bg: 'gray.200' }"
-                        mr="2"
+                        :key="event"
+                        :label="getEventDateLabel(item, event)"
                       >
-                        {{event.replace('_', ' ')}}
-                      </CTag>
+                        <CTag mr="2">
+                          {{event.replace('_', ' ')}}
+                        </CTag>
+                      </CTooltip>
                     </CTd>
                     <CTd>
                       <CLink is-external :href="item.crm_url">
