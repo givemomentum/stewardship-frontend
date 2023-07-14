@@ -38,9 +38,6 @@
 
     if (res.data > 0) {
       hooks.notify.send(`${res.data} donors have been added to ${props.plan.name}`);
-
-      await new Promise(resolve => setTimeout(resolve, 500));
-      location.reload();
     } else {
       hooks.notify.send(`The selected donors already belong to another portfolio.`);
     }

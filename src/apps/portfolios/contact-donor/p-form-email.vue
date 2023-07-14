@@ -6,6 +6,7 @@
   import { useUserStore } from "~/apps/auth/useUserStore";
   import { CrmDonor } from "~/apps/letters/interfaces";
   import { TouchRec } from "~/apps/portfolios/interfaces";
+  import { useAlgolia } from "~/apps/portfolios/useAlgolia";
   import { usePlanDonorLoader } from "~/apps/portfolios/usePlanDonorLoader";
   import { useNotify } from "~/composables/useNotify";
   import { urls } from "~/urls";
@@ -20,6 +21,7 @@
     api: useApi(),
     notify: useNotify(),
     loader: usePlanDonorLoader(props.donor.id),
+    algolia: useAlgolia(),
   };
 
   const state = {
@@ -77,6 +79,8 @@
     }
 
     const isNextRecExists = Boolean(res.data);
+
+    hooks.algolia.reloadPortfolio();
     if (isNextRecExists) {
       const recNext: TouchRec = res.data;
       navigateTo(urls.portfolios.contactDonor(

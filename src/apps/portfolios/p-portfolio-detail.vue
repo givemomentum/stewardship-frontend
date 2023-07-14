@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-  import algoliasearch, { SearchClient } from "algoliasearch";
   import { PortfolioPlan } from "~/apps/portfolios/interfaces";
+  import { useAlgolia } from "~/apps/portfolios/useAlgolia";
   import { urls } from "~/urls";
   import { format } from "~/utils";
 
@@ -12,20 +12,20 @@
 
   const state = {
     portfolio: ref(null as PortfolioPlan | null),
-    searchClient: ref(null as SearchClient | null),
     donorIdOpened: ref(null),
-    refreshKey: ref(0),
     algoliaFilter: ref(`portfolio_plan_id:${props.portfolioId}`),
   };
 
   const hooks = {
     api: useApi(),
     layout: useLayoutControl(),
+    algolia: useAlgolia(),
   };
 
   onBeforeMount(async () => {
     hooks.layout.activateLeanMode();
-    await initAlgolia();
+    await loadPortfolio();
+    hooks.algolia.init(state.portfolio.value);
   });
 
   watch(() => props.donorId, () => {
@@ -44,22 +44,9 @@
     history.pushState({}, null, urlNew);
   });
 
-  async function refreshAlgolia() {
-  }
-
-  async function initAlgolia() {
-    await loadPortfolio();
-
-    state.searchClient.value = algoliasearch(
-      state.portfolio.value.algolia_creds.app_id,
-      state.portfolio.value.algolia_creds.api_key,
-    );
-  }
-
   async function loadPortfolio() {
     const res = await hooks.api.get(`/portfolios/portfolios/${props.portfolioId}/`);
     state.portfolio.value = res.data;
-
   }
 </script>
 
@@ -77,9 +64,9 @@
       <CHeading size="lg">Portfolio {{state.portfolio.value?.name}}</CHeading>
 
       <AisInstantSearch
-        v-if="state.searchClient.value"
-        :key="state.refreshKey.value"
-        :search-client="state.searchClient.value"
+        v-if="hooks.algolia.searchClient.value"
+        :key="hooks.algolia.refreshKey.value"
+        :search-client="hooks.algolia.searchClient.value"
         :index-name="state.portfolio.value.algolia_creds.index_name"
         show-loading-indicator
       >
@@ -156,7 +143,7 @@
             <PPortfolioAdd
               v-if="state.portfolio.value"
               :plan="state.portfolio.value"
-              @portfolio-updated="refreshAlgolia()"
+              @portfolio-updated="hooks.algolia.reloadPortfolio()"
             />
           </CFlex>
         </CFlex>
@@ -165,7 +152,7 @@
           <CTable>
 
             <CTbody>
-              <ais-infinite-hits>
+              <ais-infinite-hits :transform-items="hooks.algolia.transformItems">
 
                 <template
                   v-slot="{
@@ -176,12 +163,12 @@
                 >
                   <CThead>
                     <CTr>
-                      <CTh>Name</CTh>
-                      <CTh>Lifetime giving</CTh>
-                      <CTh>Last gift</CTh>
-                      <CTh>Upcoming gift</CTh>
-                      <CTh>Touches progress</CTh>
-                      <CTh>Last touch</CTh>
+                      <PPortfolioTableHead attribute="name" label="Name" />
+                      <PPortfolioTableHead attribute="donated_total" label="Lifetime giving" />
+                      <PPortfolioTableHead attribute="last_gift_date" label="Last gift" />
+                      <PPortfolioTableHead attribute="expected_gift_date" label="Upcoming gift" />
+                      <PPortfolioTableHead attribute="season_progress" label="Touches progress" />
+                      <PPortfolioTableHead attribute="last_contact_date" label="Last touch" />
                       <CTh>Upcoming</CTh>
                       <CTh />
                       <CTh />
