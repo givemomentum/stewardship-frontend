@@ -375,22 +375,9 @@
             </CButton>
           </CFlex>
 
-          <TinyMce
-            v-model="state.letterHtml.value"
-            editor-box-shadow="0 1px 3px 0 rgba(0, 0, 0, 0.1),0 1px 2px 0 rgba(0, 0, 0, 0.06)"
-            editor-background="#f4f4f4"
-            width="850px"
-            min-height="1100px"
-            :is-show-menu-bar="true"
-            content-css-default="font-family: Calibri; font-size: 11pt;"
-          />
         </CFlex>
       </CFlex>
     </CFlex>
-
-    <CBox visibility="hidden">
-      <TinyMce />
-    </CBox>
 
   </CFlex>
 </template>

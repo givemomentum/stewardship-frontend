@@ -271,17 +271,6 @@
       </CHStack>
 
       <CBox class="tiny-container" w="100%" z-index="0" pos="relative">
-        <TinyMce
-          :key="state.emailEditorKey.value"
-          :spellcheckIgnore="props.rec?.donor.name.split(' ')"
-          v-model="state.emailContentHtml.value"
-          padding="1rem"
-          :is-show-menu-bar="false"
-          :is-read-only="comp.isEmailSent.value"
-          :is-show-toolbar="comp.isEmailSent.value"
-          min-height="200"
-        />
-
         <CButton
           v-if="!comp.isEmailSent.value && !comp.isEmailLogged.value"
           @click="state.emailContentHtml.value = state.emailOpen.value.content_html_default; saveEmailChanges()"
@@ -355,9 +344,5 @@
       />
 
     </template>
-    <!--  for preloading & caching external mce js files, otherwise it takes a while  -->
-    <CBox visibility="hidden" style="display: none">
-      <TinyMce padding="1rem" />
-    </CBox>
   </CFlex>
 </template>
