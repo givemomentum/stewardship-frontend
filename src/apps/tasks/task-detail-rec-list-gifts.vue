@@ -56,7 +56,6 @@
       <chakra.td>{{ format.dateMonth(slotProps.rec.donor?.giving_since) }}</chakra.td>
 
       <chakra.td v-if="comp.isRecLetters">
-        <VTooltip placement="top" :key="state.copyTooltip.value">
           <div>
             <CIconButton
               @click.stop="() => copyDonorInfo(slotProps.rec)"
@@ -66,11 +65,6 @@
               ariaLabel="copy"
             />
           </div>
-
-          <template v-slot:popper>
-            <CText font-size="xs">{{ state.copyTooltip.value }}</CText>
-          </template>
-        </VTooltip>
       </chakra.td>
     </template>
 

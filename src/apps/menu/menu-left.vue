@@ -34,28 +34,22 @@
           <chakra.img src="/momentum-logo-only.svg" max-w="50px" />
         </NuxtLink>
 
-        <VTooltip>
-          <div>
-            <CBox
-              v-if="hooks.menu.isFullWidth.value"
-              mt="6px"
-              px="10px"
-              pt="1px"
-              pb="2px"
-              bg="blue.100"
-              color="blue.900"
-              border-radius="lg"
-              font-size="xs"
-              :_hover="{cursor: 'help'}"
-            >
-              EAP
-            </CBox>
-          </div>
-
-          <template v-slot:popper>
-            <CText font-size="xs">Early Access Preview</CText>
-          </template>
-        </VTooltip>
+        <CTooltip label="Early Access Preview">
+          <CBox
+            v-if="hooks.menu.isFullWidth.value"
+            mt="6px"
+            px="10px"
+            pt="1px"
+            pb="2px"
+            bg="blue.100"
+            color="blue.900"
+            border-radius="lg"
+            font-size="xs"
+            :_hover="{cursor: 'help'}"
+          >
+            EAP
+          </CBox>
+        </CTooltip>
 
       </CFlex>
 

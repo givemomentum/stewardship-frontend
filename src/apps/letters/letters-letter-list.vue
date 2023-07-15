@@ -227,18 +227,16 @@
               </chakra.td>
 
               <chakra.td data-is-numeric="true">
-                <VTooltip placement="right">
-                  <div>
-                    <ChakraCheckbox
-                      :model-value="letter.is_excluded"
-                      @click.stop="toggleLetterExclusion(letter)"
-                    />
-                  </div>
-                  <template v-slot:popper>
-                    <CText font-size="xs" v-if="letter.is_excluded">Include this letter in the PDF export</CText>
-                    <CText font-size="xs" v-else>Exclude this letter from the PDF export</CText>
-                  </template>
-                </VTooltip>
+                <div>
+                  <ChakraCheckbox
+                    :model-value="letter.is_excluded"
+                    @click.stop="toggleLetterExclusion(letter)"
+                  />
+                </div>
+                <template v-slot:popper>
+                  <CText font-size="xs" v-if="letter.is_excluded">Include this letter in the PDF export</CText>
+                  <CText font-size="xs" v-else>Exclude this letter from the PDF export</CText>
+                </template>
               </chakra.td>
 
               <CFlex

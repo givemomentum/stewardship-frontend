@@ -101,41 +101,55 @@
           <CFlex gap="6">
             <ais-search-box show-loading-indicator />
 
-            <VDropdown :distance="6">
-              <CButton
-                right-icon="chevron-down"
-                variant="outline"
-                color-scheme="gray"
-              >
-                City
-              </CButton>
-              <template #popper>
-                <ARefinmentList
-                  attribute="city"
-                  searchable
-                  :limit="10"
-                  :showMoreLimit="10"
-                />
-              </template>
-            </VDropdown>
+            <CPopover>
+              <CPopoverTrigger>
+                <CButton
+                  right-icon="chevron-down"
+                  variant="outline"
+                  color-scheme="gray"
+                >
+                  City
+                </CButton>
+              </CPopoverTrigger>
+              <CPortal>
+                <CPopoverContent>
+                  <CPopoverArrow />
+                  <CPopoverBody>
+                    <ARefinmentList
+                      attribute="city"
+                      searchable
+                      :limit="10"
+                      :showMoreLimit="10"
+                    />
+                  </CPopoverBody>
+                </CPopoverContent>
+              </CPortal>
+            </CPopover>
 
-            <VDropdown :distance="6">
-              <CButton
-                right-icon="chevron-down"
-                variant="outline"
-                color-scheme="gray"
-              >
-                Upcoming events
-              </CButton>
-              <template #popper>
-                <ARefinmentList
-                  attribute="upcoming_events"
-                  searchable
-                  :limit="10"
-                  :showMoreLimit="10"
-                />
-              </template>
-            </VDropdown>
+            <CPopover>
+              <CPopoverTrigger>
+                <CButton
+                  right-icon="chevron-down"
+                  variant="outline"
+                  color-scheme="gray"
+                >
+                  Upcoming events
+                </CButton>
+              </CPopoverTrigger>
+              <CPortal>
+                <CPopoverContent>
+                  <CPopoverArrow />
+                  <CPopoverBody>
+                    <ARefinmentList
+                      attribute="upcoming_events"
+                      searchable
+                      :limit="10"
+                      :showMoreLimit="10"
+                    />
+                  </CPopoverBody>
+                </CPopoverContent>
+              </CPortal>
+            </CPopover>
 
             <ais-clear-refinements v-if="false">
               <template

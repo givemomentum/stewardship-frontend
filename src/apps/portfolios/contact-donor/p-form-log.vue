@@ -78,8 +78,6 @@
         Log
       </CButton>
 
-      <CText>Or skip:</CText>
-
       <PFormSkip
         v-if="props.rec"
         :rec="props.rec"

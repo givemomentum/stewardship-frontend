@@ -9,7 +9,6 @@ export default defineNuxtConfig({
     "@nuxt/devtools",
     "nuxt-icon",
     "@pinia/nuxt",
-    "floating-vue/nuxt",
   ],
 
   runtimeConfig: {

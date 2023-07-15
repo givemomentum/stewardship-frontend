@@ -305,24 +305,16 @@
 
         <RRecSkipBtn :rec="props.rec" />
 
-        <VTooltip>
-          <div>
-            <CButton
-              @click="sendTestEmail()"
-              variant="outline"
-              left-icon="ri-mail-send-line"
-              size="lg"
-              border-radius="lg"
-              color-scheme="gray"
-            >
-              Test
-            </CButton>
-          </div>
-
-          <template v-slot:popper>
-            <CText font-size="xs">Send a test email with this content to {{ hooks.userStore.user.email }}</CText>
-          </template>
-        </VTooltip>
+        <CButton
+          @click="sendTestEmail()"
+          variant="outline"
+          left-icon="ri-mail-send-line"
+          size="lg"
+          border-radius="lg"
+          color-scheme="gray"
+        >
+          Test
+        </CButton>
 
         <CButton
           @click="sendEmail()"
