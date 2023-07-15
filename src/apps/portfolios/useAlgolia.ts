@@ -24,7 +24,7 @@ export function useAlgolia() {
       );
     },
     reloadPortfolio: () => {
-      state.searchClient.value.clearCache();
+      state.searchClient.value?.clearCache();
       state.refreshKey.value += 1;
     },
 
