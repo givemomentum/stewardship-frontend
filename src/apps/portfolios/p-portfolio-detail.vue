@@ -51,7 +51,10 @@
   }
 
   function getEventDateLabel(algoliaItem: any, event: string) {
-    const eventObj = algoliaItem.upcoming_events_dates.find((ev) => ev.label === event);
+    const eventObj = algoliaItem.upcoming_events_dates?.find((ev) => ev.label === event);
+    if (!eventObj) {
+      return "";
+    }
     const diffInDays = differenceInDays(new Date(eventObj.date), new Date()) + 1;
     if (diffInDays === 0) {
       return `Today`;
