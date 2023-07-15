@@ -68,7 +68,7 @@
       Prefers to be called
     </CCheckbox>
 
-    <CFlex gap="4" direction="column" w="fit-content">
+    <CFlex gap="4" w="fit-content">
       <CButton
         @click="logCall()"
         :is-loading="state.isSubmitting.value"

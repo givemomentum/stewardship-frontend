@@ -55,57 +55,56 @@
         Skip
       </CButton>
     </CPopoverTrigger>
-    <CPortal>
-      <CPopoverContent w="fit-content" >
-        <CPopoverArrow />
-        <CPopoverBody p="0">
-          <CFlex p="3" direction="column" gap="3" bg="gray.50">
-            <div>Select the reason:</div>
-            <CButton
-              @click="skipRec('skipped_as_already_handled')"
-              variant="outline"
-              color-scheme="gray"
-              bg="white"
-              :is-loading="state.isSubmitting.value"
-              left-icon="check-circle"
-            >
-              Already contacted
-            </CButton>
+    <CPopoverContent w="fit-content">
+      <CPopoverArrow />
+      <CPopoverCloseButton mt="2" />
+      <CPopoverBody p="0">
+        <CFlex p="3" direction="column" gap="3" bg="gray.50">
+          <div>Select the reason:</div>
+          <CButton
+            @click="skipRec('skipped_as_already_handled')"
+            variant="outline"
+            color-scheme="gray"
+            bg="white"
+            :is-loading="state.isSubmitting.value"
+            left-icon="check-circle"
+          >
+            Already contacted
+          </CButton>
 
-            <CButton
-              @click="skipRec('skipped_to_next_month')"
-              variant="outline"
-              color-scheme="gray"
-              bg="white"
-              :is-loading="state.isSubmitting.value"
-              left-icon="bi-clock"
-            >
-              Reach out next month
-            </CButton>
-            <CButton
-              @click="skipRec('skipped_to_next_quarter')"
-              variant="outline"
-              color-scheme="gray"
-              bg="white"
-              :is-loading="state.isSubmitting.value"
-              left-icon="bi-clock"
-            >
-              Reach out next quarter
-            </CButton>
-            <CButton
-              @click="skipRec('skipped_as_unqualified')"
-              variant="outline"
-              color-scheme="gray"
-              bg="white"
-              :is-loading="state.isSubmitting.value"
-              left-icon="x"
-            >
-              Unqualified
-            </CButton>
-          </CFlex>
-        </CPopoverBody>
-      </CPopoverContent>
-    </CPortal>
+          <CButton
+            @click="skipRec('skipped_to_next_month')"
+            variant="outline"
+            color-scheme="gray"
+            bg="white"
+            :is-loading="state.isSubmitting.value"
+            left-icon="bi-clock"
+          >
+            Reach out next month
+          </CButton>
+          <CButton
+            @click="skipRec('skipped_to_next_quarter')"
+            variant="outline"
+            color-scheme="gray"
+            bg="white"
+            :is-loading="state.isSubmitting.value"
+            left-icon="bi-clock"
+          >
+            Reach out next quarter
+          </CButton>
+          <CButton
+            @click="skipRec('skipped_as_unqualified')"
+            variant="outline"
+            color-scheme="gray"
+            bg="white"
+            :is-loading="state.isSubmitting.value"
+            left-icon="x"
+          >
+            Unqualified
+          </CButton>
+        </CFlex>
+      </CPopoverBody>
+    </CPopoverContent>
   </CPopover>
 
 </template>

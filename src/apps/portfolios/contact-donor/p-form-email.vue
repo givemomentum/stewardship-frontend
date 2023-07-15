@@ -178,7 +178,7 @@
       </CBox>
     </CVStack>
 
-    <CFlex :gap="{ base: 4, '2xl': 5 }" direction="column">
+    <CFlex :gap="{ base: 4, '2xl': 5 }">
       <CButton
         @click="sendEmail()"
         :is-loading="state.isSendingEmail.value"
