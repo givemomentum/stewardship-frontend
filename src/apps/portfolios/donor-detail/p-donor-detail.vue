@@ -27,9 +27,12 @@
     actions: ref<CrmAction[]>([]),
     householdMembers: ref(null as CrmDonor[] | null),
     isActionLoading: ref(false),
+    isLoadingData: ref(true),
   };
 
   onMounted(async () => {
+    state.isLoadingData.value = true;
+
     hooks.api.get(`/crms/donors/${props.donorId}/?expand=household,donor_intels`).then(res => {
       state.donor.value = res.data;
 
@@ -46,6 +49,7 @@
     getNextRecScheduled();
     hooks.api.getJson(`/portfolios/${props.planId}/donors/${props.donorId}/rec-pending`).then(data => {
       state.recPending.value = data;
+      state.isLoadingData.value = false;
     });
   });
 
@@ -95,6 +99,7 @@
           :href="urls.portfolios.contactDonor(props.planId, props.donorId)"
         >
           <CButton
+            :is-loading="state.isLoadingData.value"
             :variant="state.recPending.value ? 'outline' : 'solid'"
             :color-scheme="state.recPending.value ? 'gray' : 'blue'"
           >
