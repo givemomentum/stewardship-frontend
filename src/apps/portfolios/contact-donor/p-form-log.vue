@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { CrmDonor } from "~/apps/letters/interfaces";
   import { TouchRec } from "~/apps/portfolios/interfaces";
-  import { useRecNav } from "~/apps/tasks/recs/useRecNav";
+  import { useAlgolia } from "~/apps/portfolios/useAlgolia";
   import { useNotify } from "~/composables/useNotify";
   import { urls } from "~/urls";
 
@@ -13,7 +13,7 @@
   const hooks = {
     api: useApi(),
     notify: useNotify(),
-    nav: useRecNav(),
+    algolia: useAlgolia(),
   };
 
   const state = {
@@ -24,15 +24,28 @@
 
   async function logCall() {
     state.isSubmitting.value = true;
-
     await hooks.api.post(`/portfolios/recs/${props.rec.id}/log-call`, {
       description: state.description.value,
       comm_pref: state.commPref.value,
     });
-    hooks.notify.send(`Call logged for ${props.rec.donor.name}`);
+    state.description.value = "";
     state.isSubmitting.value = false;
-    // todo next rec redirect, ie the same flow as in p-form-email
-    navigateTo(urls.portfolios.portfolios);
+    hooks.notify.send(`Call logged for ${props.rec.donor.name}`);
+
+    // todo merge with p-form-skip that has the same code as below
+    hooks.algolia.reloadPortfolio();
+
+    const recPendingNext = await hooks.api.getJson(
+      `/portfolios/${props.rec.plan.id}/rec-pending?donor_id_excluded=${props.rec.donor.id}`
+    );
+    if (recPendingNext) {
+      return navigateTo(urls.portfolios.contactDonor(
+        props.rec.plan.id,
+        recPendingNext.donor.id,
+        recPendingNext.id,
+      ));
+    }
+    navigateTo(urls.portfolios.portfolio(props.rec.plan.id));
   }
 </script>
 

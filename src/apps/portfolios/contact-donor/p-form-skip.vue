@@ -1,7 +1,6 @@
 <script lang="ts" setup>
   import { TouchRec, TouchStatus } from "~/apps/portfolios/interfaces";
-  import { useRecNav } from "~/apps/tasks/recs/useRecNav";
-  import { useTaskListStore } from "~/apps/tasks/useTaskListStore";
+  import { useAlgolia } from "~/apps/portfolios/useAlgolia";
   import { useNotify } from "~/composables/useNotify";
   import { urls } from "~/urls";
 
@@ -12,8 +11,7 @@
   const hooks = {
     api: useApi(),
     notify: useNotify(),
-    tasks: useTaskListStore(),
-    nav: useRecNav(),
+    algolia: useAlgolia(),
   };
 
   const state = {
@@ -25,10 +23,22 @@
     await hooks.api.patch(`/portfolios/recs/${props.rec.id}/`, {
       status: status,
     });
-    hooks.notify.send(`Recommendation for ${props.rec.donor.name} skipped`);
     state.isSubmitting.value = false;
+    hooks.notify.send(`Recommendation for ${props.rec.donor.name} skipped`);
 
-    navigateTo(urls.portfolios.donor(props.rec.plan.id, props.rec.donor.id));
+    hooks.algolia.reloadPortfolio();
+
+    const recPendingNext = await hooks.api.getJson(
+      `/portfolios/${props.rec.plan.id}/rec-pending?donor_id_excluded=${props.rec.donor.id}`
+    );
+    if (recPendingNext) {
+      return navigateTo(urls.portfolios.contactDonor(
+        props.rec.plan.id,
+        recPendingNext.donor.id,
+        recPendingNext.id,
+      ));
+    }
+    navigateTo(urls.portfolios.portfolio(props.rec.plan.id));
   }
 </script>
 
