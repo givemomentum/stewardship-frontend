@@ -68,7 +68,7 @@
       Prefers to be called
     </CCheckbox>
 
-    <CFlex gap="4">
+    <CFlex gap="4" direction="column" w="fit-content">
       <CButton
         @click="logCall()"
         :is-loading="state.isSubmitting.value"
@@ -77,6 +77,8 @@
       >
         Log
       </CButton>
+
+      <CText>Or skip:</CText>
 
       <PFormSkip
         v-if="props.rec"

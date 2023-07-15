@@ -178,7 +178,7 @@
       </CBox>
     </CVStack>
 
-    <CFlex :gap="{ base: 4, '2xl': 5 }">
+    <CFlex :gap="{ base: 4, '2xl': 5 }" direction="column">
       <CButton
         @click="sendEmail()"
         :is-loading="state.isSendingEmail.value"
@@ -188,6 +188,8 @@
       >
         Send email
       </CButton>
+
+      <CText>Or skip:</CText>
 
       <PFormSkip
         v-if="props.rec"
