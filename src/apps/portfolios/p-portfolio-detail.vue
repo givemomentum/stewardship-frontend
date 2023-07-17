@@ -221,7 +221,7 @@
                       <CTag
                         v-for="event in item.upcoming_events"
                         v-tooltip="{
-                          content: `In ${item.upcoming_events_countdown.find((ev) => ev.label === event).days} days`,
+                          content: `In ${item.upcoming_events_countdown?.find((ev) => ev.label === event).days} days`,
                           placement: 'top',
                         }"
                         :_hover="{ cursor: 'context-menu', bg: 'gray.200' }"
