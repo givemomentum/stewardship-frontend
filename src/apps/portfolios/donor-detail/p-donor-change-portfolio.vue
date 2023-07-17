@@ -5,6 +5,7 @@
   import { useApi } from "~/composables/useApi";
   import { CrmDonor } from "~/apps/letters/interfaces";
   import { PortfolioPlan } from "../interfaces";
+  import { captureEvent } from "@sentry/hub";
 
   const isOpen = ref(false);
 
@@ -18,8 +19,7 @@
     try {
       await hooks.api.post(`/crms/donors/change-portfolio`, args);
     } catch (e) {
-      // Todo: write to log
-      console.log(e);
+      captureEvent(e);
     }
     const newURL = `/portfolios/portfolio/${targetPortfolioID}/donor/${donorID}`;
     window.location.href = newURL;
