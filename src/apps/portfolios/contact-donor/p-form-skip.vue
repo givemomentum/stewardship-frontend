@@ -12,11 +12,20 @@
     api: useApi(),
     notify: useNotify(),
     algolia: useAlgolia(),
+    route: useRoute(),
   };
 
   const state = {
+    isOpenDropdown: ref(false),
     isSubmitting: ref(false),
   };
+
+  onBeforeMount(() => {
+    const mode = hooks.route.query["mode"];
+    if (mode === "skip") {
+      state.isOpenDropdown.value = true;
+    }
+  });
 
   async function skipRec(status: TouchStatus) {
     state.isSubmitting.value = true;
@@ -44,7 +53,7 @@
 
 <template>
 
-  <CPopover>
+  <CPopover :default-open="state.isOpenDropdown.value">
     <CPopoverTrigger>
       <CButton
         variant="outline"
