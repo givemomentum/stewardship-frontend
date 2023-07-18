@@ -252,7 +252,7 @@
                       </CTooltip>
                     </CTd>
                     <CTd>
-                      <CLink is-external :href="item.crm_url">
+                      <CLink v-if="item.crm_url" is-external :href="item.crm_url">
                         <CButton
                           left-icon="external-link"
                           size="xs"
@@ -262,6 +262,7 @@
                           CRM
                         </CButton>
                       </CLink>
+                      <span v-else />
                     </CTd>
                     <CTd>
                       <CButton
