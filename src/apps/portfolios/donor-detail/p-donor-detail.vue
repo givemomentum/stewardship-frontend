@@ -106,7 +106,7 @@
             Contact
           </CButton>
         </CLink>
-        <PDonorCrmLink :donor="state.donor.value" />
+        <PDonorCrmLink v-if="state.donor.value?.crm_url" :donor="state.donor.value" />
       </CFlex>
     </CFlex>
 
