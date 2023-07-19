@@ -19,10 +19,10 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       beforeSend: function (event, hint) {
         const exception = hint.originalException;
 
-        if (exception instanceof AxiosError) {
+        if (exception instanceof AxiosError && event.request) {
           event.fingerprint = [
             "{{ default }}",
-            String(event.url),
+            String(event.request.url),
           ];
         }
 
