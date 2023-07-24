@@ -67,7 +67,7 @@
       :type="props.type ?? 'date'"
       :min="props.type === 'number' ? '1' : ''"
       size="xs"
-      :w="props.type === 'number' ? '40px' : 'fit-content'"
+      :w="props.type === 'number' ? '55px' : 'fit-content'"
       v-model="state.value.value"
     />
 

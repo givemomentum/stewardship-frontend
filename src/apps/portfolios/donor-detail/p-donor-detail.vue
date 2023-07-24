@@ -184,6 +184,25 @@
           </CTd>
         </CTr>
 
+        <CTr>
+          <CTd>
+            Goal gift amount
+          </CTd>
+
+          <CTd>
+            <PInput
+              v-if="state.donor.value && hooks.loader.plan.value"
+              type="number"
+              :initial="state.donor.value.goal_gift_amount || state.donor.value.goal_gift_amount_suggestion"
+              :api-path="`/crms/donors/${state.donor.value.pk}/`"
+              :serializer="value => ({ goal_gift_amount: value })"
+              :label="format.money(state.donor.value.goal_gift_amount || state.donor.value.goal_gift_amount_suggestion)"
+              @model-updated="state.donor.value.goal_gift_amount = $event"
+              :success-message="(value) => `Goal gift amount updated`"
+            />
+          </CTd>
+        </CTr>
+
         <CTr v-if="state.donor.value?.donated_total">
           <CTd>
             Lifetime
