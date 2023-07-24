@@ -1,6 +1,7 @@
 import { defineNuxtPlugin } from "#app";
 import { attachErrorHandler, createTracingMixins, getCurrentHub, init, Replay } from "@sentry/vue";
 import { useApi } from "~/composables/useApi";
+import { AxiosError } from "axios";
 
 /**
  * copy of https://github.com/nuxt-community/sentry-module/issues/358#issuecomment-1016983543
@@ -15,6 +16,18 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       replaysOnErrorSampleRate: 1.0,
       integrations: [],
       environment: nuxtApp.$config.public.env ?? "prod",
+      beforeSend: function (event, hint) {
+        const exception = hint.originalException;
+
+        if (exception instanceof AxiosError && event.request) {
+          event.fingerprint = [
+            "{{ default }}",
+            String(event.request.url),
+          ];
+        }
+
+        return event;
+      },
     });
 
     nuxtApp.vueApp.mixin(
