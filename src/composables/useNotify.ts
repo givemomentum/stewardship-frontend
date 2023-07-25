@@ -7,17 +7,17 @@ const hooks = {
 export function useNotify() {
   return {
     send: (message: string) => send(message),
-    error: (message: string) => send(message, TYPE.ERROR),
+    error: (message: string) => send(message, TYPE.ERROR, 7000),
   };
 }
 
-function send(message: string, type: TYPE = TYPE.DEFAULT) {
+function send(message: string, type: TYPE = TYPE.DEFAULT, timeout = 4500) {
   hooks.toast(
     message,
     {
       type: type,
       position: POSITION.BOTTOM_CENTER,
-      timeout: 3000,
+      timeout: timeout,
       pauseOnFocusLoss: false,
       hideProgressBar: true,
       showCloseButtonOnHover: true,

@@ -37,14 +37,24 @@ export const useUserStore = defineStore("user", {
       this.isLoading = true;
       const api = useApi();
 
-      const userRes = await api.get("/users/me/");
-      if (userRes.status === 200) {
-        this.user = userRes.data;
+      if (this.user) {
+        return;
+      }
 
-        // Fetch CSRF token after logging user in.
-        const csrfRes = await api.get("/auth/csrf");
-        const token = csrfRes.headers[security.xsrfHeader];
-        Cookies.set(security.xsrfCookie, token);
+      try {
+        const userRes = await api.get("/users/me/");
+        if (userRes.status === 200) {
+          this.user = userRes.data;
+
+          // Fetch CSRF token after logging user in.
+          const csrfRes = await api.get("/auth/csrf");
+          const token = csrfRes.headers[security.xsrfHeader];
+          Cookies.set(security.xsrfCookie, token);
+        }
+      } catch (error) {
+        if (error.response?.status !== 403) {
+          throw error;
+        }
       }
 
       this.isLoading = false;

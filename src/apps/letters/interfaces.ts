@@ -67,6 +67,7 @@ export class CrmGift {
 export class CrmDonor {
   id: PrimaryKey;
   pk: PrimaryKey;
+  portfolio_plan_id?: PrimaryKey;
   source_id: PrimaryKey;
   source: "blackbaud" | "donor_perfect" | "salesforce" | "every_action" | "other";
   gifts?: CrmGift[];
@@ -105,6 +106,8 @@ export class CrmDonor {
   spouse_name: string;
   custom_data: { [field: string]: any };
   communication_preferences: string;
+  goal_gift_amount: number;
+  goal_gift_amount_suggestion: number | null;
 
   expected_gift_date: string;
   touches_before_gift: number | null;

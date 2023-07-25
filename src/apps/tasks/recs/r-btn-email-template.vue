@@ -95,20 +95,6 @@
 
             </FormKit>
 
-            <CBox
-              w="100%"
-              h="100%"
-              direction="row"
-              gap="8"
-              max-h="100vh"
-            >
-              <TinyMce
-                :variables="props.template.variables"
-                padding="1rem"
-                v-model="state.templateHtml.value"
-              />
-            </CBox>
-
           </CFlex>
         </CBox>
       </CFlex>

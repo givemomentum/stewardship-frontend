@@ -22,7 +22,7 @@
       path: () => `letters/templates/${props.template.pk}/`,
       method: "PATCH",
       getExtraData: () => ({
-        html: state.templateHtml.value,
+        content_html: state.templateHtml.value,
       }),
       onSuccess: async () => {
         await hooks.batchStore.load();
@@ -74,21 +74,6 @@
 
         </FormKit>
 
-        <CFormLabel mt="3">Template</CFormLabel>
-        <CFlex
-          pos="relative"
-          w="100%"
-          h="100%"
-          direction="row"
-          gap="8"
-          max-h="100vh"
-        >
-          <TinyMce
-            :variables="props.template.variables"
-            v-model="state.templateHtml.value"
-            content-css-default="font-family: Calibri; font-size: 11pt;"
-          />
-        </CFlex>
 
       </CFlex>
     </CBox>

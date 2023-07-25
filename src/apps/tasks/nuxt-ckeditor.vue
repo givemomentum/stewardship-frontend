@@ -3,7 +3,12 @@
   import CKEditor from "@ckeditor/ckeditor5-vue";
   import { ref, computed } from "vue";
 
-  const props = defineProps<{ modelValue: string; toolbarItems?: string[]; height?: string; }>();
+  const props = defineProps<{
+    modelValue: string;
+    placeholder?: string;
+    toolbarItems?: string[];
+    height?: string;
+  }>();
 
   const CKEditorVue = CKEditor.component;
   const editor = ref(BalloonBlockEditor);
@@ -23,6 +28,7 @@
       "undo",
       "redo",
     ],
+    placeholder: props.placeholder,
   });
   const emit = defineEmits(["update:modelValue"]);
 
@@ -50,6 +56,7 @@
     --ck-resizer-border-radius: var(--chakra-radii-md);
     --ck-color-base-border: var(--chakra-colors-gray-200);
     --ck-color-base-foreground: var(--chakra-colors-gray-50);
+    --ck-spacing-standard: var(--chakra-space-4);
   }
 
   .ck.ck-toolbar.ck-toolbar_grouping {
@@ -72,6 +79,31 @@
 
   .ck-content {
     width: 100%;
+    padding-left: 1em;
+
+    &.ck.ck-editor__editable_inline {
+      > :first-child {
+        margin-top: var(--chakra-space-2) !important;
+        margin-bottom: var(--chakra-space-2) !important;
+      }
+      > :last-child {
+        margin-top: var(--chakra-space-2) !important;
+        margin-bottom: var(--chakra-space-2) !important;
+      }
+    }
+
+    &.ck.ck-editor__editable {
+      &:hover {
+        border-color: var(--chakra-colors-gray-300);
+      }
+      &:focus {
+        border-color: var(--chakra-colors-blue-400);
+      }
+    }
+
+    .ck-placeholder::before {
+      color: var(--chakra-colors-gray-400);
+    }
 
     h2 {
       font-size: 1.8rem;
@@ -114,8 +146,8 @@
 
     p {
       display: block;
-      margin-block-start: 1em;
-      margin-block-end: 1em;
+      margin-block-start: 1rem;
+      margin-block-end: 1rem;
       margin-inline-start: 0;
       margin-inline-end: 0;
     }

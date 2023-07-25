@@ -13,27 +13,21 @@
         <chakra.img src="/momentum-logo.svg" color="white" max-w="185px" />
       </NuxtLink>
 
-      <VTooltip>
-        <div>
-          <CBox
-            mt="6px"
-            px="10px"
-            pt="1px"
-            pb="2px"
-            bg="blue.100"
-            color="blue.900"
-            border-radius="lg"
-            font-size="xs"
-            :_hover="{cursor: 'help'}"
-          >
-            EAP
-          </CBox>
-        </div>
-
-        <template v-slot:popper>
-          <CText font-size="xs">Early Access Preview</CText>
-        </template>
-      </VTooltip>
+      <CTooltip label="Early Access Preview">
+        <CBox
+          mt="6px"
+          px="10px"
+          pt="1px"
+          pb="2px"
+          bg="blue.100"
+          color="blue.900"
+          border-radius="lg"
+          font-size="xs"
+          :_hover="{cursor: 'help'}"
+        >
+          EAP
+        </CBox>
+      </CTooltip>
     </CFlex>
   </CFlex>
 </template>

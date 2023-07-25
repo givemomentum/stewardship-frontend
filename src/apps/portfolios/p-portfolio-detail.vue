@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-  import algoliasearch, { SearchClient } from "algoliasearch";
+  import { differenceInDays } from "date-fns";
   import { PortfolioPlan } from "~/apps/portfolios/interfaces";
+  import { useAlgolia } from "~/apps/portfolios/useAlgolia";
   import { urls } from "~/urls";
   import { format } from "~/utils";
 
@@ -12,20 +13,20 @@
 
   const state = {
     portfolio: ref(null as PortfolioPlan | null),
-    searchClient: ref(null as SearchClient | null),
     donorIdOpened: ref(null),
-    refreshKey: ref(0),
     algoliaFilter: ref(`portfolio_plan_id:${props.portfolioId}`),
   };
 
   const hooks = {
     api: useApi(),
     layout: useLayoutControl(),
+    algolia: useAlgolia(),
   };
 
   onBeforeMount(async () => {
     hooks.layout.activateLeanMode();
-    await initAlgolia();
+    await loadPortfolio();
+    hooks.algolia.init(state.portfolio.value);
   });
 
   watch(() => props.donorId, () => {
@@ -44,22 +45,30 @@
     history.pushState({}, null, urlNew);
   });
 
-  async function refreshAlgolia() {
-  }
-
-  async function initAlgolia() {
-    await loadPortfolio();
-
-    state.searchClient.value = algoliasearch(
-      state.portfolio.value.algolia_creds.app_id,
-      state.portfolio.value.algolia_creds.api_key,
-    );
-  }
-
   async function loadPortfolio() {
     const res = await hooks.api.get(`/portfolios/portfolios/${props.portfolioId}/`);
     state.portfolio.value = res.data;
+  }
 
+  function getEventDateLabel(algoliaItem: any, event: string) {
+    const eventObj = algoliaItem.upcoming_events_dates?.find((ev) => ev.label === event);
+    if (!eventObj) {
+      return "";
+    }
+    const diffInDays = differenceInDays(new Date(eventObj.date), new Date()) + 1;
+    if (diffInDays === 0) {
+      return `Today`;
+    }
+    if (diffInDays === 1) {
+      return `Tomorrow`;
+    }
+    if (diffInDays === -1) {
+      return `Yesterday`;
+    }
+    if (diffInDays < -1) {
+      return `Passed`;
+    }
+    return `${diffInDays} days until`;
   }
 </script>
 
@@ -77,9 +86,9 @@
       <CHeading size="lg">Portfolio {{state.portfolio.value?.name}}</CHeading>
 
       <AisInstantSearch
-        v-if="state.searchClient.value"
-        :key="state.refreshKey.value"
-        :search-client="state.searchClient.value"
+        v-if="hooks.algolia.searchClient.value && state.portfolio.value"
+        :key="hooks.algolia.refreshKey.value"
+        :search-client="hooks.algolia.searchClient.value"
         :index-name="state.portfolio.value.algolia_creds.index_name"
         show-loading-indicator
       >
@@ -95,41 +104,55 @@
           <CFlex gap="6">
             <ais-search-box show-loading-indicator />
 
-            <VDropdown :distance="6">
-              <CButton
-                right-icon="chevron-down"
-                variant="outline"
-                color-scheme="gray"
-              >
-                City
-              </CButton>
-              <template #popper>
-                <ARefinmentList
-                  attribute="city"
-                  searchable
-                  :limit="10"
-                  :showMoreLimit="10"
-                />
-              </template>
-            </VDropdown>
+            <CPopover>
+              <CPopoverTrigger>
+                <CButton
+                  right-icon="chevron-down"
+                  variant="outline"
+                  color-scheme="gray"
+                >
+                  City
+                </CButton>
+              </CPopoverTrigger>
+              <CPortal>
+                <CPopoverContent>
+                  <CPopoverArrow />
+                  <CPopoverBody>
+                    <ARefinmentList
+                      attribute="city"
+                      searchable
+                      :limit="10"
+                      :showMoreLimit="10"
+                    />
+                  </CPopoverBody>
+                </CPopoverContent>
+              </CPortal>
+            </CPopover>
 
-            <VDropdown :distance="6">
-              <CButton
-                right-icon="chevron-down"
-                variant="outline"
-                color-scheme="gray"
-              >
-                Upcoming events
-              </CButton>
-              <template #popper>
-                <ARefinmentList
-                  attribute="upcoming_events"
-                  searchable
-                  :limit="10"
-                  :showMoreLimit="10"
-                />
-              </template>
-            </VDropdown>
+            <CPopover>
+              <CPopoverTrigger>
+                <CButton
+                  right-icon="chevron-down"
+                  variant="outline"
+                  color-scheme="gray"
+                >
+                  Upcoming events
+                </CButton>
+              </CPopoverTrigger>
+              <CPortal>
+                <CPopoverContent>
+                  <CPopoverArrow />
+                  <CPopoverBody>
+                    <ARefinmentList
+                      attribute="upcoming_events"
+                      searchable
+                      :limit="10"
+                      :showMoreLimit="10"
+                    />
+                  </CPopoverBody>
+                </CPopoverContent>
+              </CPortal>
+            </CPopover>
 
             <ais-clear-refinements v-if="false">
               <template
@@ -156,7 +179,7 @@
             <PPortfolioAdd
               v-if="state.portfolio.value"
               :plan="state.portfolio.value"
-              @portfolio-updated="refreshAlgolia()"
+              @portfolio-updated="hooks.algolia.reloadPortfolio()"
             />
           </CFlex>
         </CFlex>
@@ -165,23 +188,21 @@
           <CTable>
 
             <CTbody>
-              <ais-infinite-hits>
+              <ais-infinite-hits :transform-items="hooks.algolia.transformItems">
 
                 <template
                   v-slot="{
                     items,
-                    refineNext,
-                    isLastPage,
                   }"
                 >
                   <CThead>
                     <CTr>
-                      <CTh>Name</CTh>
-                      <CTh>Lifetime giving</CTh>
-                      <CTh>Last gift</CTh>
-                      <CTh>Upcoming gift</CTh>
-                      <CTh>Touches progress</CTh>
-                      <CTh>Last touch</CTh>
+                      <PPortfolioTableHead attribute="name" label="Name" />
+                      <PPortfolioTableHead attribute="donated_total" label="Lifetime giving" />
+                      <PPortfolioTableHead attribute="last_gift_date" label="Last gift" />
+                      <PPortfolioTableHead attribute="expected_gift_date" label="Upcoming gift" />
+                      <PPortfolioTableHead attribute="season_progress" label="Touches progress" />
+                      <PPortfolioTableHead attribute="last_contact_date" label="Last touch" />
                       <CTh>Upcoming</CTh>
                       <CTh />
                       <CTh />
@@ -218,7 +239,7 @@
                     </CTd>
                     <CTd>{{ format.dateFromUnixV2(item.last_contact_date, false) }}</CTd>
                     <CTd>
-                      <CTag
+                      <CTooltip
                         v-for="event in item.upcoming_events"
                         v-tooltip="{
                           content: `In ${item.upcoming_events_countdown?.find((ev) => ev.label === event).days} days`,
@@ -226,12 +247,16 @@
                         }"
                         :_hover="{ cursor: 'context-menu', bg: 'gray.200' }"
                         mr="2"
+                        :key="event"
+                        :label="getEventDateLabel(item, event)"
                       >
-                        {{event.replace('_', ' ')}}
-                      </CTag>
+                        <CTag mr="2">
+                          {{event.replace('_', ' ')}}
+                        </CTag>
+                      </CTooltip>
                     </CTd>
                     <CTd>
-                      <CLink is-external :href="item.crm_url">
+                      <CLink v-if="item.crm_url" is-external :href="item.crm_url">
                         <CButton
                           left-icon="external-link"
                           size="xs"
@@ -241,6 +266,7 @@
                           CRM
                         </CButton>
                       </CLink>
+                      <span v-else />
                     </CTd>
                     <CTd>
                       <CButton
@@ -288,7 +314,6 @@
       <PDonorDetail
         :plan-id="props.portfolioId"
         :donor-id="state.donorIdOpened.value"
-        :is-skip-action="props.isSkipAction"
       />
     </ChakraDrawer>
   </CBox>

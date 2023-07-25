@@ -4,11 +4,13 @@ import { chakraConfig } from "./src/chakra-config";
 export default defineNuxtConfig({
   modules: [
     "@chakra-ui/nuxt-next",
+      "@nuxtjs/emotion", // supposed to be added by @chakra-ui/nuxt-next, but the nuxt module is in alpha so we add it manually
     "@nuxt/ui",
-    "@nuxtjs/emotion", // supposed to be added by @chakra-ui/nuxt-next, but it's broken so we add it manually
-    "@formkit/nuxt",
+    "@nuxt/devtools",
+    "nuxt-icon",
     "@pinia/nuxt",
   ],
+
   runtimeConfig: {
     public: {
       apiBase: "https://backend.app.givemomentum.com/api",
@@ -16,31 +18,29 @@ export default defineNuxtConfig({
       env: "prod",
     },
   },
+
   components: {
     dirs: [
-      /*
-       * To allow Nuxt to register the components in subdirectories
-       * you must specify the subdirectory before its parent, eg see portfolios.
-       */
-      "~/components",
-      "~/apps/letters",
-      "~/apps/tasks/recs",
-      "~/apps/tasks",
-      "~/apps/fisc",
-      "~/apps/partners/hor",
-      "~/apps/chakra",
-      "~/apps/menu",
-      "~/apps/portfolios/donor-detail",
-      "~/apps/portfolios",
-      "~/apps/shared",
+      {
+        path: "~/components",
+        pathPrefix: false,
+      },
+      {
+        path: "~/apps",
+        pathPrefix: false,
+        extensions: [".vue"],
+      },
     ],
   },
+
   sourcemap: true,
   ssr: false,
   srcDir: "src/",
+
   typescript: {
     shim: false, // intellij handles it natively
   },
+
   vite: {
     build: {
       sourcemap: true,
@@ -50,11 +50,21 @@ export default defineNuxtConfig({
       sentryVitePlugin({
         org: "givemomentum",
         project: "stewardship-frontend",
-        include: ".nuxt/dist/client",
         authToken: process.env.SENTRY_AUTH_TOKEN,
         telemetry: false,
       }),
     ],
   },
+
   chakra: chakraConfig as any,
+
+  devtools: {
+    enabled: true,
+  },
+
+  // didn't work
+  // watch: [
+  //   "~/chakra-config.ts",
+  //   "~/**.ts",
+  // ],
 });

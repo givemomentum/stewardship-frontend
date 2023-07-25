@@ -78,7 +78,7 @@
     state.isSavingChanges.value = true;
     await hooks.api.patch(
       `/letters/${state.letterOpen.value.pk}/`,
-      { html: state.letterHtml.value },
+      { content_html: state.letterHtml.value },
     );
     state.isSavingChanges.value = false;
     hooks.toast.success("Letter saved", { position: POSITION.TOP_RIGHT });
@@ -227,18 +227,16 @@
               </chakra.td>
 
               <chakra.td data-is-numeric="true">
-                <VTooltip placement="right">
-                  <div>
-                    <ChakraCheckbox
-                      :model-value="letter.is_excluded"
-                      @click.stop="toggleLetterExclusion(letter)"
-                    />
-                  </div>
-                  <template v-slot:popper>
-                    <CText font-size="xs" v-if="letter.is_excluded">Include this letter in the PDF export</CText>
-                    <CText font-size="xs" v-else>Exclude this letter from the PDF export</CText>
-                  </template>
-                </VTooltip>
+                <div>
+                  <ChakraCheckbox
+                    :model-value="letter.is_excluded"
+                    @click.stop="toggleLetterExclusion(letter)"
+                  />
+                </div>
+                <template v-slot:popper>
+                  <CText font-size="xs" v-if="letter.is_excluded">Include this letter in the PDF export</CText>
+                  <CText font-size="xs" v-else>Exclude this letter from the PDF export</CText>
+                </template>
               </chakra.td>
 
               <CFlex
@@ -375,22 +373,9 @@
             </CButton>
           </CFlex>
 
-          <TinyMce
-            v-model="state.letterHtml.value"
-            editor-box-shadow="0 1px 3px 0 rgba(0, 0, 0, 0.1),0 1px 2px 0 rgba(0, 0, 0, 0.06)"
-            editor-background="#f4f4f4"
-            width="850px"
-            min-height="1100px"
-            :is-show-menu-bar="true"
-            content-css-default="font-family: Calibri; font-size: 11pt;"
-          />
         </CFlex>
       </CFlex>
     </CFlex>
-
-    <CBox visibility="hidden">
-      <TinyMce />
-    </CBox>
 
   </CFlex>
 </template>

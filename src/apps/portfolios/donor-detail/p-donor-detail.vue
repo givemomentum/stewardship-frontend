@@ -1,5 +1,8 @@
 <script lang="ts" setup>
+  import { NuxtLink } from "#components";
   import { marked } from "marked";
+  import { TouchRec } from "~/apps/portfolios/interfaces";
+  import { usePlanDonorLoader } from "~/apps/portfolios/usePlanDonorLoader";
   import { urls } from "~/urls";
   import { format } from "~/utils";
   import { CrmAction, CrmDonor } from "~/apps/letters/interfaces";
@@ -7,24 +10,29 @@
   const props = defineProps<{
     planId: string | number;
     donorId: string | number;
-    isSkipAction?: boolean;
+    isEnableDonorContactMode?: any;
+    p?: any;
   }>();
 
   const hooks = {
     api: useApi(),
     notify: useNotify(),
+    loader: usePlanDonorLoader(props.donorId, props.planId),
   };
 
   const state = {
-    nextRec: ref(null as { scheduled_for: string; id?: Number } | null),
     donor: ref(null as CrmDonor | null),
+    recPending: ref(null as TouchRec | null),
+    nextRecScheduled: ref(null as { scheduled_for: string; id?: Number } | null),
     actions: ref<CrmAction[]>([]),
     householdMembers: ref(null as CrmDonor[] | null),
-    plan: ref(null as { touches_before_the_gift: number } | null),
     isActionLoading: ref(false),
+    isLoadingData: ref(true),
   };
 
   onMounted(async () => {
+    state.isLoadingData.value = true;
+
     hooks.api.get(`/crms/donors/${props.donorId}/?expand=household,donor_intels`).then(res => {
       state.donor.value = res.data;
 
@@ -35,20 +43,19 @@
         );
       }
     });
-    hooks.api.get(`/portfolios/portfolios/${props.planId}/`).then(res => {
-      state.plan.value = res.data;
-    });
     hooks.api.get(`/crms/actions/?donor=${props.donorId}`).then(res => {
       state.actions.value = res.data;
     });
-    hooks.api.get(`/portfolios/${props.donorId}/next-rec`).then(res => {
-      state.nextRec.value = res.data;
+    getNextRecScheduled();
+    hooks.api.getJson(`/portfolios/${props.planId}/donors/${props.donorId}/rec-pending`).then(data => {
+      state.recPending.value = data;
+      state.isLoadingData.value = false;
     });
   });
 
-  async function getNextRec() {
-    const res = await hooks.api.get(`/portfolios/${props.donorId}/next-rec`);
-    state.nextRec.value = res.data;
+  async function getNextRecScheduled() {
+    const res = await hooks.api.get(`/portfolios/${props.donorId}/next-rec-scheduled`);
+    state.nextRecScheduled.value = res.data;
   }
 
   async function removeFromPortfolio() {
@@ -61,55 +68,73 @@
 
 <template>
   <CFlex
-    p="6"
+    :p="props.p ?? 6"
     pr="10"
     direction="column"
     gap="9"
+    w="100%"
   >
-    <CFlex align="center" justify="space-between">
+    <CFlex
+      v-if="!props.isEnableDonorContactMode"
+      align="center"
+      justify="space-between"
+    >
       <CHeading size="lg">
         {{ state.donor.value?.name }}
       </CHeading>
 
       <CFlex gap="3">
         <CLink
-          :href="state.donor.value?.crm_url"
-          is-external
+          v-if="state.recPending.value"
+          :as="NuxtLink"
+          :href="urls.portfolios.contactDonor(props.planId, props.donorId, state.recPending.value?.id)"
         >
-          <CButton
-            right-icon="external-link"
-            variant="outline"
-            color-scheme="gray"
-          >
-            <!-- Workaround for Donor Perfect link issue: Show Donor Id, so she can copy it.-->
-            {{
-              state.donor.value?.source == "donor_perfect" ? state.donor.value?.source_id : "CRM Profile"
-            }}
+          <CButton>
+            Handle rec
           </CButton>
         </CLink>
         <PDonorChangePortfolio :donor="state.donor.value" :currentPlan="state.plan.value" />
+        <CLink
+          :as="NuxtLink as any"
+          :href="urls.portfolios.contactDonor(props.planId, props.donorId)"
+        >
+          <CButton
+            :is-loading="state.isLoadingData.value"
+            :variant="state.recPending.value ? 'outline' : 'solid'"
+            :color-scheme="state.recPending.value ? 'gray' : 'blue'"
+          >
+            Contact
+          </CButton>
+        </CLink>
+        <PDonorCrmLink v-if="state.donor.value?.crm_url" :donor="state.donor.value" />
       </CFlex>
     </CFlex>
 
-    <CFlex justify="space-between" h="fit-content">
+    <CFlex
+      justify="space-between"
+      h="fit-content"
+      align="flex-start"
+      :direction="{base: 'column', '2xl': 'row'}"
+      :gap="{base: '6', '2xl': '0'}"
+    >
       <CTable variant="unstyled" class="p-donor-detail-table" w="fit-content" h="fit-content">
-        <CTr v-if="state.nextRec.value">
+        <CTr v-if="state.nextRecScheduled.value">
           <CTd>Next touch</CTd>
           <CTd>
             <PInput
-              :initial="state.nextRec.value.scheduled_for"
+              :initial="state.nextRecScheduled.value.scheduled_for"
               :api-path="`/portfolios/${props.donorId}/schedule-for`"
               :serializer="(date: string) => ({
-                date: date,
+                value: date,
               })"
-              :label="format.date(state.nextRec.value.scheduled_for)"
+              :label="format.date(state.nextRecScheduled.value.scheduled_for)"
               @model-updated="() => {
-                state.nextRec.value.scheduled_for = $event;
-                getNextRec();
+                state.nextRecScheduled.value.scheduled_for = $event as string;
+                getNextRecScheduled();
               }"
               :success-message="(date: string) => `We won't recommend this donor until ${date}`"
               cta="Schedule"
-              :is-auto-tag="!state.nextRec.value.id"
+              :is-auto-tag="!state.nextRecScheduled.value.id"
             />
           </CTd>
         </CTr>
@@ -126,7 +151,7 @@
                 expected_gift_date: date,
               })"
               :label="format.date(state.donor.value.expected_gift_date)"
-              @model-updated="state.donor.value.expected_gift_date = $event"
+              @model-updated="state.donor.value.expected_gift_date = $event as string"
               :success-message="(date) => `Next gift date updated`"
             />
           </CTd>
@@ -136,12 +161,12 @@
           <CTd>Touches</CTd>
           <CTd>
             <PInput
-              v-if="state.donor.value && state.plan.value"
+              v-if="state.donor.value && hooks.loader.plan.value"
               type="number"
-              :initial="state.donor.value.touches_before_gift || state.plan.value.touches_before_the_gift"
+              :initial="state.donor.value.touches_before_gift || hooks.loader.plan.value.touches_before_the_gift"
               :api-path="`/crms/donors/${state.donor.value.pk}/`"
               :serializer="value => ({ touches_before_gift: value })"
-              :label="state.donor.value.touches_before_gift || state.plan.value.touches_before_the_gift"
+              :label="state.donor.value.touches_before_gift || hooks.loader.plan.value.touches_before_the_gift"
               @model-updated="state.donor.value.touches_before_gift = $event"
               :success-message="(value) => `Touches plan updated`"
             />
@@ -156,6 +181,25 @@
           <CTd>
             {{ format.money(state.donor.value?.last_gift_amount) }} on
             {{ format.date(state.donor.value?.last_gift_date) }}
+          </CTd>
+        </CTr>
+
+        <CTr>
+          <CTd>
+            Goal gift amount
+          </CTd>
+
+          <CTd>
+            <PInput
+              v-if="state.donor.value && hooks.loader.plan.value"
+              type="number"
+              :initial="state.donor.value.goal_gift_amount || state.donor.value.goal_gift_amount_suggestion"
+              :api-path="`/crms/donors/${state.donor.value.pk}/`"
+              :serializer="value => ({ goal_gift_amount: value })"
+              :label="format.money(state.donor.value.goal_gift_amount || state.donor.value.goal_gift_amount_suggestion)"
+              @model-updated="state.donor.value.goal_gift_amount = $event"
+              :success-message="(value) => `Goal gift amount updated`"
+            />
           </CTd>
         </CTr>
 
@@ -285,7 +329,7 @@
       </CTable>
     </CFlex>
 
-    <PDonorGifts v-if="state.donor.value" :donor="state.donor.value" />
+    <PDonorGifts v-if="state.donor.value?.gifts" :donor="state.donor.value" />
 
     <CFlex v-if="state.donor.value?.donor_intels?.length" gap="5" direction="column">
       <CFlex>

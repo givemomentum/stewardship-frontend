@@ -1,10 +1,7 @@
 <script setup lang="ts">
   import { useHead, useRuntimeConfig } from "#app";
   import { onMounted } from "vue";
-  import { ModalsContainer } from "vue-final-modal";
   import { useUserStore } from "~/apps/auth/useUserStore";
-  import LogRocket from "logrocket";
-  import { configureScope } from "@sentry/vue";
   import * as Sentry from "@sentry/vue";
   import { useApi } from "~/composables/useApi";
   import { useLayoutControl } from "~/composables/useLayoutControl";
@@ -14,6 +11,7 @@
     config: useRuntimeConfig(),
     userStore: useUserStore(),
     layout: useLayoutControl(),
+    route: useRoute(),
   };
 
   useHead({
@@ -39,7 +37,7 @@
       { children: `window._hsq = window._hsq ?? [];` },
       // GA
       {
-        src: hooks.config.public.env === "prod" ? "https://www.googletagmanager.com/gtag/js?id=G-W1HTKWB5F1" : "",
+        src: hooks.config.public.env === "prod" ? "https://www.googletagmanager.com/gtag/js?id=G-LXS4PT6K2F" : "",
         async: true,
       },
       {
@@ -47,8 +45,8 @@
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-        
-          gtag('config', 'G-W1HTKWB5F1');
+
+          gtag('config', 'G-LXS4PT6K2F');
         ` : "",
       },
 
@@ -56,11 +54,7 @@
   });
 
   onMounted(async () => {
-    await hooks.userStore.loadUser();
-
     if (!hooks.userStore.isLoggedIn) {
-      const res = await hooks.api.get("/nylas/auth-url/");
-      window.location.href = res.data;
       return;
     }
 
@@ -88,22 +82,8 @@
         });
       }
 
-      LogRocket.init("alcw3f/stewardship");
-
       const hubspot = window._hsq;
       hubspot?.push(["identify", { email: hooks.userStore.user.email }]);
-
-      LogRocket.identify(hooks.userStore.user.email, {
-        name: `${hooks.userStore.user.first_name} ${hooks.userStore.user.last_name}`,
-        email: hooks.userStore.user.email,
-        org: hooks.userStore.user.membership?.org.name,
-        is_org_admin: hooks.userStore.user.membership?.is_org_admin,
-      });
-      LogRocket.getSessionURL(sessionURL => {
-        configureScope(scope => {
-          scope.setExtra("sessionURL", sessionURL);
-        });
-      });
 
       const hotjar = window.hj;
       if (hotjar) {
@@ -123,21 +103,9 @@
       pb="0"
       :bg="hooks.layout.bg.value"
     >
-      <NuxtPage v-if="hooks.userStore.isLoggedIn" />
+      <NuxtPage />
     </CFlex>
-
-    <!--  for preloading & caching external mce js files, otherwise it takes a while  -->
-    <CBox
-      v-if="hooks.userStore.user?.membership?.org?.is_enable_app_emails"
-      visibility="hidden"
-      style="display: none"
-    >
-      <TinyMce padding="1rem" />
-    </CBox>
-
   </CFlex>
-
-  <ModalsContainer />
 
 </template>
 

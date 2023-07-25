@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+  import { TouchStatus } from "~/apps/portfolios/interfaces";
   import { useNotify } from "~/composables/useNotify";
   import { urls } from "~/urls";
   import { format } from "~/utils";
@@ -26,7 +27,7 @@
     }
   });
 
-  async function skipRec(status: string) {
+  async function skipRec(status: TouchStatus) {
     state.isSubmitting.value = true;
     await hooks.api.patch(`/portfolios/recs/${props.recId}/`, {
       status: status,
@@ -34,7 +35,6 @@
     hooks.notify.send(`Recommendation for ${state.rec.value.donor.name} skipped`);
     state.isSubmitting.value = false;
 
-    // Redirect to donor detail view after skip action.
     const portfolioId = state.rec.value.plan.id;
     const donorId = state.rec.value.donor.pk;
     navigateTo(urls.portfolios.donor(portfolioId, donorId));

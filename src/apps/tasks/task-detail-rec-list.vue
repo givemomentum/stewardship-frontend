@@ -56,7 +56,6 @@
       </CHeading>
 
       <CFlex gap="7">
-        <VTooltip>
           <div>
             <CLink
               :href="`${hooks.config.public.apiBase}/recs/rec-sets/${props.task.rec_set?.pk}/donor-csv`"
@@ -64,10 +63,6 @@
               <CButton left-icon="download" variant="link">CSV</CButton>
             </CLink>
           </div>
-          <template v-slot:popper>
-            <CText font-size="xs">Download as CSV</CText>
-          </template>
-        </VTooltip>
       </CFlex>
 
       <slot name="top-buttons" />
