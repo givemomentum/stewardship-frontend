@@ -22,7 +22,7 @@
       captureEvent(e);
     }
     const newURL = `/portfolios/portfolio/${targetPortfolioID}/donor/${donorID}`;
-    window.location.href = newURL;
+    navigateTo(newURL);
   }
   const props = defineProps<{
     donor: CrmDonor;
