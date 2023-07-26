@@ -93,7 +93,7 @@
             Handle rec
           </CButton>
         </CLink>
-        <PDonorChangePortfolio :donor="state.donor.value" :currentPlan="state.plan.value" />
+        <PDonorChangePortfolio :donor="state.donor.value" :currentPlan="state.plan?.value" />
         <CLink
           :as="NuxtLink as any"
           :href="urls.portfolios.contactDonor(props.planId, props.donorId)"
