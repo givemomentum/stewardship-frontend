@@ -1,3 +1,14 @@
+<script setup>
+import { urls } from "~/urls";
+import { useLeftMenu } from "~/apps/menu/useLeftMenu";
+import { useUserStore } from "~/apps/auth/useUserStore";
+
+const hooks = {
+  menu: useLeftMenu(),
+  userStore: useUserStore(),
+};
+</script>
+
 <template>
   <CFlex
     w="100%"
@@ -29,9 +40,20 @@
         </CBox>
       </CTooltip>
     </CFlex>
+    <CFlex ml="auto" align="center">
+      <CButton
+        v-if="hooks.userStore.user?.is_momentum_admin"
+        @click="hooks.menu.showAdminBar"
+        variant="link"
+      >
+        Admin settings
+      </CButton>
+    </CFlex>
+    <AdminBar v-if="hooks.userStore.user?.is_momentum_admin && hooks.menu.isAdminBarVisible.value" />
   </CFlex>
 </template>
 
-<script setup>
-import { urls } from "~/urls";
-</script>
+<style lang="scss">
+  @import '~/styles/chakra-ui.scss';
+  @import '~/styles/formkit.scss';
+</style>

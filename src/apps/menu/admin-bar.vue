@@ -42,11 +42,6 @@
 
 <template>
   <div class="menu-admin">
-    <div class="hide-link-container">
-      <CLink @click="hooks.menu.hideAdminBar" mt="auto" variant="link">
-        Hide
-      </CLink>
-    </div>
     <div class="admin-link-container">
       <CLink
         :href="`${hooks.config.public.backendUrl}/admin`"
@@ -79,6 +74,11 @@
       />
       <FormKit type="submit" label="Save" size="sm" />
     </FormKit>
+    <div class="hide-link-container">
+      <CLink @click="hooks.menu.hideAdminBar" mt="auto" variant="link">
+        Hide
+      </CLink>
+    </div>
   </div>
 </template>
 
@@ -88,7 +88,8 @@
     color: var(--chakra-colors-blue-100);
     position: fixed;
     width: 100%;
-    bottom: 0;
+    top: 0;
+    left: 0;
     display: flex;
     align-items: center;
     gap: 2em;
@@ -97,10 +98,6 @@
     .hide-link-container {
       display: flex;
       align-items: center;
-      padding: 0 7.5em;
-    }
-
-    .admin-link-container {
       margin-left: auto;
     }
 
