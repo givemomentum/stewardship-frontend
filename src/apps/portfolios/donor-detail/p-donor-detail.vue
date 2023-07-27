@@ -28,6 +28,7 @@
     householdMembers: ref(null as CrmDonor[] | null),
     isActionLoading: ref(false),
     isLoadingData: ref(true),
+    plan: usePlanDonorLoader(props.donorId, props.planId).plan, 
   };
 
   onMounted(async () => {

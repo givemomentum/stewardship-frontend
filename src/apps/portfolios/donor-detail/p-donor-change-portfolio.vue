@@ -21,8 +21,9 @@
     } catch (e) {
       captureEvent(e);
     }
+    hooks.algolia.reloadPortfolio()
     const newURL = `/portfolios/portfolio/${targetPortfolioID}/donor/${donorID}`;
-    // navigateTo(newURL);
+    navigateTo(newURL);
   }
   const props = defineProps<{
     donor: CrmDonor;
