@@ -6,6 +6,7 @@
   import { CrmDonor } from "~/apps/letters/interfaces";
   import { PortfolioPlan } from "../interfaces";
   import { captureEvent } from "@sentry/hub";
+import { useAlgolia } from "../useAlgolia";
 
   const isOpen = ref(false);
 
@@ -32,6 +33,7 @@
 
   const hooks = {
     api: useApi(),
+    algolia: useAlgolia(),
   };
 
   const state = {
