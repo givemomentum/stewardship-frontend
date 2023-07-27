@@ -24,7 +24,9 @@ import { useAlgolia } from "../useAlgolia";
     }
     hooks.algolia.reloadPortfolio()
     const newURL = `/portfolios/portfolio/${targetPortfolioID}/donor/${donorID}`;
-    navigateTo(newURL);
+    // Todo: reinstate proper navigation, currently does not refresh hook
+    // navigateTo(newURL); 
+    window.location.href = newURL;
   }
   const props = defineProps<{
     donor: CrmDonor;
