@@ -48,7 +48,7 @@ import { useAlgolia } from "../useAlgolia";
         ,
       );
     });
-  });
+  }, {immediate: true});
 
 </script>
 
