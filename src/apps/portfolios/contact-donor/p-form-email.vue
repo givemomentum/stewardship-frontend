@@ -31,6 +31,7 @@
     isScheduleNextRec: ref(false),
     scheduleForDate: ref(addDays(new Date(), 7).toISOString().slice(0, 10)),
     scheduleForReason: ref(""),
+    isFollowUp: ref(false),
     isSendingEmail: ref(false),
   };
 
@@ -55,14 +56,18 @@
 
     let res: AxiosResponse<TouchRec | null>;
     try {
-      res = await hooks.api.post(`/portfolios/${hooks.loader.plan.value.id}/donors/${props.donor.id}/send-email`, {
-        subject: state.emailSubject.value,
-        content_html: state.emailContentHtml.value,
-        // cc_list: state.emailCcList.value.replace(/\s/g, "").split(","),
-        rec_id: props.rec?.id,
-        next_rec_scheduled_for: state.isScheduleNextRec.value ? state.scheduleForDate.value : null,
-        next_rec_scheduled_for_reason: state.isScheduleNextRec.value ? state.scheduleForReason.value : null,
-      });
+      res = await hooks.api.post(
+        `/portfolios/${hooks.loader.plan.value.id}/donors/${props.donor.id}/send-email`,
+        {
+          subject: state.emailSubject.value,
+          content_html: state.emailContentHtml.value,
+          // cc_list: state.emailCcList.value.replace(/\s/g, "").split(","),
+          rec_id: props.rec?.id,
+          next_rec_scheduled_for: state.isScheduleNextRec.value ? state.scheduleForDate.value : null,
+          next_rec_scheduled_for_reason: state.isScheduleNextRec.value ? state.scheduleForReason.value : null,
+          is_follow_up_needed: state.isFollowUp.value,
+        }
+      );
     } catch (error) {
       captureException(error);
       console.log(error);
@@ -72,7 +77,9 @@
       state.isSendingEmail.value = false;
     }
 
-    if (state.isScheduleNextRec.value) {
+    if (state.isScheduleNextRec.value && state.isFollowUp.value) {
+      hooks.notify.send(`Email sent and next touch scheduled for ${state.scheduleForDate.value}, and a follow up in a week enabled`);
+    } else if (state.isScheduleNextRec.value) {
       hooks.notify.send(`Email sent and next touch scheduled for ${state.scheduleForDate.value}`);
     } else {
       hooks.notify.send(`Email sent`);
@@ -170,12 +177,12 @@
         <CInput type="date" v-model="state.scheduleForDate.value" w="fit-content" />
       </CVStack>
 
-      <CBox v-if="state.isScheduleNextRec.value">
-        <NuxtCkeditor
-          v-model="state.scheduleForReason.value"
-          placeholder="Notes for the next touch (optional)"
-        />
-      </CBox>
+      <CCheckbox v-model="state.isFollowUp.value" alignItems="center" display="flex">
+        Follow up in a week if no response
+        <CTooltip label="You'll receive a reminder with a pre-drafted friendly follow-up email" text-align="center">
+          <CIcon name="help" />
+        </CTooltip>
+      </CCheckbox>
     </CVStack>
 
     <CFlex :gap="{ base: 4, '2xl': 5 }">
