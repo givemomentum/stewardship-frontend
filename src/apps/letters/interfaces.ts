@@ -71,6 +71,11 @@ export class CrmDonor {
   source_id: PrimaryKey;
   source: "blackbaud" | "donor_perfect" | "salesforce" | "every_action" | "other";
   gifts?: CrmGift[];
+
+  linkedin_url: string;
+  twitter_url: string;
+  facebook_url: string;
+
   letter_label: string;
   mailing_address: {
     pk: PrimaryKey;

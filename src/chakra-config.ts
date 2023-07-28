@@ -21,6 +21,9 @@ import {
   feCheckSquare,
   fePlus,
   feList,
+  feFacebook,
+  feLinkedin,
+  feTwitter,
 } from "feather-icons-paths";
 import {
   FaDiscord,
@@ -157,6 +160,9 @@ export const chakraConfig = {
       feDatabase,
       fePlus,
       feList,
+      feFacebook,
+      feLinkedin,
+      feTwitter,
     },
     extend: {
       ...getOhVueIconProps(BiListCheck),

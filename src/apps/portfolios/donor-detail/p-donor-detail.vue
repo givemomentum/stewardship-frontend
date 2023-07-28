@@ -226,10 +226,9 @@
       </CTable>
 
       <CBox v-if="state.donor.value">
-        <CFlex direction="column">
+        <CFlex direction="column" :gap="{ base: 1, '2xl': 3 }">
           <CFlex
             v-if="state.donor.value.email"
-            :py="{ base: 1, '2xl': 2 }"
             align="center"
             gap="2"
             white-space="nowrap"
@@ -240,7 +239,6 @@
 
           <CFlex
             v-if="state.donor.value.phone_number"
-            :py="{ base: 1, '2xl': 2 }"
             align="center"
             gap="2"
             white-space="nowrap"
@@ -251,7 +249,6 @@
 
           <CFlex
             v-if="state.donor.value?.mailing_address?.city"
-            :py="{ base: 1, '2xl': 2 }"
             align="center"
             gap="2"
             white-space="nowrap"
@@ -260,6 +257,39 @@
             {{ state.donor.value?.mailing_address.city }},
             {{ state.donor.value?.mailing_address.state }}
           </CFlex>
+
+          <PInput
+            v-if="state.donor.value"
+            type="string"
+            :initial="state.donor.value.linkedin_url"
+            :api-path="`/crms/donors/${state.donor.value.pk}/`"
+            :serializer="value => ({ linkedin_url: value })"
+            iconName="linkedin"
+            @model-updated="state.donor.value.linkedin_url = $event"
+            placeholder="https://linkedin.com/in/username"
+          />
+          <PInput
+            v-if="state.donor.value"
+            type="string"
+            :initial="state.donor.value.facebook_url"
+            :api-path="`/crms/donors/${state.donor.value.pk}/`"
+            :serializer="value => ({ facebook_url: value })"
+            iconName="facebook"
+            @model-updated="state.donor.value.facebook_url = $event"
+            placeholder="https://facebook.com/username/"
+          />
+          <PInput
+            v-if="state.donor.value"
+            type="string"
+            :initial="state.donor.value.twitter_url"
+            :api-path="`/crms/donors/${state.donor.value.pk}/`"
+            :serializer="value => ({ twitter_url: value })"
+            iconName="twitter"
+            @model-updated="state.donor.value.twitter_url = $event"
+            placeholder="https://twitter.com/username"
+          />
+
+
         </CFlex>
       </CBox>
     </CFlex>
