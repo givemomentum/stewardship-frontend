@@ -48,14 +48,13 @@ import { useAlgolia } from "../useAlgolia";
   };
 
   watch(() => props.currentPlan, () => {
-    hooks.api.get(`/portfolios/portfolios/`).then(res => {
-      state.allPortfolios = res.data.filter(
+    hooks.api.getJson(`/portfolios/portfolios/`).then(data => {
+      state.allPortfolios = data.filter(
         (plan: PortfolioPlan) => Number(plan.id) !== Number(props.currentPlan.id)
         ,
       );
     });
   }, {immediate: true});
-
 </script>
 
 <template>
