@@ -28,6 +28,7 @@
     householdMembers: ref(null as CrmDonor[] | null),
     isActionLoading: ref(false),
     isLoadingData: ref(true),
+    plan: usePlanDonorLoader(props.donorId, props.planId).plan, 
   };
 
   onMounted(async () => {
@@ -39,7 +40,7 @@
       const isHousehold = res.data.household?.donors?.length ?? 0 > 1;
       if (isHousehold > 1) {
         state.householdMembers.value = res.data.household.donors.filter(
-          donor => donor.pk != res.data.pk
+          donor => donor.pk != res.data.pk,
         );
       }
     });
@@ -93,7 +94,7 @@
             Handle rec
           </CButton>
         </CLink>
-
+        <PDonorChangePortfolio :donor="state.donor.value" :currentPlan="state.plan?.value" />
         <CLink
           :as="NuxtLink as any"
           :href="urls.portfolios.contactDonor(props.planId, props.donorId)"
@@ -338,7 +339,7 @@
           color="white"
           max-w="230px"
           filter="grayscale(1)"
-          :_hover="{ filter: 'grayscale(0)'}"
+          :_hover="{ filter: 'grayscale(0)' }"
           transition="filter 0.2s"
         />
       </CFlex>
