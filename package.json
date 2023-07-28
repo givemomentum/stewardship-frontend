@@ -12,8 +12,8 @@
     "lint": "yarn run eslint --fix src/"
   },
   "dependencies": {
-    "nuxt": "^3.6.3",
-      "@nuxt/vite-builder": "^3.6.3",
+    "nuxt": "^3.6.5",
+      "@nuxt/vite-builder": "^3.6.5",
       "@unhead/vue": "~1.1.23", "//": "used to be in nuxt, still used for now",
     "@pinia/nuxt": "^0.4.11",
     "@formkit/nuxt": "^1.0.0-beta.15",
@@ -56,7 +56,7 @@
   "devDependencies": {
     "vue-router": "^4.2.4", "//": "abscence generates a Nuxt warning of some kind, not sure",
     "@nuxt/devtools": "^0.6.7",
-    "@nuxt/kit": "^3.6.3",
+    "@nuxt/kit": "^3.6.5",
     "@nuxt/ui": "^0.4.1",
       "vite": "^4.4.4", "//": "stub peer dep for @nuxt/ui",
     "prettier": "^3.0.0",
