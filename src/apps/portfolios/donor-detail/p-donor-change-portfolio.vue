@@ -9,6 +9,8 @@
 import { useAlgolia } from "../useAlgolia";
 
   const isOpen = ref(false);
+  const isLoading = ref(false);
+  
 
   async function togglePortfolio(targetPortfolioID: number) {
     const donorID = props.donor.id;
@@ -18,6 +20,8 @@ import { useAlgolia } from "../useAlgolia";
       to_id: targetPortfolioID,
     };
     try {
+      isOpen.value = false;
+      isLoading.value = true;
       await hooks.api.post(`/crms/donors/change-portfolio`, args);
     } catch (e) {
       captureEvent(e);
@@ -60,8 +64,9 @@ import { useAlgolia } from "../useAlgolia";
       class="dropdown-button"
       @click="isOpen = !isOpen"
       @keypress="isOpen = !isOpen"
+      :disabled="isLoading"
       ml="1">
-      {{props.currentPlan?.name}}
+      {{isLoading ? 'Changing Portfolio...' : props.currentPlan?.name}}
     </CButton>
     <ul
       class="dropdown-menu"
