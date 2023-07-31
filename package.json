@@ -67,6 +67,7 @@
     "vercel": "^31.0.3",
     "@babel/core": "^7.18.13", "//": "bug peer dep for @chakra-ui/vue-next",
     "@types/papaparse": "^5.3.5",
-    "@types/node": "^18.15.3"
+    "@types/node": "^18.15.3",
+    "@types/marked": "^5.0.1"
   }
 }

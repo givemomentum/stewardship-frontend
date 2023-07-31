@@ -29,7 +29,8 @@ Todo:
     - `CCheckbox`
     - `CTabs`
     - `CTooltip`
-    - `CModal` - but requires `motion-preset="slideInBottom"` and doesn't close on overlay click
+    - `CModal`
+      - in the latest `yarn.lock` you need to set `v-if="state.isOpen.value"` along with `v-model="state.isOpen.value"`. Perhaps because `emotion` doesn't like to render something without a node, and a node appears only after `nextTick()` call that adds the target nodes.
   - Packages we no longer need since they work in chakra now
     - `vue-final-modal`
     - `floating-vue` - ok to use for dropdowns, but not tooltips

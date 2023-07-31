@@ -140,6 +140,21 @@ export class CrmDonor {
   }>
 }
 
+export interface DonorProfileSection {
+  id: PrimaryKey;
+  name: string;
+  donor_id: PrimaryKey;
+  placeholder: string | "";
+  order: number;
+  version?: {
+    id?: PrimaryKey;
+    donor?: PrimaryKey;
+    content_md: string;
+    created_at?: string;
+    updated_at?: string;
+  }
+}
+
 export class CrmAction {
   pk: PrimaryKey;
   donor: PrimaryKey;

@@ -33,7 +33,7 @@ import { useAlgolia } from "../useAlgolia";
     window.location.href = newURL;
   }
   const props = defineProps<{
-    donor: CrmDonor;
+    donor?: CrmDonor;
     currentPlan: PortfolioPlan;
   }>();
 

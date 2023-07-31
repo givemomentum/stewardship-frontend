@@ -20,6 +20,10 @@
     loader: usePlanDonorLoader(props.donorId, props.planId),
   };
 
+  const tabTypes = ["notes", "household", "actions"];
+
+  type Tab = typeof tabTypes[number];
+
   const state = {
     donor: ref(null as CrmDonor | null),
     recPending: ref(null as TouchRec | null),
@@ -28,7 +32,8 @@
     householdMembers: ref(null as CrmDonor[] | null),
     isActionLoading: ref(false),
     isLoadingData: ref(true),
-    plan: usePlanDonorLoader(props.donorId, props.planId).plan, 
+    plan: hooks.loader.plan,
+    tabCurrent: ref<Tab>(tabTypes[0]),
   };
 
   onMounted(async () => {
@@ -72,7 +77,7 @@
     :p="props.p ?? 6"
     pr="10"
     direction="column"
-    gap="9"
+    gap="2"
     w="100%"
   >
     <CFlex
@@ -226,7 +231,7 @@
       </CTable>
 
       <CBox v-if="state.donor.value">
-        <CFlex direction="column" :gap="{ base: 1, '2xl': 3 }">
+        <CFlex direction="column" :gap="{ base: 3, '2xl': 3 }">
           <CFlex
             v-if="state.donor.value.email"
             align="center"
@@ -294,94 +299,135 @@
       </CBox>
     </CFlex>
 
-    <CFlex
-      v-if="state.donor.value?.household?.description"
-      direction="column"
-      gap="2"
-    >
-      <CHeading font-size="2xl" color="gray.500">
-        Description
-      </CHeading>
-
-      <CText
-        class="desc-full"
-        v-html="marked.parse(state.donor.value?.household?.description)"
-      />
-    </CFlex>
-
-    <CFlex
-      v-if="state.householdMembers.value"
-      direction="column"
-      gap="2"
-    >
-      <CHeading font-size="2xl" color="gray.500">
-        Household
-      </CHeading>
-
-      <CTable
-        variant="unstyled"
-        class="p-donor-detail-table"
-        w="fit-content"
-        h="fit-content"
-      >
-        <CTr
-          v-for="member in state.householdMembers.value"
-          :key="member?.id"
+    <CTabs v-model="state.tabCurrent.value" size="lg">
+      <CTabList>
+        <CTab
+          v-for="tab in tabTypes"
+          text-transform="capitalize"
+          :key="tab"
+          :value="tab"
         >
-          <CTd>
-            {{ member.name }}
-          </CTd>
+          {{ tab }}
+        </CTab>
+      </CTabList>
 
-          <CTd>
-            <CFlex align="center" gap="2">
-              {{ member.email || member.phone_number }}
+      <CTabPanels>
+        <CTabPanel :value="tabTypes[0]" p="3" py="4">
+          <CFlex
+            v-if="state.donor.value?.household?.description && !hooks.loader.donorProfile.value"
+            direction="column"
+            gap="2"
+          >
+            <CText
+              class="desc-full"
+              v-html="marked.parse(state.donor.value?.household?.description)"
+            />
+          </CFlex>
 
-              <CLink
-                v-if="member.portfolio_plan_id"
-                :href="urls.portfolios.donor(member.portfolio_plan_id, member.id)"
+          <CFlex
+            v-else
+            direction="column"
+            gap="4"
+          >
+            <PDonorProfile :donor-id="props.donorId" :plan-id="props.planId" />
+          </CFlex>
+        </CTabPanel>
+
+        <CTabPanel :value="tabTypes[1]" p="3" py="4">
+          <CFlex
+            v-if="state.householdMembers.value"
+            direction="column"
+            gap="2"
+          >
+            <CHeading
+              font-size="2xl"
+              color="gray.500"
+            >
+              Household
+            </CHeading>
+
+            <CTable
+              variant="unstyled"
+              class="p-donor-detail-table"
+              w="fit-content"
+              h="fit-content"
+            >
+              <CTr
+                v-for="member in state.householdMembers.value"
+                :key="member?.id"
               >
-                <CButton size="xs" variant="outline" color-scheme="gray" pt="1px">View</CButton>
-              </CLink>
+                <CTd>
+                  {{ member.name }}
+                </CTd>
 
-              <CLink v-else :href="member.crm_url">
-                <CButton
-                  size="xs"
-                  variant="outline"
-                  color-scheme="gray"
-                  right-icon="external-link"
-                  pt="1px"
-                >
-                  CRM
-                </CButton>
-              </CLink>
+                <CTd>
+                  <CFlex
+                    align="center"
+                    gap="2"
+                  >
+                    {{ member.email || member.phone_number }}
+
+                    <CLink
+                      v-if="member.portfolio_plan_id"
+                      :href="urls.portfolios.donor(member.portfolio_plan_id, member.id)"
+                    >
+                      <CButton
+                        size="xs"
+                        variant="outline"
+                        color-scheme="gray"
+                        pt="1px"
+                      >View
+                      </CButton>
+                    </CLink>
+
+                    <CLink
+                      v-else
+                      :href="member.crm_url"
+                    >
+                      <CButton
+                        size="xs"
+                        variant="outline"
+                        color-scheme="gray"
+                        right-icon="external-link"
+                        pt="1px"
+                      >
+                        CRM
+                      </CButton>
+                    </CLink>
+                  </CFlex>
+                </CTd>
+              </CTr>
+            </CTable>
+          </CFlex>
+        </CTabPanel>
+
+        <CTabPanel :value="tabTypes[2]" p="3" py="4">
+          <PDonorGifts v-if="state.donor.value?.gifts" :donor="state.donor.value" />
+
+          <CFlex v-if="state.donor.value?.donor_intels?.length" gap="5" direction="column">
+            <CFlex>
+              <chakra.img
+                src="/donor-search-logo.svg"
+                color="white"
+                max-w="230px"
+                filter="grayscale(1)"
+                :_hover="{ filter: 'grayscale(0)' }"
+                transition="filter 0.2s"
+              />
             </CFlex>
-          </CTd>
-        </CTr>
-      </CTable>
-    </CFlex>
+            <PDonorIntel :donor="state.donor.value" />
+          </CFlex>
 
-    <PDonorGifts v-if="state.donor.value?.gifts" :donor="state.donor.value" />
+          <CFlex gap="5" direction="column">
+            <CHeading font-size="2xl" color="gray.500">
+              Last actions
+            </CHeading>
+            <RLastActions v-if="state.actions.value?.length" :actions="state.actions.value" />
+          </CFlex>
+        </CTabPanel>
 
-    <CFlex v-if="state.donor.value?.donor_intels?.length" gap="5" direction="column">
-      <CFlex>
-        <chakra.img
-          src="/donor-search-logo.svg"
-          color="white"
-          max-w="230px"
-          filter="grayscale(1)"
-          :_hover="{ filter: 'grayscale(0)' }"
-          transition="filter 0.2s"
-        />
-      </CFlex>
-      <PDonorIntel :donor="state.donor.value" />
-    </CFlex>
-
-    <CFlex gap="5" direction="column">
-      <CHeading font-size="2xl" color="gray.500">
-        Last actions
-      </CHeading>
-      <RLastActions v-if="state.actions.value?.length" :actions="state.actions.value" />
-    </CFlex>
+      </CTabPanels>
+    </CTabs>
 
   </CFlex>
 </template>
@@ -389,7 +435,7 @@
 <style lang="scss">
   .p-donor-detail-table {
     td {
-      padding: 0.5rem;
+      padding: 0.35rem;
       padding-right: 1.2rem;
 
       &:first-child {

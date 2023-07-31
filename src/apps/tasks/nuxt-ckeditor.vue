@@ -122,21 +122,21 @@
     dir {
       display: block;
       list-style-type: disc;
-      margin-block-start: 1em;
-      margin-block-end: 1em;
+      margin-block-start: 0.1em;
+      margin-block-end: 0.1em;
       margin-inline-start: 0;
       margin-inline-end: 0;
-      padding-inline-start: 40px;
+      padding-inline-start: 20px;
     }
 
     ol {
       display: block;
       list-style-type: decimal;
-      margin-block-start: 1em;
-      margin-block-end: 1em;
+      margin-block-start: 0.1em;
+      margin-block-end: 0.1em;
       margin-inline-start: 0;
       margin-inline-end: 0;
-      padding-inline-start: 40px;
+      padding-inline-start: 20px;
     }
 
     li {
