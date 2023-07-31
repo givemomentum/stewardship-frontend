@@ -34,7 +34,7 @@ import { useAlgolia } from "../useAlgolia";
   }
   const props = defineProps<{
     donor?: CrmDonor;
-    currentPlan: PortfolioPlan;
+    currentPlan?: PortfolioPlan;
   }>();
 
   const hooks = {
