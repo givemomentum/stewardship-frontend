@@ -339,13 +339,6 @@
             direction="column"
             gap="2"
           >
-            <CHeading
-              font-size="2xl"
-              color="gray.500"
-            >
-              Household
-            </CHeading>
-
             <CTable
               variant="unstyled"
               class="p-donor-detail-table"
@@ -419,9 +412,6 @@
           </CFlex>
 
           <CFlex gap="5" direction="column">
-            <CHeading font-size="2xl" color="gray.500">
-              Last actions
-            </CHeading>
             <RLastActions v-if="state.actions.value?.length" :actions="state.actions.value" />
           </CFlex>
         </CTabPanel>
