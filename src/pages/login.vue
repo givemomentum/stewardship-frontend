@@ -22,7 +22,7 @@
       <CVStack direction="column" justify="flex-start" key="2" w="fit-content" gap="8">
         <CVStack align="center" gap="4" pt="8">
           <chakra.img display="flex" src="/momentum-logo-only.svg" max-w="50px" />
-          <CHeading font-size="2xl">Sign in to you account</CHeading>
+          <CHeading font-size="2xl">Sign in to your account</CHeading>
         </CVStack>
         <CVStack
           gap="4"
