@@ -1,5 +1,6 @@
 import { defineNuxtPlugin } from "#app";
-import { attachErrorHandler, createTracingMixins, getCurrentHub, init, setContext, Replay } from "@sentry/vue";
+import { attachErrorHandler, createTracingMixins, getCurrentHub, init, setContext, Replay, EventHint } from "@sentry/vue";
+import { useUserStore } from "~/apps/auth/useUserStore";
 import { useApi } from "~/composables/useApi";
 import { AxiosError } from "axios";
 
@@ -17,6 +18,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       integrations: [],
       environment: nuxtApp.$config.public.env ?? "prod",
       beforeSend: function (event, hint) {
+        const exception = hint.originalException;
+
         if (hint.originalException instanceof AxiosError && event.request) {
           setContext("axios error", {
             request: hint.originalException?.request?.responseURL,
