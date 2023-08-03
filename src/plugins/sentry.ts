@@ -90,10 +90,7 @@ async function checkIsRlsValid(nuxtApp: any) {
           portfolio_id: portfolioId,
         },
       });
-      if (!isValid) {
-        console.log("another user with wrong bloody org set, i'm not gonna waste my time in sentry on this");
-        return false;
-      }
+      return isValid;
     }
   }
   return true;
