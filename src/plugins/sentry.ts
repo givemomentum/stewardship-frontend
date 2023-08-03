@@ -17,8 +17,12 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       replaysOnErrorSampleRate: 1.0,
       integrations: [],
       environment: nuxtApp.$config.public.env ?? "prod",
-      beforeSend: function (event, hint) {
-        const exception = hint.originalException;
+      beforeSend: async function (event, hint: EventHint) {
+        const isRlsValid = await checkIsRlsValid(nuxtApp);
+        if (!isRlsValid) {
+          console.log("another user with wrong bloody org set, i'm not gonna waste my time in sentry on this");
+          return null;
+        }
 
         if (hint.originalException instanceof AxiosError && event.request) {
           setContext("axios error", {
@@ -74,3 +78,23 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     }
   }
 });
+
+async function checkIsRlsValid(nuxtApp: any) {
+  const userStore = useUserStore();
+  const api = useApi();
+  if (userStore.isLoggedIn && userStore.user?.is_momentum_admin) {
+    const portfolioId = nuxtApp?._route?.params?.portfolio_id;
+    if (portfolioId) {
+      const isValid = await api.getJson(`/auth/validate-rls`, {
+        params: {
+          portfolio_id: portfolioId,
+        },
+      });
+      if (!isValid) {
+        console.log("another user with wrong bloody org set, i'm not gonna waste my time in sentry on this");
+        return false;
+      }
+    }
+  }
+  return true;
+}
