@@ -301,12 +301,23 @@
     <CTabs v-model="state.tabCurrent.value" size="lg">
       <CTabList>
         <CTab
-          v-for="tab in tabTypes"
           text-transform="capitalize"
-          :key="tab"
-          :value="tab"
+          :value="tabTypes[0]"
         >
-          {{ tab }}
+          {{ tabTypes[0] }}
+        </CTab>
+        <CTab
+          text-transform="capitalize"
+          :value="tabTypes[1]"
+          v-if="state.householdMembers.value"
+        >
+          {{ tabTypes[1] }}
+        </CTab>
+        <CTab
+          text-transform="capitalize"
+          :value="tabTypes[2]"
+        >
+          {{ tabTypes[2] }}
         </CTab>
       </CTabList>
 
@@ -332,9 +343,13 @@
           </CFlex>
         </CTabPanel>
 
-        <CTabPanel :value="tabTypes[1]" p="3" py="4">
+        <CTabPanel
+          :value="tabTypes[1]"
+          v-if="state.householdMembers.value"
+          p="3"
+          py="4"
+        >
           <CFlex
-            v-if="state.householdMembers.value"
             direction="column"
             gap="2"
           >
@@ -394,24 +409,26 @@
         </CTabPanel>
 
         <CTabPanel :value="tabTypes[2]" p="3" py="4">
-          <PDonorGifts v-if="state.donor.value?.gifts" :donor="state.donor.value" />
+          <CFlex gap="4" direction="column">
+            <PDonorGifts v-if="state.donor.value?.gifts" :donor="state.donor.value" />
 
-          <CFlex v-if="state.donor.value?.donor_intels?.length" gap="5" direction="column">
-            <CFlex>
-              <chakra.img
-                src="/donor-search-logo.svg"
-                color="white"
-                max-w="230px"
-                filter="grayscale(1)"
-                :_hover="{ filter: 'grayscale(0)' }"
-                transition="filter 0.2s"
-              />
+            <CFlex v-if="state.donor.value?.donor_intels?.length" gap="5" direction="column">
+              <CFlex>
+                <chakra.img
+                  src="/donor-search-logo.svg"
+                  color="white"
+                  max-w="230px"
+                  filter="grayscale(1)"
+                  :_hover="{ filter: 'grayscale(0)' }"
+                  transition="filter 0.2s"
+                />
+              </CFlex>
+              <PDonorIntel :donor="state.donor.value" />
             </CFlex>
-            <PDonorIntel :donor="state.donor.value" />
-          </CFlex>
 
-          <CFlex gap="5" direction="column">
-            <RLastActions v-if="state.actions.value?.length" :actions="state.actions.value" />
+            <CFlex gap="5" direction="column">
+              <RLastActions v-if="state.actions.value?.length" :actions="state.actions.value" />
+            </CFlex>
           </CFlex>
         </CTabPanel>
 

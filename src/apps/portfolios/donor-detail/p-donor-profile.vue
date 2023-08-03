@@ -54,14 +54,18 @@
   >
     <CFlex
       v-if="hooks.loader.donorProfile.value.length > 0"
-      v-for="section in hooks.loader.donorProfile.value"
-      :key="section.id"
+      direction="column"
     >
-      <PDonorProfileSection
-        v-if="section.version"
-        :section="section"
-        :plan-id="props.planId"
-      />
+      <CBox
+        v-for="section in hooks.loader.donorProfile.value"
+        :key="section.id"
+      >
+        <PDonorProfileSection
+          v-if="section.version"
+          :section="section"
+          :plan-id="props.planId"
+        />
+      </CBox>
     </CFlex>
 
     <CButton

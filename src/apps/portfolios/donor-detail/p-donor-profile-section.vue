@@ -66,7 +66,7 @@
 </script>
 
 <template>
-  <CFlex direction="column" w="100%" gap="2">
+  <CFlex direction="column" w="100%" gap="2" mb="3" mt="1">
     <CText
       font-size="sm"
       font-weight="bold"
