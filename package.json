@@ -51,7 +51,8 @@
     "papaparse": "^5.4.1",
     "vue3-apexcharts": "^1.4.4",
       "apexcharts": "^3.41.0",
-    "marked": "^5.1.1"
+    "marked": "^5.1.1",
+    "@blackbaud/sky-addin-client": "^1.1.5"
   },
   "devDependencies": {
     "vue-router": "^4.2.4", "//": "abscence generates a Nuxt warning of some kind, not sure",

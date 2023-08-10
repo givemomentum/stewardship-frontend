@@ -1,5 +1,6 @@
 import { sentryVitePlugin } from "@sentry/vite-plugin";
 import { chakraConfig } from "./src/chakra-config";
+import { defineEventHandler } from "h3"
 
 export default defineNuxtConfig({
   modules: [
@@ -59,7 +60,26 @@ export default defineNuxtConfig({
   chakra: chakraConfig as any,
 
   devtools: {
-    enabled: true,
+    enabled: false,
+  },
+
+  devServer: {
+    https: {
+      key: "./.cert/key.pem",
+      cert: "./.cert/cert.pem",
+    }
+  },
+
+  nitro: {
+    devHandlers: [
+      {
+        handler: defineEventHandler((event) => {
+          if (event.req) {
+            console.log(event.req);
+          }
+        })
+      }
+    ]
   },
 
   // didn't work

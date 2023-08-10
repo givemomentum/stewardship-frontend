@@ -430,6 +430,11 @@
     "@babel/helper-validator-identifier" "^7.22.5"
     to-fast-properties "^2.0.0"
 
+"@blackbaud/sky-addin-client@^1.1.5":
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/@blackbaud/sky-addin-client/-/sky-addin-client-1.1.5.tgz#8d1815dc3ed41577ab3872cd7e9f442510d7260a"
+  integrity sha512-0T5FmJysVB/L59qgudRYpD6r4Pa0LKAFzeTS2oUHvW02msdfkuOo/LyrXwyLxwvwILLAxrnYL3eAbcEbTe5gWw==
+
 "@chakra-ui/anatomy@2.1.2":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@chakra-ui/anatomy/-/anatomy-2.1.2.tgz#ea66b1841e7195da08ddc862daaa3f3e56e565f5"
@@ -830,7 +835,7 @@
   dependencies:
     "@chakra-ui/vue-system" "2.1.0-beta.11"
 
-"@chakra-ui/nuxt-next@2.1.0-beta.12":
+"@chakra-ui/nuxt-next@~2.1.0-beta.12":
   version "2.1.0-beta.12"
   resolved "https://registry.yarnpkg.com/@chakra-ui/nuxt-next/-/nuxt-next-2.1.0-beta.12.tgz#4d5a9d19a70598b79fa014f7eac260f4f7ebafce"
   integrity sha512-sKQqdF2QERXjBVPlyP7CBBjVITKqx/pk+Jhg2W/c0A+kRuTT4uWb0JzNpojCHwycm+SEutZVczKeNw1srumw1w==
@@ -1439,7 +1444,7 @@
     "@emotion/weak-memoize" "^0.3.1"
     stylis "4.2.0"
 
-"@emotion/css@^11.10.5", "@emotion/css@^11.11.2":
+"@emotion/css@^11.10.5":
   version "11.11.2"
   resolved "https://registry.yarnpkg.com/@emotion/css/-/css-11.11.2.tgz#e5fa081d0c6e335352e1bc2b05953b61832dca5a"
   integrity sha512-VJxe1ucoMYMS7DkiMdC2T7PWNbrEI0a39YRiyDvK2qq4lXwjRbVP/z4lpG+odCsRzadlR+1ywwrTzhdm5HNdew==

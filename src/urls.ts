@@ -54,4 +54,9 @@ export namespace urls {
   export const donorPerfect = {
     donor: (id: number | string) => `https://www.donorperfect.net/prod/ScreenDesigner/Donor/Edit/${id}`,
   };
+
+  export const blackbaud = {
+    constituentPageAction: "/blackbaud/constituent-page-action/",
+    constituentTileDashboard: "/blackbaud/constituent-tile-dashboard/",
+  };
 }
