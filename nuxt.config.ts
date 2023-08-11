@@ -1,5 +1,6 @@
 import { sentryVitePlugin } from "@sentry/vite-plugin";
 import { chakraConfig } from "./src/chakra-config";
+import { defineEventHandler } from "h3"
 
 export default defineNuxtConfig({
   modules: [
@@ -61,6 +62,15 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true,
   },
+
+  // Enable to run the local dev server over HTTPS.
+  // The easiest way to set up the certs: https://github.com/FiloSottile/mkcert
+  // devServer: {
+  //   https: {
+  //     key: "./.cert/key.pem",
+  //     cert: "./.cert/cert.pem",
+  //   }
+  // },
 
   // didn't work
   // watch: [
