@@ -60,27 +60,17 @@ export default defineNuxtConfig({
   chakra: chakraConfig as any,
 
   devtools: {
-    enabled: false,
+    enabled: true,
   },
 
-  devServer: {
-    https: {
-      key: "./.cert/key.pem",
-      cert: "./.cert/cert.pem",
-    }
-  },
-
-  nitro: {
-    devHandlers: [
-      {
-        handler: defineEventHandler((event) => {
-          if (event.req) {
-            console.log(event.req);
-          }
-        })
-      }
-    ]
-  },
+  // Enable to run the local dev server over HTTPS.
+  // The easiest way to set up the certs: https://github.com/FiloSottile/mkcert
+  // devServer: {
+  //   https: {
+  //     key: "./.cert/key.pem",
+  //     cert: "./.cert/cert.pem",
+  //   }
+  // },
 
   // didn't work
   // watch: [

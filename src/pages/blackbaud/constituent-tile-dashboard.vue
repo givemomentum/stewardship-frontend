@@ -1,12 +1,16 @@
 <script setup lang="ts">
-console.log("setting up component");
-
 import * as BBSkyAddinClient from "@blackbaud/sky-addin-client";
+import { useRoute } from "#app";
+import { useUserStore } from "~/apps/auth/useUserStore";
+
+const hooks = {
+  userStore: useUserStore(),
+  route: useRoute(),
+};
 
 const client = new BBSkyAddinClient.AddinClient({
   callbacks: {
-    init: function (args) {
-      console.log(args);
+    init: async function (args) {
       args.ready({
         showUI: true,
         title: 'Momentum'
@@ -15,9 +19,13 @@ const client = new BBSkyAddinClient.AddinClient({
   }
 });
 
-console.log("got client:", client);
+await hooks.userStore.loadUser();
+
+if (!hooks.userStore.isLoggedIn && hooks.route.path !== "/login") {
+  navigateTo("/login");
+}
 </script>
 
 <template>
-  Hello World!
+  <PPortfolioList v-if="hooks.userStore.isLoggedIn" />
 </template>
