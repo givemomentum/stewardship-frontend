@@ -56,8 +56,10 @@ export namespace urls {
   };
 
   export const blackbaud = {
-    constituentPageAction: "/blackbaud/constituent-page-action/",
-    constituentTileDashboard: "/blackbaud/constituent-tile-dashboard/",
-    pageHostSPA: "/blackbaud/page-host-spa/",
+    addins: {
+      constituentPageAction: "/blackbaud/constituent-page-action/",
+      constituentTileDashboard: "/blackbaud/constituent-tile-dashboard/",
+      pageHostSPA: "/blackbaud/page-host-spa/",
+    },
   };
 }

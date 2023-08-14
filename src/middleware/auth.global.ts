@@ -14,7 +14,7 @@ export default defineNuxtRouteMiddleware(
     }
 
     // Skip auth redirect for Blackbaud add-ins.
-    if (Object.values(urls.blackbaud).includes(to.fullPath)) {
+    if (Object.values(urls.blackbaud.addins).includes(to.fullPath)) {
       return;
     }
 
