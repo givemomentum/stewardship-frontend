@@ -12,7 +12,7 @@ const state = {
   uid: ref(""),
 };
 
-state.uid.value = hooks.route.redirectedFrom?.query.uid || ""
+state.uid.value = hooks.route.query.uid || ""
 
 onMounted(async () => {
   hooks.layout.activateLeanMode();

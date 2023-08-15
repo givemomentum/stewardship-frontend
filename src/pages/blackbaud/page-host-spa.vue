@@ -10,19 +10,18 @@ import { useUserStore } from "~/apps/auth/useUserStore";
 
 const state = {
   userId: ref(""),
-  error: ref(""),
+  ready: ref(false),
+  statusText: ref(""),
+  showAuthButton: ref(false),
+  authButtonDisabled: ref(false),
+  authButtonText: ref("Connect your Blackbaud account with Momentum"),
 };
 
 const hooks = {
   api: useApi(),
-  layout: useLayoutControl(),
   route: useRoute(),
   userStore: useUserStore(),
 };
-
-onBeforeMount(async () => {
-  hooks.layout.activateLeanMode();
-});
 
 async function getUserId () {
   try {
@@ -34,9 +33,33 @@ async function getUserId () {
       return res.data.user_id;
     }
   } catch (error) {
-    state.error.value = error.response.data.message;
+    state.statusText.value = error.response.data.message;
   }
 };
+
+async function checkAuth () {
+  await hooks.userStore.loadUser();
+
+  if (hooks.userStore.isLoggedIn) {
+    state.showAuthButton.value = false;
+    state.ready.value = true;
+  } else {
+    setTimeout(checkAuth, 5000);
+  }
+}
+
+async function authenticate () {
+  state.authButtonText.value = "Waiting for authentication…";
+  state.authButtonDisabled.value = true;
+
+  setTimeout(checkAuth, 5000);
+
+  await navigateTo(`/login?uid=${state.userId.value}`, {
+    open: {
+      target: '_blank',
+    }
+  });
+}
 
 const client = new BBSkyAddinClient.AddinClient({
   callbacks: {
@@ -47,16 +70,41 @@ const client = new BBSkyAddinClient.AddinClient({
       });
 
       const userId = await getUserId();
-      state.userId.value = userId;
 
       // Store user ID in local storage so it's attached to any other API requests.
       localStorage.setItem(blackbaud.authStorageKey, userId);
+
+      state.userId.value = userId;
+
+      // Check if the user is authenticated, or if they need to be sent to our auth for
+      // mapping the Blackbaud User ID to their backend user.
+      await hooks.userStore.loadUser();
+
+      if (hooks.userStore.isLoggedIn) {
+        state.showAuthButton.value = false;
+        state.ready.value = true;
+      } else {
+        state.showAuthButton.value = true;
+      }
     }
   }
 });
 </script>
 
 <template>
-  <PPortfolioList v-if="!state.error.value && state.userId.value" />
-  <p v-if="state.error.value">Error: {{ state.error.value }}</p>
+  <PPortfolioList v-if="state.ready.value" />
+  <p v-if="state.statusText.value">{{ state.statusText.value }}</p>
+  <CLink v-if="state.showAuthButton.value" @click="authenticate">
+    <CButton
+      :disabled="state.authButtonDisabled.value"
+      variant="outline"
+      size="lg"
+      color-scheme="gray"
+      color="gray.600"
+      p="10px"
+      h="fit-content"
+    >
+      {{ state.authButtonText.value }}
+    </CButton>
+  </CLink>
 </template>
