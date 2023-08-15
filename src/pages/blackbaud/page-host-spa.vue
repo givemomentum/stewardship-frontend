@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import * as BBSkyAddinClient from "@blackbaud/sky-addin-client";
-import axios from "axios";
 
 import { blackbaud } from "~/constants";
 
