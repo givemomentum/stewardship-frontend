@@ -19,3 +19,8 @@ export const security = {
   xsrfHeader: "x-csrftoken",
   xsrfCookie: "csrftoken",
 };
+
+export const blackbaud = {
+  authHeader: "Blackbaud-User-Id",
+  authStorageKey: "blackbaud_user_id",
+};
