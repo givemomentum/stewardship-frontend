@@ -1,7 +1,8 @@
-import { useRuntimeConfig } from "#app";
 import axios from "axios";
+
+import { useRuntimeConfig } from "#app";
 import { PrimaryKey } from "~/apps/auth/interfaces";
-import { security } from "~/constants";
+import { security, blackbaud } from "~/constants";
 
 export function useApi() {
   const hooks = {
@@ -16,6 +17,14 @@ export function useApi() {
     validateStatus: function (status: number) {
       return status < 400 || status === 403;
     },
+  });
+
+  axiosInstance.interceptors.request.use(function (config) {
+    const blackbaudUserId = localStorage.getItem(blackbaud.authStorageKey);
+    if (blackbaudUserId) {
+      config.headers['Authorization'] = `${blackbaud.authHeader} ${blackbaudUserId}`;
+    }
+    return config;
   });
 
   async function get(path: string, config?: any) {

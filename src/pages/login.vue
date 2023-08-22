@@ -1,17 +1,29 @@
 <script setup lang="ts">
-  const hooks = {
-    api: useApi(),
-    layout: useLayoutControl(),
-  };
+import { useRoute } from "#app";
 
-  const state = {
-    url: ref(""),
-  };
+const hooks = {
+  api: useApi(),
+  layout: useLayoutControl(),
+  route: useRoute(),
+};
 
-  onMounted(async () => {
-    hooks.layout.activateLeanMode();
-    state.url.value = await hooks.api.getJson("/nylas/auth-url/");
-  });
+const state = {
+  url: ref(""),
+  uid: ref(""),
+};
+
+state.uid.value = hooks.route.query.uid || ""
+
+onMounted(async () => {
+  hooks.layout.activateLeanMode();
+  const config = {}
+  if (state.uid.value) {
+    config.params = {
+      state: state.uid.value,
+    };
+  }
+  state.url.value = await hooks.api.getJson("/nylas/auth-url/", config);
+});
 </script>
 
 <template>
