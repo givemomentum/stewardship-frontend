@@ -7,6 +7,9 @@ import { useApi } from "~/composables/useApi";
 import { useRoute } from "#app";
 import { useUserStore } from "~/apps/auth/useUserStore";
 
+// Always clear user ID from local storage on setup.
+localStorage.removeItem(blackbaud.authStorageKey);
+
 const state = {
   userId: ref(""),
   ready: ref(false),
