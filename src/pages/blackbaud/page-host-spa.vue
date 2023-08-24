@@ -96,7 +96,7 @@ const client = new BBSkyAddinClient.AddinClient({
 <template>
   <PPortfolioList v-if="state.ready.value" />
   <p v-if="state.statusText.value">{{ state.statusText.value }}</p>
-  <CLink v-if="state.showAuthButton.value" @click="authenticate">
+  <CLink v-if="state.showAuthButton.value && !state.statusText.value" @click="authenticate">
     <CButton
       :disabled="state.authButtonDisabled.value"
       variant="outline"
