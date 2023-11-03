@@ -166,9 +166,9 @@
       <h3>2.6 Google OAuth Data Access</h3>
       <p>
         Our service uses Google OAuth to access your Gmail account with
-        `gmail.readonly` and `gmail.compose` scopes. This allows us to read and
-        send new emails from your address. We only use this access to track
-        emails related to the donors in your portfolio and log these emails to
+        `gmail.send`, `gmail.readonly` and `gmail.compose` scopes. This allows us to read and
+        send new emails from your email address. We only use this access to track
+        emails related to the donors in your CRM and log these emails to
         your CRM automatically. We do not track or store any other emails that
         are not related to this function.
       </p>
