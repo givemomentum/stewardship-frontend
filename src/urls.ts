@@ -20,4 +20,11 @@ export namespace urls {
       edit: (batchPk: number) => `/emails/batch-${batchPk}/edit`,
     },
   };
+  export const blackbaud = {
+    addins: {
+      constituentPageAction: "/blackbaud/constituent-page-action/",
+      constituentTileDashboard: "/blackbaud/constituent-tile-dashboard/",
+      pageHostSPA: "/blackbaud/page-host-spa/",
+    },
+  };
 }
