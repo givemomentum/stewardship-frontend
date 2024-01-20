@@ -59,7 +59,7 @@
     "@nuxt/devtools": "^0.6.7",
     "@nuxt/kit": "^3.6.5",
     "@nuxt/ui": "^0.4.1",
-      "vite": "^4.4.4", "//": "stub peer dep for @nuxt/ui",
+      "vite": "^4.5.2", "//": "stub peer dep for @nuxt/ui",
     "prettier": "^3.0.0",
     "sass": "^1.54.5",
       "sass-loader": "^13.0.2",
